@@ -49,7 +49,7 @@ void Game::Initialize(HWND window, int width, int height)
 	m_Ambience = Vector4(0.25f, 0.25f, 0.25f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light.setPosition(2.0f, 2.0f, 2.0f);
+	m_Light.setPosition(2.0f, -1.0f, 2.0f);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
 	m_Light.setStrength(10.0);
 
@@ -167,7 +167,8 @@ void Game::Update(DX::StepTimer const& timer)
 	// STEP 3: Process inputs
 	m_Camera.Update();
 	//m_Light.setPosition(m_Camera.getPosition().x, m_Camera.getPosition().y, m_Camera.getPosition().z);
-	UpdateModels(m_time);
+
+	m_Terrain.Update();		//terrain update.  doesnt do anything at the moment. 
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
@@ -203,11 +204,6 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		ExitGame();
 	}
-}
-
-void Game::UpdateModels(float time)
-{
-
 }
 #pragma endregion
 
@@ -254,6 +250,18 @@ void Game::Render()
 	// STEP 2: Render 'real' scene...
 	// Draw Skybox
 	RenderSkyboxOnto(&m_Camera);
+
+	// Draw Terrain
+	m_LightShaderPair.EnableShader(context);
+	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_DemoRenderPass->getShaderResourceView(), m_DemoNMRenderPass->getShaderResourceView());
+	m_Terrain.Render(context);
+
+	context->RSSetState(m_states->CullCounterClockwise());
+	m_LightShaderPair.EnableShader(context);
+	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_DemoRenderPass->getShaderResourceView(), m_DemoNMRenderPass->getShaderResourceView());
+	m_Terrain.Render(context);
+
+	context->RSSetState(m_states->CullClockwise());
 
 	// Draw Basic Models
 	m_LightShaderPair.EnableShader(context);
@@ -428,6 +436,9 @@ void Game::CreateDeviceDependentResources()
     m_sprites = std::make_unique<SpriteBatch>(context);
     m_font = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
+
+	// Terrain
+	m_Terrain.Initialize(device, 128, 128);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");

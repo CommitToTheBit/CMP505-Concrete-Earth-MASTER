@@ -10,6 +10,8 @@
 #include "Input.h"
 #include "RenderTexture.h"
 
+#include "Terrain.h"
+
 #include "Camera.h"
 #include "EnvironmentCamera.h"
 #include "SpecimenShader.h"
@@ -65,7 +67,6 @@ private:
 	}; 
 
     void Update(DX::StepTimer const& timer);
-    void UpdateModels(float time);
 
     void Render();
 
@@ -126,6 +127,8 @@ private:
     OverlayShader                                                           m_OverlayShaderPair;
 
     // Models
+    Terrain																	m_Terrain;
+
     ModelClass																m_Cube;
 
 	// Generated Textures

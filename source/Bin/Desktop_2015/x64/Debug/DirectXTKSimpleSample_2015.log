@@ -1,0 +1,8 @@
+﻿  Terrain.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(25,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(262,40): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(295,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(305,6): warning C4101: 'index': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(380,8): warning C4101: 'length': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(291): warning C4715: 'Terrain::GenerateHeightMap': not all control paths return a value
+  DirectXTKSimpleSample_2015.vcxproj -> C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe
