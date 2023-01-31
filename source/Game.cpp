@@ -49,7 +49,7 @@ void Game::Initialize(HWND window, int width, int height)
 	m_Ambience = Vector4(0.25f, 0.25f, 0.25f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light.setPosition(2.0f, -1.0f, 2.0f);
+	m_Light.setPosition(1.0f, 0.0f, 2.0f);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
 	m_Light.setStrength(10.0);
 
@@ -164,6 +164,15 @@ void Game::Update(DX::StepTimer const& timer)
 		m_Camera.setRotation(rotation);
 	}
 
+	// DEBUG STEP: Generate terrain...
+	//this is hacky,  i dont like this here.  
+	auto device = m_deviceResources->GetD3DDevice();
+	if (m_gameInputCommands.generate)
+	{
+		for (int terrainLayer = 0; terrainLayer < m_Terrain.M_TERRAIN_LAYERS; terrainLayer++)
+			m_Terrain.GenerateHeightMap(device, terrainLayer); // FIXME: Hacky? See description...
+	}
+
 	// STEP 3: Process inputs
 	m_Camera.Update();
 	//m_Light.setPosition(m_Camera.getPosition().x, m_Camera.getPosition().y, m_Camera.getPosition().z);
@@ -258,7 +267,7 @@ void Game::Render()
 
 	context->RSSetState(m_states->CullCounterClockwise());
 	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_DemoRenderPass->getShaderResourceView(), m_DemoNMRenderPass->getShaderResourceView());
+	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_Terrain.Render(context);
 
 	context->RSSetState(m_states->CullClockwise());
@@ -267,6 +276,13 @@ void Game::Render()
 	m_LightShaderPair.EnableShader(context);
 	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_normalMap.Get());
 	m_Cube.Render(context);
+
+	context->RSSetState(m_states->CullCounterClockwise());
+	m_LightShaderPair.EnableShader(context);
+	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_normalMap.Get());
+	m_Cube.Render(context);
+
+	context->RSSetState(m_states->CullClockwise());
 
 	m_LightShaderPair.EnableShader(context);
 	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(0.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_normalMap.Get(), m_NeutralNMRenderPass->getShaderResourceView());

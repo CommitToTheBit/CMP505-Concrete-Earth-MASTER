@@ -13,6 +13,9 @@ struct InputCommands
 	bool up;
 	bool down;
 
+	// Procedural generation controls
+	bool generate; 
+
 	DirectX::SimpleMath::Vector2 rotation;
 };
 

@@ -23,8 +23,8 @@ bool Terrain::Initialize(ID3D11Device* device, int terrainWidth, int terrainHeig
 	m_terrainHeight = terrainHeight;
 
 	m_frequency = m_terrainWidth / 20;
-	m_amplitude = 3.0;
-	m_wavelength = 1;
+	m_amplitude = 16.0f;
+	m_wavelength = 0.7f;
 
 	// Create the structure to hold the terrain data.
 	m_heightMap = new HeightMapType[m_terrainWidth * m_terrainHeight];
@@ -273,7 +273,7 @@ bool Terrain::GenerateHeightMap(ID3D11Device* device, int terrainLayer)
 			if (terrainLayer == 0)
 				m_heightMap[index].vertices[terrainLayer].position = DirectX::SimpleMath::Vector3((float)i, (float)height, (float)j) + sin((float)i *(m_frequency))*m_amplitude * DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f);
 			else if (terrainLayer == 1)
-				m_heightMap[index].vertices[terrainLayer].position = m_heightMap[index].vertices[terrainLayer-1].position + RandomHeight(m_heightMap[index].vertices[terrainLayer-1].position, 0.0f, 0.25f*m_amplitude*m_wavelength) * m_heightMap[index].vertices[terrainLayer-1].normal;
+				m_heightMap[index].vertices[terrainLayer].position = m_heightMap[index].vertices[terrainLayer-1].position + RandomHeight(m_heightMap[index].vertices[terrainLayer-1].position, 0.0f, 0.0f*m_amplitude*m_wavelength) * m_heightMap[index].vertices[terrainLayer-1].normal;
 		}
 	}
 
