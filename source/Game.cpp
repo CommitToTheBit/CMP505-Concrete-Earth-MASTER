@@ -178,6 +178,10 @@ void Game::Update(DX::StepTimer const& timer)
 	//m_Light.setPosition(m_Camera.getPosition().x, m_Camera.getPosition().y, m_Camera.getPosition().z);
 
 	m_Terrain.Update();		//terrain update.  doesnt do anything at the moment. 
+	
+	// DEBUG:
+	//float scalars[] = { -1.0f, 1.0f, 0.5f, 1.0f, 0.25f, -0.75f, 1.0f, -2.0f };
+	//m_MarchingCube.GenerateIsosurface(device, scalars, sin(m_time/XM_2PI));
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();

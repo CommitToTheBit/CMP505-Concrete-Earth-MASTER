@@ -307,7 +307,7 @@ MarchingCube::~MarchingCube()
 
 bool MarchingCube::Initialize(ID3D11Device* device)
 {
-	float scalars[] = { -1.0f, 1.0f, -1.0f, 1.0f, 2.0f, 1.0f, 1.0f, -1.0f };
+	float scalars[] = { -1.0f, 1.0f, -1.0f, 1.0f, 20.0f, 1.0f, 1.0f, -20.0f };
 	GenerateIsosurface(device, scalars, 0.0f);
 
 	return true;
@@ -475,39 +475,19 @@ bool MarchingCube::GenerateIsosurface(ID3D11Device* device, float scalars[8], fl
 		DirectX::SimpleMath::Vector3(0.0f, 1.0f, 1.0f),
 	};
 	DirectX::SimpleMath::Vector3 edgePositions[12];
-	if (m_edgeTable[isosurfaceIndex] & 1)
-		edgePositions[0] = 0.5f*vertexPositions[0]+0.5f*vertexPositions[1];
-	if (m_edgeTable[isosurfaceIndex] & 2)
-		edgePositions[1] = 0.5f*vertexPositions[1]+0.5f*vertexPositions[2];
-	if (m_edgeTable[isosurfaceIndex] & 4)
-		edgePositions[2] = 0.5f*vertexPositions[2]+0.5f*vertexPositions[3];
-	if (m_edgeTable[isosurfaceIndex] & 8)
-		edgePositions[3] = 0.5f*vertexPositions[3]+0.5f*vertexPositions[0];
-	if (m_edgeTable[isosurfaceIndex] & 16)
-		edgePositions[4] = 0.5f*vertexPositions[4]+0.5f*vertexPositions[5];
-	if (m_edgeTable[isosurfaceIndex] & 32)
-		edgePositions[5] = 0.5f*vertexPositions[5]+0.5f*vertexPositions[6];
-	if (m_edgeTable[isosurfaceIndex] & 64)
-		edgePositions[6] = 0.5f*vertexPositions[6]+0.5f*vertexPositions[7];
-	if (m_edgeTable[isosurfaceIndex] & 128)
-		edgePositions[7] = 0.5f*vertexPositions[7]+0.5f*vertexPositions[4];
-	if (m_edgeTable[isosurfaceIndex] & 256)
-		edgePositions[8] = 0.5f*vertexPositions[0]+0.5f*vertexPositions[4];
-	if (m_edgeTable[isosurfaceIndex] & 512)
-		edgePositions[9] = 0.5f*vertexPositions[1]+0.5f*vertexPositions[5];
-	if (m_edgeTable[isosurfaceIndex] & 1024)
-		edgePositions[10] = 0.5f*vertexPositions[2]+0.5f*vertexPositions[6];
-	if (m_edgeTable[isosurfaceIndex] & 2048)
-		edgePositions[11] = 0.5f*vertexPositions[3]+0.5f*vertexPositions[7];
+	for (int i = 0; i < 12; i++)
+	{
+		if (m_edgeTable[isosurfaceIndex] & (int)pow(2, i))
+		{
+			if (i < 8)
+				edgePositions[i] = InterpolateIsosurface(vertexPositions[4*(i/4)+i%4], vertexPositions[4*(i/4)+(i+1)%4], scalars[4*(i/4)+i%4], scalars[4*(i/4)+(i+1)%4], isolevel);
+			else
+				edgePositions[i] = InterpolateIsosurface(vertexPositions[i-8], vertexPositions[i-4], scalars[i-8], scalars[i-4], isolevel);
+		}
+	}
 
 	for (int i = 0; m_triTable[isosurfaceIndex][i] != -1; i++)
 		isosurfacePositions[i] = edgePositions[m_triTable[isosurfaceIndex][i]];
-
-	// DEBUG:
-	//isosurfaceIndex = 1;
-	//isosurfacePositions[0] = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
-	//isosurfacePositions[1] = DirectX::SimpleMath::Vector3(-1.0f, 0.0f, 0.0f);
-	//isosurfacePositions[2] = DirectX::SimpleMath::Vector3(-1.0f, 0.0f, 1.0f);
 
 	result = InitializeBuffers(device);
 	if (!result)
@@ -516,6 +496,15 @@ bool MarchingCube::GenerateIsosurface(ID3D11Device* device, float scalars[8], fl
 	}
 
 	return true;
+}
+
+DirectX::SimpleMath::Vector3 MarchingCube::InterpolateIsosurface(DirectX::SimpleMath::Vector3 position1, DirectX::SimpleMath::Vector3 position2, float scalar1, float scalar2, float isolevel)
+{
+	if (std::abs(scalar1-scalar2) < 0.001)
+		return position1;
+
+	float t = std::min(std::max((isolevel-scalar1)/(scalar2-scalar1), 0.0f), 1.0f);
+	return (1.0f-t)*position1+t*position2;
 }
 
 bool MarchingCube::Update()

@@ -24,7 +24,8 @@ public:
 	void Shutdown();
 
 	// 
-	bool GenerateIsosurface(ID3D11Device*, float init_scalars[8], float init_isolevel);
+	bool GenerateIsosurface(ID3D11Device*, float scalars[8], float isolevel);
+	DirectX::SimpleMath::Vector3 InterpolateIsosurface(DirectX::SimpleMath::Vector3 position1, DirectX::SimpleMath::Vector3 position2, float scalar1, float scalar2, float isolevel);
 
 	bool Update();
 
