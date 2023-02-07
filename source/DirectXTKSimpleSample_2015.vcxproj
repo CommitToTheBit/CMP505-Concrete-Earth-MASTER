@@ -178,6 +178,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightShader.h" />
+    <ClInclude Include="MarchingCube.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="OverlayShader.h" />
     <ClInclude Include="pch.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MarchingCube.cpp" />
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="OverlayShader.cpp" />
     <ClCompile Include="pch.cpp">

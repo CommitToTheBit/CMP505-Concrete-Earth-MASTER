@@ -81,6 +81,7 @@
       <Filter>Rendering\Shader Classes</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h" />
+    <ClInclude Include="MarchingCube.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -130,6 +131,7 @@
       <Filter>Rendering\Shader Classes</Filter>
     </ClCompile>
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="MarchingCube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

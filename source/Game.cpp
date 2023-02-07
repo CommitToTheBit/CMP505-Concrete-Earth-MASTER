@@ -46,7 +46,7 @@ void Game::Initialize(HWND window, int width, int height)
     CreateWindowSizeDependentResources();
 
 	//setup light
-	m_Ambience = Vector4(0.25f, 0.25f, 0.25f, 1.0f);
+	m_Ambience = Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light.setPosition(1.0f, 0.0f, 2.0f);
@@ -262,7 +262,7 @@ void Game::Render()
 
 	// Draw Terrain
 	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_DemoRenderPass->getShaderResourceView(), m_DemoNMRenderPass->getShaderResourceView());
+	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_DemoNMRenderPass->getShaderResourceView());
 	m_Terrain.Render(context);
 
 	context->RSSetState(m_states->CullCounterClockwise());

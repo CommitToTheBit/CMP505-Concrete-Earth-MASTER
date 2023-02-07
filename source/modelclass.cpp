@@ -382,6 +382,9 @@ void ModelClass::CalculateNormalTangentBinormal(VertexPositionNormalTexture vert
 	tangent = (textureVector2.y*vector1 - textureVector1.y*vector2) / determinant;
 	binormal = (textureVector2.x*vector1 - textureVector1.x*vector2) / determinant;
 
+	tangent = (vector2.y*vector1 - vector1.y*vector2) / determinant;
+	binormal = (vector2.x*vector1 - vector1.x*vector2) / determinant;
+
 	// Normalise tangent and binormal
 	tangent.Normalize();
 	binormal.Normalize();
