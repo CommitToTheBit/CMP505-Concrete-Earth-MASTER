@@ -11,6 +11,7 @@
 #include "RenderTexture.h"
 
 #include "Terrain.h"
+#include "MarchingCube.h"
 
 #include "Camera.h"
 #include "EnvironmentCamera.h"
@@ -128,6 +129,8 @@ private:
 
     // Models
     Terrain																	m_Terrain;
+
+    MarchingCube                                                            m_MarchingCube;
 
     ModelClass																m_Cube;
 

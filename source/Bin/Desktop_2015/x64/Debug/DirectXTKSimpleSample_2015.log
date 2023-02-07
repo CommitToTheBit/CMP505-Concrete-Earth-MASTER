@@ -1635,4 +1635,5 @@ C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Marchin
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(295,56): warning C4838: conversion from 'int' to 'const unsigned int' requires a narrowing conversion
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(295,60): warning C4838: conversion from 'int' to 'const unsigned int' requires a narrowing conversion
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(295,64): warning C4838: conversion from 'int' to 'const unsigned int' requires a narrowing conversion
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(465,34): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe

@@ -297,7 +297,7 @@ const unsigned int MarchingCube::m_triTable[256][16] = {
 
 MarchingCube::MarchingCube()
 {
-
+	isosurfaceIndex = 0;
 }
 
 
@@ -307,8 +307,8 @@ MarchingCube::~MarchingCube()
 
 bool MarchingCube::Initialize(ID3D11Device* device)
 {
-	float init_scalars[] = { -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
-	GenerateIsosurface(device, init_scalars, 0.0f);
+	float scalars[] = { -1.0f, 1.0f, -1.0f, 1.0f, 2.0f, 1.0f, 1.0f, -1.0f };
+	GenerateIsosurface(device, scalars, 0.0f);
 
 	return true;
 }
@@ -323,9 +323,9 @@ bool MarchingCube::InitializeBuffers(ID3D11Device* device)
 	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
 
 	// Calculate the number of indices in the terrain mesh.
-	//for (int i = 0; m_triTable[isosurfaceIndex][i] >= 0; i += 3)
-	//	m_indexCount += 3;
-	m_indexCount = 0;
+	m_indexCount = 3;
+	for (int i = 0; m_triTable[isosurfaceIndex][i] != -1; i += 3)
+		m_indexCount += 3;
 
 	// Set the vertex count to the same as the index count.
 	m_vertexCount = m_indexCount;
@@ -402,7 +402,123 @@ bool MarchingCube::InitializeBuffers(ID3D11Device* device)
 	return true;
 }
 
-void MarchingCube::GenerateIsosurface(ID3D11Device* device, float init_scalars[8], float init_isolevel)
+void MarchingCube::Render(ID3D11DeviceContext* deviceContext)
 {
+	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	RenderBuffers(deviceContext);
+	deviceContext->DrawIndexed(m_indexCount, 0, 0);
 
+	return;
+}
+
+void MarchingCube::RenderBuffers(ID3D11DeviceContext* deviceContext)
+{
+	unsigned int stride;
+	unsigned int offset;
+
+	// Set vertex buffer stride and offset.
+	stride = sizeof(VertexType);
+	offset = 0;
+
+	// Set the vertex buffer to active in the input assembler so it can be rendered.
+	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+
+	// Set the index buffer to active in the input assembler so it can be rendered.
+	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	return;
+}
+
+void MarchingCube::Shutdown()
+{
+	// Release the index buffer.
+	if (m_indexBuffer)
+	{
+		m_indexBuffer->Release();
+		m_indexBuffer = 0;
+	}
+
+	// Release the vertex buffer.
+	if (m_vertexBuffer)
+	{
+		m_vertexBuffer->Release();
+		m_vertexBuffer = 0;
+	}
+
+	return;
+}
+
+void MarchingCube::ShutdownBuffers()
+{
+	return;
+}
+
+bool MarchingCube::GenerateIsosurface(ID3D11Device* device, float scalars[8], float isolevel)
+{
+	bool result;
+
+	isosurfaceIndex = 0;
+	for (int i = 0; i < 8; i++)
+		isosurfaceIndex += (scalars[i] < isolevel) ? pow(2, i) : 0;
+
+	DirectX::SimpleMath::Vector3 vertexPositions[8] = {
+		DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f),
+		DirectX::SimpleMath::Vector3(-1.0f, 0.0f, 0.0f),
+		DirectX::SimpleMath::Vector3(-1.0f, 0.0f, 1.0f),
+		DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f),
+		DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f),
+		DirectX::SimpleMath::Vector3(-1.0f, 1.0f, 0.0f),
+		DirectX::SimpleMath::Vector3(-1.0f, 1.0f, 1.0f),
+		DirectX::SimpleMath::Vector3(0.0f, 1.0f, 1.0f),
+	};
+	DirectX::SimpleMath::Vector3 edgePositions[12];
+	if (m_edgeTable[isosurfaceIndex] & 1)
+		edgePositions[0] = 0.5f*vertexPositions[0]+0.5f*vertexPositions[1];
+	if (m_edgeTable[isosurfaceIndex] & 2)
+		edgePositions[1] = 0.5f*vertexPositions[1]+0.5f*vertexPositions[2];
+	if (m_edgeTable[isosurfaceIndex] & 4)
+		edgePositions[2] = 0.5f*vertexPositions[2]+0.5f*vertexPositions[3];
+	if (m_edgeTable[isosurfaceIndex] & 8)
+		edgePositions[3] = 0.5f*vertexPositions[3]+0.5f*vertexPositions[0];
+	if (m_edgeTable[isosurfaceIndex] & 16)
+		edgePositions[4] = 0.5f*vertexPositions[4]+0.5f*vertexPositions[5];
+	if (m_edgeTable[isosurfaceIndex] & 32)
+		edgePositions[5] = 0.5f*vertexPositions[5]+0.5f*vertexPositions[6];
+	if (m_edgeTable[isosurfaceIndex] & 64)
+		edgePositions[6] = 0.5f*vertexPositions[6]+0.5f*vertexPositions[7];
+	if (m_edgeTable[isosurfaceIndex] & 128)
+		edgePositions[7] = 0.5f*vertexPositions[7]+0.5f*vertexPositions[4];
+	if (m_edgeTable[isosurfaceIndex] & 256)
+		edgePositions[8] = 0.5f*vertexPositions[0]+0.5f*vertexPositions[4];
+	if (m_edgeTable[isosurfaceIndex] & 512)
+		edgePositions[9] = 0.5f*vertexPositions[1]+0.5f*vertexPositions[5];
+	if (m_edgeTable[isosurfaceIndex] & 1024)
+		edgePositions[10] = 0.5f*vertexPositions[2]+0.5f*vertexPositions[6];
+	if (m_edgeTable[isosurfaceIndex] & 2048)
+		edgePositions[11] = 0.5f*vertexPositions[3]+0.5f*vertexPositions[7];
+
+	for (int i = 0; m_triTable[isosurfaceIndex][i] != -1; i++)
+		isosurfacePositions[i] = edgePositions[m_triTable[isosurfaceIndex][i]];
+
+	// DEBUG:
+	//isosurfaceIndex = 1;
+	//isosurfacePositions[0] = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
+	//isosurfacePositions[1] = DirectX::SimpleMath::Vector3(-1.0f, 0.0f, 0.0f);
+	//isosurfacePositions[2] = DirectX::SimpleMath::Vector3(-1.0f, 0.0f, 1.0f);
+
+	result = InitializeBuffers(device);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool MarchingCube::Update()
+{
+	return true;
 }

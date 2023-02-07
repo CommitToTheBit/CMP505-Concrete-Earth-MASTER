@@ -272,6 +272,18 @@ void Game::Render()
 
 	context->RSSetState(m_states->CullClockwise());
 
+	// Draw Marching Cube
+	m_DemoNMRendering.EnableShader(context);
+	m_DemoNMRendering.SetShaderParameters(context, &Matrix::CreateTranslation(Vector3(-1.5f, -0.5f, 0.5f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_MarchingCube.Render(context);
+
+	context->RSSetState(m_states->CullCounterClockwise());
+	m_DemoNMRendering.EnableShader(context);
+	m_DemoNMRendering.SetShaderParameters(context, &Matrix::CreateTranslation(Vector3(-1.5f, -0.5f, 0.5f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_MarchingCube.Render(context);
+
+	context->RSSetState(m_states->CullClockwise());
+
 	// Draw Basic Models
 	m_LightShaderPair.EnableShader(context);
 	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_normalMap.Get());
@@ -455,6 +467,9 @@ void Game::CreateDeviceDependentResources()
 
 	// Terrain
 	m_Terrain.Initialize(device, 128, 128);
+
+	// Marching Cube(s)
+	m_MarchingCube.Initialize(device);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");

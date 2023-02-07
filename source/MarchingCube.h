@@ -24,7 +24,7 @@ public:
 	void Shutdown();
 
 	// 
-	void GenerateIsosurface(ID3D11Device*, float init_scalars[8], float init_isolevel);
+	bool GenerateIsosurface(ID3D11Device*, float init_scalars[8], float init_isolevel);
 
 	bool Update();
 
@@ -38,8 +38,8 @@ private:
 
 
 private:
-	float scalars[8]; // Indexing: (0,0,0), (1,0,0), (1,0,1), (0,0,1), (0,1,0), (1,1,0), (1,1,1), (0,1,1); check against http://paulbourke.net/geometry/polygonise/!
-	float isolevel;
+	//float scalars[8]; // Indexing: (0,0,0), (1,0,0), (1,0,1), (0,0,1), (0,1,0), (1,1,0), (1,1,1), (0,1,1); check against http://paulbourke.net/geometry/polygonise/!
+	//float isolevel;
 
 	int isosurfaceIndex;
 	DirectX::SimpleMath::Vector3 isosurfacePositions[16];
