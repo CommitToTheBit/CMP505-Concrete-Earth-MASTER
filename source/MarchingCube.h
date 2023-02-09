@@ -29,6 +29,10 @@ public:
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 
+	//
+	void GenerateSphericalField(DirectX::SimpleMath::Vector3 origin);
+	void GenerateSinusoidalSphericalField(DirectX::SimpleMath::Vector3 origin);
+
 	// 
 	bool GenerateIsosurface(ID3D11Device*, float isolevel);
 	DirectX::SimpleMath::Vector3 InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel);
@@ -45,14 +49,13 @@ private:
 
 
 private:
-	//float scalars[8]; // Indexing: (0,0,0), (1,0,0), (1,0,1), (0,0,1), (0,1,0), (1,1,0), (1,1,1), (0,1,1); check against http://paulbourke.net/geometry/polygonise/!
-	//float isolevel;
 	int m_cells;
+
 	FieldVertexType* m_field;
 
-	float m_isolevel;
 	int* m_isosurfaceIndices;
 	DirectX::SimpleMath::Vector3* m_isosurfacePositions;
+	float m_isolevel;
 
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	int m_vertexCount, m_indexCount;

@@ -310,23 +310,23 @@ bool MarchingCube::Initialize(ID3D11Device* device, int cells)
 	m_cells = cells;
 	m_field = new FieldVertexType[(cells + 1) * (cells + 1) * (cells + 1)];
 
-	int index;
+	int fieldCoordinate;
 	for (int k = 0; k <= m_cells; k++)
 	{
 		for (int j = 0; j <= m_cells; j++)
 		{
 			for (int i = 0; i <= m_cells; i++)
 			{
-				index = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
-				m_field[index].position = DirectX::SimpleMath::Vector3((float)i, (float)j, (float)k)/m_cells;
-				m_field[index].scalar = 0.0f;
+				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
+				m_field[fieldCoordinate].position = DirectX::SimpleMath::Vector3((float)i, (float)j, (float)k)/m_cells;
+				m_field[fieldCoordinate].scalar = 0.0f;
 			}
 		}
 	}
 	m_isosurfaceIndices = new int[cells * cells * cells];
-	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[16 * cells * cells * cells];
+	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[15 * cells * cells * cells];
 
-	GenerateIsosurface(device, 0.5f);
+	GenerateIsosurface(device, 0.0f);
 
 	return true;
 }
@@ -340,12 +340,9 @@ bool MarchingCube::InitializeBuffers(ID3D11Device* device)
 	HRESULT result;
 	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
 
-	int cell;
-	int vertex;
-	int cellVertices[8] = { 0, 1, (m_cells+1)*(m_cells+1)+1, (m_cells+1)*(m_cells+1), (m_cells+1), (m_cells+1)+1, (m_cells+1)*(m_cells+1)+(m_cells+1)+1, (m_cells+1)*(m_cells+1)+(m_cells+1), };
-	int cellVertexA, cellVertexB;
-	DirectX::SimpleMath::Vector3 edgePositions[12];
+	int cellCoordinate;
 
+	// STEP 1: Count indices...
 	m_indexCount = 0;
 	for (int k = 0; k < m_cells; k++)
 	{
@@ -353,42 +350,18 @@ bool MarchingCube::InitializeBuffers(ID3D11Device* device)
 		{
 			for (int i = 0; i < m_cells; i++)
 			{
-				cell = m_cells*m_cells*k+m_cells*j+i;
-				vertex = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
-
-				m_isosurfaceIndices[cell] = 0;
-				for (int n = 0; n < 8; n++)
-					if (m_field[vertex+cellVertices[n]].scalar < m_isolevel)
-						m_isosurfaceIndices[cell] += pow(2, n);
-
-				
-				for (int n = 0; n < 12; n++)
+				cellCoordinate = m_cells*m_cells*k+m_cells*j+i;
+				for (int n = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][n] != -1; n += 3)
 				{
-					if (m_edgeTable[m_isosurfaceIndices[cell]] & (int)pow(2, n))
-					{
-						if (n < 8)
-						{
-							cellVertexA = vertex+cellVertices[4*(n/4)+n%4];
-							cellVertexB = vertex+cellVertices[4*(n/4)+(n+1)%4];
-						}
-						else
-						{
-							cellVertexA = vertex+cellVertices[n-8];
-							cellVertexB = vertex+cellVertices[n-4];
-						}
-						edgePositions[n] = InterpolateIsosurface(m_field[cellVertexA], m_field[cellVertexB], m_isolevel);
-					}
-				}
-
-				for (int n = 0; m_triTable[m_isosurfaceIndices[cell]][n] != -1; n++)
-				{
-					m_isosurfacePositions[16*cell+n] = edgePositions[m_triTable[m_isosurfaceIndices[cell]][n]];
-					m_indexCount++;
+					m_indexCount += 3;
 				}
 			}
 		}
 	}
 	m_indexCount = std::max(m_indexCount, 3); // FIXME: Only a shoddy patch for access violation!
+
+	// STEP 2: Count *unique* vertices...
+	// FIXME: Major refactor needed for this to work - but it seems necessary for 'balanced' normals!a
 
 	// Set the vertex count to the same as the index count.
 	m_vertexCount = m_indexCount;
@@ -415,12 +388,12 @@ bool MarchingCube::InitializeBuffers(ID3D11Device* device)
 		{
 			for (int i = 0; i < m_cells; i++)
 			{
-				cell = m_cells*m_cells*k+m_cells*j+i;
+				cellCoordinate = m_cells*m_cells*k+m_cells*j+i;
 
-				for (int n = 0; m_triTable[m_isosurfaceIndices[cell]][n] != -1; n++)
+				for (int n = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][n] != -1; n++)
 				{
-					vertices[index].position = m_isosurfacePositions[16*cell+n];
-					vertices[index].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f);
+					vertices[index].position = m_isosurfacePositions[15*cellCoordinate+n];
+					vertices[index].texture = DirectX::SimpleMath::Vector2(vertices[index].position.x, vertices[index].position.y);
 					indices[index] = index;
 					index++;
 				}
@@ -532,25 +505,106 @@ void MarchingCube::ShutdownBuffers()
 	return;
 }
 
-bool MarchingCube::GenerateIsosurface(ID3D11Device* device, float isolevel)
+void MarchingCube::GenerateSphericalField(DirectX::SimpleMath::Vector3 origin)
 {
-	int vertex;
+	int fieldCoordinate;
 	for (int k = 0; k <= m_cells; k++)
 	{
 		for (int j = 0; j <= m_cells; j++)
 		{
 			for (int i = 0; i <= m_cells; i++)
 			{
-				vertex = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
-				//m_field[vertex].scalar = m_field[vertex].position.Length();
-				//m_field[vertex].scalar = m_field[vertex].position.x;// +m_field[vertex].position.y;// +m_field[vertex].position.z;
-				m_field[vertex].scalar = 2.0f*(m_field[vertex].position-DirectX::SimpleMath::Vector3(0.5f,0.5f,0.5f)).Length();
+				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
+				m_field[fieldCoordinate].scalar = 2.0f*(m_field[fieldCoordinate].position-origin).Length();
+			}
+		}
+	}
+}
+
+void MarchingCube::GenerateSinusoidalSphericalField(DirectX::SimpleMath::Vector3 origin)
+{
+	const float AMPLITUDE = 0.03f;
+
+	int fieldCoordinate;
+
+	DirectX::SimpleMath::Vector3 position;
+	float r, theta, phi, psi;
+
+	for (int k = 0; k <= m_cells; k++)
+	{
+		for (int j = 0; j <= m_cells; j++)
+		{
+			for (int i = 0; i <= m_cells; i++)
+			{
+				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
+
+				position = 2.0f*(m_field[fieldCoordinate].position-origin);
+				r = position.Length();
+				theta = atan2(position.z, position.x);
+				phi = atan2(position.y, position.z); // NB: Not 'true' phi...
+				psi = atan2(position.x, position.y);
+
+				m_field[fieldCoordinate].scalar = r;
+				m_field[fieldCoordinate].scalar += AMPLITUDE*sin(2.0f*theta);
+				m_field[fieldCoordinate].scalar += AMPLITUDE*sin(3.0f*phi);
+				m_field[fieldCoordinate].scalar += AMPLITUDE*sin(5.0f*psi);
+				m_field[fieldCoordinate].scalar /= 1.0f-3.0f*AMPLITUDE;
+			}
+		}
+	}
+}
+
+bool MarchingCube::GenerateIsosurface(ID3D11Device* device, float isolevel)
+{
+	const int fieldVertices[8] = { 0, 1, (m_cells+1)*(m_cells+1)+1, (m_cells+1)*(m_cells+1), (m_cells+1), (m_cells+1)+1, (m_cells+1)*(m_cells+1)+(m_cells+1)+1, (m_cells+1)*(m_cells+1)+(m_cells+1), };
+
+	int cellCoordinate;
+	int fieldCoordinate;
+	int fieldVertexA, fieldVertexB;
+	DirectX::SimpleMath::Vector3 edgePositions[12];
+
+	// STEP 1: Calculate new isosurface vertex positions...
+	m_isolevel = isolevel;
+	for (int k = 0; k < m_cells; k++)
+	{
+		for (int j = 0; j < m_cells; j++)
+		{
+			for (int i = 0; i < m_cells; i++)
+			{
+				cellCoordinate = m_cells*m_cells*k+m_cells*j+i;
+				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
+
+				m_isosurfaceIndices[cellCoordinate] = 0;
+				for (int n = 0; n < 8; n++)
+					if (m_field[fieldCoordinate+fieldVertices[n]].scalar < m_isolevel)
+						m_isosurfaceIndices[cellCoordinate] += pow(2, n);
+
+
+				for (int n = 0; n < 12; n++)
+				{
+					if (m_edgeTable[m_isosurfaceIndices[cellCoordinate]] & (int)pow(2, n))
+					{
+						if (n < 8)
+						{
+							fieldVertexA = fieldCoordinate+fieldVertices[4*(n/4)+n%4];
+							fieldVertexB = fieldCoordinate+fieldVertices[4*(n/4)+(n+1)%4];
+						}
+						else
+						{
+							fieldVertexA = fieldCoordinate+fieldVertices[n-8];
+							fieldVertexB = fieldCoordinate+fieldVertices[n-4];
+						}
+						edgePositions[n] = InterpolateIsosurface(m_field[fieldVertexA], m_field[fieldVertexB], m_isolevel);
+					}
+				}
+
+				for (int n = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][n] != -1; n++)
+					m_isosurfacePositions[15*cellCoordinate+n] = edgePositions[m_triTable[m_isosurfaceIndices[cellCoordinate]][n]];
 			}
 		}
 	}
 
-	m_isolevel = isolevel;
-
+	// STEP 2: Initialise buffers for new isosurface
 	bool result = InitializeBuffers(device);
 	if (!result)
 	{
@@ -562,14 +616,6 @@ bool MarchingCube::GenerateIsosurface(ID3D11Device* device, float isolevel)
 
 DirectX::SimpleMath::Vector3 MarchingCube::InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel)
 {
-	/*if (b.position.x < a.position.x || (b.position.x == a.position.x && b.position.y < a.position.y) || (b.position.x == a.position.x && b.position.y == a.position.y && b.position.z < a.position.z))
-	{
-		FieldVertexType temp;
-		temp = a;
-		a = b;
-		b = temp;
-	}*/
-
 	if (std::abs(a.scalar-b.scalar) < 0.001f)
 		return a.position;
 
