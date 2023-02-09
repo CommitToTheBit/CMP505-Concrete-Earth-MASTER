@@ -81,7 +81,7 @@
       <Filter>Rendering\Shader Classes</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h" />
-    <ClInclude Include="MarchingCube.h" />
+    <ClInclude Include="MarchingCubes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -131,7 +131,7 @@
       <Filter>Rendering\Shader Classes</Filter>
     </ClCompile>
     <ClCompile Include="Terrain.cpp" />
-    <ClCompile Include="MarchingCube.cpp" />
+    <ClCompile Include="MarchingCubes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -266,6 +266,12 @@
     </FxCompile>
     <FxCompile Include="colour_vs.hlsl">
       <Filter>Assets\Shader Classes</Filter>
+    </FxCompile>
+    <FxCompile Include="colour3D_vs.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
+    <FxCompile Include="colour3D_ps.hlsl">
+      <Filter>Assets</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

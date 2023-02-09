@@ -180,7 +180,7 @@ void Game::Update(DX::StepTimer const& timer)
 	m_Terrain.Update();		//terrain update.  doesnt do anything at the moment. 
 	
 	// DEBUG:
-	//m_MarchingCube.GenerateIsosurface(device, 1.0f+0.5f*sin(m_time/(XM_2PI*0.5f)));
+	//m_MarchingCubes.GenerateIsosurface(device, 1.0f+0.5f*sin(m_time/(XM_2PI*0.5f)));
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
@@ -276,14 +276,14 @@ void Game::Render()
 	context->RSSetState(m_states->CullClockwise());
 
 	// Draw Marching Cube
-	m_DemoNMRendering.EnableShader(context);
-	m_DemoNMRendering.SetShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
-	m_MarchingCube.Render(context);
+	m_FieldRendering.EnableShader(context);
+	m_FieldRendering.SetShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullCounterClockwise());
-	m_DemoNMRendering.EnableShader(context);
-	m_DemoNMRendering.SetShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
-	m_MarchingCube.Render(context);
+	m_FieldRendering.EnableShader(context);
+	m_FieldRendering.SetShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullClockwise());
 
@@ -472,9 +472,9 @@ void Game::CreateDeviceDependentResources()
 	m_Terrain.Initialize(device, 128, 128);
 
 	// Marching Cube(s)
-	m_MarchingCube.Initialize(device, 32);
-	m_MarchingCube.GenerateSinusoidalSphericalField(Vector3(0.5f, 0.5f, 0.5f));
-	m_MarchingCube.GenerateIsosurface(device, 1.0f);
+	m_MarchingCubes.Initialize(device, 64);
+	m_MarchingCubes.GenerateSinusoidalSphericalField(Vector3(0.5f, 0.5f, 0.5f));
+	m_MarchingCubes.GenerateIsosurface(device, 1.0f);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");
@@ -487,6 +487,8 @@ void Game::CreateDeviceDependentResources()
 	m_GlassShaderPair.InitGlassShader(device, L"glass_vs.cso", L"glass_ps.cso");
 	m_AlphaShaderPair.InitAlphaShader(device, L"alpha_vs.cso", L"alpha_ps.cso");
 	m_OverlayShaderPair.InitOverlayShader(device, L"overlay_vs.cso", L"overlay_ps.cso");
+
+	m_FieldRendering.InitShader(device, L"colour3D_vs.cso", L"colour3D_ps.cso");
 
 	for (int i = 0; i < 6; i++)
 		m_SkyboxRendering[i].InitShader(device, L"colour_vs.cso", L"skybox_pores.cso");

@@ -11,7 +11,7 @@
 #include "RenderTexture.h"
 
 #include "Terrain.h"
-#include "MarchingCube.h"
+#include "MarchingCubes.h"
 
 #include "Camera.h"
 #include "EnvironmentCamera.h"
@@ -127,10 +127,12 @@ private:
     AlphaShader                                                             m_AlphaShaderPair;
     OverlayShader                                                           m_OverlayShaderPair;
 
+    Shader                                                                  m_FieldRendering;
+
     // Models
     Terrain																	m_Terrain;
 
-    MarchingCube                                                            m_MarchingCube;
+    MarchingCubes                                                            m_MarchingCubes;
 
     ModelClass																m_Cube;
 

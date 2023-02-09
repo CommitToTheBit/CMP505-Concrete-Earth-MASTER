@@ -13,6 +13,9 @@
       <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\alpha_vs.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\colour3D_vs.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\glass_ps.cso</FullPath>
     </ContentFile>
     <ContentFile>
@@ -32,6 +35,9 @@
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\overlay_vs.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\colour3D_ps.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\refraction_ps.cso</FullPath>

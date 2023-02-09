@@ -5,7 +5,6 @@ struct InputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
-    float3 position3D : TEXCOORD2;
 };
 
 float4 main(InputType input) : SV_TARGET
