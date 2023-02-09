@@ -323,13 +323,10 @@ bool MarchingCube::Initialize(ID3D11Device* device, int cells)
 			}
 		}
 	}
-
-	m_isolevel = 0.5f;
 	m_isosurfaceIndices = new int[cells * cells * cells];
 	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[16 * cells * cells * cells];
 
-	float scalars[] = { -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
-	GenerateIsosurface(device, scalars, 0.0f);
+	GenerateIsosurface(device, 0.5f);
 
 	return true;
 }
@@ -344,6 +341,7 @@ bool MarchingCube::InitializeBuffers(ID3D11Device* device)
 	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
 
 	int cell;
+	int vertex;
 	int cellVertices[8] = { 0, 1, (m_cells+1)*(m_cells+1)+1, (m_cells+1)*(m_cells+1), (m_cells+1), (m_cells+1)+1, (m_cells+1)*(m_cells+1)+(m_cells+1)+1, (m_cells+1)*(m_cells+1)+(m_cells+1), };
 	int cellVertexA, cellVertexB;
 	DirectX::SimpleMath::Vector3 edgePositions[12];
@@ -356,11 +354,12 @@ bool MarchingCube::InitializeBuffers(ID3D11Device* device)
 			for (int i = 0; i < m_cells; i++)
 			{
 				cell = m_cells*m_cells*k+m_cells*j+i;
+				vertex = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
 
 				m_isosurfaceIndices[cell] = 0;
 				for (int n = 0; n < 8; n++)
-					if (m_field[cell+cellVertices[n]].scalar < m_isolevel)
-						m_isosurfaceIndices[cell] +=  pow(2, n);
+					if (m_field[vertex+cellVertices[n]].scalar < m_isolevel)
+						m_isosurfaceIndices[cell] += pow(2, n);
 
 				
 				for (int n = 0; n < 12; n++)
@@ -369,13 +368,13 @@ bool MarchingCube::InitializeBuffers(ID3D11Device* device)
 					{
 						if (n < 8)
 						{
-							cellVertexA = cell+cellVertices[4*(n/4)+n%4];
-							cellVertexB = cell+cellVertices[4*(n/4)+(n+1)%4];
+							cellVertexA = vertex+cellVertices[4*(n/4)+n%4];
+							cellVertexB = vertex+cellVertices[4*(n/4)+(n+1)%4];
 						}
 						else
 						{
-							cellVertexA = cell+cellVertices[n-8];
-							cellVertexB = cell+cellVertices[n-4];
+							cellVertexA = vertex+cellVertices[n-8];
+							cellVertexB = vertex+cellVertices[n-4];
 						}
 						edgePositions[n] = InterpolateIsosurface(m_field[cellVertexA], m_field[cellVertexB], m_isolevel);
 					}
@@ -533,7 +532,7 @@ void MarchingCube::ShutdownBuffers()
 	return;
 }
 
-bool MarchingCube::GenerateIsosurface(ID3D11Device* device, float scalars[8], float isolevel)
+bool MarchingCube::GenerateIsosurface(ID3D11Device* device, float isolevel)
 {
 	int vertex;
 	for (int k = 0; k <= m_cells; k++)
@@ -543,10 +542,14 @@ bool MarchingCube::GenerateIsosurface(ID3D11Device* device, float scalars[8], fl
 			for (int i = 0; i <= m_cells; i++)
 			{
 				vertex = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
-				m_field[vertex].scalar = m_field[vertex].position.Length();
+				//m_field[vertex].scalar = m_field[vertex].position.Length();
+				//m_field[vertex].scalar = m_field[vertex].position.x;// +m_field[vertex].position.y;// +m_field[vertex].position.z;
+				m_field[vertex].scalar = 2.0f*(m_field[vertex].position-DirectX::SimpleMath::Vector3(0.5f,0.5f,0.5f)).Length();
 			}
 		}
 	}
+
+	m_isolevel = isolevel;
 
 	bool result = InitializeBuffers(device);
 	if (!result)
@@ -559,6 +562,14 @@ bool MarchingCube::GenerateIsosurface(ID3D11Device* device, float scalars[8], fl
 
 DirectX::SimpleMath::Vector3 MarchingCube::InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel)
 {
+	/*if (b.position.x < a.position.x || (b.position.x == a.position.x && b.position.y < a.position.y) || (b.position.x == a.position.x && b.position.y == a.position.y && b.position.z < a.position.z))
+	{
+		FieldVertexType temp;
+		temp = a;
+		a = b;
+		b = temp;
+	}*/
+
 	if (std::abs(a.scalar-b.scalar) < 0.001f)
 		return a.position;
 

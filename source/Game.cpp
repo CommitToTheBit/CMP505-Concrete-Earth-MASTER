@@ -180,8 +180,7 @@ void Game::Update(DX::StepTimer const& timer)
 	m_Terrain.Update();		//terrain update.  doesnt do anything at the moment. 
 	
 	// DEBUG:
-	//float scalars[] = { -1.0f, 1.0f, 0.5f, 1.0f, 0.25f, -0.75f, 1.0f, -2.0f };
-	//m_MarchingCube.GenerateIsosurface(device, scalars, sin(m_time/XM_2PI));
+	m_MarchingCube.GenerateIsosurface(device, 1.0f+0.5f*sin(m_time/XM_2PI));
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
@@ -473,7 +472,7 @@ void Game::CreateDeviceDependentResources()
 	m_Terrain.Initialize(device, 128, 128);
 
 	// Marching Cube(s)
-	m_MarchingCube.Initialize(device, 128);
+	m_MarchingCube.Initialize(device, 16);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");

@@ -30,7 +30,7 @@ public:
 	void Shutdown();
 
 	// 
-	bool GenerateIsosurface(ID3D11Device*, float scalars[8], float isolevel);
+	bool GenerateIsosurface(ID3D11Device*, float isolevel);
 	DirectX::SimpleMath::Vector3 InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel);
 
 	bool Update();
