@@ -1635,25 +1635,25 @@ C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Marchin
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(295,56): warning C4838: conversion from 'int' to 'const unsigned int' requires a narrowing conversion
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(295,60): warning C4838: conversion from 'int' to 'const unsigned int' requires a narrowing conversion
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(295,64): warning C4838: conversion from 'int' to 'const unsigned int' requires a narrowing conversion
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(346,47): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(359,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(359,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(359,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(359,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(360,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(360,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(360,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(361,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(361,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(362,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(362,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(358,68): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(361,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(361,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(361,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(361,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(362,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(362,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(362,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(363,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(363,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(363,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(364,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(364,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(365,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(366,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(363,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(363,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(364,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(364,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(364,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(365,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(365,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(365,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(366,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(366,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(367,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(368,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCube.cpp(368,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe
