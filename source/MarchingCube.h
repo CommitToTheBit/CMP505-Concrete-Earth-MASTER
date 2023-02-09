@@ -19,7 +19,7 @@ public:
 	MarchingCube();
 	~MarchingCube();
 
-	bool Initialize(ID3D11Device*);
+	bool Initialize(ID3D11Device*, int cells);
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 
@@ -41,9 +41,12 @@ private:
 private:
 	//float scalars[8]; // Indexing: (0,0,0), (1,0,0), (1,0,1), (0,0,1), (0,1,0), (1,1,0), (1,1,1), (0,1,1); check against http://paulbourke.net/geometry/polygonise/!
 	//float isolevel;
+	int m_cells;
+	float* m_scalarField;
 
-	int isosurfaceIndex;
-	DirectX::SimpleMath::Vector3 isosurfacePositions[16];
+	float m_isolevel;
+	int* m_isosurfaceIndices;
+	DirectX::SimpleMath::Vector3* m_isosurfacePositions;
 
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	int m_vertexCount, m_indexCount;

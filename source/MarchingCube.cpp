@@ -297,7 +297,7 @@ const unsigned int MarchingCube::m_triTable[256][16] = {
 
 MarchingCube::MarchingCube()
 {
-	isosurfaceIndex = 0;
+
 }
 
 
@@ -305,9 +305,16 @@ MarchingCube::~MarchingCube()
 {
 }
 
-bool MarchingCube::Initialize(ID3D11Device* device)
+bool MarchingCube::Initialize(ID3D11Device* device, int cells)
 {
-	float scalars[] = { -1.0f, 1.0f, -1.0f, 1.0f, 20.0f, 1.0f, 1.0f, -20.0f };
+	m_cells = cells;
+	m_scalarField = new float[(cells + 1) * (cells + 1) * (cells + 1)];
+
+	m_isolevel = 0.0f;
+	m_isosurfaceIndices = new int[cells * cells * cells];
+	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[16 * cells * cells * cells];
+
+	float scalars[] = { -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 	GenerateIsosurface(device, scalars, 0.0f);
 
 	return true;
@@ -322,10 +329,56 @@ bool MarchingCube::InitializeBuffers(ID3D11Device* device)
 	HRESULT result;
 	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
 
-	// Calculate the number of indices in the terrain mesh.
-	m_indexCount = 3;
-	for (int i = 0; m_triTable[isosurfaceIndex][i] != -1; i += 3)
-		m_indexCount += 3;
+	m_indexCount = 0;
+
+	int cell;
+	float scalars[] = { -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
+	for (int k = 0; k < m_cells; k++)
+	{
+		for (int j = 0; j < m_cells; j++)
+		{
+			for (int i = 0; i < m_cells; i++)
+			{
+				cell = m_cells*m_cells*k+m_cells*j+i;
+
+				m_isosurfaceIndices[cell] = 0;
+				for (int n = 0; n < 8; n++)
+					m_isosurfaceIndices[cell] += (scalars[n] < m_isolevel) ? pow(2, n) : 0;
+
+				DirectX::SimpleMath::Vector3 vertexPositions[8] = {
+					DirectX::SimpleMath::Vector3(i+1.0f, j, k),
+					DirectX::SimpleMath::Vector3(i, j, k),
+					DirectX::SimpleMath::Vector3(i, j, k+1.0f),
+					DirectX::SimpleMath::Vector3(i+1.0f, j, k+1.0f),
+					DirectX::SimpleMath::Vector3(i+1.0f, j+1.0f, k),
+					DirectX::SimpleMath::Vector3(i, j+1.0f, k),
+					DirectX::SimpleMath::Vector3(i, j+1.0f, k+1.0f),
+					DirectX::SimpleMath::Vector3(i+1.0f, j+1.0f, k+1.0f),
+				};
+				DirectX::SimpleMath::Vector3 edgePositions[12];
+				for (int n = 0; n < 12; n++)
+				{
+					if (m_edgeTable[m_isosurfaceIndices[cell]] & (int)pow(2, n))
+					{
+						if (i < 8)
+							edgePositions[n] = InterpolateIsosurface(vertexPositions[4*(n/4)+n%4], vertexPositions[4*(n/4)+(n+1)%4], scalars[4*(n/4)+n%4], scalars[4*(n/4)+(n+1)%4], m_isolevel);
+						else
+							edgePositions[n] = InterpolateIsosurface(vertexPositions[n-8], vertexPositions[n-4], scalars[n-8], scalars[n-4], m_isolevel);
+					}
+				}
+
+				for (int n = 0; m_triTable[m_isosurfaceIndices[cell]][n] != -1; n++)
+				{
+					m_isosurfacePositions[16*cell+n] = edgePositions[m_triTable[m_isosurfaceIndices[cell]][n]];
+					m_indexCount++;
+				}
+
+				//m_isosurfacePositions[0] = vertexPositions[0];
+				m_isosurfacePositions[1] = vertexPositions[1];
+				//m_isosurfacePositions[2] = vertexPositions[2];
+			}
+		}
+	}
 
 	// Set the vertex count to the same as the index count.
 	m_vertexCount = m_indexCount;
@@ -345,11 +398,24 @@ bool MarchingCube::InitializeBuffers(ID3D11Device* device)
 	}
 
 	// Initialize the index to the vertex buffer.
-	for (int index = 0; index < m_indexCount; index++)
+	int index = 0;
+	for (int k = 0; k < m_cells; k++)
 	{
-		vertices[index].position = isosurfacePositions[index];
-		vertices[index].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f);
-		indices[index] = index;
+		for (int j = 0; j < m_cells; j++)
+		{
+			for (int i = 0; i < m_cells; i++)
+			{
+				cell = m_cells*m_cells*k+m_cells*j+i;
+
+				for (int n = 0; m_triTable[m_isosurfaceIndices[cell]][n] != -1; n++)
+				{
+					vertices[index].position = m_isosurfacePositions[16*cell+n];
+					vertices[index].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f);
+					indices[index] = index;
+					index++;
+				}
+			}
+		}
 	}
 
 	// Set up the description of the static vertex buffer.
@@ -458,38 +524,7 @@ void MarchingCube::ShutdownBuffers()
 
 bool MarchingCube::GenerateIsosurface(ID3D11Device* device, float scalars[8], float isolevel)
 {
-	bool result;
-
-	isosurfaceIndex = 0;
-	for (int i = 0; i < 8; i++)
-		isosurfaceIndex += (scalars[i] < isolevel) ? pow(2, i) : 0;
-
-	DirectX::SimpleMath::Vector3 vertexPositions[8] = {
-		DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f),
-		DirectX::SimpleMath::Vector3(-1.0f, 0.0f, 0.0f),
-		DirectX::SimpleMath::Vector3(-1.0f, 0.0f, 1.0f),
-		DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f),
-		DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f),
-		DirectX::SimpleMath::Vector3(-1.0f, 1.0f, 0.0f),
-		DirectX::SimpleMath::Vector3(-1.0f, 1.0f, 1.0f),
-		DirectX::SimpleMath::Vector3(0.0f, 1.0f, 1.0f),
-	};
-	DirectX::SimpleMath::Vector3 edgePositions[12];
-	for (int i = 0; i < 12; i++)
-	{
-		if (m_edgeTable[isosurfaceIndex] & (int)pow(2, i))
-		{
-			if (i < 8)
-				edgePositions[i] = InterpolateIsosurface(vertexPositions[4*(i/4)+i%4], vertexPositions[4*(i/4)+(i+1)%4], scalars[4*(i/4)+i%4], scalars[4*(i/4)+(i+1)%4], isolevel);
-			else
-				edgePositions[i] = InterpolateIsosurface(vertexPositions[i-8], vertexPositions[i-4], scalars[i-8], scalars[i-4], isolevel);
-		}
-	}
-
-	for (int i = 0; m_triTable[isosurfaceIndex][i] != -1; i++)
-		isosurfacePositions[i] = edgePositions[m_triTable[isosurfaceIndex][i]];
-
-	result = InitializeBuffers(device);
+	bool result = InitializeBuffers(device);
 	if (!result)
 	{
 		return false;
