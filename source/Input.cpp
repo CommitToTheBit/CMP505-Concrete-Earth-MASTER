@@ -25,6 +25,8 @@ void Input::Initialise(HWND window)
 	m_GameInput.up          = false;
 	m_GameInput.down		= false;
 
+	m_GameInput.generate	= false;
+
 	m_GameInput.rotation	= DirectX::SimpleMath::Vector2::Zero;
 }
 
@@ -46,6 +48,8 @@ void Input::Update()
 	m_GameInput.left		= kb.A;
 	m_GameInput.up			= kb.Space;
 	m_GameInput.down		= kb.LeftShift;
+
+	m_GameInput.generate	= kb.Tab;
 
 	m_GameInput.rotation	= DirectX::SimpleMath::Vector2(mouse.x, mouse.y);
 }

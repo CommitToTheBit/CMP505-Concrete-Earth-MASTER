@@ -197,9 +197,9 @@ float4 main(InputType input) : SV_TARGET
     else if (fr > R[1])
         return float4(0.1 * 1.0, 0.1 * 0.28, 0.1 * 0.17, 1.0);
     else if (fr > R[2])
-        return float4(0.4 * 1.0, 0.4 * 0.28, 0.4 * 0.17, 1.0);
-    else if (fr > R[3])
         return float4(0.3 * 1.0, 0.3 * 0.28, 0.3 * 0.17, 1.0);
+    else if (fr > R[5])
+        return float4(0.25 * 1.0, 0.25 * 0.28, 0.25 * 0.17, 1.0);
     else if (fr > R[4])
         return float4(0.2 * 1.0, 0.2 * 0.28, 0.2 * 0.17, 1.0);
     else if (fr > R[5])
