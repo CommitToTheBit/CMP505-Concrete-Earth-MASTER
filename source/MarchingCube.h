@@ -15,6 +15,12 @@ private:
 		DirectX::SimpleMath::Vector3 binormal;
 	};
 
+	struct FieldVertexType
+	{
+		DirectX::SimpleMath::Vector3 position;
+		float scalar;
+	};
+
 public:
 	MarchingCube();
 	~MarchingCube();
@@ -25,7 +31,7 @@ public:
 
 	// 
 	bool GenerateIsosurface(ID3D11Device*, float scalars[8], float isolevel);
-	DirectX::SimpleMath::Vector3 InterpolateIsosurface(DirectX::SimpleMath::Vector3 position1, DirectX::SimpleMath::Vector3 position2, float scalar1, float scalar2, float isolevel);
+	DirectX::SimpleMath::Vector3 InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel);
 
 	bool Update();
 
@@ -42,7 +48,7 @@ private:
 	//float scalars[8]; // Indexing: (0,0,0), (1,0,0), (1,0,1), (0,0,1), (0,1,0), (1,1,0), (1,1,1), (0,1,1); check against http://paulbourke.net/geometry/polygonise/!
 	//float isolevel;
 	int m_cells;
-	float* m_scalarField;
+	FieldVertexType* m_field;
 
 	float m_isolevel;
 	int* m_isosurfaceIndices;
