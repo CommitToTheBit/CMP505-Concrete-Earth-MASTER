@@ -1,0 +1,84 @@
+% LaTeX Template for short student reports.
+% Citations should be in bibtex format and go in references.bib
+\documentclass[a4paper, 11pt]{article}
+\usepackage[top=3cm, bottom=3cm, left = 2cm, right = 2cm]{geometry} 
+\geometry{a4paper} 
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{graphicx} 
+\usepackage{amsmath,amssymb}  
+\usepackage{bm}  
+\usepackage[pdftex,bookmarks,colorlinks,breaklinks]{hyperref}  
+\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black} % black links, for printed output
+\usepackage{memhfixc} 
+\usepackage{pdfsync}  
+\usepackage{fancyhdr}
+\usepackage{fancyvrb}
+\usepackage{natbib}
+\usepackage{url}
+%\pagestyle{fancy}
+\usepackage{tabto}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{nameref}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\title{Untitled: A DirectX Game}
+\author{Sam Drysdale}
+\date{May 16, 2023}
+
+\begin{document}
+\graphicspath{{./Images/}}
+\maketitle
+\tableofcontents
+\begin{flushleft}
+
+\section{Summary}
+
+
+\section{User Controls}
+
+
+\section{Features}
+
+\subsection{Procedural Terrain Generation}
+
+\subsubsection{Marching Cubes}
+
+[Starting point: the problem of concavity!]
+
+Definitive... Paul Bourke's \textit{Polygonising a scalar field} \citeyearpar{bourkeMarchingCubes}...
+
+\subsubsection{Field Design}
+
+\subsection{Procedural Narrative Generation}
+
+[Overview of research in the field...]
+
+\subsubsection{Text Generation}
+
+\subsubsection{Picking}
+
+\subsection{Psychoacoustics}
+
+[Relevance to themes... geiger counter, \textit{10,000-Year Earworm}, etc...]
+
+\subsection{Post-Processing}
+
+\section{Code Organisation}
+
+\section{Evaluation}\label{Evaluation}
+
+\subsection{Features}
+
+\subsection{Code Organisation}
+
+\section{Conclusions}
+
+\bibliographystyle{agsm}
+\bibliography{../../Bibliography/Bibliography}
+\addcontentsline{toc}{section}{References}
+\end{flushleft}
+\end{document}
