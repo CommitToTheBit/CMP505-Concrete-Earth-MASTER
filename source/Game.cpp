@@ -473,7 +473,7 @@ void Game::CreateDeviceDependentResources()
 	m_Terrain.Initialize(device, 128, 128);
 
 	// Marching Cube(s)
-	m_MarchingCube.Initialize(device, 1);
+	m_MarchingCube.Initialize(device, 2);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");
