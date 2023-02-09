@@ -472,8 +472,8 @@ void Game::CreateDeviceDependentResources()
 	m_Terrain.Initialize(device, 128, 128);
 
 	// Marching Cube(s)
-	m_MarchingCubes.Initialize(device, 64);
-	m_MarchingCubes.GenerateSinusoidalSphericalField(Vector3(0.5f, 0.5f, 0.5f));
+	m_MarchingCubes.Initialize(device, 16);
+	m_MarchingCubes.GenerateToroidalField(Vector3(0.5f, 0.5f, 0.5f));
 	m_MarchingCubes.GenerateIsosurface(device, 1.0f);
 
 	// Models

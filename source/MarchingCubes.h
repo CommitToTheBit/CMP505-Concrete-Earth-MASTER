@@ -32,6 +32,7 @@ public:
 	//
 	void GenerateSphericalField(DirectX::SimpleMath::Vector3 origin);
 	void GenerateSinusoidalSphericalField(DirectX::SimpleMath::Vector3 origin);
+	void GenerateToroidalField(DirectX::SimpleMath::Vector3 origin);
 
 	// 
 	bool GenerateIsosurface(ID3D11Device*, float isolevel);

@@ -554,6 +554,38 @@ void MarchingCubes::GenerateSinusoidalSphericalField(DirectX::SimpleMath::Vector
 	}
 }
 
+void MarchingCubes::GenerateToroidalField(DirectX::SimpleMath::Vector3 origin)
+{
+	const float R = 0.75f;
+
+	int fieldCoordinate;
+
+	DirectX::SimpleMath::Vector3 position;
+	DirectX::SimpleMath::Vector3 ringPosition;
+	float r, theta, phi;
+
+	for (int k = 0; k <= m_cells; k++)
+	{
+		for (int j = 0; j <= m_cells; j++)
+		{
+			for (int i = 0; i <= m_cells; i++)
+			{
+				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
+
+				position = 2.0f*(m_field[fieldCoordinate].position-origin);
+				r = position.Length();
+				theta = atan2(position.y, position.x); // NB: Not 'true' theta...
+
+				// NB: This orientation can - should? - be generalised...
+				ringPosition = DirectX::SimpleMath::Vector3(R*cos(theta), R*sin(theta), 0.0f);
+
+				m_field[fieldCoordinate].scalar = (position-ringPosition).Length();
+				m_field[fieldCoordinate].scalar /= 1.0f-R;
+			}
+		}
+	}
+}
+
 bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 {
 	const int fieldVertices[8] = { 0, 1, (m_cells+1)*(m_cells+1)+1, (m_cells+1)*(m_cells+1), (m_cells+1), (m_cells+1)+1, (m_cells+1)*(m_cells+1)+(m_cells+1)+1, (m_cells+1)*(m_cells+1)+(m_cells+1), };
