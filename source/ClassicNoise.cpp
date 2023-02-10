@@ -114,6 +114,31 @@ float ClassicNoise::Noise(float x, float y, float z)
 	return nxyz;
 }
 
+float ClassicNoise::FBMNoise(float x, float y, float z)
+{
+	// CC: The Book of Shaders
+
+	// Properties
+	const int octaves = 8;
+	float lacunarity = 2.0;
+	float gain = 0.5;
+	
+	// Initial values
+	float amplitude = 0.5;
+	float frequency = 1.;
+	
+	// Loop of octaves
+	float noise = 0.0f;
+	for (int i = 0; i < octaves; i++)
+	{
+		noise += amplitude * Noise(frequency*x, frequency*y, frequency*z);
+		frequency *= lacunarity;
+		amplitude *= gain;
+	}
+
+	return noise;
+}
+
 // This method is a *lot* faster than using (int)Math.floor(x)
 int ClassicNoise::FastFloor(float x)
 {

@@ -530,7 +530,7 @@ void MarchingCubes::GenerateHorizontalField(DirectX::SimpleMath::Vector3 origin)
 				position = 2.0f*(m_field[fieldCoordinate].position-origin);
 
 				m_field[fieldCoordinate].scalar = position.y;
-				m_field[fieldCoordinate].scalar += 2.0f*perlin.Noise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z); // FIXME: Look at the print-out; what is the overall scale here??
+				m_field[fieldCoordinate].scalar += perlin.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z);
 			}
 		}
 	}
@@ -589,7 +589,7 @@ void MarchingCubes::GenerateToroidalField(DirectX::SimpleMath::Vector3 origin)
 {
 	ClassicNoise perlin = ClassicNoise();
 
-	const float R = 0.75f;
+	const float R = 0.5f;
 
 	int fieldCoordinate;
 
@@ -613,6 +613,7 @@ void MarchingCubes::GenerateToroidalField(DirectX::SimpleMath::Vector3 origin)
 				ringPosition = DirectX::SimpleMath::Vector3(R*cos(theta), R*sin(theta), 0.0f);
 
 				m_field[fieldCoordinate].scalar = (position-ringPosition).Length();
+				m_field[fieldCoordinate].scalar += 0.2f*perlin.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z);
 				m_field[fieldCoordinate].scalar /= 1.0f-R;
 			}
 		}

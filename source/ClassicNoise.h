@@ -12,6 +12,7 @@ public:
 	~ClassicNoise();
 
 	float Noise(float x, float y, float z);
+	float FBMNoise(float x, float y, float z);
 
 private:
 	// Mathematical functions
