@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ClassicNoise.h"
+
 using namespace DirectX;
 
 class Terrain

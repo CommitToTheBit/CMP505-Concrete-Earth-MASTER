@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ClassicNoise.h"
+
 using namespace DirectX;
 
 class MarchingCubes
@@ -30,6 +32,7 @@ public:
 	void Shutdown();
 
 	//
+	void GenerateHorizontalField(float height);
 	void GenerateSphericalField(DirectX::SimpleMath::Vector3 origin);
 	void GenerateSinusoidalSphericalField(DirectX::SimpleMath::Vector3 origin);
 	void GenerateToroidalField(DirectX::SimpleMath::Vector3 origin);

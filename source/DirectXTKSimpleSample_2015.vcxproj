@@ -171,6 +171,7 @@
   <ItemGroup>
     <ClInclude Include="AlphaShader.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ClassicNoise.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="EnvironmentCamera.h" />
     <ClInclude Include="Game.h" />
@@ -194,6 +195,7 @@
   <ItemGroup>
     <ClCompile Include="AlphaShader.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ClassicNoise.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="EnvironmentCamera.cpp" />
     <ClCompile Include="Game.cpp" />

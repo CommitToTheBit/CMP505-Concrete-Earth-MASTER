@@ -21,6 +21,8 @@ c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\bin\des
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\bin\desktop_2015\x64\debug\deviceresources.obj
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\bin\desktop_2015\x64\debug\camera.obj
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\bin\desktop_2015\x64\debug\alphashader.obj
+c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\bin\desktop_2015\x64\debug\marchingcubes.obj
+c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\bin\desktop_2015\x64\debug\classicnoise.obj
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\bin\desktop_2015\x64\debug\directxtksimplesample_2015.lib
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\bin\desktop_2015\x64\debug\directxtksimplesample_2015.exp
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\alpha_ps.cso
@@ -44,7 +46,6 @@ c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\spheric
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\tiling_irregular_hex.cso
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\light_ps.cso
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\light_vs.cso
-c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\colour_ps.cso
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\colour_vs.cso
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\neutral.cso
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\neutral_nm.cso
@@ -54,6 +55,9 @@ c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\tiling_
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\indexing_regular_quad.cso
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\tiling_regular_hex.cso
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\tiling_regular_quad.cso
+c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\colour3d_vs.cso
+c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\colour3d_ps.cso
+c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\colour_ps.cso
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\bin\desktop_2015\x64\debug\directxtksimplesample_2015.exe
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\bin\desktop_2015\x64\debug\directxtksimplesample_2015.ilk
 c:\users\samdr\documents\github\cmp505-untitled-coursework-master\source\bin\desktop_2015\x64\debug\directxtksimplesample_2015.pdb
