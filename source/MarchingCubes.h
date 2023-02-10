@@ -32,7 +32,7 @@ public:
 	void Shutdown();
 
 	//
-	void GenerateHorizontalField(float height);
+	void GenerateHorizontalField(DirectX::SimpleMath::Vector3 origin);
 	void GenerateSphericalField(DirectX::SimpleMath::Vector3 origin);
 	void GenerateSinusoidalSphericalField(DirectX::SimpleMath::Vector3 origin);
 	void GenerateToroidalField(DirectX::SimpleMath::Vector3 origin);

@@ -1,4 +1,5 @@
-// CC: Simplex Noise Demystified...
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* This enclosed section has been adapted from: Stefan Gustavson (2005) Demystifying Simplex Noise. Available at https://weber.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf (Accessed: 10 February 2023) */
 
 #pragma once
 
@@ -20,8 +21,8 @@ private:
 	float Fade(float t);
 
 private:
-	int m_grad3[12][3];
-	int m_p[256];
-	int m_perm[512];
+	static const int m_grad3[12][3];
+	static const int m_perm[512];
 };
 
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
