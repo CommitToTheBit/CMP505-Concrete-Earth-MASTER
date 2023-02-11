@@ -738,8 +738,8 @@ void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexTyp
 	determinant = textureVector1.x * textureVector2.y - textureVector1.y * textureVector2.x;
 
 	// Calculate the cross products and multiply by the coefficient to get the tangent and binormal.
-	tangent = (textureVector2.y*vector1 - textureVector1.y*vector2) / determinant;
-	binormal = (textureVector2.x*vector1 - textureVector1.x*vector2) / determinant;
+	tangent = (vector2.y*vector1 - vector1.y*vector2);// determinant;
+	binormal = (vector2.z*vector1 - vector1.z*vector2);// determinant;
 
 	// Normalise tangent and binormal
 	tangent.Normalize();
@@ -752,10 +752,7 @@ void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexTyp
 		binormal = DirectX::SimpleMath::Vector3(0.0, 0.0, 1.0);
 
 	// Calculate normal
-	if (vertex1.position.z > 0.5f || vertex2.position.z > 0.5f || vertex3.position.z > 0.5f)
-		normal = binormal.Cross(tangent); // NB: Note the orientation of the vector space!
-	else
-		normal = -binormal.Cross(tangent);
+	normal = binormal.Cross(tangent); // NB: Note the orientation of the vector space!
 
 
 	return;

@@ -1,13 +1,6 @@
-﻿  Game.cpp
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\RefractionShader.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(120,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(147,47): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(158,25): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(161,47): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  MarchingCubes.cpp
+﻿  MarchingCubes.cpp
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(327,100): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(612,18): warning C4101: 'phi': unreferenced local variable
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(663,49): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(724,8): warning C4101: 'length': unreferenced local variable
-  Generating Code...
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe
