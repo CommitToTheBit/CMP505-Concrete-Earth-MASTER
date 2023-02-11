@@ -12,7 +12,7 @@ public:
 	~ClassicNoise();
 
 	float Noise(float x, float y, float z);
-	float FBMNoise(float x, float y, float z);
+	float FBMNoise(float x, float y, float z, int octaves = 1, float amplitude = 1.0f, float frequency = 1.0f, float damping = 0.5f);
 
 private:
 	// Mathematical functions
@@ -22,8 +22,10 @@ private:
 	float Fade(float t);
 
 private:
-	static const int m_grad3[12][3];
 	static const int m_perm[512];
+
+	// NB: m_gradN has N*2^N entries...
+	static const int m_grad3[12][3];
 };
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */

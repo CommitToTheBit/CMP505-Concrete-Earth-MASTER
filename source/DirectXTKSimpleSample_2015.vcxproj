@@ -187,6 +187,7 @@
     <ClInclude Include="RefractionShader.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="SkyboxShader.h" />
     <ClInclude Include="SpecimenShader.h" />
     <ClInclude Include="StepTimer.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="RefractionShader.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="SkyboxShader.cpp" />
     <ClCompile Include="SpecimenShader.cpp" />
     <ClCompile Include="Terrain.cpp" />

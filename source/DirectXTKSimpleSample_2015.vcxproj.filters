@@ -83,6 +83,7 @@
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="MarchingCubes.h" />
     <ClInclude Include="ClassicNoise.h" />
+    <ClInclude Include="SimplexNoise.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="MarchingCubes.cpp" />
     <ClCompile Include="ClassicNoise.cpp" />
+    <ClCompile Include="SimplexNoise.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

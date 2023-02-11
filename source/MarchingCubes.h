@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ClassicNoise.h"
+#include "SimplexNoise.h"
 
 using namespace DirectX;
 

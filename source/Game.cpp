@@ -277,12 +277,24 @@ void Game::Render()
 
 	// Draw Marching Cube
 	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
 	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullCounterClockwise());
 	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_MarchingCubes.Render(context);
+
+	context->RSSetState(m_states->CullClockwise());
+
+	// Tile Marching Cube
+	m_FieldRendering.EnableShader(context);
+	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-3.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_MarchingCubes.Render(context);
+
+	context->RSSetState(m_states->CullCounterClockwise());
+	m_FieldRendering.EnableShader(context);
+	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-3.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
 	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullClockwise());
@@ -473,9 +485,9 @@ void Game::CreateDeviceDependentResources()
 
 	// Marching Cube(s)
 	m_MarchingCubes.Initialize(device, 128);
-	//m_MarchingCubes.GenerateHorizontalField(Vector3(0.5f, 0.5f, 0.5f));
-	m_MarchingCubes.GenerateToroidalField(Vector3(0.5f, 0.5f, 0.5f));
-	m_MarchingCubes.GenerateIsosurface(device, 0.5f);
+	m_MarchingCubes.GenerateHorizontalField(Vector3(0.0f, 0.01f, 0.0f));
+	//m_MarchingCubes.GenerateToroidalField(Vector3(0.5f, 0.5f, 0.5f));
+	m_MarchingCubes.GenerateIsosurface(device, 0.0f);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");
