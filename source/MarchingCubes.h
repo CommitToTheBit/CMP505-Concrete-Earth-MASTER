@@ -59,6 +59,7 @@ private:
 	FieldVertexType* m_field;
 
 	int* m_isosurfaceIndices;
+	int* m_isosurfaceVertices;
 	DirectX::SimpleMath::Vector3* m_isosurfacePositions;
 	float m_isolevel;
 
