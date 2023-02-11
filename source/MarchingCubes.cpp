@@ -396,12 +396,25 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 			{
 				cellCoordinate = m_cells*m_cells*k+m_cells*j+i;
 
-				for (int n = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][n] != -1; n++)
+				for (int n = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][n] != -1; n += 3)
 				{
-					vertices[index].position = m_isosurfacePositions[15*cellCoordinate+n];
-					vertices[index].texture = DirectX::SimpleMath::Vector2(vertices[index].position.x, vertices[index].position.y);
-					indices[index] = index;
-					index++;
+					for (int m = 0; m < 3; m++)
+					{
+						vertices[index].position = m_isosurfacePositions[15*cellCoordinate+n+m];
+						vertices[index].texture = DirectX::SimpleMath::Vector2(vertices[index].position.x, vertices[index].position.y);
+						indices[index] = index;
+						index++;
+					}
+					index -= 3;
+
+					CalculateNormalTangentBinormal(vertices[index], vertices[index+1], vertices[index+2], normal, tangent, binormal);
+					for (int m = 0; m < 3; m++)
+					{
+						vertices[index].normal = normal;
+						vertices[index].tangent = tangent;
+						vertices[index].binormal = binormal;
+						index++;
+					}
 				}
 			}
 		}
@@ -693,6 +706,52 @@ DirectX::SimpleMath::Vector3 MarchingCubes::InterpolateIsosurface(FieldVertexTyp
 
 	float t = std::min(std::max((isolevel-a.scalar)/(b.scalar-a.scalar), 0.0f), 1.0f);
 	return (1.0f-t)*a.position+t*b.position;
+}
+
+void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexType vertex2, VertexType vertex3, DirectX::SimpleMath::Vector3& normal, DirectX::SimpleMath::Vector3& tangent, DirectX::SimpleMath::Vector3& binormal)
+{
+	/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
+	/* This enclosed section has been adapted from: RasterTek (no date) Tutorial 20: Bump Mapping. Available at https://www.rastertek.com/dx11tut20.html (Accessed: 28 December 2022) */
+
+	DirectX::SimpleMath::Vector3 vector1, vector2;
+	DirectX::SimpleMath::Vector2 textureVector1, textureVector2;
+	float determinant;
+	float length;
+
+	// Calculate the two vectors for this face.
+	vector1 = (DirectX::SimpleMath::Vector3)vertex2.position - vertex1.position;
+	vector2 = (DirectX::SimpleMath::Vector3)vertex3.position - vertex1.position;
+
+	// Calculate the tu and tv texture space vectors.
+	textureVector1.x = vertex2.texture.x - vertex1.texture.x;
+	textureVector1.y = vertex2.texture.y - vertex1.texture.y;
+
+	textureVector2.x = vertex3.texture.x - vertex1.texture.x;
+	textureVector2.y = vertex3.texture.y - vertex1.texture.y;
+
+	// Calculate the denominator of the tangent/binormal equation.
+	determinant = textureVector1.x * textureVector2.y - textureVector1.y * textureVector2.x;
+
+	// Calculate the cross products and multiply by the coefficient to get the tangent and binormal.
+	tangent = (textureVector2.y*vector1 - textureVector1.y*vector2) / determinant;
+	binormal = (textureVector2.x*vector1 - textureVector1.x*vector2) / determinant;
+
+	// Normalise tangent and binormal
+	tangent.Normalize();
+	binormal.Normalize();
+
+	if (tangent.Length() == 0)
+		tangent = DirectX::SimpleMath::Vector3(1.0, 0.0, 0.0);
+
+	if (binormal.Length() == 0)
+		binormal = DirectX::SimpleMath::Vector3(0.0, 0.0, 1.0);
+
+	// Calculate normal
+	normal = binormal.Cross(tangent); // NB: Note the orientation of the vector space!
+
+	return;
+
+	/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 }
 
 bool MarchingCubes::Update()
