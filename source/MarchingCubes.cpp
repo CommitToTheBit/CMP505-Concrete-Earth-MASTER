@@ -531,7 +531,7 @@ void MarchingCubes::GenerateHorizontalField(DirectX::SimpleMath::Vector3 origin)
 
 				m_field[fieldCoordinate].scalar = position.y;
 				//m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, 0.0f, m_field[fieldCoordinate].position.z, 6, 0.5f);
-				m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, 0.0f, m_field[fieldCoordinate].position.z, 6, 1.0f), 0.0f);
+				m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.z, 6, 0.5f), 0.0f);
 			}
 		}
 	}

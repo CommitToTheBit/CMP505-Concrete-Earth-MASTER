@@ -51,10 +51,16 @@ const int SimplexNoise::m_simplex[64][4] = {
 	{ 2, 1, 0, 3 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 3, 1, 0, 2 }, { 0, 0, 0, 0 }, { 3, 2, 0, 1 }, { 3, 2, 1, 0 }, 
 };
 
-const int SimplexNoise::m_grad3[12][3] = {
-	{ 1, 1, 0 }, { -1, 1, 0 }, { 1, -1, 0 }, { -1, -1, 0 },
-	{ 1, 0, 1 }, { -1, 0, 1 }, { 1, 0, -1 }, { -1, 0, -1 },
-	{ 0, 1, 1 }, { 0, -1, 1 }, { 0, 1, -1 }, { 0, -1, -1 },
+const int SimplexNoise::m_grad2[4][2] = {
+	{ 0, 1 }, { 0, -1 },
+	{ 1, 0 }, { -1, 0 },
+};
+
+
+const int SimplexNoise::m_grad3[12][3] = { // CHECKME: Does order matter?
+	{ 0, 1, 1 }, { 0, 1, -1 }, { 0, -1, 1 }, { 0, -1, -1 },
+	{ 1, 0, 1 }, { 1, 0, -1 }, { -1, 0, 1 }, { -1, 0, -1 },
+	{ 1, 1, 0 }, { 1, -1, 0 }, { -1, 1, 0 }, { -1, -1, 0 },
 };
 
 const int SimplexNoise::m_grad4[32][4] = { 
@@ -72,6 +78,102 @@ SimplexNoise::SimplexNoise()
 SimplexNoise::~SimplexNoise()
 {
 
+}
+
+// 2D simplex noise
+float SimplexNoise::Noise(float x, float y)
+{
+	// Skew the input space to determine which simplex cell we're in
+	float F2 = 0.5*(pow(3.0f, 0.5f)-1.0f);
+	float s = (x+y)*F2;
+
+	// Find simplex cell containing point
+	int i = FastFloor(x+s);
+	int j = FastFloor(y+s);
+
+	// Unskew the input space to determine which (x,y) space cell we're in
+	float G2 = (3.0f-pow(3.0f, 0.5f))/6.0f;
+	double t = (i+j)*G2;
+
+	// Find (x,y) space cell containing point
+	float X0 = i-t; // Unskew the cell origin back to (x,y) space
+	float Y0 = j-t;
+
+	// Get relative xy coordinates of point within that cell
+	float x0 = x-X0; // The x,y distances from the cell origin
+	float y0 = y-Y0;
+
+	// For the 2D case, the simplex shape is an equilateral triangle.
+	// Determine which simplex we are in.
+	int i1, j1; // Offsets for second corner of simplex in (i,j) coords
+	if (x0 >= y0) // XY order: (0,0)->(1,0)->(1,1)
+	{
+		i1 = 1; j1 = 0;
+	}
+	else // YX order : (0,0)->(0,1)->(1,1)
+	{
+		i1 = 0; j1 = 1;
+	}
+
+	// A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and
+	// a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where c = (3-sqrt(3))/6.
+
+	// Offsetting the second corner in (x,y,z) coords...
+	double x1 = x0 - i1 + G2;
+	double y1 = y0 - j1 + G2;
+
+	// Offsetting the last corner in (x,y,z) coords...
+	double x2 = x0 - 1.0 + 2.0 * G2;
+	double y2 = y0 - 1.0 + 2.0 * G2;
+
+	// Work out the hashed gradient indices of the three simplex corners
+	int ii = i & 255;
+	int jj = j & 255;
+
+	// Calculate the set of three hashed gradient indices from the three simplex corners
+	int gi0 = m_perm[ii+m_perm[jj]] % 4;
+	int gi1 = m_perm[ii+i1+m_perm[jj+j1]] % 4;
+	int gi2 = m_perm[ii+1+m_perm[jj+1]] % 4;
+
+	// Calculate noise contributions from each of the three corners
+	float n0, n1, n2, n3;
+
+	float t0 = 0.5f - x0*x0 - y0*y0; // NB: 0.5f ensures continuity at simplex boundaries...
+	if (t0 < 0.0f)
+	{
+		n0 = 0.0;
+	}
+	else
+	{
+		t0 *= t0;
+		n0 = t0 * t0 * Dot((int*)m_grad2[gi0], x0, y0);
+	}
+
+	float t1 = 0.5f - x1*x1 - y1*y1; // NB: 0.5f ensures continuity at simplex boundaries...
+	if (t1 < 0.0f)
+	{
+		n1 = 0.0f;
+	}
+	else
+	{
+		t1 *= t1;
+		n1 = t1 * t1 * Dot((int*)m_grad2[gi1], x1, y1);
+	}
+
+	float t2 = 0.5f - x2*x2 - y2*y2; // NB: 0.5f ensures continuity at simplex boundaries...
+	if (t2 < 0.0f)
+	{
+		n2 = 0.0f;
+	}
+	else
+	{
+		t2 *= t2;
+		n2 = t2 * t2 * Dot((int*)m_grad2[gi2], x2, y2);
+	}
+
+	// Add contributions from each corner to get the final noise value.
+	// The result is scaled to return values in the interval [-1,1].
+	return 70.0 * (n0 + n1 + n2);
 }
 
 // 3D simplex noise
@@ -106,17 +208,17 @@ float SimplexNoise::Noise(float x, float y, float z)
 	int i2, j2, k2; // Offsets for third corner of simplex in (i,j,k) coords
 	if (x0 >= y0)
 	{
-		if (y0 >= z0) // X Y Z order
+		if (y0 >= z0) // XYZ order
 		{
 			i1 = 1; j1 = 0; k1 = 0; 
 			i2 = 1; j2 = 1; k2 = 0;
 		}
-		else if (x0 >= z0) // X Z Y order
+		else if (x0 >= z0) // XZY order
 		{ 
 			i1 = 1; j1 = 0; k1 = 0; 
 			i2 = 1; j2 = 0; k2 = 1; 
 		} 
-		else // Z X Y order
+		else // ZXY order
 		{ 
 			i1 = 0; j1 = 0; k1 = 1; 
 			i2 = 1; j2 = 0; k2 = 1; 
@@ -124,17 +226,17 @@ float SimplexNoise::Noise(float x, float y, float z)
 	}
 	else 
 	{
-		if (y0<z0) // Z Y X order
+		if (y0<z0) // ZYX order
 		{ 
 			i1 = 0; j1 = 0; k1 = 1; 
 			i2 = 0; j2 = 1; k2 = 1; 
 		} 
-		else if (x0<z0) // Y Z X order
+		else if (x0<z0) // YZX order
 		{ 
 			i1 = 0; j1 = 1; k1 = 0; 
 			i2 = 0; j2 = 1; k2 = 1; 
 		}
-		else // Y X Z order
+		else // YXZ order
 		{ 
 			i1 = 0; j1 = 1; k1 = 0; 
 			i2 = 1; j2 = 1; k2 = 0; 
@@ -226,6 +328,20 @@ float SimplexNoise::Noise(float x, float y, float z)
 /* ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* This enclosed section has been adapted from: Patricio Gonzalez Vivo and Jen Lowe (n.d.) The Book of Shaders: Fractal Brownian Motion. Available at https://thebookofshaders.com/13/ (Accessed: 10 February 2023) */
 
+float SimplexNoise::FBMNoise(float x, float y, int octaves, float amplitude, float frequency, float damping)
+{
+	float noise = 0.0f;
+	for (int i = 0; i < octaves; i++)
+	{
+		noise += amplitude * Noise(frequency*x, frequency*y);
+
+		amplitude *= damping;
+		frequency /= damping;
+	}
+
+	return noise;
+}
+
 float SimplexNoise::FBMNoise(float x, float y, float z, int octaves, float amplitude, float frequency, float damping)
 {
 	float noise = 0.0f;
@@ -267,61 +383,7 @@ float SimplexNoise::Dot(int g[4], float x, float y, float z, float w)
 /*public class SimplexNoise { // Simplex noise in 2D, 3D and 4D
 
 
-	// 2D simplex noise
-	public static double noise(double xin, double yin) {
-		double n0, n1, n2; // Noise contributions from the three corners
-		// Skew the input space to determine which simplex cell we're in
-		final double F2 = 0.5*(Math.sqrt(3.0)-1.0);
-		double s = (xin+yin)*F2; // Hairy factor for 2D
-		int i = fastfloor(xin+s);
-		int j = fastfloor(yin+s);
-		final double G2 = (3.0-Math.sqrt(3.0))/6.0;
-		double t = (i+j)*G2;
-		double X0 = i-t; // Unskew the cell origin back to (x,y) space
-		double Y0 = j-t;
-		double x0 = xin-X0; // The x,y distances from the cell origin
-		double y0 = yin-Y0;
-		// For the 2D case, the simplex shape is an equilateral triangle.
-		// Determine which simplex we are in.
-		int i1, j1; // Offsets for second (middle) corner of simplex in (i,j) coords
-		if (x0>y0) { i1 = 1; j1 = 0; } // lower triangle, XY order: (0,0)->(1,0)->(1,1)
-		else { i1 = 0; j1 = 1; } // upper triangle, YX order: (0,0)->(0,1)->(1,1)
-		// A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and
-		// a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where
-		// c = (3-sqrt(3))/6
-		double x1 = x0 - i1 + G2; // Offsets for middle corner in (x,y) unskewed coords
-		double y1 = y0 - j1 + G2;
-		double x2 = x0 - 1.0 + 2.0 * G2; // Offsets for last corner in (x,y) unskewed coords
-		double y2 = y0 - 1.0 + 2.0 * G2;
-		// Work out the hashed gradient indices of the three simplex corners
-		int ii = i & 255;
-		int jj = j & 255;
-		int gi0 = perm[ii+perm[jj]] % 12;
-		int gi1 = perm[ii+i1+perm[jj+j1]] % 12;
-		int gi2 = perm[ii+1+perm[jj+1]] % 12;
-		// Calculate the contribution from the three corners
-		double t0 = 0.5 - x0*x0-y0*y0;
-		if (t0<0) n0 = 0.0;
-		else {
-			t0 *= t0;
-			n0 = t0 * t0 * dot(grad3[gi0], x0, y0); // (x,y) of grad3 used for 2D gradient
-		}
-		double t1 = 0.5 - x1*x1-y1*y1;
-		if (t1<0) n1 = 0.0;
-		else {
-			t1 *= t1;
-			n1 = t1 * t1 * dot(grad3[gi1], x1, y1);
-		}
-		double t2 = 0.5 - x2*x2-y2*y2;
-		if (t2<0) n2 = 0.0;
-		else {
-			t2 *= t2;
-			n2 = t2 * t2 * dot(grad3[gi2], x2, y2);
-		}
-		// Add contributions from each corner to get the final noise value.
-		// The result is scaled to return values in the interval [-1,1].
-		return 70.0 * (n0 + n1 + n2);
-	}
+	
 
 	// 4D simplex noise
 	double noise(double x, double y, double z, double w) {

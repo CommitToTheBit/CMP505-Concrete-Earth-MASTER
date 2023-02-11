@@ -11,7 +11,10 @@ public:
 	SimplexNoise();
 	~SimplexNoise();
 
+	float Noise(float x, float y);
 	float Noise(float x, float y, float z);
+
+	float FBMNoise(float x, float y, int octaves = 1, float amplitude = 1.0f, float frequency = 1.0f, float damping = 0.5f);
 	float FBMNoise(float x, float y, float z, int octaves = 1, float amplitude = 1.0f, float frequency = 1.0f, float damping = 0.5f);
 
 private:
@@ -27,6 +30,7 @@ private:
 	static const int m_simplex[64][4];
 
 	// NB: m_gradN has N*2^N entries...
+	static const int m_grad2[4][2];
 	static const int m_grad3[12][3];
 	static const int m_grad4[32][4];
 };
