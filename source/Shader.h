@@ -19,6 +19,7 @@ public:
 		DirectX::SimpleMath::Matrix* world,
 		DirectX::SimpleMath::Matrix* view,
 		DirectX::SimpleMath::Matrix* projection,
+		bool culling,
 		float time);
 
 	void EnableShader(ID3D11DeviceContext * context);
@@ -30,7 +31,7 @@ protected:
 		DirectX::XMMATRIX world;
 		DirectX::XMMATRIX view;
 		DirectX::XMMATRIX projection;
-		float time;
+		bool culling;
 		DirectX::SimpleMath::Vector3 padding;
 	};
 
@@ -39,29 +40,6 @@ protected:
 		float time;
 		DirectX::SimpleMath::Vector3 padding;
 	};
-
-	/*//buffer for information about the game state
-	struct GameBufferType
-	{
-		float time;
-		DirectX::SimpleMath::Vector3 padding;
-	};
-
-	//buffer for information about a 'specialised' shader's parameters
-	struct MaterialBufferType
-	{
-		float refractiveIndex;
-		float refractivity;
-		float reflectivity;
-		float padding;
-	};
-
-	//buffer to pass in camera world Position
-	struct CameraBufferType
-	{
-		DirectX::SimpleMath::Vector3 cameraPosition;
-		float padding;
-	};*/
 
 	//Shaders
 	Microsoft::WRL::ComPtr<ID3D11VertexShader>								m_vertexShader;

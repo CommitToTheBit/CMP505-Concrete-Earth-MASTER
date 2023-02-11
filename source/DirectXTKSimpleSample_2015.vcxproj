@@ -171,6 +171,7 @@
   <ItemGroup>
     <ClInclude Include="AlphaShader.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ClassicNoise.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="EnvironmentCamera.h" />
     <ClInclude Include="Game.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="RefractionShader.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="SkyboxShader.h" />
     <ClInclude Include="SpecimenShader.h" />
     <ClInclude Include="StepTimer.h" />
@@ -194,6 +196,7 @@
   <ItemGroup>
     <ClCompile Include="AlphaShader.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ClassicNoise.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="EnvironmentCamera.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -214,6 +217,7 @@
     <ClCompile Include="RefractionShader.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="SkyboxShader.cpp" />
     <ClCompile Include="SpecimenShader.cpp" />
     <ClCompile Include="Terrain.cpp" />

@@ -11,9 +11,9 @@ bool SkyboxShader::InitSkyboxShader(ID3D11Device* device, WCHAR* vsFilename, WCH
 	return true;
 }
 
-bool SkyboxShader::SetSkyboxShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, float time, ID3D11ShaderResourceView* environmentMap[6])
+bool SkyboxShader::SetSkyboxShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, bool culling, float time, ID3D11ShaderResourceView* environmentMap[6])
 {
-	SetShaderParameters(context, world, view, projection, time);
+	SetShaderParameters(context, world, view, projection, culling, time);
 
 	//pass the desired texture to the pixel shader.
 	for (int i = 0; i < 6; i++)

@@ -10,6 +10,7 @@ public:
 		DirectX::SimpleMath::Matrix* world,
 		DirectX::SimpleMath::Matrix* view,
 		DirectX::SimpleMath::Matrix* projection,
+		bool culling,
 		float time,
 		float alpha,
 		ID3D11ShaderResourceView* alphaMap);

@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "MarchingCubes.h"
 
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* This enclosed section has been copied from: Paul Bourke (1994) Polygonising a Scalar Field. Available at http://paulbourke.net/geometry/polygonise/ (Accessed: 9 February 2023) */
+
 const unsigned int MarchingCubes::m_edgeTable[256] = {
 	0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
 	0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00,
@@ -295,6 +298,8 @@ const unsigned int MarchingCubes::m_triTable[256][16] = {
 	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
 };
 
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
 MarchingCubes::MarchingCubes()
 {
 
@@ -303,6 +308,7 @@ MarchingCubes::MarchingCubes()
 
 MarchingCubes::~MarchingCubes()
 {
+
 }
 
 bool MarchingCubes::Initialize(ID3D11Device* device, int cells)
@@ -505,6 +511,32 @@ void MarchingCubes::ShutdownBuffers()
 	return;
 }
 
+void MarchingCubes::GenerateHorizontalField(DirectX::SimpleMath::Vector3 origin)
+{
+	SimplexNoise simplex = SimplexNoise();
+
+	int fieldCoordinate;
+
+	DirectX::SimpleMath::Vector3 position;
+
+	for (int k = 0; k <= m_cells; k++)
+	{
+		for (int j = 0; j <= m_cells; j++)
+		{
+			for (int i = 0; i <= m_cells; i++)
+			{
+				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
+
+				position = 2.0f*(m_field[fieldCoordinate].position-origin);
+
+				m_field[fieldCoordinate].scalar = position.y;
+				//m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, 0.0f, m_field[fieldCoordinate].position.z, 6, 0.5f);
+				m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.z, 6, 0.5f), 0.0f);
+			}
+		}
+	}
+}
+
 void MarchingCubes::GenerateSphericalField(DirectX::SimpleMath::Vector3 origin)
 {
 	int fieldCoordinate;
@@ -556,7 +588,9 @@ void MarchingCubes::GenerateSinusoidalSphericalField(DirectX::SimpleMath::Vector
 
 void MarchingCubes::GenerateToroidalField(DirectX::SimpleMath::Vector3 origin)
 {
-	const float R = 0.75f;
+	ClassicNoise perlin = ClassicNoise();
+
+	const float R = 0.5f;
 
 	int fieldCoordinate;
 
@@ -580,6 +614,7 @@ void MarchingCubes::GenerateToroidalField(DirectX::SimpleMath::Vector3 origin)
 				ringPosition = DirectX::SimpleMath::Vector3(R*cos(theta), R*sin(theta), 0.0f);
 
 				m_field[fieldCoordinate].scalar = (position-ringPosition).Length();
+				m_field[fieldCoordinate].scalar += 0.2f*perlin.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z);
 				m_field[fieldCoordinate].scalar /= 1.0f-R;
 			}
 		}
@@ -594,6 +629,9 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 	int fieldCoordinate;
 	int fieldVertexA, fieldVertexB;
 	DirectX::SimpleMath::Vector3 edgePositions[12];
+
+	/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+	/* This enclosed section has been adapted from: Paul Bourke (1994) Polygonising a Scalar Field. Available at http://paulbourke.net/geometry/polygonise/ (Accessed: 9 February 2023) */
 
 	// STEP 1: Calculate new isosurface vertex positions...
 	m_isolevel = isolevel;
@@ -635,6 +673,8 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 			}
 		}
 	}
+
+	/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 	// STEP 2: Initialise buffers for new isosurface
 	bool result = InitializeBuffers(device);

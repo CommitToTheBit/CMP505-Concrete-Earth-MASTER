@@ -21,9 +21,9 @@ bool SpecimenShader::InitSpecimenShader(ID3D11Device* device, WCHAR* vsFilename,
 	return true;
 }
 
-bool SpecimenShader::SetSpecimenShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, float time, Light* light, float opacity, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* normalTexture, ID3D11ShaderResourceView* specimenTexture)
+bool SpecimenShader::SetSpecimenShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, bool culling, float time, Light* light, float opacity, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* normalTexture, ID3D11ShaderResourceView* specimenTexture)
 {
-	SetLightShaderParameters(context, world, view, projection, time, light, texture, normalTexture);
+	SetLightShaderParameters(context, world, view, projection, culling, time, light, texture, normalTexture);
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	context->Map(m_specimenBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
