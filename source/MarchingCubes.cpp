@@ -4,7 +4,7 @@
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* This enclosed section has been copied from: Paul Bourke (1994) Polygonising a Scalar Field. Available at http://paulbourke.net/geometry/polygonise/ (Accessed: 9 February 2023) */
 
-const unsigned int MarchingCubes::m_edgeTable[256] = {
+const int MarchingCubes::m_edgeTable[256] = {
 	0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
 	0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00,
 	0x190, 0x99 , 0x393, 0x29a, 0x596, 0x49f, 0x795, 0x69c,
@@ -39,7 +39,7 @@ const unsigned int MarchingCubes::m_edgeTable[256] = {
 	0x70c, 0x605, 0x50f, 0x406, 0x30a, 0x203, 0x109, 0x0
 };
 
-const unsigned int MarchingCubes::m_triTable[256][16] = {
+const int MarchingCubes::m_triTable[256][16] = {
 	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 	{0, 8, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 	{0, 1, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -544,7 +544,7 @@ void MarchingCubes::GenerateHorizontalField(DirectX::SimpleMath::Vector3 origin)
 
 				m_field[fieldCoordinate].scalar = position.y;
 				//m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, 0.0f, m_field[fieldCoordinate].position.z, 6, 0.5f);
-				m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.z, 6, 0.5f), 0.0f);
+				m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.z, 1, 0.5f), 0.0f);
 			}
 		}
 	}
@@ -603,7 +603,7 @@ void MarchingCubes::GenerateToroidalField(DirectX::SimpleMath::Vector3 origin)
 {
 	ClassicNoise perlin = ClassicNoise();
 
-	const float R = 0.5f;
+	const float R = 2.0f/3.0f;
 
 	int fieldCoordinate;
 
@@ -627,7 +627,7 @@ void MarchingCubes::GenerateToroidalField(DirectX::SimpleMath::Vector3 origin)
 				ringPosition = DirectX::SimpleMath::Vector3(R*cos(theta), R*sin(theta), 0.0f);
 
 				m_field[fieldCoordinate].scalar = (position-ringPosition).Length();
-				m_field[fieldCoordinate].scalar += 0.2f*perlin.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z);
+				//m_field[fieldCoordinate].scalar += 0.2f*perlin.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z);
 				m_field[fieldCoordinate].scalar /= 1.0f-R;
 			}
 		}
@@ -701,6 +701,11 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 
 DirectX::SimpleMath::Vector3 MarchingCubes::InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel)
 {
+	if (b.position.x < a.position.x || (b.position.x == a.position.x && b.position.y < a.position.y) || (b.position.x == a.position.x && b.position.y == a.position.y && b.position.z < a.position.z))
+	{
+		FieldVertexType vertex = a; a = b; b = vertex;
+	}
+
 	if (std::abs(a.scalar-b.scalar) < 0.001f)
 		return a.position;
 
@@ -747,7 +752,11 @@ void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexTyp
 		binormal = DirectX::SimpleMath::Vector3(0.0, 0.0, 1.0);
 
 	// Calculate normal
-	normal = binormal.Cross(tangent); // NB: Note the orientation of the vector space!
+	if (vertex1.position.z > 0.5f || vertex2.position.z > 0.5f || vertex3.position.z > 0.5f)
+		normal = binormal.Cross(tangent); // NB: Note the orientation of the vector space!
+	else
+		normal = -binormal.Cross(tangent);
+
 
 	return;
 
