@@ -401,7 +401,7 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 					for (int m = 0; m < 3; m++)
 					{
 						vertices[index].position = m_isosurfacePositions[15*cellCoordinate+n+m];
-						vertices[index].texture = DirectX::SimpleMath::Vector2(vertices[index].position.x, vertices[index].position.y);
+						vertices[index].texture = DirectX::SimpleMath::Vector2(vertices[index].position.x, vertices[index].position.z); // NB: Due to ill-defined texture coordinates, tangents/binormals are also ill-defined...
 						indices[index] = index;
 						index++;
 					}
@@ -544,7 +544,7 @@ void MarchingCubes::GenerateHorizontalField(DirectX::SimpleMath::Vector3 origin)
 
 				m_field[fieldCoordinate].scalar = position.y;
 				//m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, 0.0f, m_field[fieldCoordinate].position.z, 6, 0.5f);
-				m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.z, 1, 0.5f), 0.0f);
+				m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.z, 8, 0.5f), 0.0f);
 			}
 		}
 	}
@@ -727,6 +727,7 @@ void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexTyp
 	vector1 = (DirectX::SimpleMath::Vector3)vertex2.position - vertex1.position;
 	vector2 = (DirectX::SimpleMath::Vector3)vertex3.position - vertex1.position;
 
+	/* FIXME: Ill-defined texture coordinates!
 	// Calculate the tu and tv texture space vectors.
 	textureVector1.x = vertex2.texture.x - vertex1.texture.x;
 	textureVector1.y = vertex2.texture.y - vertex1.texture.y;
@@ -735,11 +736,11 @@ void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexTyp
 	textureVector2.y = vertex3.texture.y - vertex1.texture.y;
 
 	// Calculate the denominator of the tangent/binormal equation.
-	determinant = textureVector1.x * textureVector2.y - textureVector1.y * textureVector2.x;
+	//determinant = textureVector1.x * textureVector2.y - textureVector1.y * textureVector2.x;
 
 	// Calculate the cross products and multiply by the coefficient to get the tangent and binormal.
-	tangent = (vector2.y*vector1 - vector1.y*vector2);// determinant;
-	binormal = (vector2.z*vector1 - vector1.z*vector2);// determinant;
+	tangent = (textureVector2.y*vector1 - textureVector1.y*vector2);// determinant;
+	binormal = (textureVector2.x*vector1 - textureVector1.x*vector2);// determinant;
 
 	// Normalise tangent and binormal
 	tangent.Normalize();
@@ -752,8 +753,12 @@ void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexTyp
 		binormal = DirectX::SimpleMath::Vector3(0.0, 0.0, 1.0);
 
 	// Calculate normal
-	normal = binormal.Cross(tangent); // NB: Note the orientation of the vector space!
+	normal = tangent.Cross(binormal); // NB: Note the orientation of the vector space!
+	*/
 
+	tangent = DirectX::SimpleMath::Vector3(1.0, 0.0, 0.0);
+	binormal = DirectX::SimpleMath::Vector3(0.0, 0.0, 1.0);
+	normal = vector1.Cross(vector2); // NB: Note the orientation of the vector space!
 
 	return;
 
