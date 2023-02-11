@@ -11,9 +11,9 @@ bool OverlayShader::InitOverlayShader(ID3D11Device* device, WCHAR* vsFilename, W
 	return true;
 }
 
-bool OverlayShader::SetOverlayShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, float time, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* overlayTexture, ID3D11ShaderResourceView* overlayAlphaMap)
+bool OverlayShader::SetOverlayShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, bool culling, float time, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* overlayTexture, ID3D11ShaderResourceView* overlayAlphaMap)
 {
-	SetShaderParameters(context, world, view, projection, time);
+	SetShaderParameters(context, world, view, projection, culling, time);
 
 	//pass the desired texture to the pixel shader.
 	context->PSSetShaderResources(0, 1, &texture);

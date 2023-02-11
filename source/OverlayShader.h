@@ -10,6 +10,7 @@ public:
 		DirectX::SimpleMath::Matrix* world,
 		DirectX::SimpleMath::Matrix* view,
 		DirectX::SimpleMath::Matrix* projection,
+		bool culling,
 		float time,
 		ID3D11ShaderResourceView* texture,
 		ID3D11ShaderResourceView* overlayTexture,

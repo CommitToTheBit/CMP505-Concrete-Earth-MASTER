@@ -25,9 +25,9 @@ bool LightShader::InitLightShader(ID3D11Device* device, WCHAR* vsFilename, WCHAR
 	return true;
 }
 
-bool LightShader::SetLightShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, float time, Light* light, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* normalTexture)
+bool LightShader::SetLightShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, bool culling, float time, Light* light, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* normalTexture)
 {
-	SetShaderParameters(context, world, view, projection, time);
+	SetShaderParameters(context, world, view, projection, culling, time);
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	context->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);

@@ -3,6 +3,7 @@ cbuffer MatrixBuffer : register(b0)
     matrix worldMatrix;
     matrix viewMatrix;
     matrix projectionMatrix;
+    bool culling;
 };
 
 struct InputType
@@ -44,12 +45,15 @@ OutputType main(InputType input)
 
     output.normal = mul(input.normal, (float3x3)worldMatrix);
     output.normal = normalize(output.normal);
+    output.normal *= (culling) ? 1.0f : -1.0f;
 
     output.tangent = mul(input.tangent, (float3x3)worldMatrix);
     output.tangent = normalize(output.tangent);
+    output.tangent *= (culling) ? 1.0f : -1.0f;
 
     output.binormal = mul(input.binormal, (float3x3)worldMatrix);
     output.binormal = normalize(output.binormal);
+    output.binormal *= (culling) ? 1.0f : -1.0f;
 
     return output;
 }

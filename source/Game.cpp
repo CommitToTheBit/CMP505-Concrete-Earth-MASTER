@@ -265,58 +265,58 @@ void Game::Render()
 
 	// Draw Terrain
 	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_DemoNMRenderPass->getShaderResourceView());
+	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_DemoNMRenderPass->getShaderResourceView());
 	m_Terrain.Render(context);
 
 	context->RSSetState(m_states->CullCounterClockwise());
 	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
+	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_Terrain.Render(context);
 
 	context->RSSetState(m_states->CullClockwise());
 
 	// Draw Marching Cube
 	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time);
 	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullCounterClockwise());
 	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-2.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time);
 	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullClockwise());
 
 	// Tile Marching Cube
 	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-3.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-3.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time);
 	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullCounterClockwise());
 	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-3.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time);
+	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-3.5f, -0.5f, 0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time);
 	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullClockwise());
 
 	// Draw Basic Models
 	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_normalMap.Get());
+	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_normalMap.Get());
 	m_Cube.Render(context);
 
 	context->RSSetState(m_states->CullCounterClockwise());
 	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_normalMap.Get());
+	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_normalMap.Get());
 	m_Cube.Render(context);
 
 	context->RSSetState(m_states->CullClockwise());
 
 	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(0.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_normalMap.Get(), m_NeutralNMRenderPass->getShaderResourceView());
+	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(0.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_normalMap.Get(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_Cube.Render(context);
 
 	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), m_time, &m_Light, m_normalMap.Get(), m_normalMap.Get());
+	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_normalMap.Get(), m_normalMap.Get());
 	m_Cube.Render(context);
 
     // Show the new frame.
@@ -337,7 +337,7 @@ void Game::RenderSkyboxOnto(Camera* camera)
 	context->OMSetDepthStencilState(m_states->DepthNone(), 0); // NB: Note use of DepthNone()
 	context->RSSetState(m_states->CullCounterClockwise());
 	m_SkyboxShaderPair.EnableShader(context);
-	m_SkyboxShaderPair.SetSkyboxShaderParameters(context, &Matrix::CreateTranslation(camera->getPosition()), &camera->getCameraMatrix(), &camera->getPerspective(), m_time, environmentMap); // FIXME: Flat normal map here... but holes when viewed through glass??
+	m_SkyboxShaderPair.SetSkyboxShaderParameters(context, &Matrix::CreateTranslation(camera->getPosition()), &camera->getCameraMatrix(), &camera->getPerspective(), false, m_time, environmentMap); // FIXME: Flat normal map here... but holes when viewed through glass??
 	m_Cube.Render(context);
 
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
@@ -379,6 +379,7 @@ void Game::RenderShaderTexture(RenderTexture* renderPass, Shader rendering)
 		&SimpleMath::Matrix::CreateScale(2.0f),
 		&(Matrix)Matrix::Identity,
 		&(Matrix)Matrix::Identity,
+		true,
 		m_time);
 	m_Cube.Render(context);
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
