@@ -349,34 +349,6 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 
 	int cellCoordinate;
 
-	// STEP 0: Count *unique* vertices...
-	m_vertexCount = 0;
-	for (int k = 0; k < m_cells-1; k++)
-	{
-		for (int j = 0; j < m_cells-1; j++)
-		{
-			for (int i = 0; i < m_cells-1; i++)
-			{
-				cellCoordinate = m_cells*m_cells*k+m_cells*j+i;
-				for (int n = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][n] != -1; n++)
-				{
-
-					bool counted = false;
-					for (int m = 0; m < n; n++)
-					{
-						if (m_triTable[m_isosurfaceIndices[cellCoordinate]][m] == m_triTable[m_isosurfaceIndices[cellCoordinate]][n])
-						{
-							counted = true;
-							break;
-						}
-					}
-
-				}
-			}
-		}
-	}
-	m_vertexCount = std::max(m_indexCount, 3); // FIXME: Only a shoddy patch for access violation!
-
 	// STEP 1: Count indices...
 	m_indexCount = 0;
 	for (int k = 0; k < m_cells; k++)
@@ -399,7 +371,7 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 	// FIXME: Major refactor needed for this to work - but it seems necessary for 'balanced' normals!a
 
 	// Set the vertex count to the same as the index count.
-	m_vertexCount = m_indexCount;
+	//m_vertexCount = m_indexCount;
 
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
@@ -430,24 +402,31 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 					for (int m = 0; m < 3; m++)
 					{
 						// Introduce these first two lines in previous loop...
-						vertices[/*original appearance of [15*cellCoordinate+n+m]*/index].position = m_isosurfacePositions[/*original appearance of [*/15*cellCoordinate+n+m];
-						vertices[/*original appearance of [15*cellCoordinate+n+m]*/index].texture = DirectX::SimpleMath::Vector2(vertices[index].position.x, vertices[index].position.z); // NB: Due to ill-defined texture coordinates, tangents/binormals are also ill-defined...
-						indices[index] = /*original appearance of [15*cellCoordinate+n+m]*/index;
+						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position = m_isosurfacePositions[15*cellCoordinate+n+m];
+						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f);// vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.x, vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.z); // NB: Due to ill-defined texture coordinates, tangents/binormals are also ill-defined...
+						indices[index] = m_isosurfaceVertices[15*cellCoordinate+n+m];
 						index++;
 					}
-					index -= 3;
+					//index -= 3;
 
-					CalculateNormalTangentBinormal(vertices[index], vertices[index+1], vertices[index+2], normal, tangent, binormal);
+					CalculateNormalTangentBinormal(vertices[m_isosurfaceVertices[15*cellCoordinate+n]], vertices[m_isosurfaceVertices[15*cellCoordinate+n+1]], vertices[m_isosurfaceVertices[15*cellCoordinate+n+2]], normal, tangent, binormal);
 					for (int m = 0; m < 3; m++)
 					{
-						vertices[index].normal = normal;
-						vertices[index].tangent = tangent;
-						vertices[index].binormal = binormal;
-						index++;
+						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].normal += normal;
+						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].tangent += tangent;
+						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].binormal += binormal;
+						//index++;
 					}
 				}
 			}
 		}
+	}
+
+	for (int i = 0; i < m_vertexCount; i++)
+	{
+		vertices[i].normal.Normalize();
+		vertices[i].tangent.Normalize();
+		vertices[i].binormal.Normalize();
 	}
 
 	// Set up the description of the static vertex buffer.
@@ -674,6 +653,7 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 	DirectX::SimpleMath::Vector3 edgePositions[12];
 
 	// Set m_vertexCount = 0 here, then m_vertexCount++ for each new vertex?
+	m_vertexCount = 0;
 
 	/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 	/* This enclosed section has been adapted from: Paul Bourke (1994) Polygonising a Scalar Field. Available at http://paulbourke.net/geometry/polygonise/ (Accessed: 9 February 2023) */
@@ -717,6 +697,17 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 					m_isosurfacePositions[15*cellCoordinate+n] = edgePositions[m_triTable[m_isosurfaceIndices[cellCoordinate]][n]];
 
 					// NB: Added this to log *unique* vertices, should reduce vertex data stored to ~1/4 - a significant improvement?
+					
+					// First, check if we've [...]
+					int m;
+					for (m = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][m] != m_triTable[m_isosurfaceIndices[cellCoordinate]][n]; m++) { }
+					if (m < n)
+					{
+						m_isosurfaceVertices[15*cellCoordinate+n] = m_isosurfaceVertices[15*cellCoordinate+m];
+						continue;
+					}
+
+					//if (i > 0 && n == 1)
 					m_isosurfaceVertices[15*cellCoordinate+n] = m_vertexCount++;
 				}
 			}
