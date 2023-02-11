@@ -707,7 +707,19 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 						continue;
 					}
 
-					//if (i > 0 && n == 1)
+					if (i > 0 && n == 1)
+					{
+						//m_isosurfaceVertices[15*cellCoordinate+n] = m_vertexCount++;
+						//continue;
+
+						for (m = 0; m_triTable[m_isosurfaceIndices[cellCoordinate-1]][m] != -1; m++) { }	
+						if (false && m >= 0 && m < 15) // DIAGNOSIS - is RHS... unassigned?
+						{
+							m_isosurfaceVertices[15*cellCoordinate+n] = m_isosurfaceVertices[15*(cellCoordinate-1)+m]; 
+							continue;
+						}
+					}
+
 					m_isosurfaceVertices[15*cellCoordinate+n] = m_vertexCount++;
 				}
 			}
