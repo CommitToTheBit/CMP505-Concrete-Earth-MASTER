@@ -346,6 +346,7 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
+	float weight = 0.0f;
 
 	int cellCoordinate;
 
@@ -409,12 +410,12 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 					}
 					//index -= 3;
 
-					CalculateNormalTangentBinormal(vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]]], vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+1]]], vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+2]]], normal, tangent, binormal);
+					CalculateNormalTangentBinormal(vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]]], vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+1]]], vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+2]]], normal, tangent, binormal, weight);
 					for (int m = 0; m < 3; m++)
 					{
-						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].normal += normal;
-						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].tangent += tangent;
-						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].binormal += binormal;
+						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].normal += normal/weight;
+						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].tangent += tangent/weight;
+						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].binormal += binormal/weight;
 						//index++;
 					}
 				}
@@ -766,7 +767,7 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 						if (i > 0)
 							m_isosurfaceVertices[12*cellCoordinate+8] = m_isosurfaceVertices[12*(cellCoordinate-1)+9];
 						else if (k > 0)
-							m_isosurfaceVertices[12*cellCoordinate+8] = m_isosurfaceVertices[12*(cellCoordinate-1)+11];
+							m_isosurfaceVertices[12*cellCoordinate+8] = m_isosurfaceVertices[12*(cellCoordinate-m_cells*m_cells)+11];
 						else
 							m_isosurfaceVertices[12*cellCoordinate+8] = m_vertexCount++;
 					}
@@ -788,10 +789,15 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 						else
 							m_isosurfaceVertices[12*cellCoordinate+11] = m_vertexCount++;
 					}
+					else
+					{
+						m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]] = m_vertexCount++;
+					}
 				}
 			}
 		}
 	}
+	m_vertexCount = std::max(m_vertexCount, 1); // FIXME: Only a shoddy patch for access violation!
 
 	/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
@@ -819,7 +825,7 @@ DirectX::SimpleMath::Vector3 MarchingCubes::InterpolateIsosurface(FieldVertexTyp
 	return (1.0f-t)*a.position+t*b.position;
 }
 
-void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexType vertex2, VertexType vertex3, DirectX::SimpleMath::Vector3& normal, DirectX::SimpleMath::Vector3& tangent, DirectX::SimpleMath::Vector3& binormal)
+void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexType vertex2, VertexType vertex3, DirectX::SimpleMath::Vector3& normal, DirectX::SimpleMath::Vector3& tangent, DirectX::SimpleMath::Vector3& binormal, float& weight)
 {
 	/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 	/* This enclosed section has been adapted from: RasterTek (no date) Tutorial 20: Bump Mapping. Available at https://www.rastertek.com/dx11tut20.html (Accessed: 28 December 2022) */
@@ -862,9 +868,13 @@ void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexTyp
 	normal = tangent.Cross(binormal); // NB: Note the orientation of the vector space!
 	*/
 
-	tangent = DirectX::SimpleMath::Vector3(1.0, 0.0, 0.0);
-	binormal = DirectX::SimpleMath::Vector3(0.0, 0.0, 1.0);
+	tangent = DirectX::SimpleMath::Vector3(1.0f, 0.0f, 0.0f);
+	binormal = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f);
+
 	normal = vector1.Cross(vector2); // NB: Note the orientation of the vector space!
+	normal.Normalize();
+
+	weight = 0.5f*vector1.Cross(vector2).Length();
 
 	return;
 
