@@ -554,7 +554,7 @@ void MarchingCubes::GenerateHorizontalField(DirectX::SimpleMath::Vector3 origin)
 
 				m_field[fieldCoordinate].scalar = position.y;
 				//m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, 0.0f, m_field[fieldCoordinate].position.z, 6, 0.5f);
-				m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.z, 8, 0.5f), 0.0f);
+				m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.z, 6, 0.125f), 0.0f);
 			}
 		}
 	}
@@ -791,7 +791,7 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 					}
 					else
 					{
-						m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]] = m_vertexCount++;
+						//m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]] = m_vertexCount++;
 					}
 				}
 			}
@@ -872,9 +872,12 @@ void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexTyp
 	binormal = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f);
 
 	normal = vector1.Cross(vector2); // NB: Note the orientation of the vector space!
-	normal.Normalize();
+	if (normal.Length() == 0)
+		normal = DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f);
+	else
+		normal.Normalize();
 
-	weight = 0.5f*vector1.Cross(vector2).Length();
+	weight = std::max(m_cells*m_cells*m_cells*vector1.Cross(vector2).Length(),0.001f);
 
 	return;
 

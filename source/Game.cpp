@@ -181,7 +181,7 @@ void Game::Update(DX::StepTimer const& timer)
 	m_Terrain.Update();		//terrain update.  doesnt do anything at the moment. 
 	
 	// DEBUG:
-	//m_MarchingCubes.GenerateIsosurface(device, sin(m_time/(XM_2PI*0.5f)));
+	//m_MarchingCubes.GenerateIsosurface(device, 0.5f+0.5f*sin(m_time/(XM_2PI*5.0f)));
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
@@ -281,12 +281,12 @@ void Game::Render()
 	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(0.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_MarchingCubes.Render(context);
 
-	/*context->RSSetState(m_states->CullCounterClockwise());
+	context->RSSetState(m_states->CullCounterClockwise());
 	m_LightShaderPair.EnableShader(context);
 	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(0.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_MarchingCubes.Render(context);
 
-	context->RSSetState(m_states->CullClockwise());*/
+	context->RSSetState(m_states->CullClockwise());
 
 	// Tile Marching Cube
 	m_FieldRendering.EnableShader(context);

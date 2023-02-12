@@ -37,7 +37,9 @@ float4 main(InputType input) : SV_TARGET
     // STEP 2: Sample from the normal map to calculate 'pixel normal'
     float4 normalMap = 2.0f * textures[1].Sample(SampleType, input.tex) - 1.0f;
     float3 normal = normalMap.x * input.tangent + normalMap.y * input.binormal + normalMap.z * input.normal;
-    normal = normalize(normal);
+    //normal = normalize(normal);
+     
+    normal = normalize(input.normal);
 
     /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 
