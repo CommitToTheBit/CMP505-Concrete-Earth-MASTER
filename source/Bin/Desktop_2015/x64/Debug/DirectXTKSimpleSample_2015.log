@@ -2,6 +2,6 @@
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(327,100): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(621,18): warning C4101: 'phi': unreferenced local variable
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(675,49): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(762,8): warning C4101: 'determinant': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(763,8): warning C4101: 'length': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(829,8): warning C4101: 'determinant': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(830,8): warning C4101: 'length': unreferenced local variable
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe

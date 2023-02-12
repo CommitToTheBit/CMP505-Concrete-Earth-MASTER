@@ -330,7 +330,7 @@ bool MarchingCubes::Initialize(ID3D11Device* device, int cells)
 		}
 	}
 	m_isosurfaceIndices = new int[cells * cells * cells];
-	m_isosurfaceVertices = new int[15 * cells * cells * cells];
+	m_isosurfaceVertices = new int[12 * cells * cells * cells];
 	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[15 * cells * cells * cells];
 
 	GenerateIsosurface(device, 0.0f);
@@ -402,19 +402,19 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 					for (int m = 0; m < 3; m++)
 					{
 						// Introduce these first two lines in previous loop...
-						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position = m_isosurfacePositions[15*cellCoordinate+n+m];
-						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f);// vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.x, vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.z); // NB: Due to ill-defined texture coordinates, tangents/binormals are also ill-defined...
-						indices[index] = m_isosurfaceVertices[15*cellCoordinate+n+m];
+						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].position = m_isosurfacePositions[15*cellCoordinate+n+m];
+						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f);// vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.x, vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.z); // NB: Due to ill-defined texture coordinates, tangents/binormals are also ill-defined...
+						indices[index] = m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]];
 						index++;
 					}
 					//index -= 3;
 
-					CalculateNormalTangentBinormal(vertices[m_isosurfaceVertices[15*cellCoordinate+n]], vertices[m_isosurfaceVertices[15*cellCoordinate+n+1]], vertices[m_isosurfaceVertices[15*cellCoordinate+n+2]], normal, tangent, binormal);
+					CalculateNormalTangentBinormal(vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]]], vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+1]]], vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+2]]], normal, tangent, binormal);
 					for (int m = 0; m < 3; m++)
 					{
-						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].normal += normal;
-						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].tangent += tangent;
-						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].binormal += binormal;
+						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].normal += normal;
+						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].tangent += tangent;
+						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].binormal += binormal;
 						//index++;
 					}
 				}
@@ -703,24 +703,91 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 					for (m = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][m] != m_triTable[m_isosurfaceIndices[cellCoordinate]][n]; m++) { }
 					if (m < n)
 					{
-						m_isosurfaceVertices[15*cellCoordinate+n] = m_isosurfaceVertices[15*cellCoordinate+m];
+						//m_isosurfaceVertices[15*cellCoordinate+n] = m_isosurfaceVertices[15*cellCoordinate+m];
 						continue;
 					}
 
-					if (i > 0 && n == 1)
+					if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 0)
 					{
-						//m_isosurfaceVertices[15*cellCoordinate+n] = m_vertexCount++;
-						//continue;
-
-						for (m = 0; m_triTable[m_isosurfaceIndices[cellCoordinate-1]][m] != -1; m++) { }	
-						if (false && m >= 0 && m < 15) // DIAGNOSIS - is RHS... unassigned?
-						{
-							m_isosurfaceVertices[15*cellCoordinate+n] = m_isosurfaceVertices[15*(cellCoordinate-1)+m]; 
-							continue;
-						}
+						if (j > 0)
+							m_isosurfaceVertices[12*cellCoordinate] = m_isosurfaceVertices[12*(cellCoordinate-m_cells)+4];
+						else if (k > 0)
+							m_isosurfaceVertices[12*cellCoordinate] = m_isosurfaceVertices[12*(cellCoordinate-m_cells*m_cells)+2];
+						else
+							m_isosurfaceVertices[12*cellCoordinate] = m_vertexCount++;
 					}
-
-					m_isosurfaceVertices[15*cellCoordinate+n] = m_vertexCount++;
+					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 1)
+					{
+						if (j > 0)
+							m_isosurfaceVertices[12*cellCoordinate+1] = m_isosurfaceVertices[12*(cellCoordinate-m_cells)+5];
+						else
+							m_isosurfaceVertices[12*cellCoordinate+1] = m_vertexCount++;
+					}
+					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 2)
+					{
+						if (j > 0)
+							m_isosurfaceVertices[12*cellCoordinate+2] = m_isosurfaceVertices[12*(cellCoordinate-m_cells)+6];
+						else
+							m_isosurfaceVertices[12*cellCoordinate+2] = m_vertexCount++;
+					}
+					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 3)
+					{
+						if (i > 0)
+							m_isosurfaceVertices[12*cellCoordinate+3] = m_isosurfaceVertices[12*(cellCoordinate-1)+1];
+						else if (j > 0)
+							m_isosurfaceVertices[12*cellCoordinate+3] = m_isosurfaceVertices[12*(cellCoordinate-m_cells)+7];
+						else
+							m_isosurfaceVertices[12*cellCoordinate+3] = m_vertexCount++;
+					}
+					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 4)
+					{
+						if (k > 0)
+							m_isosurfaceVertices[12*cellCoordinate+4] = m_isosurfaceVertices[12*(cellCoordinate-m_cells*m_cells)+6];
+						else
+							m_isosurfaceVertices[12*cellCoordinate+4] = m_vertexCount++;
+					}
+					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 5)
+					{
+						m_isosurfaceVertices[12*cellCoordinate+5] = m_vertexCount++;
+					}
+					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 6)
+					{
+						m_isosurfaceVertices[12*cellCoordinate+6] = m_vertexCount++;
+					}
+					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 7)
+					{
+						if (i > 0)
+							m_isosurfaceVertices[12*cellCoordinate+7] = m_isosurfaceVertices[12*(cellCoordinate-1)+5];
+						else
+							m_isosurfaceVertices[12*cellCoordinate+7] = m_vertexCount++;
+					}
+					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 8)
+					{
+						if (i > 0)
+							m_isosurfaceVertices[12*cellCoordinate+8] = m_isosurfaceVertices[12*(cellCoordinate-1)+9];
+						else if (k > 0)
+							m_isosurfaceVertices[12*cellCoordinate+8] = m_isosurfaceVertices[12*(cellCoordinate-1)+11];
+						else
+							m_isosurfaceVertices[12*cellCoordinate+8] = m_vertexCount++;
+					}
+					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 9)
+					{
+						if (k > 0)
+							m_isosurfaceVertices[12*cellCoordinate+9] = m_isosurfaceVertices[12*(cellCoordinate-m_cells*m_cells)+10];
+						else
+							m_isosurfaceVertices[12*cellCoordinate+9] = m_vertexCount++;
+					}
+					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 10)
+					{
+						m_isosurfaceVertices[12*cellCoordinate+10] = m_vertexCount++;
+					}
+					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 11)
+					{
+						if (i > 0)
+							m_isosurfaceVertices[12*cellCoordinate+11] = m_isosurfaceVertices[12*(cellCoordinate-1)+10];
+						else
+							m_isosurfaceVertices[12*cellCoordinate+11] = m_vertexCount++;
+					}
 				}
 			}
 		}
