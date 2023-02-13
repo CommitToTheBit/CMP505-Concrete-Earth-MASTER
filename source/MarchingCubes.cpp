@@ -407,6 +407,12 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f);// vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.x, vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.z); // NB: Due to ill-defined texture coordinates, tangents/binormals are also ill-defined...
 						indices[index] = m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]];
 						index++;
+
+						// DEBUG:
+						/*vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position = m_isosurfacePositions[15*cellCoordinate+n+m];
+						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f); // NB: Due to ill-defined texture coordinates, tangents/binormals are also ill-defined...
+						indices[index] = m_isosurfaceVertices[15*cellCoordinate+n+m]];
+						index++;*/
 					}
 					//index -= 3;
 
@@ -417,6 +423,11 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].tangent += tangent/weight;
 						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].binormal += binormal/weight;
 						//index++;
+
+						// DEBUG:
+						/*vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].normal += normal/weight;
+						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].tangent += tangent/weight;
+						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].binormal += binormal/weight;*/
 					}
 				}
 			}
@@ -554,7 +565,7 @@ void MarchingCubes::GenerateHorizontalField(DirectX::SimpleMath::Vector3 origin)
 
 				m_field[fieldCoordinate].scalar = position.y;
 				//m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, 0.0f, m_field[fieldCoordinate].position.z, 6, 0.5f);
-				m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.z, 6, 0.125f), 0.0f);
+				m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 6, 1.0f), 0.0f);
 			}
 		}
 	}
@@ -704,9 +715,15 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 					for (m = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][m] != m_triTable[m_isosurfaceIndices[cellCoordinate]][n]; m++) { }
 					if (m < n)
 					{
+						// DEBUG:
 						//m_isosurfaceVertices[15*cellCoordinate+n] = m_isosurfaceVertices[15*cellCoordinate+m];
+
 						continue;
 					}
+
+					// DEBUG:
+					//m_isosurfaceVertices[15*cellCoordinate+n] = m_vertexCount++;
+					//continue;
 
 					if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 0)
 					{
