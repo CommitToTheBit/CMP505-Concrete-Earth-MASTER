@@ -281,12 +281,12 @@ void Game::Render()
 	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(0.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_MarchingCubes.Render(context);
 
-	/*context->RSSetState(m_states->CullCounterClockwise());
+	context->RSSetState(m_states->CullCounterClockwise());
 	m_LightShaderPair.EnableShader(context);
 	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(0.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_MarchingCubes.Render(context);
 
-	context->RSSetState(m_states->CullClockwise());*/
+	context->RSSetState(m_states->CullClockwise());
 
 	// Tile Marching Cube
 	m_FieldRendering.EnableShader(context);
@@ -486,10 +486,10 @@ void Game::CreateDeviceDependentResources()
 	m_Terrain.Initialize(device, 128, 128);
 
 	// Marching Cube(s)
-	m_MarchingCubes.Initialize(device, 128);
+	m_MarchingCubes.Initialize(device, 16);
 	//m_MarchingCubes.GenerateHorizontalField(Vector3(0.0f, 0.01f, 0.0f));
-	m_MarchingCubes.GenerateSphericalField(Vector3(0.5f, 0.5f, 0.5f));
-	//m_MarchingCubes.GenerateToroidalField(Vector3(0.5f, 0.5f, 0.5f));
+	//m_MarchingCubes.GenerateSphericalField(Vector3(0.5f, 0.5f, 0.5f));
+	m_MarchingCubes.GenerateToroidalField(Vector3(0.5f, 0.5f, 0.5f));
 	m_MarchingCubes.GenerateIsosurface(device, 1.0f);
 
 	// Models

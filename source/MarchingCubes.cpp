@@ -572,6 +572,22 @@ void MarchingCubes::GenerateSphericalField(DirectX::SimpleMath::Vector3 origin)
 			}
 		}
 	}
+
+	// CUBE:
+	/*DirectX::SimpleMath::Vector3 position;
+	for (int k = 0; k <= m_cells; k++)
+	{
+		for (int j = 0; j <= m_cells; j++)
+		{
+			for (int i = 0; i <= m_cells; i++)
+			{
+				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
+
+				position = 2.0f*(m_field[fieldCoordinate].position-origin);
+				m_field[fieldCoordinate].scalar = std::max(abs(position.x), std::max(abs(position.y), abs(position.z)));
+			}
+		}
+	}*/
 }
 
 void MarchingCubes::GenerateSinusoidalSphericalField(DirectX::SimpleMath::Vector3 origin)
@@ -658,7 +674,6 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 	/* This enclosed section has been adapted from: Paul Bourke (1994) Polygonising a Scalar Field. Available at http://paulbourke.net/geometry/polygonise/ (Accessed: 9 February 2023) */
 
 	// STEP 1: Calculate new isosurface vertex positions...
-	int m;
 	m_isolevel = isolevel;
 	for (int k = 0; k < m_cells; k++)
 	{
@@ -693,20 +708,17 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 				}
 
 				for (int n = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][n] != -1; n++)
-				{
-					// NB: Added this to log *unique* vertices, should reduce vertex data stored to ~1/4 - a significant improvement?
-					
-					// First, check if we've [...]
+				{			
+					// First, check if we've already used this vertex *in this cell*
+					int m;
 					for (m = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][m] != m_triTable[m_isosurfaceIndices[cellCoordinate]][n]; m++) { }
-					if (m < n)
+					if (m < n || m_triTable[m_isosurfaceIndices[cellCoordinate]][m] == -1)
 						continue;
 
+					// Assigning position...
 					m_isosurfacePositions[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]] = edgePositions[m_triTable[m_isosurfaceIndices[cellCoordinate]][n]];
-
-					// DEBUG:
-					//m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]] = m_vertexCount++;
-					//continue;
-
+					
+					// ...And assigning vertex number... // NB: Added this to log *unique* vertices, should reduce vertex data stored to ~1/4 - a significant improvement?
 					if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 0)
 					{
 						if (j > 0)
@@ -781,16 +793,12 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 					{
 						m_isosurfaceVertices[12*cellCoordinate+10] = m_vertexCount++;
 					}
-					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 11)
+					else
 					{
 						if (i > 0)
 							m_isosurfaceVertices[12*cellCoordinate+11] = m_isosurfaceVertices[12*(cellCoordinate-1)+10];
 						else
 							m_isosurfaceVertices[12*cellCoordinate+11] = m_vertexCount++;
-					}
-					else
-					{
-						//m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]] = m_vertexCount++;
 					}
 				}
 			}
@@ -817,8 +825,8 @@ DirectX::SimpleMath::Vector3 MarchingCubes::InterpolateIsosurface(FieldVertexTyp
 		FieldVertexType vertex = a; a = b; b = vertex;
 	}
 
-	if (std::abs(a.scalar-b.scalar) < 0.001f)
-		return a.position;
+	if (std::abs(b.scalar-a.scalar) == 0.0f) // NB: Set to != 0.0f for fun 'Lego' effect!
+		return 0.5f*a.position+0.5f*b.position;
 
 	float t = std::min(std::max((isolevel-a.scalar)/(b.scalar-a.scalar), 0.0f), 1.0f);
 	return (1.0f-t)*a.position+t*b.position;
@@ -876,8 +884,8 @@ void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexTyp
 	else
 		normal = DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f);
 		
-
-	weight = m_cells*m_cells*m_cells*vector1.Cross(vector2).Length();
+	// NB: Similarly, is this a satisfactory handling of division by zero?
+	weight = std::max(m_cells*m_cells*m_cells*vector1.Cross(vector2).Length(), 0.001f);
 
 	return;
 
