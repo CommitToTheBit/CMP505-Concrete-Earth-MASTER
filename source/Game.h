@@ -127,7 +127,7 @@ private:
     AlphaShader                                                             m_AlphaShaderPair;
     OverlayShader                                                           m_OverlayShaderPair;
 
-    Shader                                                                  m_FieldRendering;
+    LightShader                                                                  m_FieldRendering;
 
     // Models
     Terrain																	m_Terrain;

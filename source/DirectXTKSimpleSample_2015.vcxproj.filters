@@ -277,5 +277,11 @@
     <FxCompile Include="colour3D_ps.hlsl">
       <Filter>Assets</Filter>
     </FxCompile>
+    <FxCompile Include="light3D_vs.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
+    <FxCompile Include="light3D_ps.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

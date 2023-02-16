@@ -277,25 +277,25 @@ void Game::Render()
 	context->RSSetState(m_states->CullClockwise());
 
 	// Draw Marching Cube
-	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(0.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
+	m_FieldRendering.EnableShader(context);
+	m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(0.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullCounterClockwise());
-	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(0.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
+	m_FieldRendering.EnableShader(context);
+	m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(0.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullClockwise());
 
 	// Tile Marching Cube
 	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-1.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time);
+	m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-1.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullCounterClockwise());
 	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-1.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time);
+	m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-1.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_MarchingCubes.Render(context);
 
 	context->RSSetState(m_states->CullClockwise());
@@ -486,10 +486,10 @@ void Game::CreateDeviceDependentResources()
 	m_Terrain.Initialize(device, 128, 128);
 
 	// Marching Cube(s)
-	m_MarchingCubes.Initialize(device, 16);
+	m_MarchingCubes.Initialize(device, 32);
 	//m_MarchingCubes.GenerateHorizontalField(Vector3(0.0f, 0.01f, 0.0f));
-	//m_MarchingCubes.GenerateSphericalField(Vector3(0.5f, 0.5f, 0.5f));
-	m_MarchingCubes.GenerateToroidalField(Vector3(0.5f, 0.5f, 0.5f));
+	m_MarchingCubes.GenerateSphericalField(Vector3(0.5f, 0.5f, 0.5f));
+	//m_MarchingCubes.GenerateToroidalField(Vector3(0.5f, 0.5f, 0.5f));
 	m_MarchingCubes.GenerateIsosurface(device, 1.0f);
 
 	// Models
@@ -504,7 +504,7 @@ void Game::CreateDeviceDependentResources()
 	m_AlphaShaderPair.InitAlphaShader(device, L"alpha_vs.cso", L"alpha_ps.cso");
 	m_OverlayShaderPair.InitOverlayShader(device, L"overlay_vs.cso", L"overlay_ps.cso");
 
-	m_FieldRendering.InitShader(device, L"colour3D_vs.cso", L"colour3D_ps.cso");
+	m_FieldRendering.InitLightShader(device, L"light3D_vs.cso", L"light3D_ps.cso");
 
 	for (int i = 0; i < 6; i++)
 		m_SkyboxRendering[i].InitShader(device, L"colour_vs.cso", L"skybox_pores.cso");

@@ -572,22 +572,6 @@ void MarchingCubes::GenerateSphericalField(DirectX::SimpleMath::Vector3 origin)
 			}
 		}
 	}
-
-	// CUBE:
-	/*DirectX::SimpleMath::Vector3 position;
-	for (int k = 0; k <= m_cells; k++)
-	{
-		for (int j = 0; j <= m_cells; j++)
-		{
-			for (int i = 0; i <= m_cells; i++)
-			{
-				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
-
-				position = 2.0f*(m_field[fieldCoordinate].position-origin);
-				m_field[fieldCoordinate].scalar = std::max(abs(position.x), std::max(abs(position.y), abs(position.z)));
-			}
-		}
-	}*/
 }
 
 void MarchingCubes::GenerateSinusoidalSphericalField(DirectX::SimpleMath::Vector3 origin)
@@ -651,7 +635,7 @@ void MarchingCubes::GenerateToroidalField(DirectX::SimpleMath::Vector3 origin)
 				ringPosition = DirectX::SimpleMath::Vector3(R*cos(theta), R*sin(theta), 0.0f);
 
 				m_field[fieldCoordinate].scalar = (position-ringPosition).Length();
-				//m_field[fieldCoordinate].scalar += 0.2f*perlin.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z);
+				m_field[fieldCoordinate].scalar += 0.2f*perlin.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z);
 				m_field[fieldCoordinate].scalar /= 1.0f-R;
 			}
 		}
@@ -885,7 +869,7 @@ void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexTyp
 		normal = DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f);
 		
 	// NB: Similarly, is this a satisfactory handling of division by zero?
-	weight = std::max(m_cells*m_cells*m_cells*vector1.Cross(vector2).Length(), 0.001f);
+	weight = vector1.Cross(vector2).Length();
 
 	return;
 
