@@ -331,7 +331,7 @@ bool MarchingCubes::Initialize(ID3D11Device* device, int cells)
 	}
 	m_isosurfaceIndices = new int[cells * cells * cells];
 	m_isosurfaceVertices = new int[12 * cells * cells * cells];
-	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[15 * cells * cells * cells];
+	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * cells * cells * cells];
 
 	GenerateIsosurface(device, 0.0f);
 
@@ -403,18 +403,11 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 					for (int m = 0; m < 3; m++)
 					{
 						// Introduce these first two lines in previous loop...
-						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].position = m_isosurfacePositions[15*cellCoordinate+n+m];
+						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].position = m_isosurfacePositions[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]];// Unfixed: [15*cellCoordinate+n+m] ;
 						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f);// vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.x, vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.z); // NB: Due to ill-defined texture coordinates, tangents/binormals are also ill-defined...
 						indices[index] = m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]];
 						index++;
-
-						// DEBUG:
-						/*vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position = m_isosurfacePositions[15*cellCoordinate+n+m];
-						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f); // NB: Due to ill-defined texture coordinates, tangents/binormals are also ill-defined...
-						indices[index] = m_isosurfaceVertices[15*cellCoordinate+n+m]];
-						index++;*/
 					}
-					//index -= 3;
 
 					CalculateNormalTangentBinormal(vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]]], vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+1]]], vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+2]]], normal, tangent, binormal, weight);
 					for (int m = 0; m < 3; m++)
@@ -422,12 +415,6 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].normal += normal/weight;
 						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].tangent += tangent/weight;
 						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].binormal += binormal/weight;
-						//index++;
-
-						// DEBUG:
-						/*vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].normal += normal/weight;
-						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].tangent += tangent/weight;
-						vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].binormal += binormal/weight;*/
 					}
 				}
 			}
@@ -671,6 +658,7 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 	/* This enclosed section has been adapted from: Paul Bourke (1994) Polygonising a Scalar Field. Available at http://paulbourke.net/geometry/polygonise/ (Accessed: 9 February 2023) */
 
 	// STEP 1: Calculate new isosurface vertex positions...
+	int m;
 	m_isolevel = isolevel;
 	for (int k = 0; k < m_cells; k++)
 	{
@@ -706,23 +694,17 @@ bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
 
 				for (int n = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][n] != -1; n++)
 				{
-					m_isosurfacePositions[15*cellCoordinate+n] = edgePositions[m_triTable[m_isosurfaceIndices[cellCoordinate]][n]];
-
 					// NB: Added this to log *unique* vertices, should reduce vertex data stored to ~1/4 - a significant improvement?
 					
 					// First, check if we've [...]
-					int m;
 					for (m = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][m] != m_triTable[m_isosurfaceIndices[cellCoordinate]][n]; m++) { }
 					if (m < n)
-					{
-						// DEBUG:
-						//m_isosurfaceVertices[15*cellCoordinate+n] = m_isosurfaceVertices[15*cellCoordinate+m];
-
 						continue;
-					}
+
+					m_isosurfacePositions[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]] = edgePositions[m_triTable[m_isosurfaceIndices[cellCoordinate]][n]];
 
 					// DEBUG:
-					//m_isosurfaceVertices[15*cellCoordinate+n] = m_vertexCount++;
+					//m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]] = m_vertexCount++;
 					//continue;
 
 					if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 0)
@@ -889,12 +871,13 @@ void MarchingCubes::CalculateNormalTangentBinormal(VertexType vertex1, VertexTyp
 	binormal = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f);
 
 	normal = vector1.Cross(vector2); // NB: Note the orientation of the vector space!
-	if (normal.Length() == 0)
-		normal = DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f);
+	if (normal.Length() > 0)
+		normal.Normalize(); 
 	else
-		normal.Normalize();
+		normal = DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f);
+		
 
-	weight = std::max(m_cells*m_cells*m_cells*vector1.Cross(vector2).Length(),0.001f);
+	weight = m_cells*m_cells*m_cells*vector1.Cross(vector2).Length();
 
 	return;
 
