@@ -50,7 +50,7 @@ void Game::Initialize(HWND window, int width, int height)
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
 	//m_Light.setPosition(1.0f, 0.0f, 2.0f);
-	m_Light.setPosition(0.0f, 0.5f, 1.0f);
+	m_Light.setPosition(0.0f, 1.0f, 0.0f);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
 	m_Light.setStrength(10.0);
 
@@ -481,7 +481,7 @@ void Game::CreateDeviceDependentResources()
 	m_MarchingCubes.GenerateHorizontalField(Vector3(0.0f, 0.01f, 0.0f));
 	//m_MarchingCubes.GenerateSphericalField(Vector3(0.5f, 0.5f, 0.5f));
 	//m_MarchingCubes.GenerateToroidalField(Vector3(0.5f, 0.5f, 0.5f));
-	m_MarchingCubes.GenerateHex(device, 1.5f);
+	m_MarchingCubes.GenerateHex(device, 1.0f);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");

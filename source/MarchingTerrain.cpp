@@ -20,7 +20,7 @@ void MarchingTerrain::GenerateHorizontalField(DirectX::SimpleMath::Vector3 origi
 				position = 2.0f*(m_field[fieldCoordinate].position-origin);
 
 				m_field[fieldCoordinate].scalar = position.y;
-				m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 1, 1.0f); // Will we just manually handle height, etc.?
+				m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 6, 1.0f); // Will we just manually handle height, etc.?
 				//m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 6, 1.0f), 0.0f);
 			}
 		}
@@ -116,7 +116,10 @@ void MarchingTerrain::GenerateHex(ID3D11Device* device, float isolevel)
 	int fieldCoordinate;
 
 	DirectX::SimpleMath::Vector2 position;
-	float r;
+	float r, theta;
+
+	int q, quadrant;
+	DirectX::SimpleMath::Vector2 quadrantDirection;
 
 	for (int k = 0; k <= m_cells; k++)
 	{
@@ -127,10 +130,22 @@ void MarchingTerrain::GenerateHex(ID3D11Device* device, float isolevel)
 				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
 
 				position = 2.0f*DirectX::SimpleMath::Vector2(m_field[fieldCoordinate].position.x-0.5f, m_field[fieldCoordinate].position.z-0.5f);
-				
-				r = std::max(abs(position.x), abs(position.y)); // NB: Radius for square prism...
+
+				theta = atan2(position.y, position.x);
+				if (theta < 0.0f)
+					theta += XM_2PI;
+
+				q = 6;
+				for (quadrant = 0; theta >= ((float)quadrant+1.0f)*XM_2PI/(float)q; quadrant++) { }
+				quadrantDirection = DirectX::SimpleMath::Vector2(cos(((float)quadrant+0.5f)*XM_2PI/(float)q), sin(((float)quadrant+0.5f)*XM_2PI/(float)q));
+				r = position.Dot(quadrantDirection)/cos(XM_PI/(float(q)));
+
+				//sextant = ((int)(atan2(position.y,position.x)/(XM_2PI/6.0f))+6)%6;
+				//sextantDirection = DirectX::SimpleMath::Vector2(cos((float)sextant*XM_PI/3.0f+XM_PI/6.0f), sin((float)sextant*XM_PI/3.0f+XM_PI/6.0f))*cos(XM_PI/6.0f);
+
+				//r = std::max(abs(position.x), abs(position.y)); // NB: Radius for square prism...
 				//r = position.Length(); // NB: Radius for cylinder...
-				
+
 				// FIXME: Causing a 'Lego' effect!
 				//if (m_field[fieldCoordinate].scalar < isolevel || r >= 1.0f)
 				m_field[fieldCoordinate].scalar = std::max(m_field[fieldCoordinate].scalar, isolevel*r);
