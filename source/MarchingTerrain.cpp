@@ -20,7 +20,7 @@ void MarchingTerrain::GenerateHorizontalField(DirectX::SimpleMath::Vector3 origi
 				position = 2.0f*(m_field[fieldCoordinate].position-origin);
 
 				m_field[fieldCoordinate].scalar = position.y;
-				m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 6, 1.0f); // Will we just manually handle height, etc.?
+				m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 1, 1.0f); // Will we just manually handle height, etc.?
 				//m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 6, 1.0f), 0.0f);
 			}
 		}
@@ -127,10 +127,17 @@ void MarchingTerrain::GenerateHex(ID3D11Device* device, float isolevel)
 				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
 
 				position = 2.0f*DirectX::SimpleMath::Vector2(m_field[fieldCoordinate].position.x-0.5f, m_field[fieldCoordinate].position.z-0.5f);
-				r = position.Length();
+				
+				r = std::max(abs(position.x), abs(position.y)); // NB: Radius for square prism...
+				//r = position.Length(); // NB: Radius for cylinder...
+				
+				// FIXME: Causing a 'Lego' effect!
+				//if (m_field[fieldCoordinate].scalar < isolevel || r >= 1.0f)
+				m_field[fieldCoordinate].scalar = std::max(m_field[fieldCoordinate].scalar, isolevel*r);
+				m_field[fieldCoordinate].scalar = std::max(m_field[fieldCoordinate].scalar, isolevel*(1.0f-m_field[fieldCoordinate].position.y));
 
-				if (((i == 0) || (j == 0) || (k == 0) || (i == m_cells) || (j == m_cells) || (k == m_cells)) && m_field[fieldCoordinate].scalar < isolevel) // FIXME: && r < 1.0f)
-					m_field[fieldCoordinate].scalar = isolevel;
+				//if (((i == 0) || (j == 0) || (k == 0) || (i == m_cells) || (j == m_cells) || (k == m_cells)) && m_field[fieldCoordinate].scalar < isolevel) // FIXME: && r < 1.0f)
+				//	m_field[fieldCoordinate].scalar = isolevel;
 
 				// FIXME: Work out circular, then hex case...
 				//if (m_field[fieldCoordinate].scalar < isolevel && r > 1.0f)

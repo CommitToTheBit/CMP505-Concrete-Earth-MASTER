@@ -95,7 +95,9 @@
     <ClInclude Include="SimplexNoise.h">
       <Filter>Modelling</Filter>
     </ClInclude>
-    <ClInclude Include="MarchingTerrain.h" />
+    <ClInclude Include="MarchingTerrain.h">
+      <Filter>Modelling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -156,7 +158,9 @@
     <ClCompile Include="SimplexNoise.cpp">
       <Filter>Modelling</Filter>
     </ClCompile>
-    <ClCompile Include="MarchingTerrain.cpp" />
+    <ClCompile Include="MarchingTerrain.cpp">
+      <Filter>Modelling</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
