@@ -7,7 +7,7 @@ public:
 
 	// Planar surface generation...
 	void InitialiseHorizontalField(int octaves = 8, float amplitude = 0.1f);
-	void AttachHorizontalThorn(float isolevel);
+	void AttachHorizontalThorn(DirectX::SimpleMath::Vector3 prick, DirectX::SimpleMath::Vector3 root, float radius, float isolevel);
 
 	// Spherical surface generation...
 	void InitialiseSphericalField(int octaves = 8, float amplitude = 0.2f);

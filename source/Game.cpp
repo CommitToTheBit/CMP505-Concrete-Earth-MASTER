@@ -482,7 +482,7 @@ void Game::CreateDeviceDependentResources()
 	m_MarchingCubes.InitialiseHorizontalField();
 	//m_MarchingCubes.InitialiseSphericalField();
 	//m_MarchingCubes.InitialiseToroidalField(0.5f);
-	m_MarchingCubes.AttachHorizontalThorn(0.15f);
+	m_MarchingCubes.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.5f+0.25f*cos(2.0f*XM_PI/3.0f), 0.5f, 0.5f-0.25f*sin(2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.5f, 0.0f, 0.5f), XM_PIDIV2/8.0f, 0.15f);
 	m_MarchingCubes.GenerateHexPrism(device, 0.15f);
 
 	// Models

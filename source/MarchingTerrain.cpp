@@ -78,15 +78,10 @@ void MarchingTerrain::InitialiseToroidalField(float R, int octaves, float amplit
 	}
 }
 
-void MarchingTerrain::AttachHorizontalThorn(float isolevel)
+void MarchingTerrain::AttachHorizontalThorn(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 base, float angle, float isolevel)
 {
 	SimplexNoise simplex = SimplexNoise();
 
-	DirectX::SimpleMath::Vector3 peak = DirectX::SimpleMath::Vector3(0.5f+0.25f*cos(2.0f*XM_PI/3.0f), 0.5f, 0.5f-0.25f*sin(2.0f*XM_PI/3.0f));
-	DirectX::SimpleMath::Vector3 base = DirectX::SimpleMath::Vector3(0.5f, 0.0f, 0.5f);
-	float angle = XM_PIDIV2/8.0f;
-
-	DirectX::SimpleMath::Vector3 position;
 	float theta, thorn;
 
 	int fieldCoordinate;
@@ -98,7 +93,7 @@ void MarchingTerrain::AttachHorizontalThorn(float isolevel)
 			{
 				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
 
-				theta = acos((m_field[fieldCoordinate].position-peak).Dot(base-peak)/((m_field[fieldCoordinate].position-peak).Length()*(base-peak).Length()));
+				theta = acos((m_field[fieldCoordinate].position-origin).Dot(base-origin)/((m_field[fieldCoordinate].position-origin).Length()*(base-origin).Length()));
 				thorn = theta/angle;
 				
 				// FIXME: Procedural coarseness is not convincing...
@@ -107,8 +102,8 @@ void MarchingTerrain::AttachHorizontalThorn(float isolevel)
 				m_field[fieldCoordinate].scalar = std::min(m_field[fieldCoordinate].scalar, isolevel*thorn); // NB: Use of min, since this points 'out' from isosurface...
 
 				// FIXME: Procedural coarseness is not convincing...
-				if ((position-peak).Length() < 4.0f*sqrt(3)/m_cells) // NB: Not rigourous, but seems to protect against 'floating islands' at the tip?
-					m_field[fieldCoordinate].scalar = 2.0*isolevel;
+				//if ((m_field[fieldCoordinate].position-origin).Length() < 4.0f*sqrt(3)/m_cells) // NB: Not rigourous, but seems to protect against 'floating islands' at the tip?
+				//	m_field[fieldCoordinate].scalar = 2.0*isolevel;
 			}
 		}
 	}

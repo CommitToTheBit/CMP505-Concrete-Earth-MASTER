@@ -1,7 +1,7 @@
 ﻿  MarchingTerrain.cpp
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingTerrain.cpp(56,18): warning C4101: 'phi': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingTerrain.cpp(111,43): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingTerrain.cpp(168,11): warning C4101: 'theta': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingTerrain.cpp(170,6): warning C4101: 'q': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingTerrain.cpp(170,9): warning C4101: 'quadrant': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingTerrain.cpp(163,11): warning C4101: 'theta': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingTerrain.cpp(165,6): warning C4101: 'q': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingTerrain.cpp(165,9): warning C4101: 'quadrant': unreferenced local variable
+     Creating library Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.lib and object Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exp
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe
