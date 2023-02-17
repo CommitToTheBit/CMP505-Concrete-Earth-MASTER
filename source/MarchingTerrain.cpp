@@ -116,14 +116,12 @@ void MarchingTerrain::AddThorn(ID3D11Device* device, float isolevel)
 {
 	SimplexNoise simplex = SimplexNoise();
 
-	DirectX::SimpleMath::Vector3 peak = DirectX::SimpleMath::Vector3(0.5f, 1.0f, 0.5f);
+	DirectX::SimpleMath::Vector3 peak = DirectX::SimpleMath::Vector3(0.5f, 0.0f, 0.5f);
 	DirectX::SimpleMath::Vector3 base = DirectX::SimpleMath::Vector3(0.0f, -1.0f, 0.0f);
 	float angle = XM_PIDIV2/8.0f;
 
 	DirectX::SimpleMath::Vector3 position;
-	float theta;
-
-	float thorn;
+	float theta, thorn;
 
 	int fieldCoordinate;
 	for (int k = 0; k <= m_cells; k++)
@@ -137,12 +135,16 @@ void MarchingTerrain::AddThorn(ID3D11Device* device, float isolevel)
 				position = 2.0f*DirectX::SimpleMath::Vector3(m_field[fieldCoordinate].position.x-0.5f, m_field[fieldCoordinate].position.y-0.5f, m_field[fieldCoordinate].position.z-0.5f);
 				theta = acos((position-peak).Dot(base-peak)/((position-peak).Length()*(base-peak).Length()));
 
-				theta += simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 8, 0.25f*angle);
-
 				thorn = theta/angle;
 				
+				// FIXME: Procedural coarseness is not convincing...
+				//thorn -= simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 8, 0.5f);
 
 				m_field[fieldCoordinate].scalar = std::min(m_field[fieldCoordinate].scalar, isolevel*thorn); // NB: Use of min, since this points 'out' from isosurface...
+
+				// FIXME: Procedural coarseness is not convincing...
+				if ((position-peak).Length() < 4.0f*sqrt(3)/m_cells) // NB: Not rigourous, but seems to protect against 'floating islands' at the tip?
+					m_field[fieldCoordinate].scalar = 2.0*isolevel;
 			}
 		}
 	}
