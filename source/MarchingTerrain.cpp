@@ -20,8 +20,9 @@ void MarchingTerrain::GenerateHorizontalField(DirectX::SimpleMath::Vector3 origi
 				position = 2.0f*(m_field[fieldCoordinate].position-origin);
 
 				m_field[fieldCoordinate].scalar = position.y;
-				m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 6, 1.0f); // Will we just manually handle height, etc.?
+				//m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 6, 1.0f); // Will we just manually handle height, etc.?
 				//m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 6, 1.0f), 0.0f);
+				m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, 0.0f, m_field[fieldCoordinate].position.z, 8, 0.1f);
 			}
 		}
 	}
@@ -116,7 +117,7 @@ void MarchingTerrain::GenerateHex(ID3D11Device* device, float isolevel)
 	int fieldCoordinate;
 
 	DirectX::SimpleMath::Vector2 position;
-	float r, theta;
+	float r, theta, z;
 
 	int q, quadrant;
 	DirectX::SimpleMath::Vector2 quadrantDirection;
@@ -140,6 +141,8 @@ void MarchingTerrain::GenerateHex(ID3D11Device* device, float isolevel)
 				quadrantDirection = DirectX::SimpleMath::Vector2(cos(((float)quadrant+0.5f)*XM_2PI/(float)q), sin(((float)quadrant+0.5f)*XM_2PI/(float)q));
 				r = position.Dot(quadrantDirection)/cos(XM_PI/(float(q)));
 
+				z = 1.0f-m_field[fieldCoordinate].position.y;
+
 				//sextant = ((int)(atan2(position.y,position.x)/(XM_2PI/6.0f))+6)%6;
 				//sextantDirection = DirectX::SimpleMath::Vector2(cos((float)sextant*XM_PI/3.0f+XM_PI/6.0f), sin((float)sextant*XM_PI/3.0f+XM_PI/6.0f))*cos(XM_PI/6.0f);
 
@@ -149,7 +152,7 @@ void MarchingTerrain::GenerateHex(ID3D11Device* device, float isolevel)
 				// FIXME: Causing a 'Lego' effect!
 				//if (m_field[fieldCoordinate].scalar < isolevel || r >= 1.0f)
 				m_field[fieldCoordinate].scalar = std::max(m_field[fieldCoordinate].scalar, isolevel*r);
-				m_field[fieldCoordinate].scalar = std::max(m_field[fieldCoordinate].scalar, isolevel*(1.0f-m_field[fieldCoordinate].position.y));
+				m_field[fieldCoordinate].scalar = std::max(m_field[fieldCoordinate].scalar, isolevel*z);
 
 				//if (((i == 0) || (j == 0) || (k == 0) || (i == m_cells) || (j == m_cells) || (k == m_cells)) && m_field[fieldCoordinate].scalar < isolevel) // FIXME: && r < 1.0f)
 				//	m_field[fieldCoordinate].scalar = isolevel;
