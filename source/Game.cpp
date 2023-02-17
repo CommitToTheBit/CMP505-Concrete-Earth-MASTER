@@ -258,14 +258,14 @@ void Game::Render()
 
 	// STEP 1: Run render to textures...
 	// First render pass: Rendering any textures (including normal maps, etc...)
-	RenderDynamicTextures();
+	//RenderDynamicTextures();
 
 	// STEP 2: Render 'real' scene...
 	// Draw Skybox
 	RenderSkyboxOnto(&m_Camera);
 
 	// Draw Terrain
-	m_LightShaderPair.EnableShader(context);
+	/*m_LightShaderPair.EnableShader(context);
 	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_DemoNMRenderPass->getShaderResourceView());
 	m_Terrain.Render(context);
 
@@ -274,7 +274,7 @@ void Game::Render()
 	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_Terrain.Render(context);
 
-	context->RSSetState(m_states->CullClockwise());
+	context->RSSetState(m_states->CullClockwise());*/
 
 	Vector3 origin = Vector3(-0.5f, -0.5f, -0.5f);
 	Vector3 p = Vector3(0.5f*(1.0f+cos(XM_PI/3.0f)), 0.0f, -0.5f*cos(XM_PI/6.0f));
@@ -476,14 +476,15 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Terrain
-	m_Terrain.Initialize(device, 128, 128);
+	//m_Terrain.Initialize(device, 128, 128);
 
 	// Marching Cube(s)
 	m_MarchingCubes.Initialize(device, 128);
 	m_MarchingCubes.GenerateHorizontalField(Vector3(0.0f, 0.01f, 0.0f));
 	//m_MarchingCubes.GenerateSphericalField(Vector3(0.5f, 0.5f, 0.5f));
 	//m_MarchingCubes.GenerateToroidalField(Vector3(0.5f, 0.5f, 0.5f));
-	m_MarchingCubes.GenerateHex(device, 0.15f);
+	m_MarchingCubes.AddThorn(device, 0.45f);
+	m_MarchingCubes.GenerateHex(device, 0.45f);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");

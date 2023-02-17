@@ -22,7 +22,7 @@ void MarchingTerrain::GenerateHorizontalField(DirectX::SimpleMath::Vector3 origi
 				m_field[fieldCoordinate].scalar = position.y;
 				//m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 6, 1.0f); // Will we just manually handle height, etc.?
 				//m_field[fieldCoordinate].scalar += std::min(simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 6, 1.0f), 0.0f);
-				m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, 0.0f, m_field[fieldCoordinate].position.z, 8, 0.1f);
+				m_field[fieldCoordinate].scalar += simplex.FBMNoise(m_field[fieldCoordinate].position.x, 0.0f, m_field[fieldCoordinate].position.z, 8, 0.4f);
 			}
 		}
 	}
@@ -107,6 +107,33 @@ void MarchingTerrain::GenerateToroidalField(DirectX::SimpleMath::Vector3 origin)
 				m_field[fieldCoordinate].scalar = (position-ringPosition).Length();
 				m_field[fieldCoordinate].scalar += 0.2f*perlin.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 6, 1.0f);
 				m_field[fieldCoordinate].scalar /= 1.0f-R;
+			}
+		}
+	}
+}
+
+void MarchingTerrain::AddThorn(ID3D11Device* device, float isolevel)
+{
+	DirectX::SimpleMath::Vector3 peak = DirectX::SimpleMath::Vector3(0.5f, 0.0f, 0.5f);
+	DirectX::SimpleMath::Vector3 base = DirectX::SimpleMath::Vector3(0.0f, -1.0f, 0.0f);
+	float angle = XM_PIDIV2/8.0f;
+
+	DirectX::SimpleMath::Vector3 position;
+	float theta;
+
+	int fieldCoordinate;
+	for (int k = 0; k <= m_cells; k++)
+	{
+		for (int j = 0; j <= m_cells; j++)
+		{
+			for (int i = 0; i <= m_cells; i++)
+			{
+				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
+
+				position = 2.0f*DirectX::SimpleMath::Vector3(m_field[fieldCoordinate].position.x-0.5f, m_field[fieldCoordinate].position.y-0.5f, m_field[fieldCoordinate].position.z-0.5f);
+				theta = acos((position-peak).Dot(base-peak)/((position-peak).Length()*(base-peak).Length()));
+
+				m_field[fieldCoordinate].scalar = std::min(m_field[fieldCoordinate].scalar, isolevel*theta/angle); // NB: Use of min, since this points 'out' from isosurface...
 			}
 		}
 	}

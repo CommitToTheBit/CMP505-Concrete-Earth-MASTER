@@ -12,6 +12,7 @@ public:
 	void GenerateToroidalField(DirectX::SimpleMath::Vector3 origin);
 
 	// Add to field...
+	void AddThorn(ID3D11Device*, float isolevel);
 
 	// Generate *with hex*
 	void GenerateHex(ID3D11Device*, float isolevel);
