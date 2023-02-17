@@ -5,17 +5,19 @@ class MarchingTerrain : public MarchingCubes
 {
 public:
 
-	// *Basic* surface...
-	void GenerateHorizontalField(DirectX::SimpleMath::Vector3 origin);
-	void GenerateSphericalField(DirectX::SimpleMath::Vector3 origin);
-	void GenerateSinusoidalSphericalField(DirectX::SimpleMath::Vector3 origin);
-	void GenerateToroidalField(DirectX::SimpleMath::Vector3 origin);
+	// Planar surface generation...
+	void InitialiseHorizontalField(int octaves = 8, float amplitude = 0.1f);
+	void AttachHorizontalThorn(float isolevel);
 
-	// Add to field...
-	void AddThorn(ID3D11Device*, float isolevel);
+	// Spherical surface generation...
+	void InitialiseSphericalField(int octaves = 8, float amplitude = 0.2f);
+
+	// Toroidal surface generation...
+	void InitialiseToroidalField(float R, int octaves = 8, float amplitude = 0.2f);
 
 	// Generate *with hex*
-	void GenerateHex(ID3D11Device*, float isolevel);
+	void GenerateHexPrism(ID3D11Device*, float isolevel, bool lowerBound = true, bool upperBound = false);
+	void GenerateCylindricalPrism(ID3D11Device*, float isolevel, bool lowerBound = true, bool upperBound = false);
 
 //private:
 };
