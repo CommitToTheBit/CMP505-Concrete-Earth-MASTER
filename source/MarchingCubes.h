@@ -50,15 +50,16 @@ private:
 	void ShutdownBuffers();
 
 	// Post-processing direction vectors
-	void CalculateNormalTangentBinormal(VertexType vertex1, VertexType vertex2, VertexType vertex3, DirectX::SimpleMath::Vector3& normal, DirectX::SimpleMath::Vector3& tangent, DirectX::SimpleMath::Vector3& binormal);
+	void CalculateNormalTangentBinormal(VertexType vertex1, VertexType vertex2, VertexType vertex3, DirectX::SimpleMath::Vector3& normal, DirectX::SimpleMath::Vector3& tangent, DirectX::SimpleMath::Vector3& binormal, float& weight);
 
 
-private:
+protected:
 	int m_cells;
 
 	FieldVertexType* m_field;
 
 	int* m_isosurfaceIndices;
+	int* m_isosurfaceVertices;
 	DirectX::SimpleMath::Vector3* m_isosurfacePositions;
 	float m_isolevel;
 
@@ -66,8 +67,8 @@ private:
 	int m_vertexCount, m_indexCount;
 
 	// Lookup tables used in the construction of the isosurface.
-	static const unsigned int m_edgeTable[256];
-	static const unsigned int m_triTable[256][16];
+	static const int m_edgeTable[256];
+	static const int m_triTable[256][16];
 
 	//arrays for our generated objects Made by directX
 	std::vector<VertexPositionNormalTexture> preFabVertices;

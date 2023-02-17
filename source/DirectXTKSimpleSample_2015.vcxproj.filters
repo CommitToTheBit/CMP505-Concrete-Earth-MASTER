@@ -29,6 +29,9 @@
     <Filter Include="Rendering\Vertex Models">
       <UniqueIdentifier>{51e21d27-ec15-4e68-82ff-d8ce7cfddc5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Modelling">
+      <UniqueIdentifier>{60b172f8-1be2-47b7-bad2-e00b1eaefc1b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -80,10 +83,19 @@
     <ClInclude Include="OverlayShader.h">
       <Filter>Rendering\Shader Classes</Filter>
     </ClInclude>
-    <ClInclude Include="Terrain.h" />
-    <ClInclude Include="MarchingCubes.h" />
-    <ClInclude Include="ClassicNoise.h" />
-    <ClInclude Include="SimplexNoise.h" />
+    <ClInclude Include="MarchingCubes.h">
+      <Filter>Modelling</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Modelling</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassicNoise.h">
+      <Filter>Modelling</Filter>
+    </ClInclude>
+    <ClInclude Include="SimplexNoise.h">
+      <Filter>Modelling</Filter>
+    </ClInclude>
+    <ClInclude Include="MarchingTerrain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -132,10 +144,19 @@
     <ClCompile Include="OverlayShader.cpp">
       <Filter>Rendering\Shader Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Terrain.cpp" />
-    <ClCompile Include="MarchingCubes.cpp" />
-    <ClCompile Include="ClassicNoise.cpp" />
-    <ClCompile Include="SimplexNoise.cpp" />
+    <ClCompile Include="MarchingCubes.cpp">
+      <Filter>Modelling</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Modelling</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassicNoise.cpp">
+      <Filter>Modelling</Filter>
+    </ClCompile>
+    <ClCompile Include="SimplexNoise.cpp">
+      <Filter>Modelling</Filter>
+    </ClCompile>
+    <ClCompile Include="MarchingTerrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -275,6 +296,12 @@
       <Filter>Assets</Filter>
     </FxCompile>
     <FxCompile Include="colour3D_ps.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
+    <FxCompile Include="light3D_vs.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
+    <FxCompile Include="light3D_ps.hlsl">
       <Filter>Assets</Filter>
     </FxCompile>
   </ItemGroup>
