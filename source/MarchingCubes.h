@@ -53,7 +53,7 @@ private:
 	void CalculateNormalTangentBinormal(VertexType vertex1, VertexType vertex2, VertexType vertex3, DirectX::SimpleMath::Vector3& normal, DirectX::SimpleMath::Vector3& tangent, DirectX::SimpleMath::Vector3& binormal, float& weight);
 
 
-private:
+protected:
 	int m_cells;
 
 	FieldVertexType* m_field;

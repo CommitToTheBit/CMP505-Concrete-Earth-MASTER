@@ -12,6 +12,7 @@
 
 #include "Terrain.h"
 #include "MarchingCubes.h"
+#include "MarchingTerrain.h"
 
 #include "Camera.h"
 #include "EnvironmentCamera.h"
@@ -132,7 +133,7 @@ private:
     // Models
     Terrain																	m_Terrain;
 
-    MarchingCubes                                                            m_MarchingCubes;
+    MarchingTerrain                                                         m_MarchingCubes;
 
     ModelClass																m_Cube;
 
