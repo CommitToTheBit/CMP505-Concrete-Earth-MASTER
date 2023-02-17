@@ -128,12 +128,14 @@ private:
     AlphaShader                                                             m_AlphaShaderPair;
     OverlayShader                                                           m_OverlayShaderPair;
 
-    LightShader                                                                  m_FieldRendering;
+    LightShader                                                             m_FieldRendering;
 
     // Models
     Terrain																	m_Terrain;
 
-    MarchingTerrain                                                         m_MarchingCubes;
+    MarchingTerrain                                                         m_Thorns1;
+    MarchingTerrain                                                         m_Thorns2;
+    MarchingTerrain                                                         m_Thorns3;
 
     ModelClass																m_Cube;
 

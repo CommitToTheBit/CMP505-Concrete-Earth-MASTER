@@ -288,7 +288,13 @@ void Game::Render()
 
 			m_FieldRendering.EnableShader(context);
 			m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(origin+i*p+j*q)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-			m_MarchingCubes.Render(context);
+			
+			if (((i+j)%3+3)%3 == 0)
+				m_Thorns1.Render(context);
+			else if (((i+j)%3+3)%3 == 1)
+				m_Thorns2.Render(context);
+			else
+				m_Thorns3.Render(context);
 		}
 	}
 
@@ -478,12 +484,22 @@ void Game::CreateDeviceDependentResources()
 	//m_Terrain.Initialize(device, 128, 128);
 
 	// Marching Cube(s)
-	m_MarchingCubes.Initialize(device, 64);
-	m_MarchingCubes.InitialiseHorizontalField();
-	//m_MarchingCubes.InitialiseSphericalField();
-	//m_MarchingCubes.InitialiseToroidalField(0.5f);
-	m_MarchingCubes.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.5f+0.25f*cos(2.0f*XM_PI/3.0f), 0.5f, 0.5f-0.25f*sin(2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.5f, 0.0f, 0.5f), XM_PIDIV2/8.0f, 0.15f);
-	m_MarchingCubes.GenerateHexPrism(device, 0.15f);
+	m_Thorns1.Initialize(device, 64);
+	m_Thorns1.InitialiseHorizontalField();
+	m_Thorns1.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.5f+0.25f*cos(2.0f*XM_PI/3.0f), 0.5f, 0.5f-0.25f*sin(2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.5f, 0.0f, 0.5f), XM_PIDIV2/8.0f, 0.15f);
+	m_Thorns1.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.75f+0.3f*cos(-2.0f*XM_PI/3.0f), 0.55f, 0.6f-0.3f*sin(-2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.75f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
+	m_Thorns1.GenerateHexPrism(device, 0.15f);
+
+	m_Thorns2.Initialize(device, 64);
+	m_Thorns2.InitialiseHorizontalField();
+	m_Thorns2.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.4f+0.15f*cos(-1.0f*XM_PI/6.0f), 0.6f, 0.3f-0.15f*sin(-1.0f*XM_PI/6.0f)), DirectX::SimpleMath::Vector3(0.4f, 0.0f, 0.3f), XM_PIDIV2/8.0f, 0.15f);
+	m_Thorns2.GenerateHexPrism(device, 0.15f);
+
+	m_Thorns3.Initialize(device, 64);
+	m_Thorns3.InitialiseHorizontalField();
+	m_Thorns3.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.45f+0.25f*cos(1.0f*XM_PI/3.0f), 0.67f, 0.6f-0.25f*sin(1.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.45f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
+	m_Thorns3.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.75f+0.4f*cos(3.0f*XM_PI/3.0f), 0.45f, 0.6f-0.4f*sin(3.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.75f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
+	m_Thorns3.GenerateHexPrism(device, 0.15f);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");
