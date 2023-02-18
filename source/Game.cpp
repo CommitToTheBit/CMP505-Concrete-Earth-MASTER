@@ -56,8 +56,11 @@ void Game::Initialize(HWND window, int width, int height)
 	//setup camera
 	//m_Camera.setPosition(Vector3(2.4f+0.75*cos(atan(-1.8/2.4)), 0.0f, 1.8f+0.75*sin(atan(-1.8/2.4))));
 	//m_Camera.setRotation(Vector3(-90.0f, -180+(180.0/3.14159265)*atan(2.4/1.8), 0.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up.
-	m_Camera.setPosition(Vector3(0.0, 0.0f, 5.0));
-	m_Camera.setRotation(Vector3(-90.0f, -180, 0.0f));
+
+	// FIXME: Refactor this, for 'cleaner' board set-up?
+	m_Camera.setPosition(Vector3(1.5f, 0.5f*sin(3.0f*XM_PI/10.0f), 0.0f)+5.0f*Vector3(cos(3.0f*XM_PI/10.0f)*sin(XM_PI/12.0f), sin(3.0f*XM_PI/10.0f), cos(3.0f*XM_PI/10.0f))*cos(XM_PI/12.0f));
+	m_Camera.setRotation(Vector3(-90.0f-54.0f, -180.0f+15.0f, 0.0f));
+
 	
 #ifdef DXTK_AUDIO
     // Create DirectXTK for Audio objects
@@ -121,8 +124,8 @@ void Game::Update(DX::StepTimer const& timer)
 	//note that currently.  Delta-time is not considered in the game object movement. 
 	Vector3 inputPosition = Vector3(0.0f, 0.0f, 0.0f);
 
-	// STEP 1: Read camera translation inputs (from keyboard)
-	if (m_gameInputCommands.forward)
+	// STEP 1: Read camera translation inputs (from keyboard) // FIXME: Refactor this, for 'cleaner' board set-up?
+	/*if (m_gameInputCommands.forward)
 		inputPosition.z += 1.0f;
 	if (m_gameInputCommands.back)
 		inputPosition.z -= 1.0f;
@@ -162,20 +165,12 @@ void Game::Update(DX::StepTimer const& timer)
 		rotation += deltaRotation;
 		rotation.x = std::min(-0.001f, std::max(rotation.x, -179.999f)); // NB: Prevents gimbal lock
 		m_Camera.setRotation(rotation);
-	}
-
-	// DEBUG STEP: Generate terrain...
-	//this is hacky,  i dont like this here.  
-	auto device = m_deviceResources->GetD3DDevice();
-	if (m_gameInputCommands.generate)
-	{
-		for (int terrainLayer = 0; terrainLayer < m_Terrain.M_TERRAIN_LAYERS; terrainLayer++)
-			m_Terrain.GenerateHeightMap(device, terrainLayer); // FIXME: Hacky? See description...
-	}
+	}*/
 
 	// STEP 3: Process inputs
 	m_Camera.Update();
 	//m_Light.setPosition(m_Camera.getPosition().x, m_Camera.getPosition().y, m_Camera.getPosition().z);
+	m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 0.75f+0.25f*cos(XM_2PI*m_time/60.0f), 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
 
 	m_Terrain.Update();		//terrain update.  doesnt do anything at the moment. 
 	
@@ -282,8 +277,12 @@ void Game::Render()
 			if (abs(i-j) > m_HexBoard.m_hexRadius)
 				continue;
 
+			// FIXME: Refactor this, for 'cleaner' board set-up?
+			float l = (m_Camera.getPosition()-Vector3(1.5f, 0.5f*sin(3.0f*XM_PI/10.0f), 0.0f)).Length();
+			Matrix ortho = Matrix::CreateOrthographic(l*1280.0f/720.0f,l*1.0f,0.01f,100.0f);
+
 			m_FieldRendering.EnableShader(context);
-			m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(m_HexBoard.m_origin+i*m_HexBoard.m_p+j*m_HexBoard.m_q)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
+			m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(m_HexBoard.m_origin+i*m_HexBoard.m_p+j*m_HexBoard.m_q)), &m_Camera.getCameraMatrix(), &ortho, true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 			m_HexBoard.m_hexTiles[m_HexBoard.m_hexCoordinates[(2*m_HexBoard.m_hexRadius+1)*(j+m_HexBoard.m_hexRadius)+i+m_HexBoard.m_hexRadius]].Render(context);
 		}
 	}
@@ -474,7 +473,7 @@ void Game::CreateDeviceDependentResources()
 	//m_Terrain.Initialize(device, 128, 128);
 
 	// Marching Cube(s)
-	m_Thorns1.Initialize(device, 64);
+	/*m_Thorns1.Initialize(device, 64);
 	m_Thorns1.InitialiseHorizontalField();
 	m_Thorns1.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.5f+0.25f*cos(2.0f*XM_PI/3.0f), 0.5f, 0.5f-0.25f*sin(2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.5f, 0.0f, 0.5f), XM_PIDIV2/8.0f, 0.15f);
 	m_Thorns1.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.75f+0.3f*cos(-2.0f*XM_PI/3.0f), 0.55f, 0.6f-0.3f*sin(-2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.75f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
@@ -489,7 +488,7 @@ void Game::CreateDeviceDependentResources()
 	m_Thorns3.InitialiseHorizontalField();
 	m_Thorns3.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.45f+0.25f*cos(1.0f*XM_PI/3.0f), 0.67f, 0.6f-0.25f*sin(1.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.45f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
 	m_Thorns3.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.75f+0.4f*cos(3.0f*XM_PI/3.0f), 0.45f, 0.6f-0.4f*sin(3.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.75f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
-	m_Thorns3.GenerateHexPrism(device, 0.15f);
+	m_Thorns3.GenerateHexPrism(device, 0.15f);*/
 
 	m_HexBoard.Initialize(device, 2, 64);
 
