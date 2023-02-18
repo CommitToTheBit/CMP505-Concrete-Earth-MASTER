@@ -14,6 +14,10 @@ MarchingTerrain::~MarchingTerrain()
 
 void MarchingTerrain::InitialiseHorizontalField(int octaves, float amplitude)
 {
+	m_isosurfaceIndices = new int[m_cells * m_cells * m_cells];
+	m_isosurfaceVertices = new int[12 * m_cells * m_cells * m_cells];
+	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * m_cells * m_cells * m_cells];
+
 	SimplexNoise simplex = SimplexNoise();
 
 	DirectX::SimpleMath::Vector3 position;
@@ -36,6 +40,10 @@ void MarchingTerrain::InitialiseHorizontalField(int octaves, float amplitude)
 
 void MarchingTerrain::InitialiseSphericalField(int octaves, float amplitude)
 {
+	m_isosurfaceIndices = new int[m_cells * m_cells * m_cells];
+	m_isosurfaceVertices = new int[12 * m_cells * m_cells * m_cells];
+	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * m_cells * m_cells * m_cells];
+
 	SimplexNoise simplex = SimplexNoise();
 
 	DirectX::SimpleMath::Vector3 origin = DirectX::SimpleMath::Vector3(0.5f, 0.5f, 0.5f);
@@ -58,6 +66,10 @@ void MarchingTerrain::InitialiseSphericalField(int octaves, float amplitude)
 
 void MarchingTerrain::InitialiseToroidalField(float R, int octaves, float amplitude)
 {
+	m_isosurfaceIndices = new int[m_cells * m_cells * m_cells];
+	m_isosurfaceVertices = new int[12 * m_cells * m_cells * m_cells];
+	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * m_cells * m_cells * m_cells];
+
 	SimplexNoise simplex = SimplexNoise();
 
 	DirectX::SimpleMath::Vector3 origin = DirectX::SimpleMath::Vector3(0.5f, 0.5f, 0.5f);
@@ -89,7 +101,7 @@ void MarchingTerrain::InitialiseToroidalField(float R, int octaves, float amplit
 	}
 }
 
-void MarchingTerrain::AttachHorizontalThorn(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 base, float angle, float isolevel)
+void MarchingTerrain::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 base, float angle, float isolevel)
 {
 	SimplexNoise simplex = SimplexNoise();
 
@@ -120,7 +132,33 @@ void MarchingTerrain::AttachHorizontalThorn(DirectX::SimpleMath::Vector3 origin,
 	}
 }
 
-void MarchingTerrain::GenerateHexPrism(ID3D11Device* device, float isolevel, bool lowerBound, bool upperBound)
+void MarchingTerrain::IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius, float isolevel)
+{
+	SimplexNoise simplex = SimplexNoise();
+
+	float orb;
+
+	int fieldCoordinate;
+	for (int k = 0; k <= m_cells; k++)
+	{
+		for (int j = 0; j <= m_cells; j++)
+		{
+			for (int i = 0; i <= m_cells; i++)
+			{
+				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
+				
+				orb = (m_field[fieldCoordinate].position-centre).Length()/radius;
+
+				// FIXME: Procedural coarseness is not convincing...
+				//orb += simplex.FBMNoise(m_field[fieldCoordinate].position.x, m_field[fieldCoordinate].position.y, m_field[fieldCoordinate].position.z, 8, 0.2f*radius);
+
+				m_field[fieldCoordinate].scalar = std::min(m_field[fieldCoordinate].scalar, isolevel*orb);
+			}
+		}
+	}
+}
+
+void MarchingTerrain::DeriveHexPrism(ID3D11Device* device, float isolevel, bool lowerBound, bool upperBound)
 {
 	DirectX::SimpleMath::Vector2 position;
 	float r, theta, z;
@@ -168,7 +206,7 @@ void MarchingTerrain::GenerateHexPrism(ID3D11Device* device, float isolevel, boo
 	GenerateIsosurface(device, isolevel);
 }
 
-void MarchingTerrain::GenerateCylindricalPrism(ID3D11Device* device, float isolevel, bool lowerBound, bool upperBound)
+void MarchingTerrain::DeriveCylindricalPrism(ID3D11Device* device, float isolevel, bool lowerBound, bool upperBound)
 {
 	DirectX::SimpleMath::Vector2 position;
 	float r, theta, z;

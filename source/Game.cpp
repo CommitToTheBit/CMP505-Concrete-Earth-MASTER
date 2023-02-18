@@ -58,8 +58,8 @@ void Game::Initialize(HWND window, int width, int height)
 	//m_Camera.setRotation(Vector3(-90.0f, -180+(180.0/3.14159265)*atan(2.4/1.8), 0.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up.
 
 	// FIXME: Refactor this, for 'cleaner' board set-up?
-	m_Camera.setPosition(Vector3(1.5f, 0.5f*sin(3.0f*XM_PI/10.0f), 0.0f)+5.0f*Vector3(cos(3.0f*XM_PI/10.0f)*sin(XM_PI/12.0f), sin(3.0f*XM_PI/10.0f), cos(3.0f*XM_PI/10.0f))*cos(XM_PI/12.0f));
-	m_Camera.setRotation(Vector3(-90.0f-54.0f, -180.0f+15.0f, 0.0f));
+	m_Camera.setPosition(Vector3(1.5f, 0.5f*sin(1.0f*XM_PI/5.0f), 0.0f)+5.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(XM_PI/12.0f), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(XM_PI/12.0f));
+	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+15.0f, 0.0f));
 
 	
 #ifdef DXTK_AUDIO
@@ -278,7 +278,7 @@ void Game::Render()
 				continue;
 
 			// FIXME: Refactor this, for 'cleaner' board set-up?
-			float l = (m_Camera.getPosition()-Vector3(1.5f, 0.5f*sin(3.0f*XM_PI/10.0f), 0.0f)).Length();
+			float l = (m_Camera.getPosition()-Vector3(1.5f, 0.5f*sin(1.0f*XM_PI/5.0f), 0.0f)).Length();
 			Matrix ortho = Matrix::CreateOrthographic(l*1280.0f/720.0f,l*1.0f,0.01f,100.0f);
 
 			m_FieldRendering.EnableShader(context);

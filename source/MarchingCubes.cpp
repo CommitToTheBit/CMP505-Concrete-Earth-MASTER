@@ -329,11 +329,11 @@ bool MarchingCubes::Initialize(ID3D11Device* device, int cells)
 			}
 		}
 	}
-	m_isosurfaceIndices = new int[cells * cells * cells];
-	m_isosurfaceVertices = new int[12 * cells * cells * cells];
-	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * cells * cells * cells];
+	//m_isosurfaceIndices = new int[cells * cells * cells];
+	//m_isosurfaceVertices = new int[12 * cells * cells * cells];
+	//m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * cells * cells * cells];
 
-	GenerateIsosurface(device, 0.0f);
+	//GenerateIsosurface(device, 0.0f);
 
 	return true;
 }
@@ -469,6 +469,15 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 	}
 
 	// Release the arrays now that the vertex and index buffers have been created and loaded.
+	delete[] m_isosurfaceIndices;
+	m_isosurfaceIndices = 0;
+
+	delete[] m_isosurfaceVertices;
+	m_isosurfaceVertices = 0;
+
+	delete[] m_isosurfacePositions;
+	m_isosurfacePositions = 0;
+
 	delete[] vertices;
 	vertices = 0;
 
