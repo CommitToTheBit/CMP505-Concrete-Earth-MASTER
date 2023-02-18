@@ -4,6 +4,8 @@
 class MarchingTerrain : public MarchingCubes
 {
 public:
+	MarchingTerrain();
+	~MarchingTerrain();
 
 	// Planar surface generation...
 	void InitialiseHorizontalField(int octaves = 8, float amplitude = 0.1f);

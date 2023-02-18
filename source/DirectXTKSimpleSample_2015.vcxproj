@@ -176,6 +176,7 @@
     <ClInclude Include="EnvironmentCamera.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlassShader.h" />
+    <ClInclude Include="HexBoard.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightShader.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="EnvironmentCamera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GlassShader.cpp" />
+    <ClCompile Include="HexBoard.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightShader.cpp" />

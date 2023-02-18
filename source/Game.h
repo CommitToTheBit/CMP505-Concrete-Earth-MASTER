@@ -13,6 +13,7 @@
 #include "Terrain.h"
 #include "MarchingCubes.h"
 #include "MarchingTerrain.h"
+#include "HexBoard.h"
 
 #include "Camera.h"
 #include "EnvironmentCamera.h"
@@ -136,6 +137,8 @@ private:
     MarchingTerrain                                                         m_Thorns1;
     MarchingTerrain                                                         m_Thorns2;
     MarchingTerrain                                                         m_Thorns3;
+
+    HexBoard                                                                m_HexBoard;
 
     ModelClass																m_Cube;
 

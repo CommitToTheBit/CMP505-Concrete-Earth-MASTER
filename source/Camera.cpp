@@ -62,7 +62,6 @@ void Camera::Update()
 	m_cameraMatrix = (DirectX::SimpleMath::Matrix::CreateLookAt(m_position, m_lookat, DirectX::SimpleMath::Vector3::UnitY));
 	if (m_reflection)
 		m_cameraMatrix *= DirectX::SimpleMath::Matrix::CreateReflection(DirectX::SimpleMath::Plane(m_forward));
-	
 
 	//create right vector from look Direction
 	m_forward.Cross(DirectX::SimpleMath::Vector3::UnitY, m_right);
@@ -81,6 +80,7 @@ DirectX::SimpleMath::Matrix Camera::getCameraMatrix()
 void Camera::setPerspective(float fov, float aspectRatio, float nearPlane, float farPlane)
 {
 	m_perspective = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(fov, aspectRatio, nearPlane, farPlane);
+	//m_perspective = DirectX::SimpleMath::Matrix::CreateOrthographic(4.0f*aspectRatio, 4.0f, nearPlane, farPlane); // CreatePerspectiveFieldOfView(fov, aspectRatio, nearPlane, farPlane);
 }
 
 DirectX::SimpleMath::Matrix Camera::getPerspective()

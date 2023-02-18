@@ -1,6 +1,17 @@
 #include "pch.h"
 #include "MarchingTerrain.h"
 
+MarchingTerrain::MarchingTerrain()
+{
+
+}
+
+
+MarchingTerrain::~MarchingTerrain()
+{
+
+}
+
 void MarchingTerrain::InitialiseHorizontalField(int octaves, float amplitude)
 {
 	SimplexNoise simplex = SimplexNoise();

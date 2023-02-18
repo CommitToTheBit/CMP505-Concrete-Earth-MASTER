@@ -275,26 +275,16 @@ void Game::Render()
 
 	context->RSSetState(m_states->CullClockwise());*/
 
-	Vector3 origin = Vector3(-0.5f, -0.5f, -0.5f);
-	Vector3 p = Vector3(0.5f*(1.0f+cos(XM_PI/3.0f)), 0.0f, -0.5f*cos(XM_PI/6.0f));
-	Vector3 q = Vector3(-0.5f*(1.0f+cos(XM_PI/3.0f)), 0.0f, -0.5f*cos(XM_PI/6.0f));
-
-	for (int i = -2; i <= 2; i++)
+	for (int j = -m_HexBoard.m_hexRadius; j <= m_HexBoard.m_hexRadius; j++)
 	{
-		for (int j = -2; j <= 2; j++)
+		for (int i = -m_HexBoard.m_hexRadius; i <= m_HexBoard.m_hexRadius; i++)
 		{
-			if (abs(i-j) > 2)
+			if (abs(i-j) > m_HexBoard.m_hexRadius)
 				continue;
 
 			m_FieldRendering.EnableShader(context);
-			m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(origin+i*p+j*q)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-			
-			if (((i+j)%3+3)%3 == 0)
-				m_Thorns1.Render(context);
-			else if (((i+j)%3+3)%3 == 1)
-				m_Thorns2.Render(context);
-			else
-				m_Thorns3.Render(context);
+			m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(m_HexBoard.m_origin+i*m_HexBoard.m_p+j*m_HexBoard.m_q)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
+			m_HexBoard.m_hexTiles[m_HexBoard.m_hexCoordinates[(2*m_HexBoard.m_hexRadius+1)*(j+m_HexBoard.m_hexRadius)+i+m_HexBoard.m_hexRadius]].Render(context);
 		}
 	}
 
@@ -500,6 +490,8 @@ void Game::CreateDeviceDependentResources()
 	m_Thorns3.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.45f+0.25f*cos(1.0f*XM_PI/3.0f), 0.67f, 0.6f-0.25f*sin(1.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.45f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
 	m_Thorns3.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.75f+0.4f*cos(3.0f*XM_PI/3.0f), 0.45f, 0.6f-0.4f*sin(3.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.75f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
 	m_Thorns3.GenerateHexPrism(device, 0.15f);
+
+	m_HexBoard.Initialize(device, 2, 64);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");

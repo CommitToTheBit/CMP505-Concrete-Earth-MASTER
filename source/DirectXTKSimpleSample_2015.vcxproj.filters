@@ -95,6 +95,9 @@
     <ClInclude Include="MarchingTerrain.h">
       <Filter>Modelling</Filter>
     </ClInclude>
+    <ClInclude Include="HexBoard.h">
+      <Filter>Modelling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -156,6 +159,9 @@
       <Filter>Modelling</Filter>
     </ClCompile>
     <ClCompile Include="MarchingTerrain.cpp">
+      <Filter>Modelling</Filter>
+    </ClCompile>
+    <ClCompile Include="HexBoard.cpp">
       <Filter>Modelling</Filter>
     </ClCompile>
   </ItemGroup>
