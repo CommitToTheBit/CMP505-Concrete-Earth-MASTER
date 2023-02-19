@@ -15,12 +15,22 @@ Field::~Field()
 bool Field::Initialise(int cells)
 {
 	m_cells = cells;
-	m_isolevel = isolevel;
 
 	m_field = new FieldVertexType[(m_cells + 1) * (m_cells + 1) * (m_cells + 1)];
-	for (int f = 0; f < (m_cells+1)*(m_cells+1)*(m_cells+1); f++)
+	for (int f = 0; f < (m_cells + 1) * (m_cells + 1) * (m_cells + 1); f++)
 		m_field[f].position = DirectX::SimpleMath::Vector3(f%(m_cells+1), (f/(m_cells+1))%(m_cells+1), f/((m_cells+1)*(m_cells+1)))/m_cells;
 
+	return true;
+}
+
+bool Field::Initialise(Field* field)
+{
+	m_cells = field->m_cells;
+
+	m_field = new FieldVertexType[(m_cells + 1) * (m_cells + 1) * (m_cells + 1)];
+	std::copy(field->m_field, field->m_field + (m_cells + 1) * (m_cells + 1) * (m_cells + 1), m_field);
+
+	return true;
 }
 
 void Field::InitialiseHorizontalField(int octaves, float amplitude)
@@ -30,7 +40,7 @@ void Field::InitialiseHorizontalField(int octaves, float amplitude)
 	for (int f = 0; f < (m_cells+1)*(m_cells+1)*(m_cells+1); f++)
 	{
 		m_field[f].scalar = m_field[f].position.y;
-		m_field[f].scalar += simplex.FBMNoise(m_field[f].position.x, m_field[f].position.z, octaves, amplitude);
+		m_field[f].scalar += simplex.FBMNoise(m_field[f].position.x, 10.0f*m_field[f].position.y, m_field[f].position.z, octaves, amplitude); // NB: 10.0f factor creates some really nice, broad and barren landscapes!
 		m_field[f].scalar = std::max(m_field[f].scalar, 0.0f);
 	}
 }
@@ -77,7 +87,7 @@ void Field::InitialiseToroidalField(float R, int octaves, float amplitude)
 	}
 }
 
-void Field::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 base, float angle)
+void Field::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 base, float angle, float isolevel)
 {
 	SimplexNoise simplex = SimplexNoise();
 
@@ -91,7 +101,7 @@ void Field::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, Direct
 		// FIXME: Procedural coarseness is not convincing...
 		//thorn -= simplex.FBMNoise(m_field[f].position.x, m_field[f].position.y, m_field[f].position.z, 8, 0.5f);
 
-		m_field[f].scalar = std::min(m_field[f].scalar, m_isolevel*thorn); // NB: Use of min, since this points 'out' from isosurface...
+		m_field[f].scalar = std::min(m_field[f].scalar, isolevel*thorn); // NB: Use of min, since this points 'out' from isosurface...
 
 		// FIXME: Procedural coarseness is not convincing...
 		//if ((m_field[f].position-origin).Length() < 4.0f*sqrt(3)/m_cells) // NB: Not rigourous, but seems to protect against 'floating islands' at the tip?
@@ -99,7 +109,7 @@ void Field::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, Direct
 	}
 }
 
-void Field::IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius)
+void Field::IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius, float isolevel)
 {
 	SimplexNoise simplex = SimplexNoise();
 
@@ -112,11 +122,11 @@ void Field::IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius)
 		// FIXME: Procedural coarseness is not convincing...
 		//orb += simplex.FBMNoise(m_field[f].position.x, m_field[f].position.y, m_field[f].position.z, 8, 0.2f*radius);
 
-		m_field[f].scalar = std::min(m_field[f].scalar, m_isolevel*orb);
+		m_field[f].scalar = std::min(m_field[f].scalar, isolevel*orb);
 	}
 }
 
-void Field::DeriveHexPrism(ID3D11Device* device, bool lowerBound, bool upperBound)
+void Field::DeriveHexPrism(ID3D11Device* device, float isolevel, bool lowerBound, bool upperBound)
 {
 	DirectX::SimpleMath::Vector2 position;
 	float r, theta, z;
@@ -136,23 +146,23 @@ void Field::DeriveHexPrism(ID3D11Device* device, bool lowerBound, bool upperBoun
 		quadrantDirection = DirectX::SimpleMath::Vector2(cos(((float)quadrant+0.5f)*XM_2PI/(float)q), sin(((float)quadrant+0.5f)*XM_2PI/(float)q));
 
 		r = position.Dot(quadrantDirection)/cos(XM_PI/(float(q)));
-		m_field[f].scalar = std::max(m_field[f].scalar, m_isolevel*r);
+		m_field[f].scalar = std::max(m_field[f].scalar, isolevel*r);
 
 		if (lowerBound)
 		{
 			z = 1.0f-m_field[f].position.y;
-			m_field[f].scalar = std::max(m_field[f].scalar, m_isolevel*z);
+			m_field[f].scalar = std::max(m_field[f].scalar, isolevel*z);
 		}
 
 		if (upperBound)
 		{
 			z = m_field[f].position.y;
-			m_field[f].scalar = std::max(m_field[f].scalar, m_isolevel*z);
+			m_field[f].scalar = std::max(m_field[f].scalar, isolevel*z);
 		}
 	}
 }
 
-void Field::DeriveCylindricalPrism(ID3D11Device* device, bool lowerBound, bool upperBound)
+void Field::DeriveCylindricalPrism(ID3D11Device* device, float isolevel, bool lowerBound, bool upperBound)
 {
 	DirectX::SimpleMath::Vector2 position;
 	float r, theta, z;
@@ -164,18 +174,18 @@ void Field::DeriveCylindricalPrism(ID3D11Device* device, bool lowerBound, bool u
 	{
 		position = 2.0f*DirectX::SimpleMath::Vector2(m_field[f].position.x-0.5f, m_field[f].position.z-0.5f);
 		r = position.Length();
-		m_field[f].scalar = std::max(m_field[f].scalar, m_isolevel*r);
+		m_field[f].scalar = std::max(m_field[f].scalar, isolevel*r);
 
 		if (lowerBound)
 		{
 			z = 1.0f-m_field[f].position.y;
-			m_field[f].scalar = std::max(m_field[f].scalar, m_isolevel*z);
+			m_field[f].scalar = std::max(m_field[f].scalar, isolevel*z);
 		}
 
 		if (upperBound)
 		{
 			z = m_field[f].position.y;
-			m_field[f].scalar = std::max(m_field[f].scalar, m_isolevel*z);
+			m_field[f].scalar = std::max(m_field[f].scalar, isolevel*z);
 		}
 	}
 }

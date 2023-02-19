@@ -10,9 +10,6 @@
 #include "Input.h"
 #include "RenderTexture.h"
 
-#include "Terrain.h"
-#include "MarchingCubes.h"
-#include "MarchingTerrain.h"
 #include "HexBoard.h"
 
 #include "Camera.h"
@@ -132,13 +129,8 @@ private:
     LightShader                                                             m_FieldRendering;
 
     // Models
-    Terrain																	m_Terrain;
-
-    MarchingTerrain                                                         m_Thorns1;
-    MarchingTerrain                                                         m_Thorns2;
-    MarchingTerrain                                                         m_Thorns3;
-
     HexBoard                                                                m_HexBoard;
+    int                                                                     m_add; // DEBUG...
 
     ModelClass																m_Cube;
 

@@ -328,8 +328,6 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device, int cells, FieldVert
 	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
 	float weight = 0.0f;
 
-	int cellCoordinate;
-
 	// STEP 0: Generate isosurface...
 	const int fieldVertices[8] = { 0, 1, (cells+1)*(cells+1)+1, (cells+1)*(cells+1), (cells+1), (cells+1)+1, (cells+1)*(cells+1)+(cells+1)+1, (cells+1)*(cells+1)+(cells+1), };
 

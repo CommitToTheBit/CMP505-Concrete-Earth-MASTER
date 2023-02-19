@@ -171,14 +171,14 @@ void Game::Update(DX::StepTimer const& timer)
 	m_Camera.Update();
 	//m_Light.setPosition(m_Camera.getPosition().x, m_Camera.getPosition().y, m_Camera.getPosition().z);
 	m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 0.75f+0.25f*cos(XM_2PI*m_time/60.0f), 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
-
-	m_Terrain.Update();		//terrain update.  doesnt do anything at the moment. 
 	
 	// DEBUG:
 	auto device = m_deviceResources->GetD3DDevice();
-	//m_HexBoard.m_hexTiles[0].GenerateIsosurface(device, 0.5f+0.25f*sin(m_time/(XM_2PI*5.0f)));
-	m_HexBoard.m_hexTiles[0].InitialiseHorizontalField();
-	m_HexBoard.m_hexTiles[0].DeriveHexPrism(device, 0.5f+0.25f*sin(XM_2PI*m_time/5.0f));
+	//m_HexBoard.m_hexModels[0].GenerateIsosurface(device, 0.5f+0.25f*sin(m_time/(XM_2PI*5.0f)));
+	//m_HexBoard.m_hexModels[0].InitialiseHorizontalField();
+	//m_HexBoard.m_hexModels[0].DeriveHexPrism(device, 0.5f+0.25f*sin(XM_2PI*m_time/5.0f));
+	if (m_gameInputCommands.forward)
+		m_HexBoard.AddThorn(device, m_add++);
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
@@ -286,7 +286,7 @@ void Game::Render()
 
 			m_FieldRendering.EnableShader(context);
 			m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(m_HexBoard.m_origin+i*m_HexBoard.m_p+j*m_HexBoard.m_q)), &m_Camera.getCameraMatrix(), &ortho, true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-			m_HexBoard.m_hexTiles[m_HexBoard.m_hexCoordinates[(2*m_HexBoard.m_hexRadius+1)*(j+m_HexBoard.m_hexRadius)+i+m_HexBoard.m_hexRadius]].Render(context);
+			m_HexBoard.m_hexModels[m_HexBoard.m_hexCoordinates[(2*m_HexBoard.m_hexRadius+1)*(j+m_HexBoard.m_hexRadius)+i+m_HexBoard.m_hexRadius]].Render(context);
 		}
 	}
 
@@ -472,28 +472,9 @@ void Game::CreateDeviceDependentResources()
     m_font = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
-	// Terrain
-	//m_Terrain.Initialize(device, 128, 128);
-
-	// Marching Cube(s)
-	/*m_Thorns1.Initialize(device, 64);
-	m_Thorns1.InitialiseHorizontalField();
-	m_Thorns1.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.5f+0.25f*cos(2.0f*XM_PI/3.0f), 0.5f, 0.5f-0.25f*sin(2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.5f, 0.0f, 0.5f), XM_PIDIV2/8.0f, 0.15f);
-	m_Thorns1.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.75f+0.3f*cos(-2.0f*XM_PI/3.0f), 0.55f, 0.6f-0.3f*sin(-2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.75f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
-	m_Thorns1.GenerateHexPrism(device, 0.15f);
-
-	m_Thorns2.Initialize(device, 64);
-	m_Thorns2.InitialiseHorizontalField();
-	m_Thorns2.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.4f+0.15f*cos(-1.0f*XM_PI/6.0f), 0.6f, 0.3f-0.15f*sin(-1.0f*XM_PI/6.0f)), DirectX::SimpleMath::Vector3(0.4f, 0.0f, 0.3f), XM_PIDIV2/8.0f, 0.15f);
-	m_Thorns2.GenerateHexPrism(device, 0.15f);
-
-	m_Thorns3.Initialize(device, 64);
-	m_Thorns3.InitialiseHorizontalField();
-	m_Thorns3.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.45f+0.25f*cos(1.0f*XM_PI/3.0f), 0.67f, 0.6f-0.25f*sin(1.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.45f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
-	m_Thorns3.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.75f+0.4f*cos(3.0f*XM_PI/3.0f), 0.45f, 0.6f-0.4f*sin(3.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.75f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
-	m_Thorns3.GenerateHexPrism(device, 0.15f);*/
-
+	// Board
 	m_HexBoard.Initialize(device, 2, 64);
+	m_add = 0;
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");

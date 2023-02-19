@@ -92,9 +92,6 @@
     <ClInclude Include="SimplexNoise.h">
       <Filter>Modelling</Filter>
     </ClInclude>
-    <ClInclude Include="MarchingTerrain.h">
-      <Filter>Modelling</Filter>
-    </ClInclude>
     <ClInclude Include="HexBoard.h">
       <Filter>Modelling</Filter>
     </ClInclude>
@@ -159,9 +156,6 @@
       <Filter>Modelling</Filter>
     </ClCompile>
     <ClCompile Include="SimplexNoise.cpp">
-      <Filter>Modelling</Filter>
-    </ClCompile>
-    <ClCompile Include="MarchingTerrain.cpp">
       <Filter>Modelling</Filter>
     </ClCompile>
     <ClCompile Include="HexBoard.cpp">
