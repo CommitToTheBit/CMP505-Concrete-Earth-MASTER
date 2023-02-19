@@ -194,6 +194,7 @@
     <ClInclude Include="SpecimenShader.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="Terrain.h" />
+    <ClInclude Include="Field.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlphaShader.cpp" />
@@ -225,6 +226,7 @@
     <ClCompile Include="SkyboxShader.cpp" />
     <ClCompile Include="SpecimenShader.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="Field.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

@@ -311,20 +311,14 @@ MarchingCubes::~MarchingCubes()
 
 }
 
-bool MarchingCubes::Initialize(ID3D11Device* device, int cells)
+bool MarchingCubes::Initialize(ID3D11Device* device, int cells, FieldVertexType* field, float isolevel)
 {
-	m_cells = cells;
-
-	//m_isosurfaceIndices = new int[cells * cells * cells];
-	//m_isosurfaceVertices = new int[12 * cells * cells * cells];
-	//m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * cells * cells * cells];
-
-	//GenerateIsosurface(device, 0.0f);
+	InitializeBuffers(device, cells, field, isolevel);
 
 	return true;
 }
 
-bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
+bool MarchingCubes::InitializeBuffers(ID3D11Device* device, int cells, FieldVertexType* field, float isolevel)
 {
 	VertexType* vertices;
 	unsigned long* indices;
@@ -336,16 +330,168 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 
 	int cellCoordinate;
 
+	// STEP 0: Generate isosurface...
+	const int fieldVertices[8] = { 0, 1, (cells+1)*(cells+1)+1, (cells+1)*(cells+1), (cells+1), (cells+1)+1, (cells+1)*(cells+1)+(cells+1)+1, (cells+1)*(cells+1)+(cells+1), };
+
+	int* isosurfaceIndices = new int[cells * cells * cells];
+	int* isosurfaceVertices = new int[12 * cells * cells * cells];
+	DirectX::SimpleMath::Vector3* isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * cells * cells * cells];
+
+	int cellCoordinate;
+	int fieldCoordinate;
+	int fieldVertexA, fieldVertexB;
+	DirectX::SimpleMath::Vector3 edgePositions[12];
+
+	// Set m_vertexCount = 0 here, then m_vertexCount++ for each new vertex?
+	m_vertexCount = 0;
+
+	/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+	/* This enclosed section has been adapted from: Paul Bourke (1994) Polygonising a Scalar Field. Available at http://paulbourke.net/geometry/polygonise/ (Accessed: 9 February 2023) */
+
+	// STEP 1: Calculate new isosurface vertex positions...
+	for (int k = 0; k < cells; k++)
+	{
+		for (int j = 0; j < cells; j++)
+		{
+			for (int i = 0; i < cells; i++)
+			{
+				cellCoordinate = cells*cells*k+cells*j+i;
+				fieldCoordinate = (cells+1)*(cells+1)*k+(cells+1)*j+i;
+
+				isosurfaceIndices[cellCoordinate] = 0;
+				for (int n = 0; n < 8; n++)
+					if (field[fieldCoordinate+fieldVertices[n]].scalar < isolevel)
+						isosurfaceIndices[cellCoordinate] += pow(2, n);
+
+				for (int n = 0; n < 12; n++)
+				{
+					if (m_edgeTable[isosurfaceIndices[cellCoordinate]] & (int)pow(2, n))
+					{
+						if (n < 8)
+						{
+							fieldVertexA = fieldCoordinate+fieldVertices[4*(n/4)+n%4];
+							fieldVertexB = fieldCoordinate+fieldVertices[4*(n/4)+(n+1)%4];
+						}
+						else
+						{
+							fieldVertexA = fieldCoordinate+fieldVertices[n-8];
+							fieldVertexB = fieldCoordinate+fieldVertices[n-4];
+						}
+						edgePositions[n] = InterpolateIsosurface(field[fieldVertexA], field[fieldVertexB], isolevel);
+					}
+				}
+
+				for (int n = 0; m_triTable[isosurfaceIndices[cellCoordinate]][n] != -1; n++)
+				{
+					// First, check if we've already used this vertex *in this cell*
+					int m;
+					for (m = 0; m_triTable[isosurfaceIndices[cellCoordinate]][m] != m_triTable[isosurfaceIndices[cellCoordinate]][n]; m++) {}
+					if (m < n || m_triTable[isosurfaceIndices[cellCoordinate]][m] == -1)
+						continue;
+
+					// Assigning position...
+					isosurfacePositions[12*cellCoordinate+m_triTable[isosurfaceIndices[cellCoordinate]][n]] = edgePositions[m_triTable[isosurfaceIndices[cellCoordinate]][n]];
+
+					// ...And assigning vertex number... // NB: Added this to log *unique* vertices, should reduce vertex data stored to ~1/4 - a significant improvement?
+					if (m_triTable[isosurfaceIndices[cellCoordinate]][n] == 0)
+					{
+						if (j > 0)
+							isosurfaceVertices[12*cellCoordinate] = isosurfaceVertices[12*(cellCoordinate-cells)+4];
+						else if (k > 0)
+							isosurfaceVertices[12*cellCoordinate] = isosurfaceVertices[12*(cellCoordinate-cells*cells)+2];
+						else
+							isosurfaceVertices[12*cellCoordinate] = m_vertexCount++;
+					}
+					else if (m_triTable[isosurfaceIndices[cellCoordinate]][n] == 1)
+					{
+						if (j > 0)
+							isosurfaceVertices[12*cellCoordinate+1] = isosurfaceVertices[12*(cellCoordinate-cells)+5];
+						else
+							isosurfaceVertices[12*cellCoordinate+1] = m_vertexCount++;
+					}
+					else if (m_triTable[isosurfaceIndices[cellCoordinate]][n] == 2)
+					{
+						if (j > 0)
+							isosurfaceVertices[12*cellCoordinate+2] = isosurfaceVertices[12*(cellCoordinate-cells)+6];
+						else
+							isosurfaceVertices[12*cellCoordinate+2] = m_vertexCount++;
+					}
+					else if (m_triTable[isosurfaceIndices[cellCoordinate]][n] == 3)
+					{
+						if (i > 0)
+							isosurfaceVertices[12*cellCoordinate+3] = isosurfaceVertices[12*(cellCoordinate-1)+1];
+						else if (j > 0)
+							isosurfaceVertices[12*cellCoordinate+3] = isosurfaceVertices[12*(cellCoordinate-cells)+7];
+						else
+							isosurfaceVertices[12*cellCoordinate+3] = m_vertexCount++;
+					}
+					else if (m_triTable[isosurfaceIndices[cellCoordinate]][n] == 4)
+					{
+						if (k > 0)
+							isosurfaceVertices[12*cellCoordinate+4] = isosurfaceVertices[12*(cellCoordinate-cells*cells)+6];
+						else
+							isosurfaceVertices[12*cellCoordinate+4] = m_vertexCount++;
+					}
+					else if (m_triTable[isosurfaceIndices[cellCoordinate]][n] == 5)
+					{
+						isosurfaceVertices[12*cellCoordinate+5] = m_vertexCount++;
+					}
+					else if (m_triTable[isosurfaceIndices[cellCoordinate]][n] == 6)
+					{
+						isosurfaceVertices[12*cellCoordinate+6] = m_vertexCount++;
+					}
+					else if (m_triTable[isosurfaceIndices[cellCoordinate]][n] == 7)
+					{
+						if (i > 0)
+							isosurfaceVertices[12*cellCoordinate+7] = isosurfaceVertices[12*(cellCoordinate-1)+5];
+						else
+							isosurfaceVertices[12*cellCoordinate+7] = m_vertexCount++;
+					}
+					else if (m_triTable[isosurfaceIndices[cellCoordinate]][n] == 8)
+					{
+						if (i > 0)
+							isosurfaceVertices[12*cellCoordinate+8] = isosurfaceVertices[12*(cellCoordinate-1)+9];
+						else if (k > 0)
+							isosurfaceVertices[12*cellCoordinate+8] = isosurfaceVertices[12*(cellCoordinate-cells*cells)+11];
+						else
+							isosurfaceVertices[12*cellCoordinate+8] = m_vertexCount++;
+					}
+					else if (m_triTable[isosurfaceIndices[cellCoordinate]][n] == 9)
+					{
+						if (k > 0)
+							isosurfaceVertices[12*cellCoordinate+9] = isosurfaceVertices[12*(cellCoordinate-cells*cells)+10];
+						else
+							isosurfaceVertices[12*cellCoordinate+9] = m_vertexCount++;
+					}
+					else if (m_triTable[isosurfaceIndices[cellCoordinate]][n] == 10)
+					{
+						isosurfaceVertices[12*cellCoordinate+10] = m_vertexCount++;
+					}
+					else
+					{
+						if (i > 0)
+							isosurfaceVertices[12*cellCoordinate+11] = isosurfaceVertices[12*(cellCoordinate-1)+10];
+						else
+							isosurfaceVertices[12*cellCoordinate+11] = m_vertexCount++;
+					}
+				}
+			}
+		}
+	}
+	m_vertexCount = std::max(m_vertexCount, 1); // FIXME: Only a shoddy patch for access violation!
+
+	/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
 	// STEP 1: Count indices...
 	m_indexCount = 0;
-	for (int k = 0; k < m_cells; k++)
+	for (int k = 0; k < cells; k++)
 	{
-		for (int j = 0; j < m_cells; j++)
+		for (int j = 0; j < cells; j++)
 		{
-			for (int i = 0; i < m_cells; i++)
+			for (int i = 0; i < cells; i++)
 			{
-				cellCoordinate = m_cells*m_cells*k+m_cells*j+i;
-				for (int n = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][n] != -1; n += 3)
+				cellCoordinate = cells*cells*k+cells*j+i;
+				for (int n = 0; m_triTable[isosurfaceIndices[cellCoordinate]][n] != -1; n += 3)
 				{
 					m_indexCount += 3;
 				}
@@ -376,31 +522,31 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 
 	// Initialize the index to the vertex buffer.
 	int index = 0;
-	for (int k = 0; k < m_cells; k++)
+	for (int k = 0; k < cells; k++)
 	{
-		for (int j = 0; j < m_cells; j++)
+		for (int j = 0; j < cells; j++)
 		{
-			for (int i = 0; i < m_cells; i++)
+			for (int i = 0; i < cells; i++)
 			{
-				cellCoordinate = m_cells*m_cells*k+m_cells*j+i;
+				cellCoordinate = cells*cells*k+cells*j+i;
 
-				for (int n = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][n] != -1; n += 3)
+				for (int n = 0; m_triTable[isosurfaceIndices[cellCoordinate]][n] != -1; n += 3)
 				{
 					for (int m = 0; m < 3; m++)
 					{
 						// Introduce these first two lines in previous loop...
-						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].position = m_isosurfacePositions[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]];// Unfixed: [15*cellCoordinate+n+m] ;
-						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f);// vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.x, vertices[m_isosurfaceVertices[15*cellCoordinate+n+m]].position.z); // NB: Due to ill-defined texture coordinates, tangents/binormals are also ill-defined...
-						indices[index] = m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]];
+						vertices[isosurfaceVertices[12*cellCoordinate+m_triTable[isosurfaceIndices[cellCoordinate]][n+m]]].position = isosurfacePositions[12*cellCoordinate+m_triTable[isosurfaceIndices[cellCoordinate]][n+m]];// Unfixed: [15*cellCoordinate+n+m] ;
+						vertices[isosurfaceVertices[12*cellCoordinate+m_triTable[isosurfaceIndices[cellCoordinate]][n+m]]].texture = DirectX::SimpleMath::Vector2(0.0f, 0.0f);// vertices[isosurfaceVertices[15*cellCoordinate+n+m]].position.x, vertices[isosurfaceVertices[15*cellCoordinate+n+m]].position.z); // NB: Due to ill-defined texture coordinates, tangents/binormals are also ill-defined...
+						indices[index] = isosurfaceVertices[12*cellCoordinate+m_triTable[isosurfaceIndices[cellCoordinate]][n+m]];
 						index++;
 					}
 
-					CalculateNormalTangentBinormal(vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]]], vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+1]]], vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+2]]], normal, tangent, binormal, weight);
+					CalculateNormalTangentBinormal(vertices[isosurfaceVertices[12*cellCoordinate+m_triTable[isosurfaceIndices[cellCoordinate]][n]]], vertices[isosurfaceVertices[12*cellCoordinate+m_triTable[isosurfaceIndices[cellCoordinate]][n+1]]], vertices[isosurfaceVertices[12*cellCoordinate+m_triTable[isosurfaceIndices[cellCoordinate]][n+2]]], normal, tangent, binormal, weight);
 					for (int m = 0; m < 3; m++)
 					{
-						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].normal += normal/weight;
-						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].tangent += tangent/weight;
-						vertices[m_isosurfaceVertices[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n+m]]].binormal += binormal/weight;
+						vertices[isosurfaceVertices[12*cellCoordinate+m_triTable[isosurfaceIndices[cellCoordinate]][n+m]]].normal += normal/weight;
+						vertices[isosurfaceVertices[12*cellCoordinate+m_triTable[isosurfaceIndices[cellCoordinate]][n+m]]].tangent += tangent/weight;
+						vertices[isosurfaceVertices[12*cellCoordinate+m_triTable[isosurfaceIndices[cellCoordinate]][n+m]]].binormal += binormal/weight;
 					}
 				}
 			}
@@ -413,6 +559,15 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 		vertices[i].tangent.Normalize();
 		vertices[i].binormal.Normalize();
 	}
+
+	delete[] isosurfaceIndices;
+	isosurfaceIndices = 0;
+
+	delete[] isosurfaceVertices;
+	isosurfaceVertices = 0;
+
+	delete[] isosurfacePositions;
+	isosurfacePositions = 0;
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -455,17 +610,8 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 	}
 
 	// Release the arrays now that the vertex and index buffers have been created and loaded.
-	//delete[] m_field;
-	//m_field = 0;
-
-	delete[] m_isosurfaceIndices;
-	m_isosurfaceIndices = 0;
-
-	delete[] m_isosurfaceVertices;
-	m_isosurfaceVertices = 0;
-
-	delete[] m_isosurfacePositions;
-	m_isosurfacePositions = 0;
+	//delete[] field;
+	//field = 0;
 
 	delete[] vertices;
 	vertices = 0;
@@ -528,170 +674,6 @@ void MarchingCubes::Shutdown()
 void MarchingCubes::ShutdownBuffers()
 {
 	return;
-}
-
-bool MarchingCubes::GenerateIsosurface(ID3D11Device* device, float isolevel)
-{
-	const int fieldVertices[8] = { 0, 1, (m_cells+1)*(m_cells+1)+1, (m_cells+1)*(m_cells+1), (m_cells+1), (m_cells+1)+1, (m_cells+1)*(m_cells+1)+(m_cells+1)+1, (m_cells+1)*(m_cells+1)+(m_cells+1), };
-
-	m_isosurfaceIndices = new int[m_cells * m_cells * m_cells];
-	m_isosurfaceVertices = new int[12 * m_cells * m_cells * m_cells];
-	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * m_cells * m_cells * m_cells];
-
-	int cellCoordinate;
-	int fieldCoordinate;
-	int fieldVertexA, fieldVertexB;
-	DirectX::SimpleMath::Vector3 edgePositions[12];
-
-	// Set m_vertexCount = 0 here, then m_vertexCount++ for each new vertex?
-	m_vertexCount = 0;
-
-	/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-	/* This enclosed section has been adapted from: Paul Bourke (1994) Polygonising a Scalar Field. Available at http://paulbourke.net/geometry/polygonise/ (Accessed: 9 February 2023) */
-
-	// STEP 1: Calculate new isosurface vertex positions...
-	m_isolevel = isolevel;
-	for (int k = 0; k < m_cells; k++)
-	{
-		for (int j = 0; j < m_cells; j++)
-		{
-			for (int i = 0; i < m_cells; i++)
-			{
-				cellCoordinate = m_cells*m_cells*k+m_cells*j+i;
-				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
-
-				m_isosurfaceIndices[cellCoordinate] = 0;
-				for (int n = 0; n < 8; n++)
-					if (m_field[fieldCoordinate+fieldVertices[n]].scalar < m_isolevel)
-						m_isosurfaceIndices[cellCoordinate] += pow(2, n);
-
-				for (int n = 0; n < 12; n++)
-				{
-					if (m_edgeTable[m_isosurfaceIndices[cellCoordinate]] & (int)pow(2, n))
-					{
-						if (n < 8)
-						{
-							fieldVertexA = fieldCoordinate+fieldVertices[4*(n/4)+n%4];
-							fieldVertexB = fieldCoordinate+fieldVertices[4*(n/4)+(n+1)%4];
-						}
-						else
-						{
-							fieldVertexA = fieldCoordinate+fieldVertices[n-8];
-							fieldVertexB = fieldCoordinate+fieldVertices[n-4];
-						}
-						edgePositions[n] = InterpolateIsosurface(m_field[fieldVertexA], m_field[fieldVertexB], m_isolevel);
-					}
-				}
-
-				for (int n = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][n] != -1; n++)
-				{			
-					// First, check if we've already used this vertex *in this cell*
-					int m;
-					for (m = 0; m_triTable[m_isosurfaceIndices[cellCoordinate]][m] != m_triTable[m_isosurfaceIndices[cellCoordinate]][n]; m++) { }
-					if (m < n || m_triTable[m_isosurfaceIndices[cellCoordinate]][m] == -1)
-						continue;
-
-					// Assigning position...
-					m_isosurfacePositions[12*cellCoordinate+m_triTable[m_isosurfaceIndices[cellCoordinate]][n]] = edgePositions[m_triTable[m_isosurfaceIndices[cellCoordinate]][n]];
-					
-					// ...And assigning vertex number... // NB: Added this to log *unique* vertices, should reduce vertex data stored to ~1/4 - a significant improvement?
-					if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 0)
-					{
-						if (j > 0)
-							m_isosurfaceVertices[12*cellCoordinate] = m_isosurfaceVertices[12*(cellCoordinate-m_cells)+4];
-						else if (k > 0)
-							m_isosurfaceVertices[12*cellCoordinate] = m_isosurfaceVertices[12*(cellCoordinate-m_cells*m_cells)+2];
-						else
-							m_isosurfaceVertices[12*cellCoordinate] = m_vertexCount++;
-					}
-					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 1)
-					{
-						if (j > 0)
-							m_isosurfaceVertices[12*cellCoordinate+1] = m_isosurfaceVertices[12*(cellCoordinate-m_cells)+5];
-						else
-							m_isosurfaceVertices[12*cellCoordinate+1] = m_vertexCount++;
-					}
-					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 2)
-					{
-						if (j > 0)
-							m_isosurfaceVertices[12*cellCoordinate+2] = m_isosurfaceVertices[12*(cellCoordinate-m_cells)+6];
-						else
-							m_isosurfaceVertices[12*cellCoordinate+2] = m_vertexCount++;
-					}
-					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 3)
-					{
-						if (i > 0)
-							m_isosurfaceVertices[12*cellCoordinate+3] = m_isosurfaceVertices[12*(cellCoordinate-1)+1];
-						else if (j > 0)
-							m_isosurfaceVertices[12*cellCoordinate+3] = m_isosurfaceVertices[12*(cellCoordinate-m_cells)+7];
-						else
-							m_isosurfaceVertices[12*cellCoordinate+3] = m_vertexCount++;
-					}
-					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 4)
-					{
-						if (k > 0)
-							m_isosurfaceVertices[12*cellCoordinate+4] = m_isosurfaceVertices[12*(cellCoordinate-m_cells*m_cells)+6];
-						else
-							m_isosurfaceVertices[12*cellCoordinate+4] = m_vertexCount++;
-					}
-					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 5)
-					{
-						m_isosurfaceVertices[12*cellCoordinate+5] = m_vertexCount++;
-					}
-					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 6)
-					{
-						m_isosurfaceVertices[12*cellCoordinate+6] = m_vertexCount++;
-					}
-					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 7)
-					{
-						if (i > 0)
-							m_isosurfaceVertices[12*cellCoordinate+7] = m_isosurfaceVertices[12*(cellCoordinate-1)+5];
-						else
-							m_isosurfaceVertices[12*cellCoordinate+7] = m_vertexCount++;
-					}
-					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 8)
-					{
-						if (i > 0)
-							m_isosurfaceVertices[12*cellCoordinate+8] = m_isosurfaceVertices[12*(cellCoordinate-1)+9];
-						else if (k > 0)
-							m_isosurfaceVertices[12*cellCoordinate+8] = m_isosurfaceVertices[12*(cellCoordinate-m_cells*m_cells)+11];
-						else
-							m_isosurfaceVertices[12*cellCoordinate+8] = m_vertexCount++;
-					}
-					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 9)
-					{
-						if (k > 0)
-							m_isosurfaceVertices[12*cellCoordinate+9] = m_isosurfaceVertices[12*(cellCoordinate-m_cells*m_cells)+10];
-						else
-							m_isosurfaceVertices[12*cellCoordinate+9] = m_vertexCount++;
-					}
-					else if (m_triTable[m_isosurfaceIndices[cellCoordinate]][n] == 10)
-					{
-						m_isosurfaceVertices[12*cellCoordinate+10] = m_vertexCount++;
-					}
-					else
-					{
-						if (i > 0)
-							m_isosurfaceVertices[12*cellCoordinate+11] = m_isosurfaceVertices[12*(cellCoordinate-1)+10];
-						else
-							m_isosurfaceVertices[12*cellCoordinate+11] = m_vertexCount++;
-					}
-				}
-			}
-		}
-	}
-	m_vertexCount = std::max(m_vertexCount, 1); // FIXME: Only a shoddy patch for access violation!
-
-	/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-
-	// STEP 2: Initialise buffers for new isosurface
-	bool result = InitializeBuffers(device);
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
 }
 
 DirectX::SimpleMath::Vector3 MarchingCubes::InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel)

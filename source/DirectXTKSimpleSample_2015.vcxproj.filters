@@ -98,6 +98,9 @@
     <ClInclude Include="HexBoard.h">
       <Filter>Modelling</Filter>
     </ClInclude>
+    <ClInclude Include="Field.h">
+      <Filter>Modelling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -162,6 +165,9 @@
       <Filter>Modelling</Filter>
     </ClCompile>
     <ClCompile Include="HexBoard.cpp">
+      <Filter>Modelling</Filter>
+    </ClCompile>
+    <ClCompile Include="Field.cpp">
       <Filter>Modelling</Filter>
     </ClCompile>
   </ItemGroup>

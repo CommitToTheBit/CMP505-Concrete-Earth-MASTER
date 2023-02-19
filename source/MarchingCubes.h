@@ -1,7 +1,6 @@
 #pragma once
 
-#include "ClassicNoise.h"
-#include "SimplexNoise.h"
+#include "Field.h"
 
 using namespace DirectX;
 
@@ -18,51 +17,28 @@ protected:
 		DirectX::SimpleMath::Vector3 binormal;
 	};
 
-	struct FieldVertexType
-	{
-		DirectX::SimpleMath::Vector3 position;
-		float scalar;
-	};
-
 public:
 	MarchingCubes();
 	~MarchingCubes();
 
-	bool Initialize(ID3D11Device*, int cells);
+	bool Initialize(ID3D11Device*, int cells, FieldVertexType* field, float isolevel);
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
-
-	//
-	void GenerateHorizontalField(DirectX::SimpleMath::Vector3 origin);
-	void GenerateSphericalField(DirectX::SimpleMath::Vector3 origin);
-	void GenerateSinusoidalSphericalField(DirectX::SimpleMath::Vector3 origin);
-	void GenerateToroidalField(DirectX::SimpleMath::Vector3 origin);
-
-	// 
-	bool GenerateIsosurface(ID3D11Device*, float isolevel);
-	DirectX::SimpleMath::Vector3 InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel);
 
 	bool Update();
 
 private:
-	bool InitializeBuffers(ID3D11Device*);
+	bool InitializeBuffers(ID3D11Device*, int cells, FieldVertexType* field, float isolevel);
 	void RenderBuffers(ID3D11DeviceContext*);
 	void ShutdownBuffers();
+
+	DirectX::SimpleMath::Vector3 InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel);
 
 	// Post-processing direction vectors
 	void CalculateNormalTangentBinormal(VertexType vertex1, VertexType vertex2, VertexType vertex3, DirectX::SimpleMath::Vector3& normal, DirectX::SimpleMath::Vector3& tangent, DirectX::SimpleMath::Vector3& binormal, float& weight);
 
 
 protected:
-	int m_cells;
-
-	FieldVertexType* m_field;
-
-	int* m_isosurfaceIndices;
-	int* m_isosurfaceVertices;
-	DirectX::SimpleMath::Vector3* m_isosurfacePositions;
-	float m_isolevel;
-
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 
