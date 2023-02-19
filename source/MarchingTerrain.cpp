@@ -15,9 +15,6 @@ MarchingTerrain::~MarchingTerrain()
 void MarchingTerrain::InitialiseHorizontalField(int octaves, float amplitude)
 {
 	m_field = new FieldVertexType[(m_cells + 1) * (m_cells + 1) * (m_cells + 1)];
-	m_isosurfaceIndices = new int[m_cells * m_cells * m_cells];
-	m_isosurfaceVertices = new int[12 * m_cells * m_cells * m_cells];
-	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * m_cells * m_cells * m_cells];
 
 	SimplexNoise simplex = SimplexNoise();
 
@@ -28,7 +25,7 @@ void MarchingTerrain::InitialiseHorizontalField(int octaves, float amplitude)
 		m_field[f].position = DirectX::SimpleMath::Vector3(f%(m_cells+1), (f/(m_cells+1))%(m_cells+1), f/((m_cells+1)*(m_cells+1)))/m_cells;
 
 		m_field[f].scalar = m_field[f].position.y;
-		m_field[f].scalar += simplex.FBMNoise(m_field[f].position.x, 0.0f, m_field[f].position.z, octaves, amplitude);
+		m_field[f].scalar += simplex.FBMNoise(m_field[f].position.x, m_field[f].position.z, octaves, amplitude);
 		m_field[f].scalar = std::max(m_field[f].scalar, 0.0f);
 	}
 }
@@ -36,10 +33,6 @@ void MarchingTerrain::InitialiseHorizontalField(int octaves, float amplitude)
 void MarchingTerrain::InitialiseSphericalField(int octaves, float amplitude)
 {
 	m_field = new FieldVertexType[(m_cells + 1) * (m_cells + 1) * (m_cells + 1)];
-
-	m_isosurfaceIndices = new int[m_cells * m_cells * m_cells];
-	m_isosurfaceVertices = new int[12 * m_cells * m_cells * m_cells];
-	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * m_cells * m_cells * m_cells];
 
 	SimplexNoise simplex = SimplexNoise();
 
@@ -58,10 +51,6 @@ void MarchingTerrain::InitialiseSphericalField(int octaves, float amplitude)
 void MarchingTerrain::InitialiseToroidalField(float R, int octaves, float amplitude)
 {
 	m_field = new FieldVertexType[(m_cells + 1) * (m_cells + 1) * (m_cells + 1)];
-
-	m_isosurfaceIndices = new int[m_cells * m_cells * m_cells];
-	m_isosurfaceVertices = new int[12 * m_cells * m_cells * m_cells];
-	m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * m_cells * m_cells * m_cells];
 
 	SimplexNoise simplex = SimplexNoise();
 

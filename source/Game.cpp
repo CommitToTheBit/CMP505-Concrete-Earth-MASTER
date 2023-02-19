@@ -175,7 +175,10 @@ void Game::Update(DX::StepTimer const& timer)
 	m_Terrain.Update();		//terrain update.  doesnt do anything at the moment. 
 	
 	// DEBUG:
-	//m_MarchingCubes.GenerateHex(device, 0.5f+0.5f*sin(m_time/(XM_2PI*5.0f)));
+	auto device = m_deviceResources->GetD3DDevice();
+	//m_HexBoard.m_hexTiles[0].GenerateIsosurface(device, 0.5f+0.25f*sin(m_time/(XM_2PI*5.0f)));
+	m_HexBoard.m_hexTiles[0].InitialiseHorizontalField();
+	m_HexBoard.m_hexTiles[0].DeriveHexPrism(device, 0.5f+0.25f*sin(XM_2PI*m_time/5.0f));
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
@@ -490,7 +493,7 @@ void Game::CreateDeviceDependentResources()
 	m_Thorns3.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.75f+0.4f*cos(3.0f*XM_PI/3.0f), 0.45f, 0.6f-0.4f*sin(3.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.75f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
 	m_Thorns3.GenerateHexPrism(device, 0.15f);*/
 
-	m_HexBoard.Initialize(device, 2, 80);
+	m_HexBoard.Initialize(device, 2, 64);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");

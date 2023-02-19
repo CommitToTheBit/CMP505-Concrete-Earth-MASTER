@@ -8,7 +8,7 @@ public:
 	~MarchingTerrain();
 
 	// Planar surface generation...
-	void InitialiseHorizontalField(int octaves = 8, float amplitude = 0.1f);
+	void InitialiseHorizontalField(int octaves = 8, float amplitude = 0.025f);
 	void IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 prick, DirectX::SimpleMath::Vector3 root, float radius, float isolevel);
 	void IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius, float isolevel);
 

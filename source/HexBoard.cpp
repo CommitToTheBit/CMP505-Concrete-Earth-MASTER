@@ -36,9 +36,9 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 
 			m_hexTiles[index].Initialize(device, cells);
 			m_hexTiles[index].InitialiseHorizontalField(6);
-			m_hexTiles[index].IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3(0.5f+0.25f*cos(2.0f*XM_PI/3.0f), 0.5f+h, 0.5f-0.25f*sin(2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.5f, 0.0f, 0.5f), XM_PIDIV2/8.0f, 0.15f+h);
-			m_hexTiles[index].IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3(0.75f+0.3f*cos(-2.0f*XM_PI/3.0f), 0.55f+h, 0.6f-0.3f*sin(-2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.75f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f+h);
-			m_hexTiles[index].IntegrateOrb(DirectX::SimpleMath::Vector3(0.5f, 0.45f+h, 0.5f), 0.125f, 0.15f+h);
+			//m_hexTiles[index].IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3(0.5f+0.25f*cos(2.0f*XM_PI/3.0f), 0.5f+h, 0.5f-0.25f*sin(2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.5f, 0.0f, 0.5f), XM_PIDIV2/8.0f, 0.15f+h);
+			//m_hexTiles[index].IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3(0.75f+0.3f*cos(-2.0f*XM_PI/3.0f), 0.55f+h, 0.6f-0.3f*sin(-2.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.75f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f+h);
+			//m_hexTiles[index].IntegrateOrb(DirectX::SimpleMath::Vector3(0.5f, 0.45f+h, 0.5f), 0.125f, 0.15f+h);
 			m_hexTiles[index].DeriveHexPrism(device, 0.15f+h);
 
 			m_hexCoordinates[(2*m_hexRadius+1)*(j+m_hexRadius)+i+m_hexRadius] = index++;
