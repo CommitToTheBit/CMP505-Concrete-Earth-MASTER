@@ -314,21 +314,7 @@ MarchingCubes::~MarchingCubes()
 bool MarchingCubes::Initialize(ID3D11Device* device, int cells)
 {
 	m_cells = cells;
-	m_field = new FieldVertexType[(cells + 1) * (cells + 1) * (cells + 1)];
 
-	int fieldCoordinate;
-	for (int k = 0; k <= m_cells; k++)
-	{
-		for (int j = 0; j <= m_cells; j++)
-		{
-			for (int i = 0; i <= m_cells; i++)
-			{
-				fieldCoordinate = (m_cells+1)*(m_cells+1)*k+(m_cells+1)*j+i;
-				m_field[fieldCoordinate].position = DirectX::SimpleMath::Vector3((float)i, (float)j, (float)k)/m_cells;
-				m_field[fieldCoordinate].scalar = 0.0f;
-			}
-		}
-	}
 	//m_isosurfaceIndices = new int[cells * cells * cells];
 	//m_isosurfaceVertices = new int[12 * cells * cells * cells];
 	//m_isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * cells * cells * cells];
@@ -469,6 +455,9 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device)
 	}
 
 	// Release the arrays now that the vertex and index buffers have been created and loaded.
+	delete[] m_field;
+	m_field = 0;
+
 	delete[] m_isosurfaceIndices;
 	m_isosurfaceIndices = 0;
 

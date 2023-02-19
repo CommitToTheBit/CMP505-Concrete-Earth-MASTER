@@ -490,7 +490,7 @@ void Game::CreateDeviceDependentResources()
 	m_Thorns3.AttachHorizontalThorn(DirectX::SimpleMath::Vector3(0.75f+0.4f*cos(3.0f*XM_PI/3.0f), 0.45f, 0.6f-0.4f*sin(3.0f*XM_PI/3.0f)), DirectX::SimpleMath::Vector3(0.75f, 0.0f, 0.6f), XM_PIDIV2/8.0f, 0.15f);
 	m_Thorns3.GenerateHexPrism(device, 0.15f);*/
 
-	m_HexBoard.Initialize(device, 2, 64);
+	m_HexBoard.Initialize(device, 2, 80);
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");

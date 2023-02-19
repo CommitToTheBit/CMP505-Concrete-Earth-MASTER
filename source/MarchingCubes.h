@@ -7,7 +7,7 @@ using namespace DirectX;
 
 class MarchingCubes
 {
-private:
+protected:
 	// General vertex information, used by shaders...
 	struct VertexType
 	{
@@ -69,8 +69,4 @@ protected:
 	// Lookup tables used in the construction of the isosurface.
 	static const int m_edgeTable[256];
 	static const int m_triTable[256][16];
-
-	//arrays for our generated objects Made by directX
-	std::vector<VertexPositionNormalTexture> preFabVertices;
-	std::vector<uint16_t> preFabIndices;
 };
