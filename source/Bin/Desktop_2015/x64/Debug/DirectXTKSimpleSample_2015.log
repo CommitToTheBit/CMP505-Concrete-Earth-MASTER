@@ -1,9 +1,2 @@
-﻿  Game.cpp
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\RefractionShader.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(122,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(288,131): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(288,148): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Main.cpp
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\RefractionShader.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  Generating Code...
+﻿  HexBoard.cpp
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe
