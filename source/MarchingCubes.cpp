@@ -361,20 +361,20 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device, int cells, FieldVert
 
 		for (int n = 0; n < 12; n++)
 		{
-			if (m_edgeTable[isosurfaceIndices[c]] & (int)pow(2, n))
+			if (!(m_edgeTable[isosurfaceIndices[c]] & (int)pow(2, n)))
+				continue;
+
+			if (n < 8)
 			{
-				if (n < 8)
-				{
-					fieldVertexA = f + fieldVertices[4 * (n / 4) + n % 4];
-					fieldVertexB = f + fieldVertices[4 * (n / 4) + (n + 1) % 4];
-				}
-				else
-				{
-					fieldVertexA = f + fieldVertices[n - 8];
-					fieldVertexB = f + fieldVertices[n - 4];
-				}
-				edgePositions[n] = InterpolateIsosurface(field[fieldVertexA], field[fieldVertexB], isolevel);
+				fieldVertexA = f + fieldVertices[4 * (n / 4) + n % 4];
+				fieldVertexB = f + fieldVertices[4 * (n / 4) + (n + 1) % 4];
 			}
+			else
+			{
+				fieldVertexA = f + fieldVertices[n - 8];
+				fieldVertexB = f + fieldVertices[n - 4];
+			}
+			edgePositions[n] = InterpolateIsosurface(field[fieldVertexA], field[fieldVertexB], isolevel);
 		}
 
 		for (int n = 0; m_triTable[isosurfaceIndices[c]][n] != -1; n++)
@@ -391,87 +391,35 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device, int cells, FieldVert
 			isosurfacePositions[12 * c + m_triTable[isosurfaceIndices[c]][n]] = edgePositions[m_triTable[isosurfaceIndices[c]][n]];
 
 			// ...And assigning vertex number... // NB: Added this to log *unique* vertices, should reduce vertex data stored to ~1/4 - a significant improvement?
-			if (m_triTable[isosurfaceIndices[c]][n] == 0)
-			{
-				if (j > 0)
-					isosurfaceVertices[12 * c] = isosurfaceVertices[12 * (c - cells) + 4];
-				else if (k > 0)
-					isosurfaceVertices[12 * c] = isosurfaceVertices[12 * (c - cells * cells) + 2];
-				else
-					isosurfaceVertices[12 * c] = m_vertexCount++;
-			}
-			else if (m_triTable[isosurfaceIndices[c]][n] == 1)
-			{
-				if (j > 0)
-					isosurfaceVertices[12 * c + 1] = isosurfaceVertices[12 * (c - cells) + 5];
-				else
-					isosurfaceVertices[12 * c + 1] = m_vertexCount++;
-			}
-			else if (m_triTable[isosurfaceIndices[c]][n] == 2)
-			{
-				if (j > 0)
-					isosurfaceVertices[12 * c + 2] = isosurfaceVertices[12 * (c - cells) + 6];
-				else
-					isosurfaceVertices[12 * c + 2] = m_vertexCount++;
-			}
-			else if (m_triTable[isosurfaceIndices[c]][n] == 3)
-			{
-				if (i > 0)
-					isosurfaceVertices[12 * c + 3] = isosurfaceVertices[12 * (c - 1) + 1];
-				else if (j > 0)
-					isosurfaceVertices[12 * c + 3] = isosurfaceVertices[12 * (c - cells) + 7];
-				else
-					isosurfaceVertices[12 * c + 3] = m_vertexCount++;
-			}
-			else if (m_triTable[isosurfaceIndices[c]][n] == 4)
-			{
-				if (k > 0)
-					isosurfaceVertices[12 * c + 4] = isosurfaceVertices[12 * (c - cells * cells) + 6];
-				else
-					isosurfaceVertices[12 * c + 4] = m_vertexCount++;
-			}
-			else if (m_triTable[isosurfaceIndices[c]][n] == 5)
-			{
-				isosurfaceVertices[12 * c + 5] = m_vertexCount++;
-			}
-			else if (m_triTable[isosurfaceIndices[c]][n] == 6)
-			{
-				isosurfaceVertices[12 * c + 6] = m_vertexCount++;
-			}
-			else if (m_triTable[isosurfaceIndices[c]][n] == 7)
-			{
-				if (i > 0)
-					isosurfaceVertices[12 * c + 7] = isosurfaceVertices[12 * (c - 1) + 5];
-				else
-					isosurfaceVertices[12 * c + 7] = m_vertexCount++;
-			}
-			else if (m_triTable[isosurfaceIndices[c]][n] == 8)
-			{
-				if (i > 0)
-					isosurfaceVertices[12 * c + 8] = isosurfaceVertices[12 * (c - 1) + 9];
-				else if (k > 0)
-					isosurfaceVertices[12 * c + 8] = isosurfaceVertices[12 * (c - cells * cells) + 11];
-				else
-					isosurfaceVertices[12 * c + 8] = m_vertexCount++;
-			}
-			else if (m_triTable[isosurfaceIndices[c]][n] == 9)
-			{
-				if (k > 0)
-					isosurfaceVertices[12 * c + 9] = isosurfaceVertices[12 * (c - cells * cells) + 10];
-				else
-					isosurfaceVertices[12 * c + 9] = m_vertexCount++;
-			}
-			else if (m_triTable[isosurfaceIndices[c]][n] == 10)
-			{
-				isosurfaceVertices[12 * c + 10] = m_vertexCount++;
-			}
+			// NB: How efficient can this ladder be? Is it significant?
+			if (m_triTable[isosurfaceIndices[c]][n] == 5 || m_triTable[isosurfaceIndices[c]][n] == 6 || m_triTable[isosurfaceIndices[c]][n] == 10)
+				isosurfaceVertices[12 * c + m_triTable[isosurfaceIndices[c]][n]] = m_vertexCount++;
+			else if (m_triTable[isosurfaceIndices[c]][n] == 3 && i > 0)
+				isosurfaceVertices[12 * c + 3] = isosurfaceVertices[12 * (c - 1) + 1];
+			else if (m_triTable[isosurfaceIndices[c]][n] == 7 && i > 0)
+				isosurfaceVertices[12 * c + 7] = isosurfaceVertices[12 * (c - 1) + 5];
+			else if (m_triTable[isosurfaceIndices[c]][n] == 8 && i > 0)
+				isosurfaceVertices[12 * c + 8] = isosurfaceVertices[12 * (c - 1) + 9];
+			else if (m_triTable[isosurfaceIndices[c]][n] == 11 && i > 0)
+				isosurfaceVertices[12 * c + 11] = isosurfaceVertices[12 * (c - 1) + 10];
+			else if (m_triTable[isosurfaceIndices[c]][n] == 0 && j > 0)
+				isosurfaceVertices[12 * c] = isosurfaceVertices[12 * (c - cells) + 4];
+			else if (m_triTable[isosurfaceIndices[c]][n] == 1 && j > 0)
+				isosurfaceVertices[12 * c + 1] = isosurfaceVertices[12 * (c - cells) + 5];
+			else if (m_triTable[isosurfaceIndices[c]][n] == 2 && j > 0)
+				isosurfaceVertices[12 * c + 2] = isosurfaceVertices[12 * (c - cells) + 6];
+			else if (m_triTable[isosurfaceIndices[c]][n] == 3 && j > 0)
+				isosurfaceVertices[12 * c + 3] = isosurfaceVertices[12 * (c - cells) + 7];
+			else if (m_triTable[isosurfaceIndices[c]][n] == 0 && k > 0)
+				isosurfaceVertices[12 * c] = isosurfaceVertices[12 * (c - cells * cells) + 2];
+			else if (m_triTable[isosurfaceIndices[c]][n] == 4 && k > 0)
+				isosurfaceVertices[12 * c + 4] = isosurfaceVertices[12 * (c - cells * cells) + 6];
+			else if (m_triTable[isosurfaceIndices[c]][n] == 8 && k > 0)
+				isosurfaceVertices[12 * c + 8] = isosurfaceVertices[12 * (c - cells * cells) + 11];
+			else if (m_triTable[isosurfaceIndices[c]][n] == 9 && k > 0)
+				isosurfaceVertices[12 * c + 9] = isosurfaceVertices[12 * (c - cells * cells) + 10];
 			else
-			{
-				if (i > 0)
-					isosurfaceVertices[12 * c + 11] = isosurfaceVertices[12 * (c - 1) + 10];
-				else
-					isosurfaceVertices[12 * c + 11] = m_vertexCount++;
-			}
+				isosurfaceVertices[12 * c + m_triTable[isosurfaceIndices[c]][n]] = m_vertexCount++;
 		}
 	}
 	m_vertexCount = std::max(m_vertexCount, 1); // FIXME: Only a shoddy patch for access violation!

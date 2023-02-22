@@ -1,6 +1,5 @@
-﻿  Game.cpp
-C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\RefractionShader.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(122,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(288,131): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(288,148): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  MarchingCubes.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(360,32): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(616,8): warning C4101: 'determinant': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(617,8): warning C4101: 'length': unreferenced local variable
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe
