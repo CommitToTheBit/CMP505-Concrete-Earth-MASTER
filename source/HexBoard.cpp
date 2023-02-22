@@ -27,7 +27,7 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 	m_hexIsolevels = new float[m_hexes];
 	m_hexModels = new MarchingCubes[m_hexes];
 
-	Field hexField;
+	Field* hexField = new Field();
 
 	m_horizontalField.Initialise(cells);
 	m_horizontalField.InitialiseHorizontalField(6);
@@ -42,14 +42,16 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 
 			m_hexIsolevels[index] = 0.15f+0.15f*std::rand()/RAND_MAX;
 
-			hexField.Initialise(&m_horizontalField);
-			hexField.DeriveHexPrism(device, m_hexIsolevels[index]);
+			hexField->Initialise(&m_horizontalField);
+			hexField->DeriveHexPrism(device, m_hexIsolevels[index]);
 
-			m_hexModels[index].Initialize(device, cells, hexField.m_field, m_hexIsolevels[index]);
+			m_hexModels[index].Initialize(device, cells, hexField->m_field, m_hexIsolevels[index]);
 
 			m_hexCoordinates[(2*m_hexRadius+1)*(j+m_hexRadius)+i+m_hexRadius] = index++;
 		}
 	}
+
+	delete hexField;
 
 	return true;
 }
@@ -67,8 +69,8 @@ void HexBoard::AddThorn(ID3D11Device* device, int hex)
 	hex = (hex%m_hexes+m_hexes)%m_hexes;
 
 	// STEP 1: Initialise field...
-	Field hexField;
-	hexField.Initialise(&m_horizontalField);
+	Field* hexField = new Field();
+	hexField->Initialise(&m_horizontalField);
 
 	// STEP 2: Set thorn parameters, integrate it into the field...
 	// FIXME: A solid prototype, but highly lacking aesthetically...
@@ -88,10 +90,12 @@ void HexBoard::AddThorn(ID3D11Device* device, int hex)
 
 		DirectX::SimpleMath::Vector3 origin = DirectX::SimpleMath::Vector3(0.5f+0.5f*rOrigin*cos(thetaOrigin), 0.4f+m_hexIsolevels[hex], 0.5f+0.5f*rBase*sin(thetaOrigin));
 
-		hexField.IntegrateHorizontalThorn(origin, base, angle, m_hexIsolevels[hex]);
+		hexField->IntegrateHorizontalThorn(origin, base, angle, m_hexIsolevels[hex]);
 	}
 	
-	hexField.DeriveHexPrism(device, m_hexIsolevels[hex]);
+	hexField->DeriveHexPrism(device, m_hexIsolevels[hex]);
 
-	m_hexModels[hex].Initialize(device, hexField.m_cells, hexField.m_field, m_hexIsolevels[hex]);
+	m_hexModels[hex].Initialize(device, hexField->m_cells, hexField->m_field, m_hexIsolevels[hex]);
+
+	delete hexField;
 }
