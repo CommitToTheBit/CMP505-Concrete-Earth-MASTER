@@ -102,10 +102,6 @@ void Field::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, Direct
 		//thorn -= simplex.FBMNoise(m_field[f].position.x, m_field[f].position.y, m_field[f].position.z, 8, 0.5f);
 
 		m_field[f].scalar = std::min(m_field[f].scalar, isolevel*thorn); // NB: Use of min, since this points 'out' from isosurface...
-
-		// FIXME: Procedural coarseness is not convincing...
-		//if ((m_field[f].position-origin).Length() < 4.0f*sqrt(3)/m_cells) // NB: Not rigourous, but seems to protect against 'floating islands' at the tip?
-		//	m_field[f].scalar = 2.0*isolevel;
 	}
 }
 
