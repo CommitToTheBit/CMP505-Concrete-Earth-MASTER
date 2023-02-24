@@ -9,7 +9,7 @@ Field::Field()
 
 Field::~Field()
 {
-
+	delete[] m_field;
 }
 
 bool Field::Initialise(int cells)

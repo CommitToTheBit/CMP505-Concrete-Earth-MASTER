@@ -473,7 +473,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 2, 128);
+	m_HexBoard.Initialize(device, 2, 32);
 	m_add = 0;
 
 	// Models
