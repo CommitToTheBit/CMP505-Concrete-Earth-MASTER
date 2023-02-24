@@ -26,9 +26,6 @@
     <Filter Include="Assets\Textures">
       <UniqueIdentifier>{059afbad-ff6b-44a2-b399-23bc2482a42b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering\Vertex Models">
-      <UniqueIdentifier>{51e21d27-ec15-4e68-82ff-d8ce7cfddc5e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Modelling">
       <UniqueIdentifier>{60b172f8-1be2-47b7-bad2-e00b1eaefc1b}</UniqueIdentifier>
     </Filter>
@@ -95,7 +92,12 @@
     <ClInclude Include="SimplexNoise.h">
       <Filter>Modelling</Filter>
     </ClInclude>
-    <ClInclude Include="MarchingTerrain.h" />
+    <ClInclude Include="HexBoard.h">
+      <Filter>Modelling</Filter>
+    </ClInclude>
+    <ClInclude Include="Field.h">
+      <Filter>Modelling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -156,7 +158,12 @@
     <ClCompile Include="SimplexNoise.cpp">
       <Filter>Modelling</Filter>
     </ClCompile>
-    <ClCompile Include="MarchingTerrain.cpp" />
+    <ClCompile Include="HexBoard.cpp">
+      <Filter>Modelling</Filter>
+    </ClCompile>
+    <ClCompile Include="Field.cpp">
+      <Filter>Modelling</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

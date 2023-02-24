@@ -15,7 +15,7 @@ void Input::Initialise(HWND window)
 	m_keyboard = std::make_unique<DirectX::Keyboard>();
 	m_mouse = std::make_unique<DirectX::Mouse>();
 	m_mouse->SetWindow(window);
-	m_mouse->SetMode(DirectX::Mouse::MODE_RELATIVE);
+	//m_mouse->SetMode(DirectX::Mouse::MODE_RELATIVE); // NB: Mode is absolute, for third-person picking...
 	m_quitApp = false;
 
 	m_GameInput.forward		= false;

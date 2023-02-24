@@ -45,13 +45,26 @@
 
 \subsection{Procedural Terrain Generation}
 
-\subsubsection{Marching Cubes}
-
 [Starting point: the problem of concavity!]
 
+\vspace{10pt}\noindent
+Introduce marching cubes as the central tenet of the modelling process...
+
+\vspace{10pt}\noindent
 Definitive... Paul Bourke's \textit{Polygonising a scalar field} \citeyearpar{bourkeMarchingCubes}...
 
-\subsubsection{Field Design}
+\subsubsection{Initialisation}
+
+Introduce Perlin, Simplex noise as addendum...
+
+\subsubsection{Iteration}
+
+First introduce thorns, orbs, etc...
+
+\vspace{10pt}\noindent
+...Then explain that tiles are bounded by the exact same process (std::min adds, std::max subtracts...)
+
+\subsubsection{Texturing}
 
 \subsection{Procedural Narrative Generation}
 
@@ -68,6 +81,8 @@ Definitive... Paul Bourke's \textit{Polygonising a scalar field} \citeyearpar{bo
 \subsection{Post-Processing}
 
 \section{Code Organisation}
+
+\subsection{HexBoard.cpp}
 
 \section{Evaluation}\label{Evaluation}
 

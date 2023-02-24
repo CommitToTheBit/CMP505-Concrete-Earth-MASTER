@@ -46,19 +46,21 @@ void Game::Initialize(HWND window, int width, int height)
     CreateWindowSizeDependentResources();
 
 	//setup light
-	m_Ambience = Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+	m_Ambience = Vector4(0.25f, 0.25f, 0.25f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	//m_Light.setPosition(1.0f, 0.0f, 2.0f);
-	m_Light.setPosition(0.0f, 0.5f, 1.0f);
+	m_Light.setPosition(1.0f, 1.0f, 3.0f);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
-	m_Light.setStrength(10.0);
+	m_Light.setStrength(100.0);
 
 	//setup camera
 	//m_Camera.setPosition(Vector3(2.4f+0.75*cos(atan(-1.8/2.4)), 0.0f, 1.8f+0.75*sin(atan(-1.8/2.4))));
 	//m_Camera.setRotation(Vector3(-90.0f, -180+(180.0/3.14159265)*atan(2.4/1.8), 0.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up.
-	m_Camera.setPosition(Vector3(0.0, 0.0f, 5.0));
-	m_Camera.setRotation(Vector3(-90.0f, -180, 0.0f));
+
+	// FIXME: Refactor this, for 'cleaner' board set-up?
+	m_Camera.setPosition(0.3f*Vector3(1.5f, 0.5f*sin(1.0f*XM_PI/5.0f), 0.0f)+0.3f*5.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(XM_PI/12.0f), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(XM_PI/12.0f));
+	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+15.0f, 0.0f));
+
 	
 #ifdef DXTK_AUDIO
     // Create DirectXTK for Audio objects
@@ -122,8 +124,8 @@ void Game::Update(DX::StepTimer const& timer)
 	//note that currently.  Delta-time is not considered in the game object movement. 
 	Vector3 inputPosition = Vector3(0.0f, 0.0f, 0.0f);
 
-	// STEP 1: Read camera translation inputs (from keyboard)
-	if (m_gameInputCommands.forward)
+	// STEP 1: Read camera translation inputs (from keyboard) // FIXME: Refactor this, for 'cleaner' board set-up?
+	/*if (m_gameInputCommands.forward)
 		inputPosition.z += 1.0f;
 	if (m_gameInputCommands.back)
 		inputPosition.z -= 1.0f;
@@ -163,25 +165,20 @@ void Game::Update(DX::StepTimer const& timer)
 		rotation += deltaRotation;
 		rotation.x = std::min(-0.001f, std::max(rotation.x, -179.999f)); // NB: Prevents gimbal lock
 		m_Camera.setRotation(rotation);
-	}
-
-	// DEBUG STEP: Generate terrain...
-	//this is hacky,  i dont like this here.  
-	auto device = m_deviceResources->GetD3DDevice();
-	if (m_gameInputCommands.generate)
-	{
-		for (int terrainLayer = 0; terrainLayer < m_Terrain.M_TERRAIN_LAYERS; terrainLayer++)
-			m_Terrain.GenerateHeightMap(device, terrainLayer); // FIXME: Hacky? See description...
-	}
+	}*/
 
 	// STEP 3: Process inputs
 	m_Camera.Update();
 	//m_Light.setPosition(m_Camera.getPosition().x, m_Camera.getPosition().y, m_Camera.getPosition().z);
-
-	m_Terrain.Update();		//terrain update.  doesnt do anything at the moment. 
+	m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 0.75f+0.25f*cos(XM_2PI*m_time/60.0f), 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
 	
 	// DEBUG:
-	//m_MarchingCubes.GenerateHex(device, 0.5f+0.5f*sin(m_time/(XM_2PI*5.0f)));
+	auto device = m_deviceResources->GetD3DDevice();
+	//m_HexBoard.m_hexModels[0].GenerateIsosurface(device, 0.5f+0.25f*sin(m_time/(XM_2PI*5.0f)));
+	//m_HexBoard.m_hexModels[0].InitialiseHorizontalField();
+	//m_HexBoard.m_hexModels[0].DeriveHexPrism(device, 0.5f+0.25f*sin(XM_2PI*m_time/5.0f));
+	if (m_gameInputCommands.forward)
+		m_HexBoard.AddThorn(device, m_add++);
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
@@ -258,14 +255,14 @@ void Game::Render()
 
 	// STEP 1: Run render to textures...
 	// First render pass: Rendering any textures (including normal maps, etc...)
-	RenderDynamicTextures();
+	//RenderDynamicTextures();
 
 	// STEP 2: Render 'real' scene...
 	// Draw Skybox
 	RenderSkyboxOnto(&m_Camera);
 
 	// Draw Terrain
-	m_LightShaderPair.EnableShader(context);
+	/*m_LightShaderPair.EnableShader(context);
 	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_DemoNMRenderPass->getShaderResourceView());
 	m_Terrain.Render(context);
 
@@ -274,31 +271,24 @@ void Game::Render()
 	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 	m_Terrain.Render(context);
 
-	context->RSSetState(m_states->CullClockwise());
+	context->RSSetState(m_states->CullClockwise());*/
 
-	// Draw Marching Cube
-	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(0.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-	m_MarchingCubes.Render(context);
+	for (int j = -m_HexBoard.m_hexRadius; j <= m_HexBoard.m_hexRadius; j++)
+	{
+		for (int i = -m_HexBoard.m_hexRadius; i <= m_HexBoard.m_hexRadius; i++)
+		{
+			if (abs(i-j) > m_HexBoard.m_hexRadius)
+				continue;
 
-	context->RSSetState(m_states->CullCounterClockwise());
-	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(0.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-	m_MarchingCubes.Render(context);
+			// FIXME: Refactor this, for 'cleaner' board set-up?
+			float l = (m_Camera.getPosition()-Vector3(1.5f, 0.5f*sin(1.0f*XM_PI/5.0f), 0.0f)).Length();
+			Matrix ortho = Matrix::CreateOrthographic(l*1280.0f/720.0f,l*1.0f,0.01f,100.0f);
 
-	context->RSSetState(m_states->CullClockwise());
-
-	// Tile Marching Cube
-	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-1.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-	m_MarchingCubes.Render(context);
-
-	context->RSSetState(m_states->CullCounterClockwise());
-	m_FieldRendering.EnableShader(context);
-	m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(Vector3(-1.5f, -0.5f, -0.5f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-	m_MarchingCubes.Render(context);
-
-	context->RSSetState(m_states->CullClockwise());
+			m_FieldRendering.EnableShader(context);
+			m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(m_HexBoard.m_origin+i*m_HexBoard.m_p+j*m_HexBoard.m_q)), &m_Camera.getCameraMatrix(), &ortho, true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
+			m_HexBoard.m_hexModels[m_HexBoard.m_hexCoordinates[(2*m_HexBoard.m_hexRadius+1)*(j+m_HexBoard.m_hexRadius)+i+m_HexBoard.m_hexRadius]].Render(context);
+		}
+	}
 
 	// Draw Basic Models
 	/*m_LightShaderPair.EnableShader(context);
@@ -482,15 +472,9 @@ void Game::CreateDeviceDependentResources()
     m_font = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
-	// Terrain
-	m_Terrain.Initialize(device, 128, 128);
-
-	// Marching Cube(s)
-	m_MarchingCubes.Initialize(device, 128);
-	m_MarchingCubes.GenerateHorizontalField(Vector3(0.0f, 0.01f, 0.0f));
-	//m_MarchingCubes.GenerateSphericalField(Vector3(0.5f, 0.5f, 0.5f));
-	//m_MarchingCubes.GenerateToroidalField(Vector3(0.5f, 0.5f, 0.5f));
-	m_MarchingCubes.GenerateHex(device, 1.0f);
+	// Board
+	m_HexBoard.Initialize(device, 2, 32);
+	m_add = 0;
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");

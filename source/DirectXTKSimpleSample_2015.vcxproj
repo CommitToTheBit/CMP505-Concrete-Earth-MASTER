@@ -176,11 +176,11 @@
     <ClInclude Include="EnvironmentCamera.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlassShader.h" />
+    <ClInclude Include="HexBoard.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightShader.h" />
     <ClInclude Include="MarchingCubes.h" />
-    <ClInclude Include="MarchingTerrain.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="OverlayShader.h" />
     <ClInclude Include="pch.h" />
@@ -193,6 +193,7 @@
     <ClInclude Include="SpecimenShader.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="Terrain.h" />
+    <ClInclude Include="Field.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlphaShader.cpp" />
@@ -202,12 +203,12 @@
     <ClCompile Include="EnvironmentCamera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GlassShader.cpp" />
+    <ClCompile Include="HexBoard.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MarchingCubes.cpp" />
-    <ClCompile Include="MarchingTerrain.cpp" />
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="OverlayShader.cpp" />
     <ClCompile Include="pch.cpp">
@@ -223,6 +224,7 @@
     <ClCompile Include="SkyboxShader.cpp" />
     <ClCompile Include="SpecimenShader.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="Field.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
