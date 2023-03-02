@@ -19,10 +19,11 @@ HexBoard::~HexBoard()
 bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 {
 	m_hexRadius = hexRadius;
-	m_hexDiameter = (2*hexRadius+1)* (2*hexRadius+1);
+	m_hexDiameter = (2*hexRadius+1)*(2*hexRadius+1);
 	m_hexes = 1+3*hexRadius*(hexRadius+1);
 
 	m_hexCoordinates = new int[m_hexDiameter];
+	m_hexPermutation = new int[m_hexes];
 
 	m_hexIsolevels = new float[m_hexes];
 	m_hexModels = new MarchingCubes[m_hexes];
@@ -40,14 +41,16 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 			if (abs(i-j) > m_hexRadius)
 				continue;
 
-			m_hexIsolevels[index] = 0.15f+0.15f*std::rand()/RAND_MAX;
+			m_hexIsolevels[index] = 0.1f+0.02f*index;//0.15f*std::rand()/RAND_MAX;
 
 			hexField->Initialise(&m_horizontalField);
 			hexField->DeriveHexPrism(device, m_hexIsolevels[index]);
 
 			m_hexModels[index].Initialize(device, cells, hexField->m_field, m_hexIsolevels[index]);
 
-			m_hexCoordinates[(2*m_hexRadius+1)*(j+m_hexRadius)+i+m_hexRadius] = index++;
+			m_hexCoordinates[(2*m_hexRadius+1)*(j+m_hexRadius)+i+m_hexRadius] = index;
+			m_hexPermutation[index] = (index+m_hexes/2)%m_hexes;
+			index++;
 		}
 	}
 

@@ -1,10 +1,6 @@
-﻿  Field.cpp
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,99): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,55): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,127): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(74,18): warning C4101: 'phi': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(164,11): warning C4101: 'theta': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(166,6): warning C4101: 'q': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(166,9): warning C4101: 'quadrant': unreferenced local variable
+﻿  Game.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\RefractionShader.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(122,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(287,131): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(287,148): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe

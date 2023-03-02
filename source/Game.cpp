@@ -58,7 +58,7 @@ void Game::Initialize(HWND window, int width, int height)
 	//m_Camera.setRotation(Vector3(-90.0f, -180+(180.0/3.14159265)*atan(2.4/1.8), 0.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up.
 
 	// FIXME: Refactor this, for 'cleaner' board set-up?
-	m_Camera.setPosition(0.3f*Vector3(1.5f, 0.5f*sin(1.0f*XM_PI/5.0f), 0.0f)+0.3f*5.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(XM_PI/12.0f), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(XM_PI/12.0f));
+	m_Camera.setPosition(Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f)+7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(XM_PI/12.0f), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(XM_PI/12.0f));
 	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+15.0f, 0.0f));
 
 	
@@ -169,8 +169,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 	// STEP 3: Process inputs
 	m_Camera.Update();
-	//m_Light.setPosition(m_Camera.getPosition().x, m_Camera.getPosition().y, m_Camera.getPosition().z);
-	m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 0.75f+0.25f*cos(XM_2PI*m_time/60.0f), 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
+	//m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 0.75f+0.25f*cos(XM_2PI*m_time/60.0f), 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
 	
 	// DEBUG:
 	auto device = m_deviceResources->GetD3DDevice();
@@ -286,7 +285,7 @@ void Game::Render()
 
 			m_FieldRendering.EnableShader(context);
 			m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(m_HexBoard.m_origin+i*m_HexBoard.m_p+j*m_HexBoard.m_q)), &m_Camera.getCameraMatrix(), &ortho, true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-			m_HexBoard.m_hexModels[m_HexBoard.m_hexCoordinates[(2*m_HexBoard.m_hexRadius+1)*(j+m_HexBoard.m_hexRadius)+i+m_HexBoard.m_hexRadius]].Render(context);
+			m_HexBoard.m_hexModels[m_HexBoard.m_hexPermutation[m_HexBoard.m_hexCoordinates[(2*m_HexBoard.m_hexRadius+1)*(j+m_HexBoard.m_hexRadius)+i+m_HexBoard.m_hexRadius]]].Render(context);
 		}
 	}
 
@@ -454,8 +453,8 @@ void Game::NewAudioDevice()
 // Properties
 void Game::GetDefaultSize(int& width, int& height) const
 {
-    width = 1280;
-    height = 720;
+    width = 1920;
+    height = 1080;
 }
 #pragma endregion
 
@@ -473,7 +472,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 2, 32);
+	m_HexBoard.Initialize(device, 3, 32);
 	m_add = 0;
 
 	// Models
@@ -508,15 +507,15 @@ void Game::CreateDeviceDependentResources()
 	//Initialise Render to texture
 	for (int i = 0; i < 6; i++)
 	{
-		m_SkyboxRenderPass[i] = new RenderTexture(device, 1280, 720, 1, 2);
+		m_SkyboxRenderPass[i] = new RenderTexture(device, 1920, 1080, 1, 2);
 	}
 
-	m_NeutralRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
-	m_NeutralNMRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
-	m_DemoRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
-	m_DemoNMRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
-	m_SphericalPoresRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
-	m_SphericalPoresNMRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
+	m_NeutralRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
+	m_NeutralNMRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
+	m_DemoRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
+	m_DemoNMRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
+	m_SphericalPoresRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
+	m_SphericalPoresNMRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
 
 	m_preRendered = false;
 }

@@ -19,6 +19,7 @@ private:
 public: // FIXME: Left off while still accessed in Game.cpp...
 	int m_hexRadius, m_hexDiameter, m_hexes; // total tiles: 1+3*m_hexRadius*(m_hexRadius+1)
 	int* m_hexCoordinates;
+	int* m_hexPermutation;
 
 	// Modelling info...
 	Field m_horizontalField;
