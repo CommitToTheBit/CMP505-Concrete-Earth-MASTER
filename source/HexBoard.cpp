@@ -20,9 +20,9 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 {
 	m_hexRadius = hexRadius;
 	m_hexDiameter = (2*hexRadius+1);
-	m_hexes = 1+3*hexRadius*(hexRadius+1);
+	m_hexes = 1+3*(hexRadius+1)*(hexRadius+2); // NB: We add an 'outer ring' of repeated hexes
 
-	m_hexCoordinates = new int[m_hexDiameter*m_hexDiameter];
+	m_hexCoordinates = new int[(m_hexDiameter+2)*(m_hexDiameter+2)];
 	m_hexPermutation = new int[m_hexes];
 
 	m_hexIsolevels = new float[m_hexes];
@@ -34,25 +34,29 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 	m_horizontalField.InitialiseHorizontalField(6);
 
 	int index = 0;
-	for (int j = -m_hexRadius; j <= m_hexRadius; j++)
+	for (int j = -m_hexRadius-1; j <= m_hexRadius+1; j++)
 	{
-		for (int i = -m_hexRadius; i <= m_hexRadius; i++)
+		for (int i = -m_hexRadius-1; i <= m_hexRadius+1; i++)
 		{
-			if (abs(i-j) > m_hexRadius)
+			if (abs(i) > m_hexRadius || abs(i-j) > m_hexRadius || abs(j) > m_hexRadius)
+			{
+				m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1] = 0;
 				continue;
+			}
 
-			m_hexIsolevels[index] = 0.15f+0.15f*std::rand()/RAND_MAX;
+			m_hexIsolevels[index] = 0.15f+0.02f*index;//0.15f*std::rand()/RAND_MAX;
 
 			hexField->Initialise(&m_horizontalField);
 			hexField->DeriveHexPrism(device, m_hexIsolevels[index]);
 
 			m_hexModels[index].Initialize(device, cells, hexField->m_field, m_hexIsolevels[index]);
 
-			m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius] = index;
+			m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1] = index;
 			m_hexPermutation[index] = index;// (index+m_hexes/2)%m_hexes;
 			index++;
 		}
 	}
+	//SetPerimeter();
 
 	m_north = 0;
 	m_east = 0;
@@ -72,11 +76,11 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, LightShader* lightShad
 
 	DirectX::SimpleMath::Vector3 relativePosition, boundPosition;
 	float maxBound, tBound;
-	for (int j = -m_hexRadius; j <= m_hexRadius; j++)
+	for (int j = -m_hexRadius-1; j <= m_hexRadius+1; j++)
 	{
-		for (int i = -m_hexRadius; i <= m_hexRadius; i++)
+		for (int i = -m_hexRadius-1; i <= m_hexRadius+1; i++)
 		{
-			if (abs(i-j) > m_hexRadius)
+			if (abs(i-j) > m_hexRadius+1)
 				continue;
 
 			// FIXME: Refactor this, for 'cleaner' board set-up?
@@ -86,23 +90,46 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, LightShader* lightShad
 			relativePosition = (i+ifrac)*m_p+(j+jfrac)*m_q;
 
 			// FIXME: Needs tidied!
-			if (m_east == -m_north)
-				maxBound = std::max(abs(j+jfrac-i-ifrac), abs(j+jfrac));
-			else if (m_east == 0)
-				maxBound = std::max(abs(i+ifrac), abs(j+jfrac));
-			else
-				maxBound = std::max(abs(i+ifrac-j-jfrac), abs(i+ifrac));
+			maxBound = std::max(std::max(abs(i+ifrac), abs(i+ifrac-j-jfrac)), abs(j+jfrac));
 			tBound = std::max(0.0f, std::min(m_hexRadius + 1.0f - maxBound, 1.0f));
-			boundPosition = DirectX::SimpleMath::Vector3(0.0f, -0.5f*(1.0f - tBound), 0.0f);
-
+			boundPosition = DirectX::SimpleMath::Vector3(0.0f, -0.0f*(1.0f - tBound), 0.0f);
 
 			lightShader->EnableShader(deviceContext);
 			lightShader->SetLightShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition+boundPosition)), &camera->getCameraMatrix(), &ortho, true, time, light, texture, normalTexture);
-			m_hexModels[m_hexPermutation[m_hexCoordinates[(2*m_hexRadius+1)*(j+m_hexRadius)+i+m_hexRadius]]].Render(deviceContext);
+			m_hexModels[m_hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1]]].Render(deviceContext);
 		}
 	}
 
 	return;
+}
+
+void HexBoard::SetPerimeter()
+{
+	int ijColumn, ijColumnLength, sign;
+	for (int j = -m_hexRadius-1; j <= m_hexRadius+1; j++)
+	{
+		for (int i = -m_hexRadius-1; i <= m_hexRadius+1; i++)
+		{
+			if (abs(i) < m_hexRadius+1 && (abs(i-j) == m_hexRadius+1 || abs(j) == m_hexRadius+1))
+			{
+				ijColumn = i;
+				ijColumnLength = m_hexDiameter-abs(ijColumn);
+
+				m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1] = m_hexCoordinates[(m_hexDiameter+2)*(j-(j/abs(j))*ijColumnLength+m_hexRadius+1)+i+m_hexRadius+1];
+			}
+			else if (abs(j) < m_hexRadius+1 && (abs(i) == m_hexRadius+1) || abs(i-j) == m_hexRadius+1)
+			{
+				ijColumn = j;
+				ijColumnLength = m_hexDiameter-abs(ijColumn);
+
+				m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1] = m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i-(i/abs(i))*ijColumnLength+m_hexRadius+1];
+			}
+		}
+	}
+
+	// NB: Special 'verticcal' cases, not handled in the above loop...
+	m_hexCoordinates[0] = m_hexCoordinates[(m_hexDiameter+2)*m_hexDiameter+m_hexDiameter];
+	m_hexCoordinates[(m_hexDiameter+2)*(m_hexDiameter+2)-1] = m_hexCoordinates[(m_hexDiameter+2)+1];
 }
 
 void HexBoard::SetInterpolation(int north, int east)
@@ -158,23 +185,23 @@ void HexBoard::Permute()
 			if (m_east == -1)
 			{
 				if (j-i == m_north*m_hexRadius || j == m_north*m_hexRadius)
-					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j-m_north*(ijColumnLength-1)+m_hexRadius)+i+m_hexRadius]];
+					hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1]] = m_hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j-m_north*(ijColumnLength-1)+m_hexRadius+1)+i+m_hexRadius+1]];
 				else
-					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_north+m_hexRadius)+i+m_hexRadius]];
+					hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1]] = m_hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_north+m_hexRadius+1)+i+m_hexRadius+1]];
 			}
 			else if (m_east == 0)
 			{
 				if (i == m_north*m_hexRadius || j == m_north*m_hexRadius)
-					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j-m_north*(ijColumnLength-1)+m_hexRadius)+i-m_north*(ijColumnLength-1)+m_hexRadius]];
+					hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1]] = m_hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j-m_north*(ijColumnLength-1)+m_hexRadius+1)+i-m_north*(ijColumnLength-1)+m_hexRadius+1]];
 				else
-					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_north+m_hexRadius)+i+m_north+m_hexRadius]];
+					hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1]] = m_hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_north+m_hexRadius+1)+i+m_north+m_hexRadius+1]];
 			}
 			else
 			{
 				if (i-j == m_north*m_hexRadius || i == m_north*m_hexRadius)
-					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i-m_north*(ijColumnLength-1)+m_hexRadius]];
+					hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1]] = m_hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i-m_north*(ijColumnLength-1)+m_hexRadius+1]];
 				else
-					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_north+m_hexRadius]];
+					hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1]] = m_hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_north+m_hexRadius+1]];
 			}
 		}
 	}
