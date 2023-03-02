@@ -50,7 +50,7 @@ void Game::Initialize(HWND window, int width, int height)
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
 	//m_Light.setPosition(1.0f, 1.0f, 3.0f);
-	m_Light.setPosition(0.0f, 1.0f, 0.0f);
+	m_Light.setPosition(0.0f, 1.5f, 0.0f);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
 	m_Light.setStrength(100.0);
 
@@ -180,7 +180,7 @@ void Game::Update(DX::StepTimer const& timer)
 	//m_HexBoard.m_hexModels[0].DeriveHexPrism(device, 0.5f+0.25f*sin(XM_2PI*m_time/5.0f));
 	if (m_HexBoard.m_interpolating)
 	{
-		m_HexBoard.Interpolate(1.0f*timer.GetElapsedSeconds());
+		m_HexBoard.Interpolate(2.0f*timer.GetElapsedSeconds());
 	}
 	else
 	{
@@ -277,7 +277,7 @@ void Game::Render()
 	// Draw Skybox
 	RenderSkyboxOnto(&m_Camera);
 
-	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, 0.0f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
+	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
 	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 
 	// Draw Basic Models

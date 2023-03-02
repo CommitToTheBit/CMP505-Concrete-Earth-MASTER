@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "HexBoard.h"
 
-const DirectX::SimpleMath::Vector3 HexBoard::m_origin = DirectX::SimpleMath::Vector3(-0.5f, -0.5f, -0.5f);
+const DirectX::SimpleMath::Vector3 HexBoard::m_origin = DirectX::SimpleMath::Vector3(-0.5f, 0.0f, -0.5f);
 const DirectX::SimpleMath::Vector3 HexBoard::m_p = DirectX::SimpleMath::Vector3(0.5f*(1.0f+cos(XM_PI/3.0f)), 0.0f, -0.5f*cos(XM_PI/6.0f)); // Points NE...
 const DirectX::SimpleMath::Vector3 HexBoard::m_q = DirectX::SimpleMath::Vector3(-0.5f*(1.0f+cos(XM_PI/3.0f)), 0.0f, -0.5f*cos(XM_PI/6.0f)); // Points NW...
 
@@ -41,7 +41,7 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 			if (abs(i-j) > m_hexRadius)
 				continue;
 
-			m_hexIsolevels[index] = 0.1f+0.02f*index;//0.15f*std::rand()/RAND_MAX;
+			m_hexIsolevels[index] = 0.15f+0.15f*std::rand()/RAND_MAX;
 
 			hexField->Initialise(&m_horizontalField);
 			hexField->DeriveHexPrism(device, m_hexIsolevels[index]);
@@ -70,7 +70,8 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, LightShader* lightShad
 	float ifrac = -m_t*((m_east != -m_north) ? m_north : 0);
 	float jfrac = -m_t*((m_east != m_north) ? m_north : 0);
 
-	DirectX::SimpleMath::Vector3 relativePosition;
+	DirectX::SimpleMath::Vector3 relativePosition, boundPosition;
+	float maxBound, tBound;
 	for (int j = -m_hexRadius; j <= m_hexRadius; j++)
 	{
 		for (int i = -m_hexRadius; i <= m_hexRadius; i++)
@@ -82,34 +83,21 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, LightShader* lightShad
 			float l = (camera->getPosition()-boardPosition).Length();
 			DirectX::SimpleMath::Matrix ortho = DirectX::SimpleMath::Matrix::CreateOrthographic(l*1280.0f/720.0f, l*1.0f, 0.01f, 100.0f);
 
-			relativePosition = m_origin+(i+ifrac)*m_p+(j+jfrac)*m_q;
+			relativePosition = (i+ifrac)*m_p+(j+jfrac)*m_q;
 
 			// FIXME: Needs tidied!
-			float scale = 1.0f;
-			if (m_east == 0)
-			{
-				if (std::max(abs(i+ifrac), abs(j+jfrac)) > m_hexRadius)
-				{
-					scale = std::max(m_hexRadius + 1.0f - std::max(abs(i+ifrac), abs(j+jfrac)), 0.0f);
-				}
-			}
-			else if (m_east == -m_north)
-			{
-				if (std::max(abs(j+jfrac-i-ifrac), abs(j+jfrac)) > m_hexRadius)
-				{
-					scale = std::max(m_hexRadius + 1.0f - std::max(abs(j+jfrac-i-ifrac), abs(j+jfrac)), 0.0f);
-				}
-			}
+			if (m_east == -m_north)
+				maxBound = std::max(abs(j+jfrac-i-ifrac), abs(j+jfrac));
+			else if (m_east == 0)
+				maxBound = std::max(abs(i+ifrac), abs(j+jfrac));
 			else
-			{
-				if (std::max(abs(i+ifrac-j-jfrac), abs(i+ifrac)) > m_hexRadius)
-				{
-					scale = std::max(m_hexRadius + 1.0f - std::max(abs(i+ifrac-j-jfrac), abs(i+ifrac)), 0.0f);
-				}
-			}
+				maxBound = std::max(abs(i+ifrac-j-jfrac), abs(i+ifrac));
+			tBound = std::max(0.0f, std::min(m_hexRadius + 1.0f - maxBound, 1.0f));
+			boundPosition = DirectX::SimpleMath::Vector3(0.0f, -0.5f*(1.0f - tBound), 0.0f);
+
 
 			lightShader->EnableShader(deviceContext);
-			lightShader->SetLightShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateScale(scale) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition)), &camera->getCameraMatrix(), &ortho, true, time, light, texture, normalTexture);
+			lightShader->SetLightShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition+boundPosition)), &camera->getCameraMatrix(), &ortho, true, time, light, texture, normalTexture);
 			m_hexModels[m_hexPermutation[m_hexCoordinates[(2*m_hexRadius+1)*(j+m_hexRadius)+i+m_hexRadius]]].Render(deviceContext);
 		}
 	}
