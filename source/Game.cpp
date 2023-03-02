@@ -190,12 +190,12 @@ void Game::Update(DX::StepTimer const& timer)
 			m_HexBoard.SetInterpolation(1, -1);
 		if (m_gameInputCommands.right)
 			m_HexBoard.SetInterpolation(1, 1);
-		//if (m_gameInputCommands.back)
-		//	m_HexBoard.SetInterpolation(-1, 0);
+		if (m_gameInputCommands.back)
+			m_HexBoard.SetInterpolation(-1, 0);
 		//if (m_gameInputCommands.back)
 		//	m_HexBoard.SetInterpolation(-1, 1);
-		if (m_gameInputCommands.back)
-			m_HexBoard.SetInterpolation(-1, -1);
+		//if (m_gameInputCommands.back)
+		//	m_HexBoard.SetInterpolation(-1, -1);
 
 		//m_HexBoard.AddThorn(device, m_add++);
 	}
@@ -467,7 +467,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 3, 32);
+	m_HexBoard.Initialize(device, 4, 32);
 	m_add = 0;
 
 	// Models

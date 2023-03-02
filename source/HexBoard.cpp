@@ -44,7 +44,7 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 				continue;
 			}
 
-			m_hexIsolevels[index] = 0.15f+0.02f*index;//0.15f*std::rand()/RAND_MAX;
+			m_hexIsolevels[index] = 0.15f+0.01f*index;//0.15f*std::rand()/RAND_MAX;
 
 			hexField->Initialise(&m_horizontalField);
 			hexField->DeriveHexPrism(device, m_hexIsolevels[index]);
@@ -92,7 +92,7 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, LightShader* lightShad
 			// FIXME: Needs tidied!
 			maxBound = std::max(std::max(abs(i+ifrac), abs(i+ifrac-j-jfrac)), abs(j+jfrac));
 			tBound = std::max(0.0f, std::min(m_hexRadius + 1.0f - maxBound, 1.0f));
-			boundPosition = DirectX::SimpleMath::Vector3(0.0f, -0.0f*(1.0f - tBound), 0.0f);
+			boundPosition = DirectX::SimpleMath::Vector3(0.0f, -0.5f*(1.0f - tBound), 0.0f);
 
 			lightShader->EnableShader(deviceContext);
 			lightShader->SetLightShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition+boundPosition)), &camera->getCameraMatrix(), &ortho, true, time, light, texture, normalTexture);
