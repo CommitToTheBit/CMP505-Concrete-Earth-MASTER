@@ -103,9 +103,70 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, LightShader* lightShad
 	return;
 }
 
-void HexBoard::SetPerimeter()
+void HexBoard::SetInterpolation(int north, int east)
 {
-	int ijColumn, ijColumnLength, sign;
+	// ERROR-HANDLING: 'Normalise' direction...
+	m_north = (north != 0) ? north/abs(north) : 0;
+	m_east = (east != 0) ? east/abs(east) : 0;
+
+	if (m_north == 0)
+		return;
+
+	m_interpolating = true;
+	SetInterpolationPerimeter();
+}
+
+void HexBoard::Interpolate(float t)
+{
+	m_t += t;
+	if (m_t < 1.0f)
+		return;
+
+	ApplyInterpolationPermutation();
+
+	m_interpolating = false;
+	m_t = 0.0f;
+	m_north = 0;
+	m_east = 0;
+}
+
+void HexBoard::SetInterpolationPerimeter()
+{
+	int ijColumn, ijColumnLength;
+	for (int j = -m_hexRadius-1; j <= m_hexRadius+1; j++)
+	{
+		for (int i = -m_hexRadius-1; i <= m_hexRadius+1; i++)
+		{
+			if (m_east == -m_north)
+			{
+				ijColumn = i;
+				ijColumnLength = m_hexDiameter-abs(ijColumn);
+
+				if (abs(i) < m_hexRadius+1 && (i-j == -m_north*(m_hexRadius+1)) || j == m_north*(m_hexRadius+1)) // NB: Minus sign here due to ij/NESW coordinate systems!
+					m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1] = m_hexCoordinates[(m_hexDiameter+2)*((j-m_north*ijColumnLength)+m_hexRadius+1)+i+m_hexRadius+1];
+			}
+			else if (m_east == 0)
+			{
+				ijColumn = i-j;
+				ijColumnLength = m_hexDiameter-abs(ijColumn);
+
+				if (abs(i-j) < m_hexRadius+1 && (i == m_north*(m_hexRadius+1) || j == m_north*(m_hexRadius+1)))
+					m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1] = m_hexCoordinates[(m_hexDiameter+2)*((j-m_north*ijColumnLength)+m_hexRadius+1)+(i-m_north*ijColumnLength)+m_hexRadius+1];
+			}
+			else
+			{
+				ijColumn = j;
+				ijColumnLength = m_hexDiameter-abs(ijColumn);
+
+				if (abs(j) < m_hexRadius+1 && (i == m_north*(m_hexRadius+1) || i-j == m_north*(m_hexRadius+1))) // NB: Minus sign here due to ij/NESW coordinate systems!
+					m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1] = m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+(i-m_north*ijColumnLength)+m_hexRadius+1];
+			}
+		}
+	}
+
+	return;
+
+	int sign;
 	for (int j = -m_hexRadius-1; j <= m_hexRadius+1; j++)
 	{
 		for (int i = -m_hexRadius-1; i <= m_hexRadius+1; i++)
@@ -132,33 +193,7 @@ void HexBoard::SetPerimeter()
 	m_hexCoordinates[(m_hexDiameter+2)*(m_hexDiameter+2)-1] = m_hexCoordinates[(m_hexDiameter+2)+1];
 }
 
-void HexBoard::SetInterpolation(int north, int east)
-{
-	// ERROR-HANDLING: 'Normalise' direction...
-	m_north = (north != 0) ? north/abs(north) : 0;
-	m_east = (east != 0) ? east/abs(east) : 0;
-
-	if (m_north == 0)
-		return;
-
-	m_interpolating = true;
-}
-
-void HexBoard::Interpolate(float t)
-{
-	m_t += t;
-	if (m_t < 1.0f)
-		return;
-
-	Permute();
-
-	m_interpolating = false;
-	m_t = 0.0f;
-	m_north = 0;
-	m_east = 0;
-}
-
-void HexBoard::Permute()
+void HexBoard::ApplyInterpolationPermutation()
 {
 	if (m_north == 0)
 		return;
@@ -174,7 +209,7 @@ void HexBoard::Permute()
 			if (abs(i-j) > m_hexRadius)
 				continue;
 
-			if (m_east == -1)
+			if (m_east == -m_north)
 				ijColumn = i;
 			else if (m_east == 0)
 				ijColumn = i-j;
@@ -182,9 +217,9 @@ void HexBoard::Permute()
 				ijColumn = j;
 			ijColumnLength = m_hexDiameter-abs(ijColumn);
 
-			if (m_east == -1)
+			if (m_east == -m_north)
 			{
-				if (j-i == m_north*m_hexRadius || j == m_north*m_hexRadius)
+				if (i-j == -m_north*m_hexRadius || j == m_north*m_hexRadius)
 					hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1]] = m_hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j-m_north*(ijColumnLength-1)+m_hexRadius+1)+i+m_hexRadius+1]];
 				else
 					hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1]] = m_hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_north+m_hexRadius+1)+i+m_hexRadius+1]];

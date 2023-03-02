@@ -182,7 +182,7 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		m_HexBoard.Interpolate(2.0f*timer.GetElapsedSeconds());
 	}
-	else
+	if (!m_HexBoard.m_interpolating) // NB: Not an 'if/else', since this would waste a frame! 
 	{
 		if (m_gameInputCommands.forward)
 			m_HexBoard.SetInterpolation(1, 0);
@@ -190,8 +190,12 @@ void Game::Update(DX::StepTimer const& timer)
 			m_HexBoard.SetInterpolation(1, -1);
 		if (m_gameInputCommands.right)
 			m_HexBoard.SetInterpolation(1, 1);
+		//if (m_gameInputCommands.back)
+		//	m_HexBoard.SetInterpolation(-1, 0);
+		//if (m_gameInputCommands.back)
+		//	m_HexBoard.SetInterpolation(-1, 1);
 		if (m_gameInputCommands.back)
-			m_HexBoard.SetInterpolation(-1, 0);
+			m_HexBoard.SetInterpolation(-1, -1);
 
 		//m_HexBoard.AddThorn(device, m_add++);
 	}
