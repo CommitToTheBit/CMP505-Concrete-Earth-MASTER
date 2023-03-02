@@ -49,7 +49,8 @@ void Game::Initialize(HWND window, int width, int height)
 	m_Ambience = Vector4(0.25f, 0.25f, 0.25f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light.setPosition(1.0f, 1.0f, 3.0f);
+	//m_Light.setPosition(1.0f, 1.0f, 3.0f);
+	m_Light.setPosition(0.0f, 1.0f, 0.0f);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
 	m_Light.setStrength(100.0);
 
@@ -58,8 +59,10 @@ void Game::Initialize(HWND window, int width, int height)
 	//m_Camera.setRotation(Vector3(-90.0f, -180+(180.0/3.14159265)*atan(2.4/1.8), 0.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up.
 
 	// FIXME: Refactor this, for 'cleaner' board set-up?
-	m_Camera.setPosition(Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f)+7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(XM_PI/12.0f), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(XM_PI/12.0f));
-	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+15.0f, 0.0f));
+	float twist = XM_PI/12.0f;
+	Vector3 displacement = Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
+	m_Camera.setPosition(displacement+7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(twist));
+	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+180.0f*twist/XM_PI, 0.0f));
 
 	
 #ifdef DXTK_AUDIO
@@ -177,7 +180,14 @@ void Game::Update(DX::StepTimer const& timer)
 	//m_HexBoard.m_hexModels[0].InitialiseHorizontalField();
 	//m_HexBoard.m_hexModels[0].DeriveHexPrism(device, 0.5f+0.25f*sin(XM_2PI*m_time/5.0f));
 	if (m_gameInputCommands.forward)
-		m_HexBoard.AddThorn(device, m_add++);
+		m_HexBoard.Permute(1,0);
+	if (m_gameInputCommands.left)
+		m_HexBoard.Permute(1, -1);
+	if (m_gameInputCommands.right)
+		m_HexBoard.Permute(1, 1);
+	if (m_gameInputCommands.back)
+		m_HexBoard.Permute(-1, 0);
+		//m_HexBoard.AddThorn(device, m_add++);
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
@@ -280,7 +290,8 @@ void Game::Render()
 				continue;
 
 			// FIXME: Refactor this, for 'cleaner' board set-up?
-			float l = (m_Camera.getPosition()-Vector3(1.5f, 0.5f*sin(1.0f*XM_PI/5.0f), 0.0f)).Length();
+			Vector3 displacement = Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
+			float l = (m_Camera.getPosition()-displacement).Length();
 			Matrix ortho = Matrix::CreateOrthographic(l*1280.0f/720.0f,l*1.0f,0.01f,100.0f);
 
 			m_FieldRendering.EnableShader(context);

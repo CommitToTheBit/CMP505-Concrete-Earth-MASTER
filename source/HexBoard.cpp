@@ -19,10 +19,10 @@ HexBoard::~HexBoard()
 bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 {
 	m_hexRadius = hexRadius;
-	m_hexDiameter = (2*hexRadius+1)*(2*hexRadius+1);
+	m_hexDiameter = (2*hexRadius+1);
 	m_hexes = 1+3*hexRadius*(hexRadius+1);
 
-	m_hexCoordinates = new int[m_hexDiameter];
+	m_hexCoordinates = new int[m_hexDiameter*m_hexDiameter];
 	m_hexPermutation = new int[m_hexes];
 
 	m_hexIsolevels = new float[m_hexes];
@@ -48,8 +48,8 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 
 			m_hexModels[index].Initialize(device, cells, hexField->m_field, m_hexIsolevels[index]);
 
-			m_hexCoordinates[(2*m_hexRadius+1)*(j+m_hexRadius)+i+m_hexRadius] = index;
-			m_hexPermutation[index] = (index+m_hexes/2)%m_hexes;
+			m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius] = index;
+			m_hexPermutation[index] = index;// (index+m_hexes/2)%m_hexes;
 			index++;
 		}
 	}
@@ -65,6 +65,58 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext)
 		m_hexModels[i].Render(deviceContext);
 
 	return;
+}
+
+void HexBoard::Permute(int north, int east)
+{
+	int* hexPermutation = new int[m_hexes];
+
+	// ERROR-HANDLING: 'Normalise' direction...
+	north = (north != 0) ? north/abs(north) : 1;
+	east = (east != 0) ? east/abs(east) : 0;
+
+	int ijColumn, ijColumnLength;
+	int	iPermuted, jPermuted;
+	for (int j = -m_hexRadius; j <= m_hexRadius; j++)
+	{
+		for (int i = -m_hexRadius; i <= m_hexRadius; i++)
+		{
+			if (abs(i-j) > m_hexRadius)
+				continue;
+
+			if (east == -1)
+				ijColumn = i;
+			else if (east == 0)
+				ijColumn = i-j;
+			else
+				ijColumn = j;
+			ijColumnLength = m_hexDiameter-abs(ijColumn);
+
+			if (east == -1)
+			{
+				if (j-i == north*m_hexRadius || j == north*m_hexRadius)
+					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j-north*(ijColumnLength-1)+m_hexRadius)+i+m_hexRadius]];
+				else
+					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j+north+m_hexRadius)+i+m_hexRadius]];
+			}
+			else if (east == 0)
+			{
+				if (i == north*m_hexRadius || j == north*m_hexRadius)
+					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j-north*(ijColumnLength-1)+m_hexRadius)+i-north*(ijColumnLength-1)+m_hexRadius]];
+				else
+					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j+north+m_hexRadius)+i+north+m_hexRadius]];
+			}
+			else
+			{
+				if (i-j == north*m_hexRadius || i == north*m_hexRadius)
+					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i-north*(ijColumnLength-1)+m_hexRadius]];
+				else
+					hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+m_hexRadius]] = m_hexPermutation[m_hexCoordinates[m_hexDiameter*(j+m_hexRadius)+i+north+m_hexRadius]];
+			}
+		}
+	}
+
+	m_hexPermutation = hexPermutation;
 }
 
 void HexBoard::AddThorn(ID3D11Device* device, int hex)

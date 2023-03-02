@@ -10,6 +10,8 @@ public:
 	bool Initialize(ID3D11Device*, int hexRadius, int cells);
 	void Render(ID3D11DeviceContext*);
 
+	void Permute(int north, int east);
+
 	// DEBUG: Testing interactivity...
 	void AddThorn(ID3D11Device*, int hex);
 
