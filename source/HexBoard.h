@@ -1,6 +1,10 @@
 #pragma once
 #include "MarchingCubes.h"
 
+#include "Camera.h"
+
+#include "LightShader.h"
+
 class HexBoard
 {
 public:
@@ -8,7 +12,18 @@ public:
 	~HexBoard();
 
 	bool Initialize(ID3D11Device*, int hexRadius, int cells);
-	void Render(ID3D11DeviceContext*);
+
+	// Rendering...
+	void Render(ID3D11DeviceContext*, 
+		LightShader* lightShader, 
+		Camera* camera, 
+		float time,
+		Light* light,  
+		ID3D11ShaderResourceView* texture, 
+		ID3D11ShaderResourceView* normalTexture);
+
+	void SetInterpolation(int north, int east);
+	void Interpolate(float t);
 
 	void Permute(int north, int east);
 
@@ -30,5 +45,12 @@ public: // FIXME: Left off while still accessed in Game.cpp...
 	MarchingCubes* m_hexModels; // new MarchingTerrain[1+3*m_hexRadius*(m_hexRadius+1)]
 
 	static const DirectX::SimpleMath::Vector3 m_origin, m_p, m_q;
+
+	// Linear interpolation...
+	int m_north, m_east;
+
+	bool m_interpolating;
+	float m_t;
+	DirectX::SimpleMath::Vector3 m_direction;
 };
 

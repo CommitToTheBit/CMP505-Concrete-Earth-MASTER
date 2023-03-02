@@ -179,15 +179,25 @@ void Game::Update(DX::StepTimer const& timer)
 	//m_HexBoard.m_hexModels[0].GenerateIsosurface(device, 0.5f+0.25f*sin(m_time/(XM_2PI*5.0f)));
 	//m_HexBoard.m_hexModels[0].InitialiseHorizontalField();
 	//m_HexBoard.m_hexModels[0].DeriveHexPrism(device, 0.5f+0.25f*sin(XM_2PI*m_time/5.0f));
-	if (m_gameInputCommands.forward)
-		m_HexBoard.Permute(1,0);
-	if (m_gameInputCommands.left)
-		m_HexBoard.Permute(1, -1);
-	if (m_gameInputCommands.right)
-		m_HexBoard.Permute(1, 1);
-	if (m_gameInputCommands.back)
-		m_HexBoard.Permute(-1, 0);
+	if (m_HexBoard.m_interpolating)
+	{
+		m_HexBoard.Interpolate(5.0f*timer.GetElapsedSeconds());
+	}
+	else
+	{
+		if (m_gameInputCommands.forward)
+			m_HexBoard.Permute(1, 0);
+		if (m_gameInputCommands.left)
+			m_HexBoard.Permute(1, -1);
+		if (m_gameInputCommands.right)
+			m_HexBoard.Permute(1, 1);
+		if (m_gameInputCommands.back)
+			m_HexBoard.Permute(-1, 0);
+
+		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right || m_gameInputCommands.back)
+			m_HexBoard.SetInterpolation(1,1);
 		//m_HexBoard.AddThorn(device, m_add++);
+	}
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
@@ -270,35 +280,7 @@ void Game::Render()
 	// Draw Skybox
 	RenderSkyboxOnto(&m_Camera);
 
-	// Draw Terrain
-	/*m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_DemoNMRenderPass->getShaderResourceView());
-	m_Terrain.Render(context);
-
-	context->RSSetState(m_states->CullCounterClockwise());
-	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-	m_Terrain.Render(context);
-
-	context->RSSetState(m_states->CullClockwise());*/
-
-	for (int j = -m_HexBoard.m_hexRadius; j <= m_HexBoard.m_hexRadius; j++)
-	{
-		for (int i = -m_HexBoard.m_hexRadius; i <= m_HexBoard.m_hexRadius; i++)
-		{
-			if (abs(i-j) > m_HexBoard.m_hexRadius)
-				continue;
-
-			// FIXME: Refactor this, for 'cleaner' board set-up?
-			Vector3 displacement = Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-			float l = (m_Camera.getPosition()-displacement).Length();
-			Matrix ortho = Matrix::CreateOrthographic(l*1280.0f/720.0f,l*1.0f,0.01f,100.0f);
-
-			m_FieldRendering.EnableShader(context);
-			m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(m_HexBoard.m_origin+i*m_HexBoard.m_p+j*m_HexBoard.m_q)), &m_Camera.getCameraMatrix(), &ortho, true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-			m_HexBoard.m_hexModels[m_HexBoard.m_hexPermutation[m_HexBoard.m_hexCoordinates[(2*m_HexBoard.m_hexRadius+1)*(j+m_HexBoard.m_hexRadius)+i+m_HexBoard.m_hexRadius]]].Render(context);
-		}
-	}
+	m_HexBoard.Render(context, &m_FieldRendering, &m_Camera, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 
 	// Draw Basic Models
 	/*m_LightShaderPair.EnableShader(context);

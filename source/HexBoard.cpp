@@ -54,17 +54,62 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 		}
 	}
 
+	m_north = 0;
+	m_east = 0;
+
+	m_t = 0.0f;
+	m_direction = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
+
 	delete hexField;
 
 	return true;
 }
 
-void HexBoard::Render(ID3D11DeviceContext* deviceContext)
+void HexBoard::Render(ID3D11DeviceContext* deviceContext, LightShader* lightShader, Camera* camera, float time, Light* light, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* normalTexture)
 {
-	for (int i = 0; i < 1+3*m_hexRadius*(m_hexRadius+1); i++)
-		m_hexModels[i].Render(deviceContext);
+	DirectX::SimpleMath::Vector3 relativePosition;
+	for (int j = -m_hexRadius; j <= m_hexRadius; j++)
+	{
+		for (int i = -m_hexRadius; i <= m_hexRadius; i++)
+		{
+			if (abs(i-j) > m_hexRadius)
+				continue;
+
+			// FIXME: Refactor this, for 'cleaner' board set-up?
+			DirectX::SimpleMath::Vector3 displacement = DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
+			float l = (camera->getPosition()-displacement).Length();
+			DirectX::SimpleMath::Matrix ortho = DirectX::SimpleMath::Matrix::CreateOrthographic(l*1280.0f/720.0f, l*1.0f, 0.01f, 100.0f);
+
+			relativePosition = m_origin+i*m_p+j*m_q+m_t*m_direction;
+
+			lightShader->EnableShader(deviceContext);
+			lightShader->SetLightShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(relativePosition)), &camera->getCameraMatrix(), &ortho, true, time, light, texture, normalTexture);
+			m_hexModels[m_hexPermutation[m_hexCoordinates[(2*m_hexRadius+1)*(j+m_hexRadius)+i+m_hexRadius]]].Render(deviceContext);
+		}
+	}
 
 	return;
+}
+
+void HexBoard::SetInterpolation(int north, int east)
+{
+	// ERROR-HANDLING: 'Normalise' direction...
+	m_north = (north != 0) ? north/abs(north) : 1;
+	m_east = (east != 0) ? east/abs(east) : 0;
+
+	m_interpolating = true;
+}
+
+void HexBoard::Interpolate(float t)
+{
+	m_t += t;
+	if (m_t < 1.0f)
+		return;
+
+	m_interpolating = false;
+	m_t = 0.0f;
+	m_north = 0;
+	m_east = 0;
 }
 
 void HexBoard::Permute(int north, int east)
@@ -72,8 +117,11 @@ void HexBoard::Permute(int north, int east)
 	int* hexPermutation = new int[m_hexes];
 
 	// ERROR-HANDLING: 'Normalise' direction...
-	north = (north != 0) ? north/abs(north) : 1;
-	east = (east != 0) ? east/abs(east) : 0;
+	m_north = (north != 0) ? north/abs(north) : 0;
+	m_east = (east != 0) ? east/abs(east) : 0;
+
+	if (m_north == 0)
+		return;
 
 	int ijColumn, ijColumnLength;
 	int	iPermuted, jPermuted;
