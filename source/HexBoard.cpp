@@ -67,8 +67,8 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 
 void HexBoard::Render(ID3D11DeviceContext* deviceContext, LightShader* lightShader, DirectX::SimpleMath::Vector3 boardPosition, Camera* camera, float time, Light* light, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* normalTexture)
 {
-	float ifrac = -m_t*(m_north+0.5f*m_east);
-	float jfrac = -m_t*(m_north-0.5f*m_east);
+	float ifrac = -m_t*((m_east != -m_north) ? m_north : 0);
+	float jfrac = -m_t*((m_east != m_north) ? m_north : 0);
 
 	DirectX::SimpleMath::Vector3 relativePosition;
 	for (int j = -m_hexRadius; j <= m_hexRadius; j++)
@@ -84,8 +84,32 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, LightShader* lightShad
 
 			relativePosition = m_origin+(i+ifrac)*m_p+(j+jfrac)*m_q;
 
+			// FIXME: Needs tidied!
+			float scale = 1.0f;
+			if (m_east == 0)
+			{
+				if (std::max(abs(i+ifrac), abs(j+jfrac)) > m_hexRadius)
+				{
+					scale = std::max(m_hexRadius + 1.0f - std::max(abs(i+ifrac), abs(j+jfrac)), 0.0f);
+				}
+			}
+			else if (m_east == -m_north)
+			{
+				if (std::max(abs(j+jfrac-i-ifrac), abs(j+jfrac)) > m_hexRadius)
+				{
+					scale = std::max(m_hexRadius + 1.0f - std::max(abs(j+jfrac-i-ifrac), abs(j+jfrac)), 0.0f);
+				}
+			}
+			else
+			{
+				if (std::max(abs(i+ifrac-j-jfrac), abs(i+ifrac)) > m_hexRadius)
+				{
+					scale = std::max(m_hexRadius + 1.0f - std::max(abs(i+ifrac-j-jfrac), abs(i+ifrac)), 0.0f);
+				}
+			}
+
 			lightShader->EnableShader(deviceContext);
-			lightShader->SetLightShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition)), &camera->getCameraMatrix(), &ortho, true, time, light, texture, normalTexture);
+			lightShader->SetLightShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateScale(scale) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition)), &camera->getCameraMatrix(), &ortho, true, time, light, texture, normalTexture);
 			m_hexModels[m_hexPermutation[m_hexCoordinates[(2*m_hexRadius+1)*(j+m_hexRadius)+i+m_hexRadius]]].Render(deviceContext);
 		}
 	}
