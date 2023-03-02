@@ -15,7 +15,8 @@ public:
 
 	// Rendering...
 	void Render(ID3D11DeviceContext*, 
-		LightShader* lightShader, 
+		LightShader* lightShader,
+		DirectX::SimpleMath::Vector3 boardPosition,
 		Camera* camera, 
 		float time,
 		Light* light,  
@@ -25,13 +26,11 @@ public:
 	void SetInterpolation(int north, int east);
 	void Interpolate(float t);
 
-	void Permute(int north, int east);
-
 	// DEBUG: Testing interactivity...
 	void AddThorn(ID3D11Device*, int hex);
 
 private:
-
+	void Permute();
 
 public: // FIXME: Left off while still accessed in Game.cpp...
 	int m_hexRadius, m_hexDiameter, m_hexes; // total tiles: 1+3*m_hexRadius*(m_hexRadius+1)

@@ -60,8 +60,7 @@ void Game::Initialize(HWND window, int width, int height)
 
 	// FIXME: Refactor this, for 'cleaner' board set-up?
 	float twist = XM_PI/12.0f;
-	Vector3 displacement = Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_Camera.setPosition(displacement+7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(twist));
+	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(twist));
 	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+180.0f*twist/XM_PI, 0.0f));
 
 	
@@ -181,21 +180,19 @@ void Game::Update(DX::StepTimer const& timer)
 	//m_HexBoard.m_hexModels[0].DeriveHexPrism(device, 0.5f+0.25f*sin(XM_2PI*m_time/5.0f));
 	if (m_HexBoard.m_interpolating)
 	{
-		m_HexBoard.Interpolate(5.0f*timer.GetElapsedSeconds());
+		m_HexBoard.Interpolate(1.0f*timer.GetElapsedSeconds());
 	}
 	else
 	{
 		if (m_gameInputCommands.forward)
-			m_HexBoard.Permute(1, 0);
+			m_HexBoard.SetInterpolation(1, 0);
 		if (m_gameInputCommands.left)
-			m_HexBoard.Permute(1, -1);
+			m_HexBoard.SetInterpolation(1, -1);
 		if (m_gameInputCommands.right)
-			m_HexBoard.Permute(1, 1);
+			m_HexBoard.SetInterpolation(1, 1);
 		if (m_gameInputCommands.back)
-			m_HexBoard.Permute(-1, 0);
+			m_HexBoard.SetInterpolation(-1, 0);
 
-		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right || m_gameInputCommands.back)
-			m_HexBoard.SetInterpolation(1,1);
 		//m_HexBoard.AddThorn(device, m_add++);
 	}
 
@@ -280,7 +277,8 @@ void Game::Render()
 	// Draw Skybox
 	RenderSkyboxOnto(&m_Camera);
 
-	m_HexBoard.Render(context, &m_FieldRendering, &m_Camera, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
+	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, 0.0f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
+	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
 
 	// Draw Basic Models
 	/*m_LightShaderPair.EnableShader(context);
