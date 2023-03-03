@@ -53,6 +53,10 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 
 			m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1] = index;
 			m_hexPermutation[index] = index;// (index+m_hexes/2)%m_hexes;
+
+			if (index%5 == 0)
+				AddThorn(device, index);
+
 			index++;
 		}
 	}
@@ -96,7 +100,7 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, Shader* shader, Direct
 
 			shader->EnableShader(deviceContext);
 			shader->SetShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition+boundPosition)), &camera->getCameraMatrix(), &ortho, true, time);
-			shader->SetAlphaBufferParameters(deviceContext, 1.0f);
+			shader->SetAlphaBufferParameters(deviceContext, tBound);
 			shader->SetLightBufferParameters(deviceContext, light);
 			shader->SetShaderTexture(deviceContext, texture, -1, 0);
 			shader->SetShaderTexture(deviceContext, normalTexture, -1, 1);

@@ -1,4 +1,5 @@
-﻿C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light3D_ps.hlsl(43,11-116): warning X3206: implicit truncation of vector type
-  
-  compilation object save succeeded; see C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light3D_ps.cso
+﻿  HexBoard.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(178,6): warning C4101: 'sign': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(213,17): warning C4101: 'jPermuted': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(213,6): warning C4101: 'iPermuted': unreferenced local variable
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe

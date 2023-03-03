@@ -157,7 +157,7 @@ bool Shader::SetAlphaBufferParameters(ID3D11DeviceContext* context, float alpha)
 	context->Map(m_alphaBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 	AlphaBufferType* alphaPtr = (AlphaBufferType*)mappedResource.pData;
-	alphaPtr->alpha;
+	alphaPtr->alpha = alpha;
 	context->Unmap(m_alphaBuffer, 0);
 	context->PSSetConstantBuffers(1, 1, &m_alphaBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the PS
 
