@@ -126,7 +126,7 @@ private:
     AlphaShader                                                             m_AlphaShaderPair;
     OverlayShader                                                           m_OverlayShaderPair;
 
-    LightShader                                                             m_FieldRendering;
+    Shader                                                                  m_FieldRendering;
 
     // Models
     HexBoard                                                                m_HexBoard;

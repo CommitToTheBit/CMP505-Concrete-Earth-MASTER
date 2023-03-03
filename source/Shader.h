@@ -15,12 +15,23 @@ public:
 	//All the methods here simply create new versions corresponding to your needs
 	bool InitShader(ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilename); //Loads the Vert / pixel Shader pair
 
+	// (Modular) Add-ons...
+	// NB: Apply these *in order*
+	bool InitLightBuffer(ID3D11Device* device);
+
 	bool SetShaderParameters(ID3D11DeviceContext* context,
 		DirectX::SimpleMath::Matrix* world,
 		DirectX::SimpleMath::Matrix* view,
 		DirectX::SimpleMath::Matrix* projection,
 		bool culling,
 		float time);
+
+	// (Modular) Add-ons...
+	// NB: Apply these *in order*
+	bool SetLightBufferParameters(ID3D11DeviceContext* context,
+		Light* light);
+
+	bool SetShaderTexture(ID3D11DeviceContext* context, ID3D11ShaderResourceView* texture, int vsStartSlot, int psStartSlot);
 
 	void EnableShader(ID3D11DeviceContext * context);
 
@@ -49,12 +60,15 @@ protected:
 	ID3D11SamplerState*														m_sampleState;
 	ID3D11Buffer*															m_matrixBuffer;
 	ID3D11Buffer*															m_timeBuffer;
-};
 
-/*class GlassShader : Shader
-{
-public:
-	using Shader::InitStandard; // FIXME: Need to re-initialise parameter buffers!
-	bool SetShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, float time, Light* sceneLight1, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* normalTexture, ID3D11ShaderResourceView* specimenTexture, ID3D11ShaderResourceView* specimenAlphaTexture, ID3D11ShaderResourceView* frontFaceCubeMap[6], ID3D11ShaderResourceView* backFaceCubeMap[6], float refractiveIndex, float refractivity, float reflectivity, DirectX::SimpleMath::Vector3 cameraPosition);
-	using Shader::EnableShader;
-};*/
+	// Light Buffers
+	struct LightBufferType
+	{
+		DirectX::SimpleMath::Vector4 ambient;
+		DirectX::SimpleMath::Vector4 diffuse;
+		DirectX::SimpleMath::Vector3 position;
+		float strength;
+	};
+
+	ID3D11Buffer* m_lightBuffer;
+};

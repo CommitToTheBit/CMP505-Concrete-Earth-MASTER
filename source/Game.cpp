@@ -284,7 +284,7 @@ void Game::Render()
 	RenderSkyboxOnto(&m_Camera);
 
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
+	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView(), &m_Light);
 
 	// Draw Basic Models
 	/*m_LightShaderPair.EnableShader(context);
@@ -484,7 +484,8 @@ void Game::CreateDeviceDependentResources()
 	m_AlphaShaderPair.InitAlphaShader(device, L"alpha_vs.cso", L"alpha_ps.cso");
 	m_OverlayShaderPair.InitOverlayShader(device, L"overlay_vs.cso", L"overlay_ps.cso");
 
-	m_FieldRendering.InitLightShader(device, L"light3D_vs.cso", L"light3D_ps.cso");
+	m_FieldRendering.InitShader(device, L"light3D_vs.cso", L"light3D_ps.cso");
+	m_FieldRendering.InitLightBuffer(device);
 
 	for (int i = 0; i < 6; i++)
 		m_SkyboxRendering[i].InitShader(device, L"colour_vs.cso", L"skybox_pores.cso");

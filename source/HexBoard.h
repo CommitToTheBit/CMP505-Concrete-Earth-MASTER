@@ -15,13 +15,13 @@ public:
 
 	// Rendering...
 	void Render(ID3D11DeviceContext*, 
-		LightShader* lightShader,
+		Shader* shader,
 		DirectX::SimpleMath::Vector3 boardPosition,
 		Camera* camera, 
 		float time,
-		Light* light,  
 		ID3D11ShaderResourceView* texture, 
-		ID3D11ShaderResourceView* normalTexture);
+		ID3D11ShaderResourceView* normalTexture,
+		Light* light);
 
 	void SetInterpolation(int north, int east);
 	void Interpolate(float t);

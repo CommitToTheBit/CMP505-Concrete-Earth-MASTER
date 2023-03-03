@@ -131,3 +131,51 @@ void Shader::EnableShader(ID3D11DeviceContext* context)
 	context->PSSetSamplers(0, 1, &m_sampleState);					// Set the sampler state in the pixel shader.
 
 }
+
+bool Shader::InitLightBuffer(ID3D11Device* device)
+{
+	// Setup light buffer
+	// Setup the description of the light dynamic constant buffer that is in the pixel shader.
+	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
+	D3D11_BUFFER_DESC lightBufferDesc;
+	lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	lightBufferDesc.ByteWidth = sizeof(LightBufferType);
+	lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	lightBufferDesc.MiscFlags = 0;
+	lightBufferDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	device->CreateBuffer(&lightBufferDesc, NULL, &m_lightBuffer);
+
+	return true;
+}
+
+bool Shader::SetLightBufferParameters(ID3D11DeviceContext* context, Light* light)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	context->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+	LightBufferType* lightPtr = (LightBufferType*)mappedResource.pData;
+	lightPtr->ambient = light->getAmbientColour();
+	lightPtr->diffuse = light->getDiffuseColour();
+	lightPtr->position = light->getPosition();
+	lightPtr->strength = light->getStrength();
+	context->Unmap(m_lightBuffer, 0);
+	context->PSSetConstantBuffers(1, 1, &m_lightBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the PS
+
+	return false;
+}
+
+bool Shader::SetShaderTexture(ID3D11DeviceContext* context, ID3D11ShaderResourceView* texture, int vsStartSlot, int psStartSlot) // FIXME: Is there a way of just setting to the next available slot?
+{
+	//pass the desired texture to the vertex shader.
+	if (vsStartSlot >= 0)
+		context->VSSetShaderResources(vsStartSlot, 1, &texture);
+
+	//pass the desired texture to the pixel shader.
+	if (psStartSlot >= 0)
+		context->VSSetShaderResources(psStartSlot, 1, &texture);
+
+	return false;
+}

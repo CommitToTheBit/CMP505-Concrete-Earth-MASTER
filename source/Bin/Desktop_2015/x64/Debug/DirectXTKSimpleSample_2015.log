@@ -1,5 +1,23 @@
-﻿  Game.cpp
+﻿  AlphaShader.cpp
+  Game.cpp
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\RefractionShader.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(124,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(183,30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  GlassShader.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\RefractionShader.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  HexBoard.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(173,6): warning C4101: 'sign': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(208,17): warning C4101: 'jPermuted': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(208,6): warning C4101: 'iPermuted': unreferenced local variable
+  LightShader.cpp
+  Main.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\RefractionShader.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  OverlayShader.cpp
+  RefractionShader.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\RefractionShader.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\RefractionShader.cpp(44,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Shader.cpp
+  SkyboxShader.cpp
+  SpecimenShader.cpp
+  Generating Code...
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe
