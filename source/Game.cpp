@@ -485,6 +485,7 @@ void Game::CreateDeviceDependentResources()
 	m_OverlayShaderPair.InitOverlayShader(device, L"overlay_vs.cso", L"overlay_ps.cso");
 
 	m_FieldRendering.InitShader(device, L"light3D_vs.cso", L"light3D_ps.cso");
+	m_FieldRendering.InitAlphaBuffer(device);
 	m_FieldRendering.InitLightBuffer(device);
 
 	for (int i = 0; i < 6; i++)

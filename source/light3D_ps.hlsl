@@ -6,7 +6,12 @@ cbuffer TimeBuffer : register(b0)
     float time;
 };
 
-cbuffer LightBuffer : register(b1)
+cbuffer AlphaBuffer : register(b1)
+{
+    float alpha;
+};
+
+cbuffer LightBuffer : register(b2)
 {
     float4 ambientColor;
     float4 diffuseColor;
@@ -41,7 +46,7 @@ float4 main(InputType input) : SV_TARGET
 
     // STEP 3: Applying lighting to pixel's base colour.
     float4 color = lightColor * textureColor;
-    color.a = 0.25f;
+    color.a = 1.0f;// alpha;
 
     return color;
 }

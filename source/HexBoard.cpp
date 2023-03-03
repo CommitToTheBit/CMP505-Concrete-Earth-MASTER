@@ -96,6 +96,7 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, Shader* shader, Direct
 
 			shader->EnableShader(deviceContext);
 			shader->SetShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition+boundPosition)), &camera->getCameraMatrix(), &ortho, true, time);
+			shader->SetAlphaBufferParameters(deviceContext, 1.0f);
 			shader->SetLightBufferParameters(deviceContext, light);
 			shader->SetShaderTexture(deviceContext, texture, -1, 0);
 			shader->SetShaderTexture(deviceContext, normalTexture, -1, 1);

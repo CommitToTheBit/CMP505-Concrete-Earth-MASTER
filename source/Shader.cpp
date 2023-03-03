@@ -132,6 +132,38 @@ void Shader::EnableShader(ID3D11DeviceContext* context)
 
 }
 
+bool Shader::InitAlphaBuffer(ID3D11Device* device)
+{
+	// Setup Alpha buffer
+	// Setup the description of the Alpha dynamic constant buffer that is in the pixel shader.
+	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
+	D3D11_BUFFER_DESC alphaBufferDesc;
+	alphaBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	alphaBufferDesc.ByteWidth = sizeof(AlphaBufferType);
+	alphaBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	alphaBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	alphaBufferDesc.MiscFlags = 0;
+	alphaBufferDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	device->CreateBuffer(&alphaBufferDesc, NULL, &m_alphaBuffer);
+
+	return true;
+}
+
+bool Shader::SetAlphaBufferParameters(ID3D11DeviceContext* context, float alpha)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	context->Map(m_alphaBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+	AlphaBufferType* alphaPtr = (AlphaBufferType*)mappedResource.pData;
+	alphaPtr->alpha;
+	context->Unmap(m_alphaBuffer, 0);
+	context->PSSetConstantBuffers(1, 1, &m_alphaBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the PS
+
+	return false;
+}
+
 bool Shader::InitLightBuffer(ID3D11Device* device)
 {
 	// Setup light buffer
@@ -162,7 +194,7 @@ bool Shader::SetLightBufferParameters(ID3D11DeviceContext* context, Light* light
 	lightPtr->position = light->getPosition();
 	lightPtr->strength = light->getStrength();
 	context->Unmap(m_lightBuffer, 0);
-	context->PSSetConstantBuffers(1, 1, &m_lightBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the PS
+	context->PSSetConstantBuffers(2, 1, &m_lightBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the PS
 
 	return false;
 }

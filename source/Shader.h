@@ -16,8 +16,9 @@ public:
 	bool InitShader(ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilename); //Loads the Vert / pixel Shader pair
 
 	// (Modular) Add-ons...
-	// NB: Apply these *in order*
+	// NB: Apply these *in order* // NB: Order also applies to buffer slots (starting from... 1?)
 	bool InitLightBuffer(ID3D11Device* device);
+	bool InitAlphaBuffer(ID3D11Device* device);
 
 	bool SetShaderParameters(ID3D11DeviceContext* context,
 		DirectX::SimpleMath::Matrix* world,
@@ -27,9 +28,9 @@ public:
 		float time);
 
 	// (Modular) Add-ons...
-	// NB: Apply these *in order*
-	bool SetLightBufferParameters(ID3D11DeviceContext* context,
-		Light* light);
+	// NB: Apply these *in order* // NB: Order also applies to buffer slots (starting from... 1?)
+	bool SetLightBufferParameters(ID3D11DeviceContext* context, Light* light);
+	bool SetAlphaBufferParameters(ID3D11DeviceContext* context, float alpha);
 
 	bool SetShaderTexture(ID3D11DeviceContext* context, ID3D11ShaderResourceView* texture, int vsStartSlot, int psStartSlot);
 
@@ -61,7 +62,7 @@ protected:
 	ID3D11Buffer*															m_matrixBuffer;
 	ID3D11Buffer*															m_timeBuffer;
 
-	// Light Buffers
+	// Light Shading
 	struct LightBufferType
 	{
 		DirectX::SimpleMath::Vector4 ambient;
@@ -70,5 +71,15 @@ protected:
 		float strength;
 	};
 
-	ID3D11Buffer* m_lightBuffer;
+	ID3D11Buffer*															m_lightBuffer;
+
+	// Alpha Shading
+	struct AlphaBufferType
+	{
+		float alpha;
+		DirectX::SimpleMath::Vector3 padding;
+	};
+
+	ID3D11Buffer*															m_alphaBuffer;
+
 };
