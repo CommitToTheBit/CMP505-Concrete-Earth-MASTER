@@ -54,6 +54,7 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 			m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1] = index;
 			m_hexPermutation[index] = index;// (index+m_hexes/2)%m_hexes;
 
+			// DEBUG: Used for display purposes...
 			if (index%5 == 0)
 				AddThorn(device, index);
 
@@ -80,9 +81,9 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, Shader* shader, Direct
 
 	DirectX::SimpleMath::Vector3 relativePosition, boundPosition;
 	float maxBound, tBound;
-	for (int j = -m_hexRadius-1; j <= m_hexRadius+1; j++)
+	for (int j = m_hexRadius+1; j >= -m_hexRadius-1; j--)
 	{
-		for (int i = -m_hexRadius-1; i <= m_hexRadius+1; i++)
+		for (int i = m_hexRadius+1; i >= -m_hexRadius-1; i--)
 		{
 			if (abs(i-j) > m_hexRadius+1)
 				continue;
@@ -99,9 +100,11 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, Shader* shader, Direct
 			boundPosition = DirectX::SimpleMath::Vector3(0.0f, -0.5f*(1.0f - tBound), 0.0f);
 
 			shader->EnableShader(deviceContext);
-			shader->SetShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition+boundPosition)), &camera->getCameraMatrix(), &ortho, true, time);
-			shader->SetAlphaBufferParameters(deviceContext, tBound);
-			shader->SetLightBufferParameters(deviceContext, light);
+			//shader->SetShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition+boundPosition)), &camera->getCameraMatrix(), &ortho, true, time);
+			shader->SetMatrixBuffer(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition+boundPosition)), &camera->getCameraMatrix(), &ortho, true);
+			shader->SetAlphaBuffer(deviceContext, tBound);
+			shader->SetLightBuffer(deviceContext, light);
+
 			shader->SetShaderTexture(deviceContext, texture, -1, 0);
 			shader->SetShaderTexture(deviceContext, normalTexture, -1, 1);
 

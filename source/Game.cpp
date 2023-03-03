@@ -323,9 +323,11 @@ void Game::RenderSkyboxOnto(Camera* camera)
 		
 	context->OMSetDepthStencilState(m_states->DepthNone(), 0); // NB: Note use of DepthNone()
 	context->RSSetState(m_states->CullCounterClockwise());
-	m_SkyboxShaderPair.EnableShader(context);
-	m_SkyboxShaderPair.SetSkyboxShaderParameters(context, &Matrix::CreateTranslation(camera->getPosition()), &camera->getCameraMatrix(), &camera->getPerspective(), false, m_time, environmentMap); // FIXME: Flat normal map here... but holes when viewed through glass??
-	m_Cube.Render(context);
+	
+	// FIXME: Skybox out of commission, for now... 
+	//m_SkyboxShaderPair.EnableShader(context);
+	//m_SkyboxShaderPair.SetSkyboxShaderParameters(context, &Matrix::CreateTranslation(camera->getPosition()), &camera->getCameraMatrix(), &camera->getPerspective(), false, m_time, environmentMap); // FIXME: Flat normal map here... but holes when viewed through glass??
+	//m_Cube.Render(context);
 
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	context->RSSetState(m_states->CullClockwise());
@@ -361,14 +363,15 @@ void Game::RenderShaderTexture(RenderTexture* renderPass, Shader rendering)
 	renderPass->setRenderTarget(context);
 	renderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
 	rendering.EnableShader(context);
-	rendering.SetShaderParameters(
+	// FIXME: Out of commission...
+	/*rendering.SetShaderParameters(
 		context,
 		&SimpleMath::Matrix::CreateScale(2.0f),
 		&(Matrix)Matrix::Identity,
 		&(Matrix)Matrix::Identity,
 		true,
 		m_time);
-	m_Cube.Render(context);
+	m_Cube.Render(context);*/
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
 }
 
@@ -476,15 +479,8 @@ void Game::CreateDeviceDependentResources()
 	m_Cube.InitializeModel(device, "cube.obj");
 
 	// Shaders
-	m_LightShaderPair.InitLightShader(device, L"light_vs.cso", L"light_ps.cso");
-	m_SkyboxShaderPair.InitSkyboxShader(device, L"skybox_vs.cso", L"skybox_ps.cso");
-	m_SpecimenShaderPair.InitSpecimenShader(device, L"specimen_vs.cso", L"specimen_ps.cso");
-	m_RefractionShaderPair.InitRefractionShader(device, L"refraction_vs.cso", L"refraction_ps.cso");
-	m_GlassShaderPair.InitGlassShader(device, L"glass_vs.cso", L"glass_ps.cso");
-	m_AlphaShaderPair.InitAlphaShader(device, L"alpha_vs.cso", L"alpha_ps.cso");
-	m_OverlayShaderPair.InitOverlayShader(device, L"overlay_vs.cso", L"overlay_ps.cso");
-
 	m_FieldRendering.InitShader(device, L"light3D_vs.cso", L"light3D_ps.cso");
+	m_FieldRendering.InitMatrixBuffer(device);
 	m_FieldRendering.InitAlphaBuffer(device);
 	m_FieldRendering.InitLightBuffer(device);
 

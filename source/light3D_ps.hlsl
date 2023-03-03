@@ -1,17 +1,12 @@
 Texture2D textures[2];
 SamplerState SampleType;
 
-cbuffer TimeBuffer : register(b0)
-{
-    float time;
-};
-
-cbuffer AlphaBuffer : register(b1)
+cbuffer AlphaBuffer : register(b2)
 {
     float alpha;
 };
 
-cbuffer LightBuffer : register(b2)
+cbuffer LightBuffer : register(b3)
 {
     float4 ambientColor;
     float4 diffuseColor;

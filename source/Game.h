@@ -14,15 +14,8 @@
 
 #include "Camera.h"
 #include "EnvironmentCamera.h"
-#include "SpecimenShader.h"
 
 #include "Shader.h"
-#include "LightShader.h"
-#include "SkyboxShader.h"
-#include "RefractionShader.h"
-#include "GlassShader.h"
-#include "AlphaShader.h"
-#include "OverlayShader.h"
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -118,14 +111,6 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>                        m_normalMap;
 
 	//Shaders
-	LightShader																m_LightShaderPair;
-    SkyboxShader                                                            m_SkyboxShaderPair;
-    SpecimenShader                                                          m_SpecimenShaderPair;
-    RefractionShader                                                        m_RefractionShaderPair;
-    GlassShader                                                             m_GlassShaderPair;
-    AlphaShader                                                             m_AlphaShaderPair;
-    OverlayShader                                                           m_OverlayShaderPair;
-
     Shader                                                                  m_FieldRendering;
 
     // Models

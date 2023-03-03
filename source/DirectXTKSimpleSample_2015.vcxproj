@@ -169,60 +169,46 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AlphaShader.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ClassicNoise.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="EnvironmentCamera.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GlassShader.h" />
     <ClInclude Include="HexBoard.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="LightShader.h" />
     <ClInclude Include="MarchingCubes.h" />
     <ClInclude Include="modelclass.h" />
-    <ClInclude Include="OverlayShader.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ReadData.h" />
-    <ClInclude Include="RefractionShader.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimplexNoise.h" />
-    <ClInclude Include="SkyboxShader.h" />
-    <ClInclude Include="SpecimenShader.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Field.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AlphaShader.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ClassicNoise.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="EnvironmentCamera.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GlassShader.cpp" />
     <ClCompile Include="HexBoard.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
-    <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MarchingCubes.cpp" />
     <ClCompile Include="modelclass.cpp" />
-    <ClCompile Include="OverlayShader.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="RefractionShader.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />
-    <ClCompile Include="SkyboxShader.cpp" />
-    <ClCompile Include="SpecimenShader.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Field.cpp" />
   </ItemGroup>

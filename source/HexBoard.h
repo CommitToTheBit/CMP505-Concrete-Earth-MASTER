@@ -3,7 +3,7 @@
 
 #include "Camera.h"
 
-#include "LightShader.h"
+#include "Shader.h"
 
 class HexBoard
 {
