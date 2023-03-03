@@ -1,12 +1,12 @@
 Texture2D textures[2];
 SamplerState SampleType;
 
-cbuffer TimeBuffer : register(b0)
+cbuffer AlphaBuffer : register(b2)
 {
-    float time;
+    float alpha;
 };
 
-cbuffer LightBuffer : register(b1)
+cbuffer LightBuffer : register(b3)
 {
     float4 ambientColor;
     float4 diffuseColor;
@@ -41,6 +41,7 @@ float4 main(InputType input) : SV_TARGET
 
     // STEP 3: Applying lighting to pixel's base colour.
     float4 color = lightColor * textureColor;
+    color.a = alpha;
 
     return color;
 }

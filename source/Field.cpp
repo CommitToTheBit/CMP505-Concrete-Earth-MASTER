@@ -40,7 +40,7 @@ void Field::InitialiseHorizontalField(int octaves, float amplitude)
 	for (int f = 0; f < (m_cells+1)*(m_cells+1)*(m_cells+1); f++)
 	{
 		m_field[f].scalar = m_field[f].position.y;
-		m_field[f].scalar += simplex.FBMNoise(m_field[f].position.x, 10.0f*m_field[f].position.y, m_field[f].position.z, octaves, amplitude); // NB: 10.0f factor creates some really nice, broad and barren landscapes!
+		m_field[f].scalar += simplex.FBMNoise(m_field[f].position.x, /*10.0f**/m_field[f].position.y, m_field[f].position.z, octaves, amplitude); // NB: 10.0f factor creates some really nice, broad and barren landscapes!
 		m_field[f].scalar = std::max(m_field[f].scalar, 0.0f);
 	}
 }

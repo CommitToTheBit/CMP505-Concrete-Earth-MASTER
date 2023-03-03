@@ -14,15 +14,8 @@
 
 #include "Camera.h"
 #include "EnvironmentCamera.h"
-#include "SpecimenShader.h"
 
 #include "Shader.h"
-#include "LightShader.h"
-#include "SkyboxShader.h"
-#include "RefractionShader.h"
-#include "GlassShader.h"
-#include "AlphaShader.h"
-#include "OverlayShader.h"
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -118,15 +111,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>                        m_normalMap;
 
 	//Shaders
-	LightShader																m_LightShaderPair;
-    SkyboxShader                                                            m_SkyboxShaderPair;
-    SpecimenShader                                                          m_SpecimenShaderPair;
-    RefractionShader                                                        m_RefractionShaderPair;
-    GlassShader                                                             m_GlassShaderPair;
-    AlphaShader                                                             m_AlphaShaderPair;
-    OverlayShader                                                           m_OverlayShaderPair;
-
-    LightShader                                                             m_FieldRendering;
+    Shader                                                                  m_FieldRendering;
 
     // Models
     HexBoard                                                                m_HexBoard;
@@ -135,26 +120,7 @@ private:
     ModelClass																m_Cube;
 
 	// Generated Textures
-    RenderTexture*                                                          m_SkyboxRenderPass[6];
-    Shader                                                                  m_SkyboxRendering[6];
-
-    RenderTexture*                                                          m_NeutralRenderPass;
-    Shader                                                                  m_NeutralRendering;
-
-    RenderTexture*                                                          m_NeutralNMRenderPass;
-    Shader                                                                  m_NeutralNMRendering;
-
-    RenderTexture*                                                          m_DemoRenderPass;
-    Shader                                                                  m_DemoRendering;
-
-    RenderTexture*                                                          m_DemoNMRenderPass;
-    Shader                                                                  m_DemoNMRendering;
-
-    RenderTexture*                                                          m_SphericalPoresRenderPass;
-    Shader                                                                  m_SphericalPoresRendering;
-
-    RenderTexture*                                                          m_SphericalPoresNMRenderPass;
-    Shader                                                                  m_SphericalPoresNMRendering;
+    // NB: Come back to these...
 
 
 #ifdef DXTK_AUDIO

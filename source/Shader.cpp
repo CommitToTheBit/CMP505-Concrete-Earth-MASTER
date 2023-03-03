@@ -68,6 +68,19 @@ bool Shader::InitShader(ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilena
 	// Create the texture sampler state.
 	device->CreateSamplerState(&samplerDesc, &m_sampleState);
 
+	return true;
+}
+void Shader::EnableShader(ID3D11DeviceContext* context)
+{
+	context->IASetInputLayout(m_layout);							//set the input layout for the shader to match out geometry
+	context->VSSetShader(m_vertexShader.Get(), 0, 0);				//turn on vertex shader
+	context->PSSetShader(m_pixelShader.Get(), 0, 0);				//turn on pixel shader
+	context->PSSetSamplers(0, 1, &m_sampleState);					// Set the sampler state in the pixel shader.
+
+}
+
+bool Shader::InitMatrixBuffer(ID3D11Device* device)
+{
 	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
 	D3D11_BUFFER_DESC matrixBufferDesc;
 	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -80,10 +93,15 @@ bool Shader::InitShader(ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilena
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
 
+	return true;
+}
+bool Shader::InitTimeBuffer(ID3D11Device* device)
+{
+	// Setup Time buffer
 	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
 	D3D11_BUFFER_DESC timeBufferDesc;
 	timeBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	timeBufferDesc.ByteWidth = sizeof(MatrixBufferType);
+	timeBufferDesc.ByteWidth = sizeof(TimeBufferType);
 	timeBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	timeBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	timeBufferDesc.MiscFlags = 0;
@@ -94,9 +112,45 @@ bool Shader::InitShader(ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilena
 
 	return true;
 }
+bool Shader::InitAlphaBuffer(ID3D11Device* device)
+{
+	// Setup Alpha buffer
+	// Setup the description of the Alpha dynamic constant buffer that is in the pixel shader.
+	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
+	D3D11_BUFFER_DESC alphaBufferDesc;
+	alphaBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	alphaBufferDesc.ByteWidth = sizeof(AlphaBufferType);
+	alphaBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	alphaBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	alphaBufferDesc.MiscFlags = 0;
+	alphaBufferDesc.StructureByteStride = 0;
 
-bool Shader::SetShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, bool culling, float time)
-{ 
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	device->CreateBuffer(&alphaBufferDesc, NULL, &m_alphaBuffer);
+
+	return true;
+}
+bool Shader::InitLightBuffer(ID3D11Device* device)
+{
+	// Setup light buffer
+	// Setup the description of the light dynamic constant buffer that is in the pixel shader.
+	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
+	D3D11_BUFFER_DESC lightBufferDesc;
+	lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	lightBufferDesc.ByteWidth = sizeof(LightBufferType);
+	lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	lightBufferDesc.MiscFlags = 0;
+	lightBufferDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	device->CreateBuffer(&lightBufferDesc, NULL, &m_lightBuffer);
+
+	return true;
+}
+
+bool Shader::SetMatrixBuffer(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, bool culling)
+{
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
@@ -108,26 +162,67 @@ bool Shader::SetShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMa
 
 	context->Unmap(m_matrixBuffer, 0);
 	context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the VS;
+	//context->PSSetConstantBuffers(0, 1, &m_matrixBuffer);
 
+	return false;
+}
+bool Shader::SetTimeBuffer(ID3D11DeviceContext* context, float time)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	context->Map(m_timeBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 	TimeBufferType* timePtr = (TimeBufferType*)mappedResource.pData;
 	timePtr->time = time;
 	timePtr->padding = DirectX::SimpleMath::Vector3(0.0, 0.0, 0.0);
 	context->Unmap(m_timeBuffer, 0);
-	context->PSSetConstantBuffers(0, 1, &m_timeBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the PS
 
-	timePtr->time = time;
-	timePtr->padding = DirectX::SimpleMath::Vector3(0.0, 0.0, 0.0);
+	context->Unmap(m_timeBuffer, 0);
+	//context->VSSetConstantBuffers(1, 1, &m_timeBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the VS;
+	context->PSSetConstantBuffers(1, 1, &m_timeBuffer);
+
+	return false;
+}
+bool Shader::SetAlphaBuffer(ID3D11DeviceContext* context, float alpha)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	context->Map(m_alphaBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+	AlphaBufferType* alphaPtr = (AlphaBufferType*)mappedResource.pData;
+	alphaPtr->alpha = alpha;
+
+	context->Unmap(m_alphaBuffer, 0);
+	//context->VSSetConstantBuffers(2, 1, &m_alphaBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the PS
+	context->PSSetConstantBuffers(2, 1, &m_alphaBuffer);
+
+	return false;
+}
+bool Shader::SetLightBuffer(ID3D11DeviceContext* context, Light* light)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	context->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+	LightBufferType* lightPtr = (LightBufferType*)mappedResource.pData;
+	lightPtr->ambient = light->getAmbientColour();
+	lightPtr->diffuse = light->getDiffuseColour();
+	lightPtr->position = light->getPosition();
+	lightPtr->strength = light->getStrength();
+
+	context->Unmap(m_lightBuffer, 0);
+	//context->VSSetConstantBuffers(3, 1, &m_lightBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the PS
+	context->PSSetConstantBuffers(3, 1, &m_lightBuffer);
 
 	return false;
 }
 
-void Shader::EnableShader(ID3D11DeviceContext* context)
+bool Shader::SetShaderTexture(ID3D11DeviceContext* context, ID3D11ShaderResourceView* texture, int vsStartSlot, int psStartSlot) // FIXME: Is there a way of just setting to the next available slot?
 {
-	context->IASetInputLayout(m_layout);							//set the input layout for the shader to match out geometry
-	context->VSSetShader(m_vertexShader.Get(), 0, 0);				//turn on vertex shader
-	context->PSSetShader(m_pixelShader.Get(), 0, 0);				//turn on pixel shader
-	context->PSSetSamplers(0, 1, &m_sampleState);					// Set the sampler state in the pixel shader.
+	//pass the desired texture to the vertex shader.
+	if (vsStartSlot >= 0)
+		context->VSSetShaderResources(vsStartSlot, 1, &texture);
 
+	//pass the desired texture to the pixel shader.
+	if (psStartSlot >= 0)
+		context->VSSetShaderResources(psStartSlot, 1, &texture);
+
+	return false;
 }

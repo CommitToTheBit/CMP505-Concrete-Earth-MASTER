@@ -14,18 +14,28 @@ public:
 	//we could extend this to load in only a vertex shader, only a pixel shader etc.  or specialised init for Geometry or domain shader. 
 	//All the methods here simply create new versions corresponding to your needs
 	bool InitShader(ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilename); //Loads the Vert / pixel Shader pair
+	void EnableShader(ID3D11DeviceContext* context);
 
-	bool SetShaderParameters(ID3D11DeviceContext* context,
-		DirectX::SimpleMath::Matrix* world,
-		DirectX::SimpleMath::Matrix* view,
-		DirectX::SimpleMath::Matrix* projection,
-		bool culling,
-		float time);
+	// (Modular) Add-ons...
+	bool InitMatrixBuffer(ID3D11Device* device);	// 0
+	bool InitTimeBuffer(ID3D11Device* device);		// 1
+	bool InitAlphaBuffer(ID3D11Device* device);		// 2
+	bool InitLightBuffer(ID3D11Device* device);		// 3
 
-	void EnableShader(ID3D11DeviceContext * context);
+	// (Modular) Add-ons...
+	bool SetMatrixBuffer(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, bool culling);
+	bool SetTimeBuffer(ID3D11DeviceContext* context, float alpha);
+	bool SetAlphaBuffer(ID3D11DeviceContext* context, float alpha);
+	bool SetLightBuffer(ID3D11DeviceContext* context, Light* light);
+
+	bool SetShaderTexture(ID3D11DeviceContext* context, ID3D11ShaderResourceView* texture, int vsStartSlot, int psStartSlot);
 
 protected:
-	//standard matrix buffer supplied to all shaders
+	Microsoft::WRL::ComPtr<ID3D11VertexShader>								m_vertexShader;
+	Microsoft::WRL::ComPtr<ID3D11PixelShader>								m_pixelShader;
+	ID3D11InputLayout*														m_layout;
+
+	// Matrix Buffer
 	struct MatrixBufferType
 	{
 		DirectX::XMMATRIX world;
@@ -34,27 +44,34 @@ protected:
 		bool culling;
 		DirectX::SimpleMath::Vector3 padding;
 	};
+	ID3D11Buffer*															m_matrixBuffer;
 
+	// Time Buffer
 	struct TimeBufferType
 	{
 		float time;
 		DirectX::SimpleMath::Vector3 padding;
 	};
-
-	//Shaders
-	Microsoft::WRL::ComPtr<ID3D11VertexShader>								m_vertexShader;
-	Microsoft::WRL::ComPtr<ID3D11PixelShader>								m_pixelShader;
-	ID3D11InputLayout*														m_layout;
-
-	ID3D11SamplerState*														m_sampleState;
-	ID3D11Buffer*															m_matrixBuffer;
 	ID3D11Buffer*															m_timeBuffer;
-};
 
-/*class GlassShader : Shader
-{
-public:
-	using Shader::InitStandard; // FIXME: Need to re-initialise parameter buffers!
-	bool SetShaderParameters(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, float time, Light* sceneLight1, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* normalTexture, ID3D11ShaderResourceView* specimenTexture, ID3D11ShaderResourceView* specimenAlphaTexture, ID3D11ShaderResourceView* frontFaceCubeMap[6], ID3D11ShaderResourceView* backFaceCubeMap[6], float refractiveIndex, float refractivity, float reflectivity, DirectX::SimpleMath::Vector3 cameraPosition);
-	using Shader::EnableShader;
-};*/
+	// Alpha Buffer
+	struct AlphaBufferType
+	{
+		float alpha;
+		DirectX::SimpleMath::Vector3 padding;
+	};
+	ID3D11Buffer*															m_alphaBuffer;
+
+	// Light Buffer(s)
+	struct LightBufferType
+	{
+		DirectX::SimpleMath::Vector4 ambient;
+		DirectX::SimpleMath::Vector4 diffuse;
+		DirectX::SimpleMath::Vector3 position;
+		float strength;
+	};
+	ID3D11Buffer*															m_lightBuffer;
+
+	// Sampler
+	ID3D11SamplerState*														m_sampleState;
+};

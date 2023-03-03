@@ -46,20 +46,21 @@ void Game::Initialize(HWND window, int width, int height)
     CreateWindowSizeDependentResources();
 
 	//setup light
-	m_Ambience = Vector4(0.25f, 0.25f, 0.25f, 1.0f);
+	m_Ambience = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light.setPosition(1.0f, 1.0f, 3.0f);
+	m_Light.setPosition(0.0f, 1.0f, m_HexBoard.m_hexRadius-1);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
-	m_Light.setStrength(100.0);
+	m_Light.setStrength(40.0);
 
 	//setup camera
 	//m_Camera.setPosition(Vector3(2.4f+0.75*cos(atan(-1.8/2.4)), 0.0f, 1.8f+0.75*sin(atan(-1.8/2.4))));
 	//m_Camera.setRotation(Vector3(-90.0f, -180+(180.0/3.14159265)*atan(2.4/1.8), 0.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up.
 
 	// FIXME: Refactor this, for 'cleaner' board set-up?
-	m_Camera.setPosition(0.3f*Vector3(1.5f, 0.5f*sin(1.0f*XM_PI/5.0f), 0.0f)+0.3f*5.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(XM_PI/12.0f), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(XM_PI/12.0f));
-	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+15.0f, 0.0f));
+	float twist = XM_PI/12.0f;
+	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(twist));
+	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+180.0f*twist/XM_PI, 0.0f));
 
 	
 #ifdef DXTK_AUDIO
@@ -169,16 +170,34 @@ void Game::Update(DX::StepTimer const& timer)
 
 	// STEP 3: Process inputs
 	m_Camera.Update();
-	//m_Light.setPosition(m_Camera.getPosition().x, m_Camera.getPosition().y, m_Camera.getPosition().z);
-	m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 0.75f+0.25f*cos(XM_2PI*m_time/60.0f), 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
+	//m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 1.0f, 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
 	
 	// DEBUG:
 	auto device = m_deviceResources->GetD3DDevice();
 	//m_HexBoard.m_hexModels[0].GenerateIsosurface(device, 0.5f+0.25f*sin(m_time/(XM_2PI*5.0f)));
 	//m_HexBoard.m_hexModels[0].InitialiseHorizontalField();
 	//m_HexBoard.m_hexModels[0].DeriveHexPrism(device, 0.5f+0.25f*sin(XM_2PI*m_time/5.0f));
-	if (m_gameInputCommands.forward)
-		m_HexBoard.AddThorn(device, m_add++);
+	if (m_HexBoard.m_interpolating)
+	{
+		m_HexBoard.Interpolate(2.0f*timer.GetElapsedSeconds());
+	}
+	if (!m_HexBoard.m_interpolating) // NB: Not an 'if/else', since this would waste a frame! 
+	{
+		if (m_gameInputCommands.forward)
+			m_HexBoard.SetInterpolation(1, 0);
+		if (m_gameInputCommands.left)
+			m_HexBoard.SetInterpolation(1, -1);
+		if (m_gameInputCommands.right)
+			m_HexBoard.SetInterpolation(1, 1);
+		if (m_gameInputCommands.back)
+			m_HexBoard.SetInterpolation(-1, 0);
+		//if (m_gameInputCommands.back)
+		//	m_HexBoard.SetInterpolation(-1, 1);
+		//if (m_gameInputCommands.back)
+		//	m_HexBoard.SetInterpolation(-1, -1);
+
+		//m_HexBoard.AddThorn(device, m_add++);
+	}
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
@@ -240,7 +259,9 @@ void Game::Render()
     m_sprites->End();
 
 	//Set Rendering states. 
-	context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
+	//context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
+	//context->OMSetBlendState(m_states->Additive(), nullptr, 0xFFFFFFFF); // NB: Which blend is best? Is it most efficient to just set this here?
+	context->OMSetBlendState(m_states->NonPremultiplied(), nullptr, 0xFFFFFFFF);
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	context->RSSetState(m_states->CullClockwise());
 //	context->RSSetState(m_states->Wireframe());
@@ -261,54 +282,8 @@ void Game::Render()
 	// Draw Skybox
 	RenderSkyboxOnto(&m_Camera);
 
-	// Draw Terrain
-	/*m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_DemoNMRenderPass->getShaderResourceView());
-	m_Terrain.Render(context);
-
-	context->RSSetState(m_states->CullCounterClockwise());
-	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &(Matrix::CreateScale(8.0f / 128.0f) * Matrix::CreateTranslation(Vector3(-4.0f, -2.0f, -4.0f))), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-	m_Terrain.Render(context);
-
-	context->RSSetState(m_states->CullClockwise());*/
-
-	for (int j = -m_HexBoard.m_hexRadius; j <= m_HexBoard.m_hexRadius; j++)
-	{
-		for (int i = -m_HexBoard.m_hexRadius; i <= m_HexBoard.m_hexRadius; i++)
-		{
-			if (abs(i-j) > m_HexBoard.m_hexRadius)
-				continue;
-
-			// FIXME: Refactor this, for 'cleaner' board set-up?
-			float l = (m_Camera.getPosition()-Vector3(1.5f, 0.5f*sin(1.0f*XM_PI/5.0f), 0.0f)).Length();
-			Matrix ortho = Matrix::CreateOrthographic(l*1280.0f/720.0f,l*1.0f,0.01f,100.0f);
-
-			m_FieldRendering.EnableShader(context);
-			m_FieldRendering.SetLightShaderParameters(context, &(Matrix::CreateScale(1.0f) * Matrix::CreateTranslation(m_HexBoard.m_origin+i*m_HexBoard.m_p+j*m_HexBoard.m_q)), &m_Camera.getCameraMatrix(), &ortho, true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView());
-			m_HexBoard.m_hexModels[m_HexBoard.m_hexCoordinates[(2*m_HexBoard.m_hexRadius+1)*(j+m_HexBoard.m_hexRadius)+i+m_HexBoard.m_hexRadius]].Render(context);
-		}
-	}
-
-	// Draw Basic Models
-	/*m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_normalMap.Get());
-	m_Cube.Render(context);
-
-	context->RSSetState(m_states->CullCounterClockwise());
-	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_normalMap.Get());
-	m_Cube.Render(context);
-
-	context->RSSetState(m_states->CullClockwise());
-
-	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(0.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_normalMap.Get(), m_NeutralNMRenderPass->getShaderResourceView());
-	m_Cube.Render(context);
-
-	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_normalMap.Get(), m_normalMap.Get());
-	m_Cube.Render(context);*/
+	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
+	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
 
     // Show the new frame.
     m_deviceResources->Present();
@@ -321,15 +296,17 @@ void Game::RenderSkyboxOnto(Camera* camera)
 	auto renderTargetView = m_deviceResources->GetRenderTargetView();
 	auto depthTargetView = m_deviceResources->GetDepthStencilView();
 
-	ID3D11ShaderResourceView* environmentMap[6];
-	for (int j = 0; j < 6; j++)
-		environmentMap[j] = m_SkyboxRenderPass[j]->getShaderResourceView();
+	//ID3D11ShaderResourceView* environmentMap[6];
+	//for (int j = 0; j < 6; j++)
+	//	environmentMap[j] = m_SkyboxRenderPass[j]->getShaderResourceView();
 		
 	context->OMSetDepthStencilState(m_states->DepthNone(), 0); // NB: Note use of DepthNone()
 	context->RSSetState(m_states->CullCounterClockwise());
-	m_SkyboxShaderPair.EnableShader(context);
-	m_SkyboxShaderPair.SetSkyboxShaderParameters(context, &Matrix::CreateTranslation(camera->getPosition()), &camera->getCameraMatrix(), &camera->getPerspective(), false, m_time, environmentMap); // FIXME: Flat normal map here... but holes when viewed through glass??
-	m_Cube.Render(context);
+	
+	// FIXME: Skybox out of commission, for now... 
+	//m_SkyboxShaderPair.EnableShader(context);
+	//m_SkyboxShaderPair.SetSkyboxShaderParameters(context, &Matrix::CreateTranslation(camera->getPosition()), &camera->getCameraMatrix(), &camera->getPerspective(), false, m_time, environmentMap); // FIXME: Flat normal map here... but holes when viewed through glass??
+	//m_Cube.Render(context);
 
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	context->RSSetState(m_states->CullClockwise());
@@ -338,22 +315,12 @@ void Game::RenderSkyboxOnto(Camera* camera)
 // Render Passes
 void Game::RenderStaticTextures()
 {
-	RenderShaderTexture(m_NeutralRenderPass, m_NeutralRendering);
-	RenderShaderTexture(m_NeutralNMRenderPass, m_NeutralNMRendering);
 
-	for (int i = 0; i < 6; i++)
-		RenderShaderTexture(m_SkyboxRenderPass[i], m_SkyboxRendering[i]);
-
-	//Rendered as a failsafe!
-	RenderDynamicTextures();
 }
 
 void Game::RenderDynamicTextures()
 {
-	RenderShaderTexture(m_DemoRenderPass, m_DemoRendering);
-	RenderShaderTexture(m_DemoNMRenderPass, m_DemoNMRendering);
-	RenderShaderTexture(m_SphericalPoresRenderPass, m_SphericalPoresRendering);
-	RenderShaderTexture(m_SphericalPoresNMRenderPass, m_SphericalPoresNMRendering);
+
 }
 
 void Game::RenderShaderTexture(RenderTexture* renderPass, Shader rendering)
@@ -365,14 +332,15 @@ void Game::RenderShaderTexture(RenderTexture* renderPass, Shader rendering)
 	renderPass->setRenderTarget(context);
 	renderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
 	rendering.EnableShader(context);
-	rendering.SetShaderParameters(
+	// FIXME: Out of commission...
+	/*rendering.SetShaderParameters(
 		context,
 		&SimpleMath::Matrix::CreateScale(2.0f),
 		&(Matrix)Matrix::Identity,
 		&(Matrix)Matrix::Identity,
 		true,
 		m_time);
-	m_Cube.Render(context);
+	m_Cube.Render(context);*/
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
 }
 
@@ -454,8 +422,8 @@ void Game::NewAudioDevice()
 // Properties
 void Game::GetDefaultSize(int& width, int& height) const
 {
-    width = 1280;
-    height = 720;
+    width = 1920;
+    height = 1080;
 }
 #pragma endregion
 
@@ -473,50 +441,22 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 2, 32);
+	m_HexBoard.Initialize(device, 4, 32);
 	m_add = 0;
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");
 
 	// Shaders
-	m_LightShaderPair.InitLightShader(device, L"light_vs.cso", L"light_ps.cso");
-	m_SkyboxShaderPair.InitSkyboxShader(device, L"skybox_vs.cso", L"skybox_ps.cso");
-	m_SpecimenShaderPair.InitSpecimenShader(device, L"specimen_vs.cso", L"specimen_ps.cso");
-	m_RefractionShaderPair.InitRefractionShader(device, L"refraction_vs.cso", L"refraction_ps.cso");
-	m_GlassShaderPair.InitGlassShader(device, L"glass_vs.cso", L"glass_ps.cso");
-	m_AlphaShaderPair.InitAlphaShader(device, L"alpha_vs.cso", L"alpha_ps.cso");
-	m_OverlayShaderPair.InitOverlayShader(device, L"overlay_vs.cso", L"overlay_ps.cso");
-
-	m_FieldRendering.InitLightShader(device, L"light3D_vs.cso", L"light3D_ps.cso");
-
-	for (int i = 0; i < 6; i++)
-		m_SkyboxRendering[i].InitShader(device, L"colour_vs.cso", L"skybox_pores.cso");
-
-	m_NeutralRendering.InitShader(device, L"light_vs.cso", L"neutral.cso");
-	m_NeutralNMRendering.InitShader(device, L"light_vs.cso", L"neutral_nm.cso");
-	m_DemoRendering.InitShader(device, L"light_vs.cso", L"pores.cso");
-	m_DemoNMRendering.InitShader(device, L"light_vs.cso", L"pores_nm.cso");
-
-	m_SphericalPoresRendering.InitShader(device, L"light_vs.cso", L"spherical_pores.cso");
-	m_SphericalPoresNMRendering.InitShader(device, L"light_vs.cso", L"spherical_pores_nm.cso");
-
+	m_FieldRendering.InitShader(device, L"light3D_vs.cso", L"light3D_ps.cso");
+	m_FieldRendering.InitMatrixBuffer(device);
+	m_FieldRendering.InitAlphaBuffer(device);
+	m_FieldRendering.InitLightBuffer(device);
 
 	//load Textures
 	CreateDDSTextureFromFile(device, L"sample_nm.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());
 
 	//Initialise Render to texture
-	for (int i = 0; i < 6; i++)
-	{
-		m_SkyboxRenderPass[i] = new RenderTexture(device, 1280, 720, 1, 2);
-	}
-
-	m_NeutralRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
-	m_NeutralNMRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
-	m_DemoRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
-	m_DemoNMRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
-	m_SphericalPoresRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
-	m_SphericalPoresNMRenderPass = new RenderTexture(device, 1280, 720, 1, 2);
 
 	m_preRendered = false;
 }
