@@ -74,7 +74,7 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 	return true;
 }
 
-void HexBoard::Render(ID3D11DeviceContext* deviceContext, Shader* shader, DirectX::SimpleMath::Vector3 boardPosition, Camera* camera, float time, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* normalTexture, Light* light)
+void HexBoard::Render(ID3D11DeviceContext* deviceContext, Shader* shader, DirectX::SimpleMath::Vector3 boardPosition, Camera* camera, float time, Light* light) // NB: Initlaise shader as part of HexBoard?
 {
 	float ifrac = -m_t*((m_east != -m_north) ? m_north : 0);
 	float jfrac = -m_t*((m_east != m_north) ? m_north : 0);
@@ -100,13 +100,13 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, Shader* shader, Direct
 			boundPosition = DirectX::SimpleMath::Vector3(0.0f, -0.5f*(1.0f - tBound), 0.0f);
 
 			shader->EnableShader(deviceContext);
-			//shader->SetShaderParameters(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition+boundPosition)), &camera->getCameraMatrix(), &ortho, true, time);
+
+			// Buffers...
 			shader->SetMatrixBuffer(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition+boundPosition)), &camera->getCameraMatrix(), &ortho, true);
 			shader->SetAlphaBuffer(deviceContext, tBound);
 			shader->SetLightBuffer(deviceContext, light);
 
-			shader->SetShaderTexture(deviceContext, texture, -1, 0);
-			shader->SetShaderTexture(deviceContext, normalTexture, -1, 1);
+			// Textures...
 
 			m_hexModels[m_hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1]]].Render(deviceContext);
 		}

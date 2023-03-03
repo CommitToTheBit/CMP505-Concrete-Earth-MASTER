@@ -1,11 +1,5 @@
 ﻿  Game.cpp
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(124,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(183,30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  HexBoard.cpp
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(181,6): warning C4101: 'sign': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(216,17): warning C4101: 'jPermuted': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(216,6): warning C4101: 'iPermuted': unreferenced local variable
-  Main.cpp
-  Shader.cpp
-  Generating Code...
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(52,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(123,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(182,30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe

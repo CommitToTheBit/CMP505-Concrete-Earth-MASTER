@@ -20,11 +20,11 @@
     <Filter Include="Modelling">
       <UniqueIdentifier>{60b172f8-1be2-47b7-bad2-e00b1eaefc1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets\Shader Classes %28DEPRECATED%29">
-      <UniqueIdentifier>{f529fe65-ede5-4321-b5c9-5a9385d2396f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Assets\Shader Textures %28DEPRECATED%29">
+    <Filter Include="Assets\Shader Textures">
       <UniqueIdentifier>{7ac1a878-5bec-414d-8036-e0357d223468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders">
+      <UniqueIdentifier>{f529fe65-ede5-4321-b5c9-5a9385d2396f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -161,110 +161,17 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="neutral_nm.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="neutral.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="light_ps.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="light_vs.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="tiling_irregular_quad.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="tiling_regular_quad.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="tiling_irregular_hex.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="pores.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="pores_nm.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="indexing_regular_quad.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="indexing_euclidean_voronoi.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="indexing_manhattan_voronoi.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="skybox_vs.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="skybox_ps.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="skybox_pores.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="specimen_vs.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="specimen_ps.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="refraction_vs.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="refraction_ps.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="glass_vs.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="glass_ps.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="alpha_vs.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="alpha_ps.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="overlay_vs.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="overlay_ps.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="tiling_regular_hex.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="spherical_pores.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="spherical_pores_nm.hlsl">
-      <Filter>Assets\Shader Textures %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="indexing_french_voronoi.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="colour_ps.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="colour_vs.hlsl">
-      <Filter>Assets\Shader Classes %28DEPRECATED%29</Filter>
-    </FxCompile>
-    <FxCompile Include="colour3D_vs.hlsl">
-      <Filter>Assets</Filter>
-    </FxCompile>
-    <FxCompile Include="colour3D_ps.hlsl">
-      <Filter>Assets</Filter>
+    <FxCompile Include="light3D_ps.hlsl">
+      <Filter>Assets\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="light3D_vs.hlsl">
-      <Filter>Assets</Filter>
+      <Filter>Assets\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="light3D_ps.hlsl">
-      <Filter>Assets</Filter>
+    <FxCompile Include="colour3D_ps.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="colour3D_vs.hlsl">
+      <Filter>Assets\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

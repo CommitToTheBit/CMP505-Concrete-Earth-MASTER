@@ -46,13 +46,12 @@ void Game::Initialize(HWND window, int width, int height)
     CreateWindowSizeDependentResources();
 
 	//setup light
-	m_Ambience = Vector4(0.25f, 0.25f, 0.25f, 1.0f);
+	m_Ambience = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	//m_Light.setPosition(1.0f, 1.0f, 3.0f);
-	m_Light.setPosition(0.0f, 1.5f, 0.0f);
+	m_Light.setPosition(0.0f, 1.0f, m_HexBoard.m_hexRadius-1);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
-	m_Light.setStrength(100.0);
+	m_Light.setStrength(40.0);
 
 	//setup camera
 	//m_Camera.setPosition(Vector3(2.4f+0.75*cos(atan(-1.8/2.4)), 0.0f, 1.8f+0.75*sin(atan(-1.8/2.4))));
@@ -171,7 +170,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 	// STEP 3: Process inputs
 	m_Camera.Update();
-	//m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 0.75f+0.25f*cos(XM_2PI*m_time/60.0f), 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
+	//m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 1.0f, 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
 	
 	// DEBUG:
 	auto device = m_deviceResources->GetD3DDevice();
@@ -284,27 +283,7 @@ void Game::Render()
 	RenderSkyboxOnto(&m_Camera);
 
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, m_NeutralRenderPass->getShaderResourceView(), m_NeutralNMRenderPass->getShaderResourceView(), &m_Light);
-
-	// Draw Basic Models
-	/*m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_normalMap.Get());
-	m_Cube.Render(context);
-
-	context->RSSetState(m_states->CullCounterClockwise());
-	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(-2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_NeutralRenderPass->getShaderResourceView(), m_normalMap.Get());
-	m_Cube.Render(context);
-
-	context->RSSetState(m_states->CullClockwise());
-
-	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(0.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), true, m_time, &m_Light, m_normalMap.Get(), m_NeutralNMRenderPass->getShaderResourceView());
-	m_Cube.Render(context);
-
-	m_LightShaderPair.EnableShader(context);
-	m_LightShaderPair.SetLightShaderParameters(context, &Matrix::CreateTranslation(Vector3(2.0f, 0.0f, 0.0f)), &m_Camera.getCameraMatrix(), &m_Camera.getPerspective(), false, m_time, &m_Light, m_normalMap.Get(), m_normalMap.Get());
-	m_Cube.Render(context);*/
+	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
 
     // Show the new frame.
     m_deviceResources->Present();
@@ -317,9 +296,9 @@ void Game::RenderSkyboxOnto(Camera* camera)
 	auto renderTargetView = m_deviceResources->GetRenderTargetView();
 	auto depthTargetView = m_deviceResources->GetDepthStencilView();
 
-	ID3D11ShaderResourceView* environmentMap[6];
-	for (int j = 0; j < 6; j++)
-		environmentMap[j] = m_SkyboxRenderPass[j]->getShaderResourceView();
+	//ID3D11ShaderResourceView* environmentMap[6];
+	//for (int j = 0; j < 6; j++)
+	//	environmentMap[j] = m_SkyboxRenderPass[j]->getShaderResourceView();
 		
 	context->OMSetDepthStencilState(m_states->DepthNone(), 0); // NB: Note use of DepthNone()
 	context->RSSetState(m_states->CullCounterClockwise());
@@ -336,22 +315,12 @@ void Game::RenderSkyboxOnto(Camera* camera)
 // Render Passes
 void Game::RenderStaticTextures()
 {
-	RenderShaderTexture(m_NeutralRenderPass, m_NeutralRendering);
-	RenderShaderTexture(m_NeutralNMRenderPass, m_NeutralNMRendering);
 
-	for (int i = 0; i < 6; i++)
-		RenderShaderTexture(m_SkyboxRenderPass[i], m_SkyboxRendering[i]);
-
-	//Rendered as a failsafe!
-	RenderDynamicTextures();
 }
 
 void Game::RenderDynamicTextures()
 {
-	RenderShaderTexture(m_DemoRenderPass, m_DemoRendering);
-	RenderShaderTexture(m_DemoNMRenderPass, m_DemoNMRendering);
-	RenderShaderTexture(m_SphericalPoresRenderPass, m_SphericalPoresRendering);
-	RenderShaderTexture(m_SphericalPoresNMRenderPass, m_SphericalPoresNMRendering);
+
 }
 
 void Game::RenderShaderTexture(RenderTexture* renderPass, Shader rendering)
@@ -484,33 +453,10 @@ void Game::CreateDeviceDependentResources()
 	m_FieldRendering.InitAlphaBuffer(device);
 	m_FieldRendering.InitLightBuffer(device);
 
-	for (int i = 0; i < 6; i++)
-		m_SkyboxRendering[i].InitShader(device, L"colour_vs.cso", L"skybox_pores.cso");
-
-	m_NeutralRendering.InitShader(device, L"light_vs.cso", L"neutral.cso");
-	m_NeutralNMRendering.InitShader(device, L"light_vs.cso", L"neutral_nm.cso");
-	m_DemoRendering.InitShader(device, L"light_vs.cso", L"pores.cso");
-	m_DemoNMRendering.InitShader(device, L"light_vs.cso", L"pores_nm.cso");
-
-	m_SphericalPoresRendering.InitShader(device, L"light_vs.cso", L"spherical_pores.cso");
-	m_SphericalPoresNMRendering.InitShader(device, L"light_vs.cso", L"spherical_pores_nm.cso");
-
-
 	//load Textures
 	CreateDDSTextureFromFile(device, L"sample_nm.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());
 
 	//Initialise Render to texture
-	for (int i = 0; i < 6; i++)
-	{
-		m_SkyboxRenderPass[i] = new RenderTexture(device, 1920, 1080, 1, 2);
-	}
-
-	m_NeutralRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
-	m_NeutralNMRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
-	m_DemoRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
-	m_DemoNMRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
-	m_SphericalPoresRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
-	m_SphericalPoresNMRenderPass = new RenderTexture(device, 1920, 1080, 1, 2);
 
 	m_preRendered = false;
 }

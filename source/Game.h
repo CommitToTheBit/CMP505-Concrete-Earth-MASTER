@@ -120,26 +120,7 @@ private:
     ModelClass																m_Cube;
 
 	// Generated Textures
-    RenderTexture*                                                          m_SkyboxRenderPass[6];
-    Shader                                                                  m_SkyboxRendering[6];
-
-    RenderTexture*                                                          m_NeutralRenderPass;
-    Shader                                                                  m_NeutralRendering;
-
-    RenderTexture*                                                          m_NeutralNMRenderPass;
-    Shader                                                                  m_NeutralNMRendering;
-
-    RenderTexture*                                                          m_DemoRenderPass;
-    Shader                                                                  m_DemoRendering;
-
-    RenderTexture*                                                          m_DemoNMRenderPass;
-    Shader                                                                  m_DemoNMRendering;
-
-    RenderTexture*                                                          m_SphericalPoresRenderPass;
-    Shader                                                                  m_SphericalPoresRendering;
-
-    RenderTexture*                                                          m_SphericalPoresNMRenderPass;
-    Shader                                                                  m_SphericalPoresNMRendering;
+    // NB: Come back to these...
 
 
 #ifdef DXTK_AUDIO

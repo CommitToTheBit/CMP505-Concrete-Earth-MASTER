@@ -19,8 +19,6 @@ public:
 		DirectX::SimpleMath::Vector3 boardPosition,
 		Camera* camera, 
 		float time,
-		ID3D11ShaderResourceView* texture, 
-		ID3D11ShaderResourceView* normalTexture,
 		Light* light);
 
 	void SetInterpolation(int north, int east);
