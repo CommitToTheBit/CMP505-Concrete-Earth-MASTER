@@ -31,7 +31,7 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 	Field* hexField = new Field();
 
 	m_horizontalField.Initialise(cells);
-	m_horizontalField.InitialiseHorizontalField(6);
+	m_horizontalField.InitialiseHorizontalField(6,0.1f);
 
 	int index = 0;
 	for (int j = -m_hexRadius-1; j <= m_hexRadius+1; j++)
@@ -44,7 +44,7 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 				continue;
 			}
 
-			m_hexIsolevels[index] = 0.15f+0.01f*index;//0.15f*std::rand()/RAND_MAX;
+			m_hexIsolevels[index] = 0.15f+0.15f*std::rand()/RAND_MAX;
 
 			hexField->Initialise(&m_horizontalField);
 			hexField->DeriveHexPrism(device, m_hexIsolevels[index]);

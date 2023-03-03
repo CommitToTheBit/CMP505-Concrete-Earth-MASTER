@@ -41,6 +41,7 @@ float4 main(InputType input) : SV_TARGET
 
     // STEP 3: Applying lighting to pixel's base colour.
     float4 color = lightColor * textureColor;
+    color.a = 0.25f;
 
     return color;
 }
