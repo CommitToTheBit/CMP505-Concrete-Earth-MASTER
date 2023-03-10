@@ -46,12 +46,12 @@ void Game::Initialize(HWND window, int width, int height)
     CreateWindowSizeDependentResources();
 
 	//setup light
-	m_Ambience = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+	m_Ambience = Vector4(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light.setPosition(0.0f, 1.0f, m_HexBoard.m_hexRadius-1);
+	m_Light.setPosition(0.0f, 2.5f, 2.0f*m_HexBoard.m_hexRadius-1);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
-	m_Light.setStrength(40.0);
+	m_Light.setStrength(100.0f);
 
 	//setup camera
 	//m_Camera.setPosition(Vector3(2.4f+0.75*cos(atan(-1.8/2.4)), 0.0f, 1.8f+0.75*sin(atan(-1.8/2.4))));

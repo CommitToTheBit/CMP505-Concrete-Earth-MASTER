@@ -26,6 +26,9 @@
     <Filter Include="Assets\Shaders">
       <UniqueIdentifier>{f529fe65-ede5-4321-b5c9-5a9385d2396f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Narrative">
+      <UniqueIdentifier>{aea32c18-7af7-410b-ab35-f575c3a51aaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
