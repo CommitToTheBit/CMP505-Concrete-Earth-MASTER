@@ -99,19 +99,24 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11InputLayout>                               m_batchInputLayout;
 	std::unique_ptr<DirectX::GeometricPrimitive>                            m_testmodel;
 
-	//lights
+	// lights
 	Light																	m_Light;
     DirectX::SimpleMath::Vector4                                            m_Ambience;
 
-	//Cameras
+	// Cameras
 	Camera																	m_Camera;
     EnvironmentCamera                                                       m_environmentCamera;
 
-	//textures
+	// textures
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>                        m_normalMap;
 
-	//Shaders
+	// Shaders
     Shader                                                                  m_FieldRendering;
+
+    // Shader Textures
+    Shader                                                                  m_NeutralShader;
+
+    // Render-to-Textures
 
     // Models
     HexBoard                                                                m_HexBoard;
@@ -119,8 +124,7 @@ private:
 
     ModelClass																m_Cube;
 
-	// Generated Textures
-    // NB: Come back to these...
+
 
 
 #ifdef DXTK_AUDIO

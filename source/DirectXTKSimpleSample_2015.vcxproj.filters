@@ -77,6 +77,9 @@
     <ClInclude Include="Shader.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="LSystem.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -120,6 +123,9 @@
       <Filter>Modelling</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="LSystem.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
@@ -170,11 +176,11 @@
     <FxCompile Include="light3D_vs.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="colour3D_ps.hlsl">
-      <Filter>Assets\Shaders</Filter>
+    <FxCompile Include="neutral_ps.hlsl">
+      <Filter>Assets\Shader Textures</Filter>
     </FxCompile>
-    <FxCompile Include="colour3D_vs.hlsl">
-      <Filter>Assets\Shaders</Filter>
+    <FxCompile Include="neutral_vs.hlsl">
+      <Filter>Assets\Shader Textures</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

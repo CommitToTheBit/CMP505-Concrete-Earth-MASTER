@@ -282,6 +282,12 @@ void Game::Render()
 	// Draw Skybox
 	RenderSkyboxOnto(&m_Camera);
 
+	// Drawn DEBUG Cube...
+	m_NeutralShader.EnableShader(context);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
+	m_Cube.Render(context);
+
+	// Draw board
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
 	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
 
@@ -452,6 +458,9 @@ void Game::CreateDeviceDependentResources()
 	m_FieldRendering.InitMatrixBuffer(device);
 	m_FieldRendering.InitAlphaBuffer(device);
 	m_FieldRendering.InitLightBuffer(device);
+
+	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
+	m_NeutralShader.InitMatrixBuffer(device);
 
 	//load Textures
 	CreateDDSTextureFromFile(device, L"sample_nm.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());

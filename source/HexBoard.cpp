@@ -100,14 +100,10 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, Shader* shader, Direct
 			boundPosition = DirectX::SimpleMath::Vector3(0.0f, -0.5f*(1.0f - tBound), 0.0f);
 
 			shader->EnableShader(deviceContext);
-
-			// Buffers...
 			shader->SetMatrixBuffer(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(1.0f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition+boundPosition)), &camera->getCameraMatrix(), &ortho, true);
 			shader->SetAlphaBuffer(deviceContext, tBound);
 			shader->SetLightBuffer(deviceContext, light);
-
-			// Textures...
-
+			// Textures, then...
 			m_hexModels[m_hexPermutation[m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1]]].Render(deviceContext);
 		}
 	}
