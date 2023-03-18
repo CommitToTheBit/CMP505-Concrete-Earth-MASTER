@@ -32,6 +32,7 @@ private:
 	void RenderBuffers(ID3D11DeviceContext*);
 	void ShutdownBuffers();
 
+	bool DrawIsosurface(VertexType* vertices, unsigned long* indices, int cells, FieldVertexType* field, float isolevel);
 	DirectX::SimpleMath::Vector3 InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel);
 
 	// Post-processing direction vectors
