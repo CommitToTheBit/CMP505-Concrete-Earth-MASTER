@@ -53,8 +53,8 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 	m_vertexCount = 0*graphVertices+4*graphEdges; // NB: Prototype starts with disconnected lines only...
 	m_indexCount = 0*graphVertices+4*graphEdges;*/
 
-	m_vertexCount = 3;
-	m_indexCount = 6;
+	m_vertexCount = std::max((int)(4*m_treeVertices.size()),3);
+	m_indexCount = std::max((int)(12*m_treeVertices.size()),3);
 
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
@@ -73,27 +73,39 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 	// Initialize the index to the vertex buffer.
 	int index = 0;
 
-	if (m_treeVertices.size() > 0)
+	TreeVertexType treeVertex, parentVertex;
+	DirectX::SimpleMath::Vector3 orthogonal;
+	for (int i = 1; i < m_treeVertices.size(); i++)
 	{
-		vertices[0].position = m_treeVertices[0].position;
-		vertices[1].position = m_treeVertices[1].position;
-		vertices[2].position = m_treeVertices[2].position;
+		treeVertex = m_treeVertices[i];
+		parentVertex = m_treeVertices[treeVertex.parent];
 
-		indices[0] = 0;
-		indices[1] = 1;
-		indices[2] = 2;
+		DirectX::SimpleMath::Vector3::Transform(treeVertex.position-parentVertex.position,DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2),orthogonal);
+		orthogonal.Normalize();
 
-		// DEBUG:
-		indices[3] = 0;
-		indices[4] = 2;
-		indices[5] = 1;
-	}
+		// FIXME: Work out perpendicular component here...
 
-	for (int i = 0; i < m_vertexCount; i++)
-	{
-		vertices[i].normal.Normalize();
-		vertices[i].tangent.Normalize();
-		vertices[i].binormal.Normalize();
+
+		vertices[4*i].position = parentVertex.position+parentVertex.radius*orthogonal;
+		vertices[4*i+1].position = parentVertex.position-parentVertex.radius*orthogonal;
+		vertices[4*i+2].position = treeVertex.position-treeVertex.radius*orthogonal;
+		vertices[4*i+3].position = treeVertex.position+treeVertex.radius*orthogonal;
+
+		indices[12*i] = 4*i;
+		indices[12*i+1] = 4*i+1;
+		indices[12*i+2] = 4*i+2;
+
+		indices[12*i+3] = 4*i;
+		indices[12*i+4] = 4*i+2;
+		indices[12*i+5] = 4*i+3;
+
+		indices[12*i+6] = 4*i;
+		indices[12*i+7] = 4*i+2;
+		indices[12*i+8] = 4*i+1;
+
+		indices[12*i+9] = 4*i;
+		indices[12*i+10] = 4*i+3;
+		indices[12*i+11] = 4*i+2;
 	}
 
 	// Set up the description of the static vertex buffer.
@@ -212,14 +224,18 @@ void LSystem::Update(ID3D11Device* device, float time)
 
 void LSystem::UpdateTree(float time)
 {
-	float length = (0.5f+0.5f*cos(time))/pow(2.0f, 5.0f); // NB: pow(2.0f,iterations)
+	float length = (0.9f+0.1f*cos(time))/pow(2.0f, 6.0f); // NB: pow(2.0f,iterations)
 
 	m_treeVertices = std::vector<TreeVertexType>();
 
 	m_treeVertices.push_back(TreeVertexType());
-	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2+time)*DirectX::SimpleMath::Matrix::CreateTranslation(0.5f, 0.0f, 0.0f);
+
+	m_treeVertices[0].parent = 0;
+
+	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2)*DirectX::SimpleMath::Matrix::CreateTranslation(0.5f, 0.0f, 0.0f);
 	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
-	m_treeVertices[0].radius = 1.0f/16.0f;
+
+	m_treeVertices[0].radius = length;
 
 	int parentIndex = 0;
 	std::vector<int> parentIndices = std::vector<int>();
@@ -237,23 +253,27 @@ void LSystem::UpdateTree(float time)
 		}
 		else if (alpha == "+")
 		{
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((45.0f+5.0f*sin(time))*DirectX::XM_PI/180.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((45.0f)*DirectX::XM_PI/180.0f)*localTransform;
 		}
 		else if (alpha == "-")
 		{
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((-45.0f+5.0f*sin(time))*DirectX::XM_PI/180.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((-45.0f)*DirectX::XM_PI/180.0f)*localTransform;
 		}
 		else
 		{
 			// DEBUG:
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((15.0f)*DirectX::XM_PI/180.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((1.0f*sin(time/3.0f))*DirectX::XM_PI/180.0f)*localTransform;
 
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(0.5f,0.0f,0.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(length,0.0f,0.0f)*localTransform;
 
 			m_treeVertices.push_back(TreeVertexType());
+
+			m_treeVertices[m_treeVertices.size()-1].parent = parentIndex;
+
 			m_treeVertices[m_treeVertices.size()-1].transform = localTransform*m_treeVertices[parentIndex].transform;
 			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[m_treeVertices.size()-1].transform, m_treeVertices[m_treeVertices.size()-1].position);
-			m_treeVertices[m_treeVertices.size()-1].radius = 1.0f/16.0f;
+
+			m_treeVertices[m_treeVertices.size()-1].radius = length;
 
 			parentIndex = m_treeVertices.size()-1;
 			localTransform = DirectX::SimpleMath::Matrix::Identity;

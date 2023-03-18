@@ -451,13 +451,13 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 1);
+	m_HexBoard.Initialize(device, 4, 32);
 	m_add = 0;
 
 	// L-Systems
 	m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "+", "A", "]", "-", "A"});
 	m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	m_lSystem.InitializeSentence(std::vector<std::string>{"A"}, 5);
+	m_lSystem.InitializeSentence(std::vector<std::string>{"A"}, 6);
 	m_lSystem.Initialize(device);
 
 	// Models

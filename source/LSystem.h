@@ -20,6 +20,8 @@ protected:
 	// Tree vertex information, used for 'structuring' turtle drawings...
 	struct TreeVertexType
 	{
+		int parent;
+
 		DirectX::SimpleMath::Matrix transform;
 		DirectX::SimpleMath::Vector3 position;
 		float radius;
