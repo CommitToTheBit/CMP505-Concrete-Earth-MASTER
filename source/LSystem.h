@@ -21,6 +21,7 @@ protected:
 	struct TreeVertexType
 	{
 		DirectX::SimpleMath::Matrix transform;
+		DirectX::SimpleMath::Vector3 position;
 		float radius;
 	};
 
@@ -32,16 +33,21 @@ public:
 	void InitializeProductionRule(std::string A, std::vector<std::string> alpha);
 	void InitializeSentence(std::vector<std::string> S, int iterations);
 
-	void Render(ID3D11Device*, ID3D11DeviceContext*, float time);
+	void Render(ID3D11DeviceContext*);
 	void Shutdown();
+
+	void Update(ID3D11Device*, float time);
 
 	// DEBUG:
 	std::string GetSentence();
 
 private:
 	bool InitializeBuffers(ID3D11Device*);
-	void RenderBuffers(ID3D11Device*, ID3D11DeviceContext*, float time);
+	void RenderBuffers(ID3D11DeviceContext*);
 	void ShutdownBuffers();
+
+	void UpdateTree(float time);
+	void DrawTree();
 
 	std::vector<std::string> GetProductionRule(std::string A);
 

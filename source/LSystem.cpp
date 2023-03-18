@@ -31,7 +31,7 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 	float weight = 0.0f;
 
 	// STEP 0: Generate graph...
-	int graphVertices = 1;
+	/*int graphVertices = 1;
 	int graphEdges = 0;
 
 	int graphVertex = 0;
@@ -51,7 +51,10 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 	}
 
 	m_vertexCount = 0*graphVertices+4*graphEdges; // NB: Prototype starts with disconnected lines only...
-	m_indexCount = 0*graphVertices+4*graphEdges;
+	m_indexCount = 0*graphVertices+4*graphEdges;*/
+
+	m_vertexCount = 3;
+	m_indexCount = 6;
 
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
@@ -70,13 +73,21 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 	// Initialize the index to the vertex buffer.
 	int index = 0;
 
-	vertices[0].position = DirectX::SimpleMath::Vector3(0.5f, 0.0f, 0.0f);
-	vertices[1].position = DirectX::SimpleMath::Vector3(0.4f, 0.5f, 0.0f);
-	vertices[2].position = DirectX::SimpleMath::Vector3(0.6f, 0.5f, 0.0f);
+	if (m_treeVertices.size() > 0)
+	{
+		vertices[0].position = m_treeVertices[0].position;
+		vertices[1].position = m_treeVertices[1].position;
+		vertices[2].position = m_treeVertices[2].position;
 
-	indices[0] = 0;
-	indices[1] = 2;
-	indices[2] = 1;
+		indices[0] = 0;
+		indices[1] = 1;
+		indices[2] = 2;
+
+		// DEBUG:
+		indices[3] = 0;
+		indices[4] = 2;
+		indices[5] = 1;
+	}
 
 	for (int i = 0; i < m_vertexCount; i++)
 	{
@@ -133,107 +144,19 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 	return true;
 }
 
-void LSystem::Render(ID3D11Device* device, ID3D11DeviceContext* deviceContext, float time)
+void LSystem::Render(ID3D11DeviceContext* deviceContext)
 {
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	RenderBuffers(device, deviceContext, time);
+	RenderBuffers(deviceContext);
 	deviceContext->DrawIndexed(m_indexCount, 0, 0);
 
 	return;
 }
 
-void LSystem::RenderBuffers(ID3D11Device* device, ID3D11DeviceContext* deviceContext, float time)
+void LSystem::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
-	VertexType* vertices;
-	unsigned long* indices;
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-	HRESULT result;
-
-	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
-
 	unsigned int stride;
 	unsigned int offset;
-
-	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
-	if (!vertices)
-	{
-		return;
-	}
-
-	// Create the index array.
-	indices = new unsigned long[m_indexCount];
-	if (!indices)
-	{
-		return;
-	}
-
-	// Initialize the index to the vertex buffer.
-	int index = 0;
-
-	vertices[0].position = DirectX::SimpleMath::Vector3(0.5f+0.5f*sin(2.0f*time), 0.0f, 0.0f);
-	vertices[1].position = DirectX::SimpleMath::Vector3(0.4f, 0.5f, 0.0f);
-	vertices[2].position = DirectX::SimpleMath::Vector3(0.6f, 0.5f, 0.0f);
-
-	indices[0] = 0;
-	indices[1] = 2;
-	indices[2] = 1;
-
-	for (int i = 0; i < m_vertexCount; i++)
-	{
-		vertices[i].normal.Normalize();
-		vertices[i].tangent.Normalize();
-		vertices[i].binormal.Normalize();
-	}
-
-	// Set up the description of the static vertex buffer.
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-	vertexBufferDesc.StructureByteStride = 0;
-
-	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = vertices;
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
-
-	// Now create the vertex buffer.
-	m_vertexBuffer->Release(); // FIXME: Messy...
-	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
-	if (FAILED(result))
-	{
-		return;
-	}
-
-	// Set up the description of the static index buffer.
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
-	indexBufferDesc.StructureByteStride = 0;
-
-	// Give the subresource structure a pointer to the index data.
-	indexData.pSysMem = indices;
-	indexData.SysMemPitch = 0;
-	indexData.SysMemSlicePitch = 0;
-
-	// Create the index buffer.
-	m_indexBuffer->Release(); // FIXME: Messy...
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
-	if (FAILED(result))
-	{
-		return;
-	}
-
-	delete[] vertices;
-	vertices = 0;
-
-	delete[] indices;
-	indices = 0;
 
 	// Set vertex buffer stride and offset.
 	stride = sizeof(VertexType);
@@ -249,6 +172,93 @@ void LSystem::RenderBuffers(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	return;
+}
+
+void LSystem::Shutdown()
+{
+	// Release the index buffer.
+	if (m_indexBuffer)
+	{
+		m_indexBuffer->Release();
+		m_indexBuffer = 0;
+	}
+
+	// Release the vertex buffer.
+	if (m_vertexBuffer)
+	{
+		m_vertexBuffer->Release();
+		m_vertexBuffer = 0;
+	}
+
+	return;
+}
+
+void LSystem::ShutdownBuffers()
+{
+	return;
+}
+
+void LSystem::Update(ID3D11Device* device, float time)
+{
+	// STEP 1: Clear buffers...
+	Shutdown();
+
+	// STEP 2: Update tree topology using new parameters...
+	UpdateTree(time);
+
+	// STEP 3: Re-initialise buffers...
+	Initialize(device);
+}
+
+void LSystem::UpdateTree(float time)
+{
+	float length = (0.5f+0.5f*cos(time))/pow(2.0f, 5.0f); // NB: pow(2.0f,iterations)
+
+	m_treeVertices = std::vector<TreeVertexType>();
+
+	m_treeVertices.push_back(TreeVertexType());
+	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2+time)*DirectX::SimpleMath::Matrix::CreateTranslation(0.5f, 0.0f, 0.0f);
+	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
+	m_treeVertices[0].radius = 1.0f/16.0f;
+
+	int parentIndex = 0;
+	std::vector<int> parentIndices = std::vector<int>();
+	DirectX::SimpleMath::Matrix localTransform = DirectX::SimpleMath::Matrix::Identity;
+	for each (std::string alpha in m_sentence)
+	{
+		if (alpha == "[")
+		{
+			parentIndices.push_back(parentIndex);
+		}
+		else if (alpha == "]" && parentIndices.size() > 0)
+		{
+			parentIndex = parentIndices[parentIndices.size()-1];
+			parentIndices.pop_back();
+		}
+		else if (alpha == "+")
+		{
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((45.0f+5.0f*sin(time))*DirectX::XM_PI/180.0f)*localTransform;
+		}
+		else if (alpha == "-")
+		{
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((-45.0f+5.0f*sin(time))*DirectX::XM_PI/180.0f)*localTransform;
+		}
+		else
+		{
+			// DEBUG:
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((15.0f)*DirectX::XM_PI/180.0f)*localTransform;
+
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(0.5f,0.0f,0.0f)*localTransform;
+
+			m_treeVertices.push_back(TreeVertexType());
+			m_treeVertices[m_treeVertices.size()-1].transform = localTransform*m_treeVertices[parentIndex].transform;
+			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[m_treeVertices.size()-1].transform, m_treeVertices[m_treeVertices.size()-1].position);
+			m_treeVertices[m_treeVertices.size()-1].radius = 1.0f/16.0f;
+
+			parentIndex = m_treeVertices.size()-1;
+			localTransform = DirectX::SimpleMath::Matrix::Identity;
+		}
+	}
 }
 
 void LSystem::InitializeProductionRule(std::string A, std::vector<std::string> alpha)

@@ -196,6 +196,8 @@ void Game::Update(DX::StepTimer const& timer)
 			m_HexBoard.AddThorns(device, m_add++, 3);
 	}
 
+	m_lSystem.Update(device, m_time);
+
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
 	m_world = Matrix::Identity;
@@ -247,7 +249,6 @@ void Game::Render()
 
     m_deviceResources->PIXBeginEvent(L"Render");
     auto context = m_deviceResources->GetD3DDeviceContext();
-	auto device = m_deviceResources->GetD3DDevice();
 	auto renderTargetView = m_deviceResources->GetRenderTargetView();
 	auto depthTargetView = m_deviceResources->GetDepthStencilView();
 
@@ -283,11 +284,11 @@ void Game::Render()
 	// Drawn DEBUG Cube...
 	m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &Matrix::CreateScale(1080.0f/1920.0f,1.0f,1.0f), true);
-	m_lSystem.Render(device,context, m_time);
+	m_lSystem.Render(context);
 
 	// Draw board
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
+	//m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
 
 	// Draw Text to the screen
 	m_sprites->Begin();
@@ -450,7 +451,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 32);
+	m_HexBoard.Initialize(device, 4, 1);
 	m_add = 0;
 
 	// L-Systems
