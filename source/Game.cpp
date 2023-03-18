@@ -190,13 +190,10 @@ void Game::Update(DX::StepTimer const& timer)
 		if (m_gameInputCommands.right)
 			m_HexBoard.SetInterpolation(1, 1);
 		if (m_gameInputCommands.back)
-			m_HexBoard.SetInterpolation(-1, 0);
-		//if (m_gameInputCommands.back)
+		//	m_HexBoard.SetInterpolation(-1, 0);
 		//	m_HexBoard.SetInterpolation(-1, 1);
-		//if (m_gameInputCommands.back)
 		//	m_HexBoard.SetInterpolation(-1, -1);
-
-		//m_HexBoard.AddThorn(device, m_add++);
+			m_HexBoard.AddThorns(device, m_add++, 3);
 	}
 
 	m_view = m_Camera.getCameraMatrix();

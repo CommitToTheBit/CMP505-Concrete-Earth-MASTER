@@ -326,13 +326,33 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device, int cells, FieldVert
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 
-	// Draw the isosurface in vertices, indices...
-	vertices = new VertexType[];
-	indices = new unsigned long[];
+	// STEP 1: Constructing and drawing an isosurface from a pre-made field...
+	int* isosurfaceVertices = new int[12 * cells * cells * cells];
+	int* isosurfaceIndices = new int[cells * cells * cells];
+	DirectX::SimpleMath::Vector3* isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * cells * cells * cells];
 
-	if (!DrawIsosurface(vertices, indices, cells, field, isolevel))
+	CalculateIsosurfaceStatics(isosurfaceVertices, isosurfaceIndices, isosurfacePositions, field, cells, isolevel);
+
+	vertices = new VertexType[m_vertexCount];
+	if (!vertices)
 		return false;
 
+	indices = new unsigned long[m_indexCount];
+	if (!indices)
+		return false;
+
+	ConstructIsosurface(vertices, indices, isosurfaceVertices, isosurfaceIndices, isosurfacePositions, cells);
+
+	delete[] isosurfaceIndices;
+	isosurfaceIndices = 0;
+
+	delete[] isosurfaceVertices;
+	isosurfaceVertices = 0;
+
+	delete[] isosurfacePositions;
+	isosurfacePositions = 0;
+
+	// STEP 2: Passing drawn isosurface into the buffer...
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
@@ -349,9 +369,7 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device, int cells, FieldVert
 	// Now create the vertex buffer.
 	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
 	if (FAILED(result))
-	{
 		return false;
-	}
 
 	// Set up the description of the static index buffer.
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -369,9 +387,7 @@ bool MarchingCubes::InitializeBuffers(ID3D11Device* device, int cells, FieldVert
 	// Create the index buffer.
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
 	if (FAILED(result))
-	{
 		return false;
-	}
 
 	delete[] vertices;
 	vertices = 0;
@@ -436,20 +452,9 @@ void MarchingCubes::ShutdownBuffers()
 	return;
 }
 
-//void MarchingCubes::
-
-
-bool MarchingCubes::DrawIsosurface(VertexType* vertices, unsigned long* indices, int cells, FieldVertexType* field, float isolevel)
+void MarchingCubes::CalculateIsosurfaceStatics(int* isosurfaceVertices, int* isosurfaceIndices, DirectX::SimpleMath::Vector3* isosurfacePositions, FieldVertexType* field, int cells, float isolevel)
 {
-	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
-	float weight = 0.0f;
-
-	// STEP 0: Generate isosurface...
 	const int fieldVertices[8] = { 0, 1, (cells+1)*(cells+1)+1, (cells+1)*(cells+1), (cells+1), (cells+1)+1, (cells+1)*(cells+1)+(cells+1)+1, (cells+1)*(cells+1)+(cells+1), };
-
-	int* isosurfaceIndices = new int[cells * cells * cells];
-	int* isosurfaceVertices = new int[12 * cells * cells * cells];
-	DirectX::SimpleMath::Vector3* isosurfacePositions = new DirectX::SimpleMath::Vector3[12 * cells * cells * cells];
 
 	int fieldVertexA, fieldVertexB;
 	DirectX::SimpleMath::Vector3 edgePositions[12];
@@ -461,7 +466,7 @@ bool MarchingCubes::DrawIsosurface(VertexType* vertices, unsigned long* indices,
 	/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 	/* This enclosed section has been adapted from: Paul Bourke (1994) Polygonising a Scalar Field. Available at http://paulbourke.net/geometry/polygonise/ (Accessed: 9 February 2023) */
 
-	// STEP 1: Calculate new isosurface vertex positions...
+	// Calculate new isosurface vertex positions...
 	int i, j, k, f;
 	for (int c = 0; c < cells * cells * cells; c++)
 	{
@@ -538,31 +543,17 @@ bool MarchingCubes::DrawIsosurface(VertexType* vertices, unsigned long* indices,
 				isosurfaceVertices[12 * c + m_triTable[isosurfaceIndices[c]][n]] = m_vertexCount++;
 		}
 	}
-	m_vertexCount = std::max(m_vertexCount, 1); // FIXME: Only a shoddy patch for access violation!
-	m_indexCount = std::max(m_indexCount, 3); // FIXME: Only a shoddy patch for access violation!
 
 	/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
+	m_vertexCount = std::max(m_vertexCount, 1); // FIXME: Only a shoddy patch for access violation!
+	m_indexCount = std::max(m_indexCount, 3); // FIXME: Only a shoddy patch for access violation!
+}
 
-	// STEP 2: Count *unique* vertices...
-	// FIXME: Major refactor needed for this to work - but it seems necessary for 'balanced' normals!
-
-	// Set the vertex count to the same as the index count.
-	//m_vertexCount = m_indexCount;
-
-	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
-	if (!vertices)
-	{
-		return false;
-	}
-
-	// Create the index array.
-	indices = new unsigned long[m_indexCount];
-	if (!indices)
-	{
-		return false;
-	}
+void MarchingCubes::ConstructIsosurface(VertexType* vertices, unsigned long* indices, int* isosurfaceVertices, int* isosurfaceIndices, DirectX::SimpleMath::Vector3* isosurfacePositions, int cells)
+{
+	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
+	float weight = 0.0f;
 
 	// Initialize the index to the vertex buffer.
 	int index = 0;
@@ -595,15 +586,6 @@ bool MarchingCubes::DrawIsosurface(VertexType* vertices, unsigned long* indices,
 		vertices[i].tangent.Normalize();
 		vertices[i].binormal.Normalize();
 	}
-
-	delete[] isosurfaceIndices;
-	isosurfaceIndices = 0;
-
-	delete[] isosurfaceVertices;
-	isosurfaceVertices = 0;
-
-	delete[] isosurfacePositions;
-	isosurfacePositions = 0;
 }
 
 DirectX::SimpleMath::Vector3 MarchingCubes::InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel)

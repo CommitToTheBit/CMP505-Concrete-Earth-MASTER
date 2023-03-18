@@ -1,13 +1,4 @@
 ﻿  Game.cpp
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(123,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(182,30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  HexBoard.cpp
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(177,6): warning C4101: 'sign': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(212,17): warning C4101: 'jPermuted': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(212,6): warning C4101: 'iPermuted': unreferenced local variable
-  Main.cpp
-  MarchingCubes.cpp
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(330,29): error C3078: array size must be specified in new expressions without an initializer
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(331,31): error C3078: array size must be specified in new expressions without an initializer
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(476,32): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
-  Generating Code...
+  DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe

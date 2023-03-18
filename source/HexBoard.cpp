@@ -20,7 +20,7 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 {
 	m_hexRadius = hexRadius;
 	m_hexDiameter = (2*hexRadius+1);
-	m_hexes = 1+3*(hexRadius+1)*(hexRadius+2); // NB: We add an 'outer ring' of repeated hexes
+	m_hexes = 1+3*hexRadius*(hexRadius+1); // NB: We add an 'outer ring' of repeated hexes
 
 	m_hexCoordinates = new int[(m_hexDiameter+2)*(m_hexDiameter+2)];
 	m_hexPermutation = new int[m_hexes];
@@ -56,7 +56,7 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 
 			// DEBUG: Used for display purposes...
 			if (index%5 == 0)
-				AddThorn(device, index);
+				AddThorns(device, index, 3);
 
 			index++;
 		}
@@ -252,7 +252,7 @@ void HexBoard::ApplyInterpolationPermutation()
 	m_hexPermutation = hexPermutation;
 }
 
-void HexBoard::AddThorn(ID3D11Device* device, int hex)
+void HexBoard::AddThorns(ID3D11Device* device, int hex, int thorns)
 {
 	hex = (hex%m_hexes+m_hexes)%m_hexes;
 
@@ -262,7 +262,7 @@ void HexBoard::AddThorn(ID3D11Device* device, int hex)
 
 	// STEP 2: Set thorn parameters, integrate it into the field...
 	// FIXME: A solid prototype, but highly lacking aesthetically...
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < thorns; i++)
 	{
 		float angle = XM_PIDIV2/10.0f;
 
@@ -283,6 +283,7 @@ void HexBoard::AddThorn(ID3D11Device* device, int hex)
 	
 	hexField->DeriveHexPrism(device, m_hexIsolevels[hex]);
 
+	m_hexModels[hex].Shutdown(); // NB: Resetting prevents memory leak!
 	m_hexModels[hex].Initialize(device, hexField->m_cells, hexField->m_field, m_hexIsolevels[hex]);
 
 	delete hexField;

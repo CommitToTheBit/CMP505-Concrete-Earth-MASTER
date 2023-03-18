@@ -26,6 +26,7 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
+
 	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
 	float weight = 0.0f;
 
@@ -148,6 +149,7 @@ void LSystem::RenderBuffers(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
+
 	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
 
 	unsigned int stride;
@@ -199,6 +201,7 @@ void LSystem::RenderBuffers(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
+	m_vertexBuffer->Release(); // FIXME: Messy...
 	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
 	if (FAILED(result))
 	{
@@ -219,6 +222,7 @@ void LSystem::RenderBuffers(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
+	m_indexBuffer->Release(); // FIXME: Messy...
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
 	if (FAILED(result))
 	{
