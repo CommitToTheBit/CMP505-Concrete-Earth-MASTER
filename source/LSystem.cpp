@@ -29,14 +29,28 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
 	float weight = 0.0f;
 
-	// STEP 2: Count *unique* vertices...
-	// FIXME: Major refactor needed for this to work - but it seems necessary for 'balanced' normals!
+	// STEP 0: Generate graph...
+	int graphVertices = 1;
+	int graphEdges = 0;
 
-	// Set the vertex count to the same as the index count.
-	//m_vertexCount = m_indexCount;
+	int graphVertex = 0;
+	std::vector<int> pushedVertices;
 
-	m_vertexCount = 3;
-	m_indexCount = 3;
+	for each (std::string alpha in sentence)
+	{
+		if (alpha != "[" && alpha != "]" && alpha != "+" && alpha != "-")
+		{
+			graphEdges++;
+			graphVertices++;
+		}
+		else if (alpha == "]" && graphVertices > 1) // NB: Popping means we start at an 'old' vertex..
+		{
+			graphVertices--;
+		}
+	}
+
+	m_vertexCount = 0*graphVertices+4*graphEdges; // NB: Prototype starts with disconnected lines only...
+	m_indexCount = 0*graphVertices+4*graphEdges;
 
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
@@ -108,6 +122,36 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 	delete[] indices;
 	indices = 0;
 	return true;
+}
+
+void LSystem::Render(ID3D11DeviceContext* deviceContext)
+{
+	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	RenderBuffers(deviceContext);
+	deviceContext->DrawIndexed(m_indexCount, 0, 0);
+
+	return;
+}
+
+void LSystem::RenderBuffers(ID3D11DeviceContext* deviceContext)
+{
+	unsigned int stride;
+	unsigned int offset;
+
+	// Set vertex buffer stride and offset.
+	stride = sizeof(VertexType);
+	offset = 0;
+
+	// Set the vertex buffer to active in the input assembler so it can be rendered.
+	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+
+	// Set the index buffer to active in the input assembler so it can be rendered.
+	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	return;
 }
 
 void LSystem::InitializeProductionRule(std::string A, std::vector<std::string> alpha)

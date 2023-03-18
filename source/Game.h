@@ -11,6 +11,7 @@
 #include "RenderTexture.h"
 
 #include "HexBoard.h"
+#include "LSystem.h"
 
 #include "Camera.h"
 #include "EnvironmentCamera.h"
@@ -121,6 +122,9 @@ private:
     // Models
     HexBoard                                                                m_HexBoard;
     int                                                                     m_add; // DEBUG...
+
+    // L-Systems
+    LSystem                                                                 m_lSystem;
 
     ModelClass																m_Cube;
 
