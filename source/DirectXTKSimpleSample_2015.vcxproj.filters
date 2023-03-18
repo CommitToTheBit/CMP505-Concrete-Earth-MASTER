@@ -78,7 +78,7 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="LSystem.h">
-      <Filter>Rendering</Filter>
+      <Filter>Modelling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -126,7 +126,7 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="LSystem.cpp">
-      <Filter>Rendering</Filter>
+      <Filter>Modelling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
