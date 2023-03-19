@@ -258,7 +258,9 @@ void LSystem::Update(ID3D11Device* device, float time)
 
 void LSystem::UpdateTree(float time)
 {
-	float length = (0.5f+0.5f*cos(time/3.0f))*pow(2.0f, -8.0f); // NB: pow(2.0f,iterations)
+	float intensity = 1.0f;// (0.5f+0.5f*cos(time/3.0f));
+
+	float length = intensity*pow(2.0f, -6.0f); // NB: pow(2.0f,iterations)
 
 	m_treeVertices = std::vector<TreeVertexType>();
 
@@ -267,10 +269,10 @@ void LSystem::UpdateTree(float time)
 	m_treeVertices[0].parent = 0;
 	m_treeVertices[0].depth = 0;
 	m_treeVertices[0].degree = 0;
-	m_treeVertices[0].childDepth = INT_MAX;
+	m_treeVertices[0].childDepth = 0;// INT_MAX;
 	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2)*DirectX::SimpleMath::Matrix::CreateTranslation(0.5f, 0.0f, 0.0f);
 	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
-	m_treeVertices[0].radius = (0.5f+0.5f*cos(time/3.0f))*pow(2.0f, -4.0f);
+	m_treeVertices[0].radius = (0.5f+0.5f*cos(time/3.0f))*pow(2.0f, -10.0f);
 
 	int parentIndex = 0;
 	std::vector<int> parentIndices = std::vector<int>();
@@ -298,18 +300,18 @@ void LSystem::UpdateTree(float time)
 		}
 		else if (alpha == "+")
 		{
-			vertexDepth++;
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((45.0f)*DirectX::XM_PI/180.0f)*localTransform;
+			//vertexDepth++;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((120.0f)*DirectX::XM_PI/180.0f)*localTransform;
 		}
 		else if (alpha == "-")
 		{
-			vertexDepth++;
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((-45.0f)*DirectX::XM_PI/180.0f)*localTransform;
+			//vertexDepth++;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((-120.0f)*DirectX::XM_PI/180.0f)*localTransform;
 		}
 		else
 		{
 			// DEBUG:
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(30.0f*pow(2.0f, -(8.0f-1.0f))*sin(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
+			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.05f*sin(time)*DirectX::XM_PI/180.0f)*localTransform;
 
 			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(length, 0.0f, 0.0f)*localTransform;
 
@@ -318,10 +320,10 @@ void LSystem::UpdateTree(float time)
 			m_treeVertices[m_treeVertices.size()-1].parent = parentIndex;
 			m_treeVertices[m_treeVertices.size()-1].depth = vertexDepth;
 			m_treeVertices[m_treeVertices.size()-1].degree = 1;
-			m_treeVertices[m_treeVertices.size()-1].childDepth = INT_MAX;
+			m_treeVertices[m_treeVertices.size()-1].childDepth = 0;// INT_MAX;
 			m_treeVertices[m_treeVertices.size()-1].transform = localTransform*m_treeVertices[parentIndex].transform;
 			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[m_treeVertices.size()-1].transform, m_treeVertices[m_treeVertices.size()-1].position);
-			m_treeVertices[m_treeVertices.size()-1].radius = 0.0f;// pow(2.0f, -(4.0f+vertexDepth));
+			m_treeVertices[m_treeVertices.size()-1].radius = intensity*pow(2.0f, -(10.0f+vertexDepth));
 
 			m_treeVertices[parentIndex].degree++;
 			m_treeVertices[parentIndex].childDepth = std::min(vertexDepth,m_treeVertices[parentIndex].childDepth);
@@ -337,11 +339,13 @@ void LSystem::UpdateTree(float time)
 	int vertexIndex;
 	for (int i = 1; i < m_treeVertices.size(); i++)
 	{
+		continue;
+
 		if (m_treeVertices[i].depth == m_treeVertices[i].childDepth)
 			continue;
 
-		a = (0.5f+0.5f*cos(time/3.0f))*pow(2.0f, -(4.0f+m_treeVertices[i].childDepth));
-		b = (0.5f+0.5f*cos(time/3.0f))*pow(2.0f, -(4.0f+m_treeVertices[i].depth));
+		a = intensity*pow(2.0f, -(4.0f+m_treeVertices[i].childDepth));
+		b = intensity*pow(2.0f, -(4.0f+m_treeVertices[i].depth));
 
 		branchLength = 0.0f;
 		vertexIndex = i;

@@ -283,7 +283,7 @@ void Game::Render()
 
 	// Drawn DEBUG Cube...
 	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateScale(2.0f)*Matrix::CreateTranslation(-1.0f,-1.0f,0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1080.0f/1920.0f, 1.0f, 1.0f), true);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateScale(2.0f)*Matrix::CreateTranslation(-2.0f,-1.0f,0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1080.0f/1920.0f, 1.0f, 1.0f), true);
 	m_lSystem.Render(context);
 
 	// Draw board
@@ -455,9 +455,14 @@ void Game::CreateDeviceDependentResources()
 	m_add = 0;
 
 	// L-Systems
-	m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "+", "A", "]", "-", "A"});
-	m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	m_lSystem.InitializeSentence(std::vector<std::string>{"A"}, 8);
+	//m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "+", "A", "]", "-", "A"});
+	//m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
+	//m_lSystem.InitializeSentence(std::vector<std::string>{"A"}, 8);
+	
+	m_lSystem.InitializeProductionRule("F", std::vector<std::string>{"F", "-", "G", "+", "F", "+", "G", "-", "F"});
+	m_lSystem.InitializeProductionRule("G", std::vector<std::string>{"G", "G"});
+	m_lSystem.InitializeSentence(std::vector<std::string>{"F", "-", "G", "-", "G"}, 6);
+	
 	m_lSystem.Initialize(device);
 
 	// Models
