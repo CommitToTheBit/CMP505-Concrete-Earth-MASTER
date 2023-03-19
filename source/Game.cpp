@@ -283,7 +283,7 @@ void Game::Render()
 
 	// Drawn DEBUG Cube...
 	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &Matrix::CreateScale(1080.0f/1920.0f,1.0f,1.0f), true);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateScale(2.0f)*Matrix::CreateTranslation(-1.0f,-1.0f,0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1080.0f/1920.0f, 1.0f, 1.0f), true);
 	m_lSystem.Render(context);
 
 	// Draw board
@@ -291,9 +291,9 @@ void Game::Render()
 	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
 
 	// Draw Text to the screen
-	m_sprites->Begin();
-	m_font->DrawString(m_sprites.get(), m_lSystem.GetSentence().c_str(), XMFLOAT2(10, 10), Colors::White);
-	m_sprites->End();
+	//m_sprites->Begin();
+	//m_font->DrawString(m_sprites.get(), m_lSystem.GetSentence().c_str(), XMFLOAT2(10, 10), Colors::White);
+	//m_sprites->End();
 
     // Show the new frame.
     m_deviceResources->Present();
@@ -451,13 +451,13 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 32);
+	m_HexBoard.Initialize(device, 4, 1);
 	m_add = 0;
 
 	// L-Systems
-	m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "+", "B", "A", "]", "-", "A"});
+	m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "+", "A", "]", "-", "A"});
 	m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	m_lSystem.InitializeSentence(std::vector<std::string>{"A"}, 6);
+	m_lSystem.InitializeSentence(std::vector<std::string>{"A"}, 8);
 	m_lSystem.Initialize(device);
 
 	// Models

@@ -240,7 +240,7 @@ void LSystem::Update(ID3D11Device* device, float time)
 
 void LSystem::UpdateTree(float time)
 {
-	float length = 0.5f*pow(2.0f, -6.0f); // NB: pow(2.0f,iterations)
+	float length = (1.0f+0.0f*cos(time/3.0f))*pow(2.0f, -8.0f); // NB: pow(2.0f,iterations)
 
 	m_treeVertices = std::vector<TreeVertexType>();
 
@@ -291,9 +291,9 @@ void LSystem::UpdateTree(float time)
 		else
 		{
 			// DEBUG:
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.5f*sin(time/3.0f)*DirectX::XM_PI/180.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(30.0f*pow(2.0f, -(8.0f-1.0f))*sin(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
 
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(length,0.0f,0.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(length, 0.0f, 0.0f)*localTransform;
 
 			m_treeVertices.push_back(TreeVertexType());
 
@@ -303,7 +303,7 @@ void LSystem::UpdateTree(float time)
 			m_treeVertices[m_treeVertices.size()-1].childDepth = INT_MAX;
 			m_treeVertices[m_treeVertices.size()-1].transform = localTransform*m_treeVertices[parentIndex].transform;
 			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[m_treeVertices.size()-1].transform, m_treeVertices[m_treeVertices.size()-1].position);
-			m_treeVertices[m_treeVertices.size()-1].radius = pow(2.0f,-(4.0f+vertexDepth));
+			m_treeVertices[m_treeVertices.size()-1].radius = 0.0f;// pow(2.0f, -(4.0f+vertexDepth));
 
 			m_treeVertices[parentIndex].degree++;
 			m_treeVertices[parentIndex].childDepth = std::min(vertexDepth,m_treeVertices[parentIndex].childDepth);
@@ -314,6 +314,36 @@ void LSystem::UpdateTree(float time)
 	}
 
 	// STEP 2: Assign widths based on depth...
+	float branchLength, branch;
+	float a, b;
+	int vertexIndex;
+	for (int i = 1; i < m_treeVertices.size(); i++)
+	{
+		if (m_treeVertices[i].depth == m_treeVertices[i].childDepth)
+			continue;
+
+		a = pow(2.0f, -(4.0f+m_treeVertices[i].childDepth));
+		b = pow(2.0f, -(4.0f+m_treeVertices[i].depth));
+
+		branchLength = 0.0f;
+		vertexIndex = i;
+		while (m_treeVertices[vertexIndex].depth == m_treeVertices[i].depth && vertexIndex != m_treeVertices[vertexIndex].parent)
+		{
+			branchLength += (m_treeVertices[m_treeVertices[vertexIndex].parent].position-m_treeVertices[vertexIndex].position).Length();
+			vertexIndex = m_treeVertices[vertexIndex].parent;
+		}
+
+		branch = 0.0f;
+		vertexIndex = i;
+		while (m_treeVertices[vertexIndex].depth == m_treeVertices[i].depth && vertexIndex != m_treeVertices[vertexIndex].parent)
+		{
+			branch += (m_treeVertices[m_treeVertices[vertexIndex].parent].position-m_treeVertices[vertexIndex].position).Length()/branchLength;
+			m_treeVertices[vertexIndex].radius = std::max((1.0f-branch)*a+branch*b, m_treeVertices[vertexIndex].radius);
+			vertexIndex = m_treeVertices[vertexIndex].parent;
+		}
+		m_treeVertices[vertexIndex].radius = std::max(b, m_treeVertices[vertexIndex].radius);
+	}
+
 
 	// If (degree 1 or all children have greater depth)
 	// ...set radius to function of child depth...
