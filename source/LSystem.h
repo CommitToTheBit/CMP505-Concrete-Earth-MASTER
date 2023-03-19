@@ -1,4 +1,6 @@
 #pragma once
+#include "ClassicNoise.h"
+#include "SimplexNoise.h"
 
 #include <map>
 #include <string>
@@ -40,7 +42,7 @@ public:
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 
-	void Update(ID3D11Device*, float time);
+	void Update(ID3D11Device*, float deltaTime, float intensity);
 
 	// DEBUG:
 	std::string GetSentence();
@@ -50,7 +52,7 @@ private:
 	void RenderBuffers(ID3D11DeviceContext*);
 	void ShutdownBuffers();
 
-	void UpdateTree(float time);
+	void UpdateTree(float deltaTime, float intensity);
 	void DrawTree();
 
 	std::vector<std::string> GetProductionRule(std::string A);
@@ -60,6 +62,7 @@ private:
 	std::map<std::string, std::vector<std::vector<std::string>>> m_productionWeights;
 	std::vector<std::string> m_sentence;
 
+	float m_time, m_intensity;
 	std::vector<TreeVertexType> m_treeVertices;
 
 protected:

@@ -111,7 +111,7 @@ void Field::IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius, floa
 
 	float orb;
 
-	for (int f = 0; f < m_cells* m_cells* m_cells; f++)
+	for (int f = 0; f < m_cells * m_cells * m_cells; f++)
 	{
 		orb = (m_field[f].position-centre).Length()/radius;
 

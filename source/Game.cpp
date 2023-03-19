@@ -180,6 +180,8 @@ void Game::Update(DX::StepTimer const& timer)
 	if (m_HexBoard.m_interpolating)
 	{
 		m_HexBoard.Interpolate(2.0f*timer.GetElapsedSeconds());
+
+		m_lSystem.Update(device, m_timer.GetElapsedSeconds(), 1.0f);
 	}
 	if (!m_HexBoard.m_interpolating) // NB: Not an 'if/else', since this would waste a frame! 
 	{
@@ -190,13 +192,11 @@ void Game::Update(DX::StepTimer const& timer)
 		if (m_gameInputCommands.right)
 			m_HexBoard.SetInterpolation(1, 1);
 		if (m_gameInputCommands.back)
-		//	m_HexBoard.SetInterpolation(-1, 0);
+			m_HexBoard.SetInterpolation(-1, 0);
 		//	m_HexBoard.SetInterpolation(-1, 1);
 		//	m_HexBoard.SetInterpolation(-1, -1);
-			m_HexBoard.AddThorns(device, m_add++, 3);
+		//	m_HexBoard.AddThorns(device, m_add++, 3);
 	}
-
-	m_lSystem.Update(device, m_time);
 
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
@@ -451,11 +451,11 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 1);
+	m_HexBoard.Initialize(device, 4, 32);
 	m_add = 0;
 
 	// L-Systems
-	m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "-", "A"});
+	m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
 	m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
 	m_lSystem.InitializeSentence(std::vector<std::string>{"A"}, 8);
 	

@@ -3,7 +3,7 @@
 
 LSystem::LSystem()
 {
-
+	m_time = 0;
 }
 
 
@@ -244,21 +244,26 @@ void LSystem::ShutdownBuffers()
 	return;
 }
 
-void LSystem::Update(ID3D11Device* device, float time)
+void LSystem::Update(ID3D11Device* device, float deltaTime, float intensity)
 {
 	// STEP 1: Clear buffers...
 	Shutdown();
 
 	// STEP 2: Update tree topology using new parameters...
-	UpdateTree(time);
+	UpdateTree(deltaTime, intensity);
 
 	// STEP 3: Re-initialise buffers...
 	Initialize(device);
 }
 
-void LSystem::UpdateTree(float time)
+void LSystem::UpdateTree(float deltaTime, float intensity)
 {
-	float intensity = 0.5f-0.5f*cos(time/2.0f);
+	std::srand(0);
+
+	SimplexNoise simplex = SimplexNoise();
+
+	m_time += deltaTime;
+	intensity = 1.0f-pow(2.0f,-4.0f)*(0.5f+0.5f*cos(m_time));
 
 	float length = pow(2.0f, -8.0f); // NB: pow(2.0f,iterations)
 	float radius = pow(2.0f, -4.0f);
@@ -324,9 +329,11 @@ void LSystem::UpdateTree(float time)
 		else
 		{
 			// DEBUG:
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.25f*cos(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
+			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.25f*cos(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(2.0f*pow(2.0f,vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
+			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*simplex.FBMNoise(0.1f*m_time, 0.1f*m_treeVertices[parentIndex].position.x, m_treeVertices[parentIndex].position.y, 8)*DirectX::XM_PI/180.0f)*localTransform;
 
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(intensity-1.0f)+1.0f)*length, 0.0f, 0.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
 
 			m_treeVertices.push_back(TreeVertexType());
 
