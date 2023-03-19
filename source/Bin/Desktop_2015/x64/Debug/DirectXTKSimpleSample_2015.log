@@ -1,4 +1,78 @@
-﻿  Game.cpp
+﻿C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light3D_ps.hlsl(39,11-116): warning X3206: implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light3D_ps.cso
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light3D_vs.hlsl(41,5-33): warning X3206: implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light3D_vs.cso
+  compilation object save succeeded; see C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\neutral_ps.cso
+  compilation object save succeeded; see C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\neutral_vs.cso
+  pch.cpp
+  Camera.cpp
+  ClassicNoise.cpp
+  DeviceResources.cpp
+  EnvironmentCamera.cpp
+  Game.cpp
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(123,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(182,30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  HexBoard.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(177,6): warning C4101: 'sign': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(212,17): warning C4101: 'jPermuted': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\HexBoard.cpp(212,6): warning C4101: 'iPermuted': unreferenced local variable
+  Input.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Input.cpp(54,68): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Input.cpp(54,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Light.cpp
+  LSystem.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\LSystem.cpp(307,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Main.cpp
+  MarchingCubes.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(481,32): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(612,8): warning C4101: 'determinant': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(613,8): warning C4101: 'length': unreferenced local variable
+  modelclass.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\modelclass.cpp(211,28): warning C4477: 'fscanf_s' : format string '%s' requires an argument of type 'unsigned int', but variadic argument 2 has type 'size_t'
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\modelclass.cpp(211,28): message : this argument is used as a buffer size
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\modelclass.cpp(365,8): warning C4101: 'length': unreferenced local variable
+  RenderTexture.cpp
+  Shader.cpp
+  SimplexNoise.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(87,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(99,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(100,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(152,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(160,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(160,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(163,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(171,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(171,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(176,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(139,20): warning C4101: 'n3': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(196,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(197,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(198,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(256,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(257,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(258,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(261,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(262,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(263,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(325,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  Terrain.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(25,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(262,40): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(295,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(305,6): warning C4101: 'index': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(380,8): warning C4101: 'length': unreferenced local variable
+  Field.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,99): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,55): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,127): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(74,18): warning C4101: 'phi': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(164,11): warning C4101: 'theta': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(166,6): warning C4101: 'q': unreferenced local variable
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(166,9): warning C4101: 'quadrant': unreferenced local variable
+  Generating Code...
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(291): warning C4715: 'Terrain::GenerateHeightMap': not all control paths return a value
+     Creating library Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.lib and object Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exp
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe

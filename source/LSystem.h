@@ -22,6 +22,7 @@ protected:
 	{
 		int parent;
 		int depth;
+		int degree;
 
 		DirectX::SimpleMath::Matrix transform;
 		DirectX::SimpleMath::Vector3 position;
@@ -60,7 +61,6 @@ private:
 	std::vector<std::string> m_sentence;
 
 	std::vector<TreeVertexType> m_treeVertices;
-	std::map<int, std::vector<int>> m_treeEdges;
 
 protected:
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
