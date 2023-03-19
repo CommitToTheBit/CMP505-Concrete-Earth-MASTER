@@ -23,7 +23,7 @@ protected:
 		int parent;
 		int depth;
 		int degree;
-
+		int childDepth;
 		DirectX::SimpleMath::Matrix transform;
 		DirectX::SimpleMath::Vector3 position;
 		float radius;

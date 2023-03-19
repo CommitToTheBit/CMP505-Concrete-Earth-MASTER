@@ -249,6 +249,7 @@ void LSystem::UpdateTree(float time)
 	m_treeVertices[0].parent = 0;
 	m_treeVertices[0].depth = 0;
 	m_treeVertices[0].degree = 0;
+	m_treeVertices[0].childDepth = INT_MAX;
 	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2)*DirectX::SimpleMath::Matrix::CreateTranslation(0.5f, 0.0f, 0.0f);
 	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
 	m_treeVertices[0].radius = pow(2.0f, -4.0f);
@@ -261,6 +262,7 @@ void LSystem::UpdateTree(float time)
 
 	DirectX::SimpleMath::Matrix localTransform = DirectX::SimpleMath::Matrix::Identity;
 
+	// STEP 1: Create branching structure...
 	for each (std::string alpha in m_sentence)
 	{
 		if (alpha == "[")
@@ -298,16 +300,25 @@ void LSystem::UpdateTree(float time)
 			m_treeVertices[m_treeVertices.size()-1].parent = parentIndex;
 			m_treeVertices[m_treeVertices.size()-1].depth = vertexDepth;
 			m_treeVertices[m_treeVertices.size()-1].degree = 1;
+			m_treeVertices[m_treeVertices.size()-1].childDepth = INT_MAX;
 			m_treeVertices[m_treeVertices.size()-1].transform = localTransform*m_treeVertices[parentIndex].transform;
 			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[m_treeVertices.size()-1].transform, m_treeVertices[m_treeVertices.size()-1].position);
 			m_treeVertices[m_treeVertices.size()-1].radius = pow(2.0f,-(4.0f+vertexDepth));
 
 			m_treeVertices[parentIndex].degree++;
+			m_treeVertices[parentIndex].childDepth = std::min(vertexDepth,m_treeVertices[parentIndex].childDepth);
 
 			parentIndex = m_treeVertices.size()-1;
 			localTransform = DirectX::SimpleMath::Matrix::Identity;
 		}
 	}
+
+	// STEP 2: Assign widths based on depth...
+
+	// If (degree 1 or all children have greater depth)
+	// ...set radius to function of child depth...
+	// ...count steps backwards up until parent has less depth...
+	// ...and linearly interpolate width over that path!
 }
 
 void LSystem::InitializeProductionRule(std::string A, std::vector<std::string> alpha)
