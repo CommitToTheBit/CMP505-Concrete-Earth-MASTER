@@ -53,8 +53,8 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 	m_vertexCount = 0*graphVertices+4*graphEdges; // NB: Prototype starts with disconnected lines only...
 	m_indexCount = 0*graphVertices+4*graphEdges;*/
 
-	m_vertexCount = std::max((int)(4*m_treeVertices.size()),3);
-	m_indexCount = std::max((int)(24*m_treeVertices.size()),3);
+	m_vertexCount = std::max((int)(4*m_treeVertices.size())/*+17*/, 3); // NB: Using 16-gon to approximate a circle!
+	m_indexCount = std::max((int)(24*m_treeVertices.size())/*+6*16*/, 3);
 
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
@@ -123,6 +123,24 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 		indices[24*i+22] = 4*i+3;
 		indices[24*i+23] = 4*i+2;
 	}
+
+	/*if (m_treeVertices.size() > 0)
+	{
+		for (int i = 0; i < 16; i++)
+			vertices[4*m_treeVertices.size()+i].position = m_treeVertices[0].position+DirectX::SimpleMath::Vector3(m_treeVertices[0].radius*cos(((float)i/16.0f)*DirectX::XM_2PI), m_treeVertices[0].radius*sin(((float)i/16.0f)*DirectX::XM_2PI), 0.0f);
+		vertices[4*m_treeVertices.size()+16].position = m_treeVertices[0].position;
+
+		for (int i = 0; i < 16; i++)
+		{
+			indices[24*m_treeVertices.size()+6*i] = 4*m_treeVertices.size()+16;
+			indices[24*m_treeVertices.size()+6*i+1] = 4*m_treeVertices.size()+i;
+			indices[24*m_treeVertices.size()+6*i+2] = 4*m_treeVertices.size()+(i+1)%16;
+
+			indices[24*m_treeVertices.size()+6*i+3] = 4*m_treeVertices.size()+16;
+			indices[24*m_treeVertices.size()+6*i+4] = 4*m_treeVertices.size()+(i+1)%16;
+			indices[24*m_treeVertices.size()+6*i+5] = 4*m_treeVertices.size()+i;
+		}
+	}*/
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -240,7 +258,7 @@ void LSystem::Update(ID3D11Device* device, float time)
 
 void LSystem::UpdateTree(float time)
 {
-	float length = (1.0f+0.0f*cos(time/3.0f))*pow(2.0f, -8.0f); // NB: pow(2.0f,iterations)
+	float length = (0.5f+0.5f*cos(time/3.0f))*pow(2.0f, -8.0f); // NB: pow(2.0f,iterations)
 
 	m_treeVertices = std::vector<TreeVertexType>();
 
@@ -252,7 +270,7 @@ void LSystem::UpdateTree(float time)
 	m_treeVertices[0].childDepth = INT_MAX;
 	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2)*DirectX::SimpleMath::Matrix::CreateTranslation(0.5f, 0.0f, 0.0f);
 	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
-	m_treeVertices[0].radius = pow(2.0f, -4.0f);
+	m_treeVertices[0].radius = (0.5f+0.5f*cos(time/3.0f))*pow(2.0f, -4.0f);
 
 	int parentIndex = 0;
 	std::vector<int> parentIndices = std::vector<int>();
@@ -322,8 +340,8 @@ void LSystem::UpdateTree(float time)
 		if (m_treeVertices[i].depth == m_treeVertices[i].childDepth)
 			continue;
 
-		a = pow(2.0f, -(4.0f+m_treeVertices[i].childDepth));
-		b = pow(2.0f, -(4.0f+m_treeVertices[i].depth));
+		a = (0.5f+0.5f*cos(time/3.0f))*pow(2.0f, -(4.0f+m_treeVertices[i].childDepth));
+		b = (0.5f+0.5f*cos(time/3.0f))*pow(2.0f, -(4.0f+m_treeVertices[i].depth));
 
 		branchLength = 0.0f;
 		vertexIndex = i;
