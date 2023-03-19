@@ -263,7 +263,7 @@ void LSystem::UpdateTree(float deltaTime, float intensity)
 	SimplexNoise simplex = SimplexNoise();
 
 	m_time += deltaTime;
-	intensity = 1.0f-pow(2.0f,-4.0f)*(0.5f+0.5f*cos(m_time));
+	intensity = 1.0f-pow(2.0f,-2.0f)*(0.5f+0.5f*cos(m_time));
 
 	float length = pow(2.0f, -8.0f); // NB: pow(2.0f,iterations)
 	float radius = pow(2.0f, -4.0f);
@@ -330,8 +330,9 @@ void LSystem::UpdateTree(float deltaTime, float intensity)
 		{
 			// DEBUG:
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.25f*cos(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(2.0f*pow(2.0f,vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
+			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(pow(2.0f,vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*simplex.FBMNoise(0.1f*m_time, 0.1f*m_treeVertices[parentIndex].position.x, m_treeVertices[parentIndex].position.y, 8)*DirectX::XM_PI/180.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(2.0f*pow(2.0f, vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
 
 			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
 
@@ -375,7 +376,7 @@ void LSystem::UpdateTree(float deltaTime, float intensity)
 				vertexIndex = m_treeVertices[vertexIndex].parent;
 			}
 
-			b = (m_treeVertices[vertexIndex].childDepth > m_treeVertices[vertexIndex].depth) ? intensity*radius*(float)pow(2.0f, -m_treeVertices[i].depth) : m_treeVertices[vertexIndex].radius;
+			b = (m_treeVertices[vertexIndex].childDepth > m_treeVertices[vertexIndex].depth) ? intensity*radius*(float)pow(2.0f, -m_treeVertices[i].depth) : std::min(intensity*radius*(float)pow(2.0f, -m_treeVertices[i].depth), m_treeVertices[vertexIndex].radius);
 
 			branch = 0.0f;
 			vertexIndex = i;
