@@ -21,6 +21,7 @@ protected:
 	struct TreeVertexType
 	{
 		int parent;
+		int depth;
 
 		DirectX::SimpleMath::Matrix transform;
 		DirectX::SimpleMath::Vector3 position;

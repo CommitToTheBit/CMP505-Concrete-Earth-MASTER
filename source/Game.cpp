@@ -455,7 +455,7 @@ void Game::CreateDeviceDependentResources()
 	m_add = 0;
 
 	// L-Systems
-	m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "+", "A", "]", "-", "A"});
+	m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "+", "B", "A", "]", "-", "A"});
 	m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
 	m_lSystem.InitializeSentence(std::vector<std::string>{"A"}, 6);
 	m_lSystem.Initialize(device);
