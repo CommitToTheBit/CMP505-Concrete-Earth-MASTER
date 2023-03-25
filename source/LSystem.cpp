@@ -266,7 +266,7 @@ void LSystem::UpdateTree(float deltaTime, float intensity)
 	intensity = 1.0f-pow(2.0f,-2.0f)*(0.5f+0.5f*cos(m_time));
 
 	float length = pow(2.0f, -10.0f); // NB: pow(2.0f,iterations)
-	float radius = pow(2.0f, -5.0f);
+	float radius = pow(2.0f, -7.0f);
 	int maxDepth = INT_MAX;
 
 	float radiusBase = 1.5f;
@@ -281,7 +281,7 @@ void LSystem::UpdateTree(float deltaTime, float intensity)
 	m_treeVertices[0].depth = 0;
 	m_treeVertices[0].degree = 0;
 	m_treeVertices[0].childDepth = maxDepth;
-	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2)*DirectX::SimpleMath::Matrix::CreateTranslation(0.5f, 0.0f, 0.0f);
+	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2)*DirectX::SimpleMath::Matrix::CreateTranslation(0.0f, 0.0f, 0.0f);
 	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
 
 	int parentIndex = 0;

@@ -282,9 +282,16 @@ void Game::Render()
 	RenderSkyboxOnto(&m_Camera);
 
 	// Drawn DEBUG Cube...
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateScale(2.0f)*Matrix::CreateTranslation(-1.0f,-1.0f,0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1080.0f/1920.0f, 1.0f, 1.0f), true);
-	m_lSystem.Render(context);
+	for (float theta = 0.0f; theta < XM_2PI; theta += XM_2PI/20.0f)
+	{
+		// CONSIDER: pow(1.0f+pow(1920.0f/1080.0f, 2.0f), 0.5f) AT... atan(ADJ/OPP) = atan(1080.0f/1920.0f)... x = acos(theta)... a = 1.0f/cos(atan(1080.0f/1920.0f)...
+
+		// x/(1920.0f/1080.0f) + y/1 = 1.0f/cos(atan(1080.0f/1920.0f)
+
+		m_NeutralShader.EnableShader(context);
+		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(pow(1.0f+pow(1920.0f/1080.0f, 2.0f), 0.5f)*cos(theta), pow(1080.0f/1920.0f,0.5f)*pow(1.0f+pow(1920.0f/1080.0f, 2.0f), 0.5f)*sin(theta), 0.0f)*Matrix::CreateScale(pow(1920.0f/1080.0f, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1080.0f/1920.0f, 1.0f, 1.0f), true);
+		m_lSystem.Render(context);
+	}
 
 	// Draw board
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
@@ -451,7 +458,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 1);
+	m_HexBoard.Initialize(device, 4, 64);
 	m_add = 0;
 
 	// L-Systems
