@@ -154,7 +154,7 @@ void Game::Update(DX::StepTimer const& timer)
 		if (m_gameInputCommands.anticlockwise)
 			deltaInterpolation -= 1.0f;
 			
-		m_lSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.3f*deltaInterpolation*m_timer.GetElapsedSeconds());
+		m_lSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.08f*deltaInterpolation*m_timer.GetElapsedSeconds());
 	}
 
 	// WORLD MATRICES:
@@ -445,7 +445,6 @@ void Game::CreateDeviceDependentResources()
 	m_lSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
 	
 	m_lSystem.Initialize(device);
-
 
 	// Models
 	m_Screen.Initialize(device);
