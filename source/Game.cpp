@@ -223,29 +223,7 @@ void Game::Render()
 	// If m_time == 0.0, then render all static textures (once only!)
 	if (!m_preRendered)
 	{
-		RenderStaticTextures();
-
 		m_preRendered = true;
-	}
-
-	// STEP 1: Run render to textures...
-	// First render pass: Rendering any textures (including normal maps, etc...)
-	//RenderDynamicTextures();
-
-	// STEP 2: Render 'real' scene...
-	// Draw Skybox
-	RenderSkyboxOnto(&m_Camera);
-
-	// Drawn DEBUG Cube...
-	for (float theta = 0.0f; theta < XM_2PI; theta += XM_2PI/20.0f)
-	{
-		// CONSIDER: pow(1.0f+pow(1920.0f/1080.0f, 2.0f), 0.5f) AT... atan(ADJ/OPP) = atan(1080.0f/1920.0f)... x = acos(theta)... a = 1.0f/cos(atan(1080.0f/1920.0f)...
-
-		// x/(1920.0f/1080.0f) + y/1 = 1.0f/cos(atan(1080.0f/1920.0f)
-
-		m_NeutralShader.EnableShader(context);
-		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio,0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f)*Matrix::CreateScale(pow(m_aspectRatio, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-		m_lSystem.Render(context);
 	}
 
 	// PHYSICAL RENDER
@@ -256,11 +234,27 @@ void Game::Render()
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
 	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
 
+	// VEINS RENDER:
+	m_VeinsRenderPass->setRenderTarget(context);
+	m_VeinsRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
+
+	for (float theta = 0.0f; theta < XM_2PI; theta += XM_2PI/20.0f)
+	{
+		// CONSIDER: pow(1.0f+pow(1920.0f/1080.0f, 2.0f), 0.5f) AT... atan(ADJ/OPP) = atan(1080.0f/1920.0f)... x = acos(theta)... a = 1.0f/cos(atan(1080.0f/1920.0f)...
+
+		// x/(1920.0f/1080.0f) + y/1 = 1.0f/cos(atan(1080.0f/1920.0f)
+
+		m_NeutralShader.EnableShader(context);
+		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio, 0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f)*Matrix::CreateScale(pow(m_aspectRatio, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+		m_lSystem.Render(context);
+	}
+
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
 
 	m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
-	m_ScreenShader.SetShaderTexture(context, m_normalMap.Get(), -1, 0);
+	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
+	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
 	m_Screen.Render(context);
 
 	// Draw Text to the screen
@@ -463,17 +457,17 @@ void Game::CreateDeviceDependentResources()
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
 
-	m_ScreenShader.InitShader(device, L"texture_vs.cso", L"texture_ps.cso");
+	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps_001.cso");
 	m_ScreenShader.InitMatrixBuffer(device);
-	m_ScreenShader.SetShaderTexture(context, m_normalMap.Get(), -1, 0);
 
 	//load Textures
 	CreateDDSTextureFromFile(device, L"sample_nm.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());
 
-	//Initialise Render to texture
-	m_PhysicalRenderPass = new RenderTexture(device, m_width, m_height, 1, 2);
-
 	m_preRendered = false;
+
+	//Initialise Render to texture
+	m_PhysicalRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
+	m_VeinsRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.

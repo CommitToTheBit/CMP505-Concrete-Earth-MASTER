@@ -191,5 +191,11 @@
     <FxCompile Include="texture_vs.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="vignette_ps_001.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="vignette_vs.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

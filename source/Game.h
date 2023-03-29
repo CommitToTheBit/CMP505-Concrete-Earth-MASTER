@@ -127,6 +127,7 @@ private:
     Shader                                                                  m_ScreenShader;
 
     RenderTexture*                                                          m_PhysicalRenderPass;
+    RenderTexture*                                                          m_VeinsRenderPass;
 
     // Models
     HexBoard                                                                m_HexBoard;

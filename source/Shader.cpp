@@ -222,7 +222,7 @@ bool Shader::SetShaderTexture(ID3D11DeviceContext* context, ID3D11ShaderResource
 
 	//pass the desired texture to the pixel shader.
 	if (psStartSlot >= 0)
-		context->VSSetShaderResources(psStartSlot, 1, &texture);
+		context->PSSetShaderResources(psStartSlot, 1, &texture);
 
 	return false;
 }
