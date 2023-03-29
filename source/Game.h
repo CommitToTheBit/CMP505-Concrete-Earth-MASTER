@@ -13,7 +13,7 @@
 #include "HexBoard.h"
 #include "LSystem.h"
 
-//#include "Screen.h"
+#include "Screen.h"
 
 #include "Camera.h"
 #include "EnvironmentCamera.h"
@@ -123,7 +123,7 @@ private:
     Shader                                                                  m_NeutralShader;
 
     // Render-to-Textures
-    //Screen                                                                  m_Screen;
+    Screen                                                                  m_Screen;
 
     // Models
     HexBoard                                                                m_HexBoard;

@@ -1,12 +1,7 @@
-﻿  Screen.cpp
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Screen.cpp(4,9): error C2533: 'Screen::{ctor}': constructors not allowed a return type
-  Field.cpp
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,99): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,55): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,127): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(74,18): warning C4101: 'phi': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(164,11): warning C4101: 'theta': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(166,6): warning C4101: 'q': unreferenced local variable
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(166,9): warning C4101: 'quadrant': unreferenced local variable
-  Generating Code...
+﻿  Game.cpp
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(120,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(131,30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(157,85): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(157,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(256,121): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe
