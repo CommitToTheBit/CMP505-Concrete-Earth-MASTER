@@ -455,3 +455,8 @@ std::string LSystem::GetSentence()
 
 	return text;
 }
+
+float LSystem::GetIntensity()
+{
+	return m_intensity;
+}

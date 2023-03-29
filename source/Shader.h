@@ -24,7 +24,7 @@ public:
 
 	// (Modular) Add-ons...
 	bool SetMatrixBuffer(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, bool culling);
-	bool SetTimeBuffer(ID3D11DeviceContext* context, float alpha);
+	bool SetTimeBuffer(ID3D11DeviceContext* context, float time);
 	bool SetAlphaBuffer(ID3D11DeviceContext* context, float alpha);
 	bool SetLightBuffer(ID3D11DeviceContext* context, Light* light);
 

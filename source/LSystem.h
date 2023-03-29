@@ -44,6 +44,8 @@ public:
 
 	void Update(ID3D11Device*, float deltaTime, float deltaIntensity);
 
+	float GetIntensity();
+
 	// DEBUG:
 	std::string GetSentence();
 
