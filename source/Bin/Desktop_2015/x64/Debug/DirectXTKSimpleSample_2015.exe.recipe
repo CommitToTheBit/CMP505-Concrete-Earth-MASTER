@@ -18,6 +18,12 @@
     <ContentFile>
       <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\neutral_vs.cso</FullPath>
     </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\texture_ps.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\texture_vs.cso</FullPath>
+    </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />

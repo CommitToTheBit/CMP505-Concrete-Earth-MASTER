@@ -20,9 +20,6 @@
     <Filter Include="Modelling">
       <UniqueIdentifier>{60b172f8-1be2-47b7-bad2-e00b1eaefc1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets\Shader Textures">
-      <UniqueIdentifier>{7ac1a878-5bec-414d-8036-e0357d223468}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Assets\Shaders">
       <UniqueIdentifier>{f529fe65-ede5-4321-b5c9-5a9385d2396f}</UniqueIdentifier>
     </Filter>
@@ -183,10 +180,16 @@
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="neutral_ps.hlsl">
-      <Filter>Assets\Shader Textures</Filter>
+      <Filter>Assets\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="neutral_vs.hlsl">
-      <Filter>Assets\Shader Textures</Filter>
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="texture_ps.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="texture_vs.hlsl">
+      <Filter>Assets\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

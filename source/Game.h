@@ -124,6 +124,9 @@ private:
 
     // Render-to-Textures
     Screen                                                                  m_Screen;
+    Shader                                                                  m_ScreenShader;
+
+    RenderTexture*                                                          m_PhysicalRenderPass;
 
     // Models
     HexBoard                                                                m_HexBoard;

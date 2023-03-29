@@ -248,12 +248,19 @@ void Game::Render()
 		m_lSystem.Render(context);
 	}
 
-	// Draw board
+	// PHYSICAL RENDER
+	m_PhysicalRenderPass->setRenderTarget(context);
+	m_PhysicalRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
+	
+	// Render board...
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
 	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
 
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
+	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
+
+	m_ScreenShader.EnableShader(context);
+	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
+	m_ScreenShader.SetShaderTexture(context, m_normalMap.Get(), -1, 0);
 	m_Screen.Render(context);
 
 	// Draw Text to the screen
@@ -419,7 +426,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 1);
+	m_HexBoard.Initialize(device, 4, 8);
 	m_add = 0;
 
 	// L-Systems
@@ -456,10 +463,15 @@ void Game::CreateDeviceDependentResources()
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
 
+	m_ScreenShader.InitShader(device, L"texture_vs.cso", L"texture_ps.cso");
+	m_ScreenShader.InitMatrixBuffer(device);
+	m_ScreenShader.SetShaderTexture(context, m_normalMap.Get(), -1, 0);
+
 	//load Textures
 	CreateDDSTextureFromFile(device, L"sample_nm.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());
 
 	//Initialise Render to texture
+	m_PhysicalRenderPass = new RenderTexture(device, m_width, m_height, 1, 2);
 
 	m_preRendered = false;
 }

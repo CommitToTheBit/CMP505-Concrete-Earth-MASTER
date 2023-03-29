@@ -42,8 +42,8 @@ bool Screen::InitializeBuffers(ID3D11Device* device)
 
 	for (int i = 0; i < 4; i++)
 	{
-		vertices[i].position = DirectX::SimpleMath::Vector3(cos((i+0.5f)*DirectX::XM_PIDIV2), sin((i+0.5f)*DirectX::XM_PIDIV2), 0.0f);
-		vertices[i].texture = DirectX::SimpleMath::Vector2(0.5f+0.5f*cos((i+0.5f)*DirectX::XM_PIDIV2), 0.5f+0.5f*sin((i+0.5f)*DirectX::XM_PIDIV2)); // NB: Check this is the right orientation!
+		vertices[i].position = DirectX::SimpleMath::Vector3(pow(2.0f,0.5f)*cos((i+0.5f)*DirectX::XM_PIDIV2), pow(2.0f, 0.5f)*sin((i+0.5f)*DirectX::XM_PIDIV2), 0.0f);
+		vertices[i].texture = DirectX::SimpleMath::Vector2(0.5f+0.5f*pow(2.0f, 0.5f)*cos((i+0.5f)*DirectX::XM_PIDIV2), 0.5f-0.5f*pow(2.0f, 0.5f)*sin((i+0.5f)*DirectX::XM_PIDIV2)); // NB: Check this is the right orientation!
 		vertices[i].normal = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f);
 		vertices[i].tangent = DirectX::SimpleMath::Vector3(1.0f, 0.0f, 1.0f);
 		vertices[i].binormal = DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f);
