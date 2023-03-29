@@ -148,6 +148,40 @@ bool Shader::InitLightBuffer(ID3D11Device* device)
 
 	return true;
 }
+bool Shader::InitAspectRatioBuffer(ID3D11Device* device)
+{
+	// Setup Aspect Ratio buffer
+	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+	D3D11_BUFFER_DESC aspectRatioBufferDesc;
+	aspectRatioBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	aspectRatioBufferDesc.ByteWidth = sizeof(AspectRatioBufferType);
+	aspectRatioBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	aspectRatioBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	aspectRatioBufferDesc.MiscFlags = 0;
+	aspectRatioBufferDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	device->CreateBuffer(&aspectRatioBufferDesc, NULL, &m_aspectRatioBuffer);
+
+	return true;
+}
+bool Shader::InitStressBuffer(ID3D11Device* device)
+{
+	// Setup Aspect Ratio buffer
+	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+	D3D11_BUFFER_DESC stressBufferDesc;
+	stressBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	stressBufferDesc.ByteWidth = sizeof(StressBufferType);
+	stressBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	stressBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	stressBufferDesc.MiscFlags = 0;
+	stressBufferDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	device->CreateBuffer(&stressBufferDesc, NULL, &m_stressBuffer);
+
+	return true;
+}
 
 bool Shader::SetMatrixBuffer(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, bool culling)
 {
@@ -210,6 +244,34 @@ bool Shader::SetLightBuffer(ID3D11DeviceContext* context, Light* light)
 	context->Unmap(m_lightBuffer, 0);
 	//context->VSSetConstantBuffers(3, 1, &m_lightBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the PS
 	context->PSSetConstantBuffers(3, 1, &m_lightBuffer);
+
+	return false;
+}
+bool Shader::SetAspectRatioBuffer(ID3D11DeviceContext* context, float aspectRatio)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	context->Map(m_aspectRatioBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+	AspectRatioBufferType* aspectRatioPtr = (AspectRatioBufferType*)mappedResource.pData;
+	aspectRatioPtr->aspectRatio = aspectRatio;
+
+	context->Unmap(m_aspectRatioBuffer, 0);
+	//context->VSSetConstantBuffers(4, 1, &m_aspectRatioBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the PS
+	context->PSSetConstantBuffers(4, 1, &m_aspectRatioBuffer);
+
+	return false;
+}
+bool Shader::SetStressBuffer(ID3D11DeviceContext* context, float stress)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	context->Map(m_stressBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+	StressBufferType* stressPtr = (StressBufferType*)mappedResource.pData;
+	stressPtr->stress = stress;
+
+	context->Unmap(m_stressBuffer, 0);
+	//context->VSSetConstantBuffers(5, 1, &m_stressBuffer);	//note the first variable is the mapped buffer ID.  Corresponding to what you set in the PS
+	context->PSSetConstantBuffers(5, 1, &m_stressBuffer);
 
 	return false;
 }

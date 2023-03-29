@@ -17,16 +17,20 @@ public:
 	void EnableShader(ID3D11DeviceContext* context);
 
 	// (Modular) Add-ons...
-	bool InitMatrixBuffer(ID3D11Device* device);	// 0
-	bool InitTimeBuffer(ID3D11Device* device);		// 1
-	bool InitAlphaBuffer(ID3D11Device* device);		// 2
-	bool InitLightBuffer(ID3D11Device* device);		// 3
+	bool InitMatrixBuffer(ID3D11Device* device);		// 0
+	bool InitTimeBuffer(ID3D11Device* device);			// 1
+	bool InitAlphaBuffer(ID3D11Device* device);			// 2
+	bool InitLightBuffer(ID3D11Device* device);			// 3
+	bool InitAspectRatioBuffer(ID3D11Device* device);	// 4
+	bool InitStressBuffer(ID3D11Device* device);		// 5
 
 	// (Modular) Add-ons...
 	bool SetMatrixBuffer(ID3D11DeviceContext* context, DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* view, DirectX::SimpleMath::Matrix* projection, bool culling);
 	bool SetTimeBuffer(ID3D11DeviceContext* context, float time);
 	bool SetAlphaBuffer(ID3D11DeviceContext* context, float alpha);
 	bool SetLightBuffer(ID3D11DeviceContext* context, Light* light);
+	bool SetAspectRatioBuffer(ID3D11DeviceContext* context, float aspectRatio);
+	bool SetStressBuffer(ID3D11DeviceContext* context, float stress);
 
 	bool SetShaderTexture(ID3D11DeviceContext* context, ID3D11ShaderResourceView* texture, int vsStartSlot, int psStartSlot);
 
@@ -71,6 +75,23 @@ protected:
 		float strength;
 	};
 	ID3D11Buffer*															m_lightBuffer;
+
+	// Aspect Ratio Buffer
+	struct AspectRatioBufferType
+	{
+		float aspectRatio;
+		DirectX::SimpleMath::Vector3 padding;
+	};
+	ID3D11Buffer*															m_aspectRatioBuffer;
+
+	// Stress Buffer
+	struct StressBufferType
+	{
+		float stress;
+		DirectX::SimpleMath::Vector3 padding;
+	};
+	ID3D11Buffer*															m_stressBuffer;
+
 
 	// Sampler
 	ID3D11SamplerState*														m_sampleState;

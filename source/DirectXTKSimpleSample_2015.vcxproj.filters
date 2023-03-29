@@ -200,5 +200,8 @@
     <FxCompile Include="vignette_ps_002.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="vignette_ps_003.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
