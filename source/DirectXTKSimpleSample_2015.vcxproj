@@ -183,6 +183,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="ReadData.h" />
     <ClInclude Include="RenderTexture.h" />
+    <ClInclude Include="Screen.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="StepTimer.h" />
@@ -209,6 +210,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RenderTexture.cpp" />
+    <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="Terrain.cpp" />

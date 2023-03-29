@@ -80,6 +80,9 @@
     <ClInclude Include="LSystem.h">
       <Filter>Modelling</Filter>
     </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -127,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="LSystem.cpp">
       <Filter>Modelling</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

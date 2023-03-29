@@ -53,10 +53,6 @@ void Game::Initialize(HWND window, int width, int height)
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
 	m_Light.setStrength(100.0f);
 
-	//setup camera
-	//m_Camera.setPosition(Vector3(2.4f+0.75*cos(atan(-1.8/2.4)), 0.0f, 1.8f+0.75*sin(atan(-1.8/2.4))));
-	//m_Camera.setRotation(Vector3(-90.0f, -180+(180.0/3.14159265)*atan(2.4/1.8), 0.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up.
-
 	// FIXME: Refactor this, for 'cleaner' board set-up?
 	float twist = XM_PI/12.0f;
 	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(twist));
@@ -123,11 +119,10 @@ void Game::Update(DX::StepTimer const& timer)
 
 	m_time = m_timer.GetTotalSeconds();
 
-	//note that currently.  Delta-time is not considered in the game object movement. 
-	Vector3 inputPosition = Vector3(0.0f, 0.0f, 0.0f);
-
-	// STEP 3: Process inputs
+	// CAMERA INPUTS:
 	m_Camera.Update();
+
+	// LIGHTING INPUTS:
 	//m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 1.0f, 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
 	
 	// HEXBOARD INPUTS:
@@ -217,18 +212,13 @@ void Game::Render()
 	auto renderTargetView = m_deviceResources->GetRenderTargetView();
 	auto depthTargetView = m_deviceResources->GetDepthStencilView();
 
-    // Draw Text to the screen
-    m_sprites->Begin();
-		m_font->DrawString(m_sprites.get(), L"", XMFLOAT2(10, 10), Colors::White);
-    m_sprites->End();
-
 	//Set Rendering states. 
 	//context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
 	//context->OMSetBlendState(m_states->Additive(), nullptr, 0xFFFFFFFF); // NB: Which blend is best? Is it most efficient to just set this here?
 	context->OMSetBlendState(m_states->NonPremultiplied(), nullptr, 0xFFFFFFFF);
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	context->RSSetState(m_states->CullClockwise());
-//	context->RSSetState(m_states->Wireframe());
+	//context->RSSetState(m_states->Wireframe());
 
 	// If m_time == 0.0, then render all static textures (once only!)
 	if (!m_preRendered)
@@ -262,6 +252,10 @@ void Game::Render()
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
 	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
 
+	//m_NeutralShader.EnableShader(context);
+	//m_NeutralShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	//m_Screen.Render(context);
+
 	// Draw Text to the screen
 	//m_sprites->Begin();
 	//m_font->DrawString(m_sprites.get(), m_lSystem.GetSentence().c_str(), XMFLOAT2(10, 10), Colors::White);
@@ -270,6 +264,8 @@ void Game::Render()
     // Show the new frame.
     m_deviceResources->Present();
 }
+
+
 
 // Rendering Models
 void Game::RenderSkyboxOnto(Camera* camera)
@@ -447,6 +443,8 @@ void Game::CreateDeviceDependentResources()
 
 
 	// Models
+	//m_Screen.Initialize(device);
+
 	m_Cube.InitializeModel(device, "cube.obj");
 
 	// Shaders
