@@ -1,6 +1,2 @@
-﻿  Game.cpp
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(120,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(131,30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(157,86): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(157,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+﻿  compilation object save succeeded; see C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_002.cso
   DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe
