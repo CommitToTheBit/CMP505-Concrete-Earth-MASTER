@@ -42,7 +42,7 @@ public:
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 
-	void Update(ID3D11Device*, float deltaTime, float intensity);
+	void Update(ID3D11Device*, float deltaTime, float deltaIntensity);
 
 	// DEBUG:
 	std::string GetSentence();

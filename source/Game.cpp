@@ -61,7 +61,6 @@ void Game::Initialize(HWND window, int width, int height)
 	float twist = XM_PI/12.0f;
 	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(twist));
 	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+180.0f*twist/XM_PI, 0.0f));
-
 	
 #ifdef DXTK_AUDIO
     // Create DirectXTK for Audio objects
@@ -120,68 +119,21 @@ void Game::Tick()
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
+	auto device = m_deviceResources->GetD3DDevice();
+
 	m_time = m_timer.GetTotalSeconds();
 
 	//note that currently.  Delta-time is not considered in the game object movement. 
 	Vector3 inputPosition = Vector3(0.0f, 0.0f, 0.0f);
 
-	// STEP 1: Read camera translation inputs (from keyboard) // FIXME: Refactor this, for 'cleaner' board set-up?
-	/*if (m_gameInputCommands.forward)
-		inputPosition.z += 1.0f;
-	if (m_gameInputCommands.back)
-		inputPosition.z -= 1.0f;
-	if (m_gameInputCommands.right)
-		inputPosition.x += 1.0f;
-	if (m_gameInputCommands.left)
-		inputPosition.x -= 1.0f;
-	if (m_gameInputCommands.up)
-		inputPosition.y += 1.0f;
-	if (m_gameInputCommands.down)
-		inputPosition.y -= 1.0f;
-
-	if (inputPosition.x != 0.0f || inputPosition.y != 0.0f || inputPosition.z != 0.0f)
-	{
-		inputPosition.Normalize();
-		inputPosition.x *= 0.8f;
-		inputPosition.y *= 0.8f;
-
-		// NB: forward/right directions are relative to the camera, but up remains relative to the space to avoid confusion...
-		Vector3 deltaPosition = inputPosition.z*m_Camera.getForward() + inputPosition.x*m_Camera.getRight() + inputPosition.y*Vector3::UnitY;
-		deltaPosition *= m_timer.GetElapsedSeconds()*m_Camera.getMoveSpeed();
-
-		Vector3 position = m_Camera.getPosition()+deltaPosition;
-		m_Camera.setPosition(position);
-	}
-
-	// STEP 2: Read camera rotation inputs (from mouse)
-	Vector2 inputRotation = m_gameInputCommands.rotation;
-	if (inputRotation.x != 0.0f || inputRotation.y != 0.0f)
-	{
-		Vector3 rotation = m_Camera.getRotation();
-		inputRotation.x *= sin(XM_PIDIV4+0.5*XM_PI*(-rotation.x/180.0f));
-
-		Vector3 deltaRotation = (-inputRotation.y)*Vector3::UnitX + (-inputRotation.x)*Vector3::UnitY;
-		deltaRotation *= m_timer.GetElapsedSeconds()*m_Camera.getRotationSpeed();
-
-		rotation += deltaRotation;
-		rotation.x = std::min(-0.001f, std::max(rotation.x, -179.999f)); // NB: Prevents gimbal lock
-		m_Camera.setRotation(rotation);
-	}*/
-
 	// STEP 3: Process inputs
 	m_Camera.Update();
 	//m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 1.0f, 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
 	
-	// DEBUG:
-	auto device = m_deviceResources->GetD3DDevice();
-	//m_HexBoard.m_hexModels[0].GenerateIsosurface(device, 0.5f+0.25f*sin(m_time/(XM_2PI*5.0f)));
-	//m_HexBoard.m_hexModels[0].InitialiseHorizontalField();
-	//m_HexBoard.m_hexModels[0].DeriveHexPrism(device, 0.5f+0.25f*sin(XM_2PI*m_time/5.0f));
+	// HEXBOARD INPUTS:
 	if (m_HexBoard.m_interpolating)
 	{
 		m_HexBoard.Interpolate(2.0f*timer.GetElapsedSeconds());
-
-		m_lSystem.Update(device, m_timer.GetElapsedSeconds(), 1.0f);
 	}
 	if (!m_HexBoard.m_interpolating) // NB: Not an 'if/else', since this would waste a frame! 
 	{
@@ -198,6 +150,19 @@ void Game::Update(DX::StepTimer const& timer)
 		//	m_HexBoard.AddThorns(device, m_add++, 3);
 	}
 
+	// VIGNETTE INPUTS:
+	if (m_gameInputCommands.clockwise || m_gameInputCommands.anticlockwise)
+	{
+		float deltaInterpolation = 0.0f;
+		if (m_gameInputCommands.clockwise)
+			deltaInterpolation += 1.0f;
+		if (m_gameInputCommands.anticlockwise)
+			deltaInterpolation -= 1.0f;
+			
+		m_lSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.3f*deltaInterpolation*m_timer.GetElapsedSeconds());
+	}
+
+	// WORLD MATRICES:
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
 	m_world = Matrix::Identity;
@@ -289,7 +254,7 @@ void Game::Render()
 		// x/(1920.0f/1080.0f) + y/1 = 1.0f/cos(atan(1080.0f/1920.0f)
 
 		m_NeutralShader.EnableShader(context);
-		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(pow(1.0f+pow(1920.0f/1080.0f, 2.0f), 0.5f)*cos(theta), pow(1080.0f/1920.0f,0.5f)*pow(1.0f+pow(1920.0f/1080.0f, 2.0f), 0.5f)*sin(theta), 0.0f)*Matrix::CreateScale(pow(1920.0f/1080.0f, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1080.0f/1920.0f, 1.0f, 1.0f), true);
+		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio,0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f)*Matrix::CreateScale(pow(m_aspectRatio, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 		m_lSystem.Render(context);
 	}
 
@@ -458,7 +423,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 64);
+	m_HexBoard.Initialize(device, 4, 1);
 	m_add = 0;
 
 	// L-Systems
@@ -479,6 +444,7 @@ void Game::CreateDeviceDependentResources()
 	m_lSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
 	
 	m_lSystem.Initialize(device);
+
 
 	// Models
 	m_Cube.InitializeModel(device, "cube.obj");
@@ -503,19 +469,15 @@ void Game::CreateDeviceDependentResources()
 // Allocate all memory resources that change on a window SizeChanged event.
 void Game::CreateWindowSizeDependentResources()
 {
-    auto size = m_deviceResources->GetOutputSize();
-    float aspectRatio = float(size.right) / float(size.bottom);
-    float fovAngleY = 50.0f * XM_PI / 180.0f;
+	auto size = m_deviceResources->GetOutputSize();
 
-    // This is a simple example of change that can be made when the app is in
-    // portrait or snapped view.
-    //if (aspectRatio < 1.0f)
-    //{
-    //    fovAngleY *= 2.0f;
-    //}
+	m_width = size.right;
+	m_height = size.bottom;
+	m_aspectRatio = (float)m_width/m_height;
+	m_fov = 50.0f * XM_PI / 180.0f;
 
     // This sample makes use of a right-handed coordinate system using row-major matrices.
-	m_Camera.setPerspective(fovAngleY, aspectRatio, 0.01f, 100.0f);
+	m_Camera.setPerspective(m_fov, m_aspectRatio, 0.01f, 100.0f);
 }
 
 

@@ -78,6 +78,9 @@ private:
 
     // Device resources.
     std::unique_ptr<DX::DeviceResources>    m_deviceResources;
+    int                                     m_width, m_height;
+    float                                   m_aspectRatio;
+    float                                   m_fov;
 
     // Rendering loop timer.
     DX::StepTimer                           m_timer;

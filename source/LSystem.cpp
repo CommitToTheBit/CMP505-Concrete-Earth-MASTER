@@ -3,7 +3,8 @@
 
 LSystem::LSystem()
 {
-	m_time = 0;
+	m_time = 0.0f;
+	m_intensity = 0.0f;
 }
 
 
@@ -14,6 +15,7 @@ LSystem::~LSystem()
 
 bool LSystem::Initialize(ID3D11Device* device)
 {
+	//UpdateTree(0.0f, 0.0f);
 	InitializeBuffers(device);
 
 	return true;
@@ -256,14 +258,16 @@ void LSystem::Update(ID3D11Device* device, float deltaTime, float intensity)
 	Initialize(device);
 }
 
-void LSystem::UpdateTree(float deltaTime, float intensity)
+void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 {
 	std::srand(0);
 
 	SimplexNoise simplex = SimplexNoise();
 
 	m_time += deltaTime;
-	intensity = 1.0f-pow(2.0f,-2.0f)*(0.5f+0.5f*cos(m_time));
+
+	m_intensity += deltaIntensity;
+	m_intensity = std::max(0.0f, std::min(m_intensity, 1.0f));
 
 	float length = pow(2.0f, -10.0f); // NB: pow(2.0f,iterations)
 	float radius = pow(2.0f, -7.0f);
@@ -336,7 +340,7 @@ void LSystem::UpdateTree(float deltaTime, float intensity)
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*simplex.FBMNoise(0.1f*m_time, 0.1f*m_treeVertices[parentIndex].position.x, m_treeVertices[parentIndex].position.y, 8)*DirectX::XM_PI/180.0f)*localTransform;
 			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)*localTransform;
 
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
 
 			m_treeVertices.push_back(TreeVertexType());
 
@@ -360,7 +364,7 @@ void LSystem::UpdateTree(float deltaTime, float intensity)
 	float a, b;
 	int vertexIndex;
 
-	m_treeVertices[0].radius = intensity*radius; // NB: Set as an 'anchor'...
+	m_treeVertices[0].radius = m_intensity*radius; // NB: Set as an 'anchor'...
 	for (int d = 0; d <= depthReached; d++)
 	{
 		for (int i = 1; i < m_treeVertices.size(); i++)
@@ -368,7 +372,7 @@ void LSystem::UpdateTree(float deltaTime, float intensity)
 			if (m_treeVertices[i].depth == m_treeVertices[i].childDepth || m_treeVertices[i].depth != d)
 				continue;
 
-			a = intensity*radius*pow(radiusBase, -m_treeVertices[i].childDepth);
+			a = m_intensity*radius*pow(radiusBase, -m_treeVertices[i].childDepth);
 
 			branchLength = 0.0f;
 			vertexIndex = i;
@@ -378,7 +382,7 @@ void LSystem::UpdateTree(float deltaTime, float intensity)
 				vertexIndex = m_treeVertices[vertexIndex].parent;
 			}
 
-			b = (m_treeVertices[vertexIndex].childDepth > m_treeVertices[vertexIndex].depth) ? intensity*radius*(float)pow(radiusBase, -m_treeVertices[i].depth) : std::min(intensity*radius*(float)pow(radiusBase, -m_treeVertices[i].depth), m_treeVertices[vertexIndex].radius);
+			b = (m_treeVertices[vertexIndex].childDepth > m_treeVertices[vertexIndex].depth) ? m_intensity*radius*(float)pow(radiusBase, -m_treeVertices[i].depth) : std::min(m_intensity*radius*(float)pow(radiusBase, -m_treeVertices[i].depth), m_treeVertices[vertexIndex].radius);
 
 			branch = 0.0f;
 			vertexIndex = i;
