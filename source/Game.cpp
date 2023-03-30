@@ -254,7 +254,7 @@ void Game::Render()
 	m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
 	m_ScreenShader.SetTimeBuffer(context, m_time);
-	m_ScreenShader.SetAlphaBuffer(context, 0.5f);
+	m_ScreenShader.SetAlphaBuffer(context, 0.4f);
 	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
 	m_ScreenShader.SetStressBuffer(context, m_lSystem.GetIntensity());
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
@@ -424,7 +424,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 1);
+	m_HexBoard.Initialize(device, 4, 32);
 	m_add = 0;
 
 	// L-Systems
@@ -460,7 +460,7 @@ void Game::CreateDeviceDependentResources()
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
 
-	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"hex_vignette_ps_003.cso");
+	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"hex_vignette_ps_004.cso");
 	m_ScreenShader.InitMatrixBuffer(device);
 	m_ScreenShader.InitTimeBuffer(device);
 	m_ScreenShader.InitAlphaBuffer(device);
