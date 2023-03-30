@@ -10,6 +10,8 @@ struct InputCommands
 	bool back;
 	bool right;
 	bool left;
+	bool clockwise;
+	bool anticlockwise;
 	bool up;
 	bool down;
 

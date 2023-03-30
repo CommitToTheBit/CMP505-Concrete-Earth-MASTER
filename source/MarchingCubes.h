@@ -32,6 +32,9 @@ private:
 	void RenderBuffers(ID3D11DeviceContext*);
 	void ShutdownBuffers();
 
+	void CalculateIsosurfaceStatics(int* isosurfaceVertices, int* isosurfaceIndices, DirectX::SimpleMath::Vector3* isosurfacePositions, FieldVertexType* field, int cells, float isolevel); // Construction: 
+	void ConstructIsosurface(VertexType* vertices, unsigned long* indices, int* isosurfaceVertices, int* isosurfaceIndices, DirectX::SimpleMath::Vector3* isosurfacePositions, int cells);
+
 	DirectX::SimpleMath::Vector3 InterpolateIsosurface(FieldVertexType a, FieldVertexType b, float isolevel);
 
 	// Post-processing direction vectors

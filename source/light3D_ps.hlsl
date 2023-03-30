@@ -35,6 +35,7 @@ float4 main(InputType input) : SV_TARGET
     // STEP 2: Calculate lighting hitting pixel
     float3 lightDirection = normalize(input.position3D - lightPosition);
     float3 lightDistance = max(length(input.position3D - lightPosition), pow(sourceStrength, 0.5));
+    //float lightIntensity = saturate(dot(input.normal, -lightDirection)); // NB: Ignores source strength...?
     float lightIntensity = sourceStrength*saturate(dot(input.normal, -lightDirection))/(lightDistance*lightDistance);
     float4 lightColor = ambientColor + diffuseColor * lightIntensity;
     lightColor = saturate(lightColor);

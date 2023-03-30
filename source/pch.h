@@ -33,6 +33,7 @@
 
 #include <wrl/client.h>
 
+//#include <d2d1_1.h> // FIXME: Will need this to set up Direct2D... // NB: Need to create analogue of DeviceResources.h?
 #include <d3d11_1.h>
 #include <DirectXMath.h>
 #include <DirectXColors.h>

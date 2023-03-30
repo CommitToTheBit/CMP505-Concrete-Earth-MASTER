@@ -46,22 +46,17 @@ void Game::Initialize(HWND window, int width, int height)
     CreateWindowSizeDependentResources();
 
 	//setup light
-	m_Ambience = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+	m_Ambience = Vector4(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light.setPosition(0.0f, 1.0f, m_HexBoard.m_hexRadius-1);
+	m_Light.setPosition(0.0f, 2.5f, 2.0f*m_HexBoard.m_hexRadius-1);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
-	m_Light.setStrength(40.0);
-
-	//setup camera
-	//m_Camera.setPosition(Vector3(2.4f+0.75*cos(atan(-1.8/2.4)), 0.0f, 1.8f+0.75*sin(atan(-1.8/2.4))));
-	//m_Camera.setRotation(Vector3(-90.0f, -180+(180.0/3.14159265)*atan(2.4/1.8), 0.0f));	//orientation is -90 becuase zero will be looking up at the sky straight up.
+	m_Light.setStrength(100.0f);
 
 	// FIXME: Refactor this, for 'cleaner' board set-up?
 	float twist = XM_PI/12.0f;
 	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(twist));
 	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+180.0f*twist/XM_PI, 0.0f));
-
 	
 #ifdef DXTK_AUDIO
     // Create DirectXTK for Audio objects
@@ -120,63 +115,17 @@ void Game::Tick()
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
+	auto device = m_deviceResources->GetD3DDevice();
+
 	m_time = m_timer.GetTotalSeconds();
 
-	//note that currently.  Delta-time is not considered in the game object movement. 
-	Vector3 inputPosition = Vector3(0.0f, 0.0f, 0.0f);
-
-	// STEP 1: Read camera translation inputs (from keyboard) // FIXME: Refactor this, for 'cleaner' board set-up?
-	/*if (m_gameInputCommands.forward)
-		inputPosition.z += 1.0f;
-	if (m_gameInputCommands.back)
-		inputPosition.z -= 1.0f;
-	if (m_gameInputCommands.right)
-		inputPosition.x += 1.0f;
-	if (m_gameInputCommands.left)
-		inputPosition.x -= 1.0f;
-	if (m_gameInputCommands.up)
-		inputPosition.y += 1.0f;
-	if (m_gameInputCommands.down)
-		inputPosition.y -= 1.0f;
-
-	if (inputPosition.x != 0.0f || inputPosition.y != 0.0f || inputPosition.z != 0.0f)
-	{
-		inputPosition.Normalize();
-		inputPosition.x *= 0.8f;
-		inputPosition.y *= 0.8f;
-
-		// NB: forward/right directions are relative to the camera, but up remains relative to the space to avoid confusion...
-		Vector3 deltaPosition = inputPosition.z*m_Camera.getForward() + inputPosition.x*m_Camera.getRight() + inputPosition.y*Vector3::UnitY;
-		deltaPosition *= m_timer.GetElapsedSeconds()*m_Camera.getMoveSpeed();
-
-		Vector3 position = m_Camera.getPosition()+deltaPosition;
-		m_Camera.setPosition(position);
-	}
-
-	// STEP 2: Read camera rotation inputs (from mouse)
-	Vector2 inputRotation = m_gameInputCommands.rotation;
-	if (inputRotation.x != 0.0f || inputRotation.y != 0.0f)
-	{
-		Vector3 rotation = m_Camera.getRotation();
-		inputRotation.x *= sin(XM_PIDIV4+0.5*XM_PI*(-rotation.x/180.0f));
-
-		Vector3 deltaRotation = (-inputRotation.y)*Vector3::UnitX + (-inputRotation.x)*Vector3::UnitY;
-		deltaRotation *= m_timer.GetElapsedSeconds()*m_Camera.getRotationSpeed();
-
-		rotation += deltaRotation;
-		rotation.x = std::min(-0.001f, std::max(rotation.x, -179.999f)); // NB: Prevents gimbal lock
-		m_Camera.setRotation(rotation);
-	}*/
-
-	// STEP 3: Process inputs
+	// CAMERA INPUTS:
 	m_Camera.Update();
+
+	// LIGHTING INPUTS:
 	//m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 1.0f, 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
 	
-	// DEBUG:
-	auto device = m_deviceResources->GetD3DDevice();
-	//m_HexBoard.m_hexModels[0].GenerateIsosurface(device, 0.5f+0.25f*sin(m_time/(XM_2PI*5.0f)));
-	//m_HexBoard.m_hexModels[0].InitialiseHorizontalField();
-	//m_HexBoard.m_hexModels[0].DeriveHexPrism(device, 0.5f+0.25f*sin(XM_2PI*m_time/5.0f));
+	// HEXBOARD INPUTS:
 	if (m_HexBoard.m_interpolating)
 	{
 		m_HexBoard.Interpolate(2.0f*timer.GetElapsedSeconds());
@@ -191,14 +140,24 @@ void Game::Update(DX::StepTimer const& timer)
 			m_HexBoard.SetInterpolation(1, 1);
 		if (m_gameInputCommands.back)
 			m_HexBoard.SetInterpolation(-1, 0);
-		//if (m_gameInputCommands.back)
 		//	m_HexBoard.SetInterpolation(-1, 1);
-		//if (m_gameInputCommands.back)
 		//	m_HexBoard.SetInterpolation(-1, -1);
-
-		//m_HexBoard.AddThorn(device, m_add++);
+		//	m_HexBoard.AddThorns(device, m_add++, 3);
 	}
 
+	// VIGNETTE INPUTS:
+	if (m_gameInputCommands.clockwise || m_gameInputCommands.anticlockwise)
+	{
+		float deltaInterpolation = 0.0f;
+		if (m_gameInputCommands.clockwise)
+			deltaInterpolation += 1.0f;
+		if (m_gameInputCommands.anticlockwise)
+			deltaInterpolation -= 1.0f;
+			
+		m_lSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
+	}
+
+	// WORLD MATRICES:
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
 	m_world = Matrix::Identity;
@@ -253,41 +212,65 @@ void Game::Render()
 	auto renderTargetView = m_deviceResources->GetRenderTargetView();
 	auto depthTargetView = m_deviceResources->GetDepthStencilView();
 
-    // Draw Text to the screen
-    m_sprites->Begin();
-		m_font->DrawString(m_sprites.get(), L"", XMFLOAT2(10, 10), Colors::White);
-    m_sprites->End();
-
 	//Set Rendering states. 
 	//context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
 	//context->OMSetBlendState(m_states->Additive(), nullptr, 0xFFFFFFFF); // NB: Which blend is best? Is it most efficient to just set this here?
 	context->OMSetBlendState(m_states->NonPremultiplied(), nullptr, 0xFFFFFFFF);
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	context->RSSetState(m_states->CullClockwise());
-//	context->RSSetState(m_states->Wireframe());
+	//context->RSSetState(m_states->Wireframe());
 
 	// If m_time == 0.0, then render all static textures (once only!)
 	if (!m_preRendered)
 	{
-		RenderStaticTextures();
-
 		m_preRendered = true;
 	}
 
-	// STEP 1: Run render to textures...
-	// First render pass: Rendering any textures (including normal maps, etc...)
-	//RenderDynamicTextures();
-
-	// STEP 2: Render 'real' scene...
-	// Draw Skybox
-	RenderSkyboxOnto(&m_Camera);
-
+	// PHYSICAL RENDER
+	m_PhysicalRenderPass->setRenderTarget(context);
+	m_PhysicalRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
+	
+	// Render board...
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
 	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
+
+	// VEINS RENDER:
+	m_VeinsRenderPass->setRenderTarget(context);
+	m_VeinsRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
+
+	for (float theta = 0.0f; theta < XM_2PI; theta += XM_2PI/20.0f)
+	{
+		// CONSIDER: pow(1.0f+pow(1920.0f/1080.0f, 2.0f), 0.5f) AT... atan(ADJ/OPP) = atan(1080.0f/1920.0f)... x = acos(theta)... a = 1.0f/cos(atan(1080.0f/1920.0f)...
+
+		// x/(1920.0f/1080.0f) + y/1 = 1.0f/cos(atan(1080.0f/1920.0f)
+
+		m_NeutralShader.EnableShader(context);
+		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio, 0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f)*Matrix::CreateScale(pow(m_aspectRatio, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+		m_lSystem.Render(context);
+	}
+
+	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
+
+	m_ScreenShader.EnableShader(context);
+	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
+	m_ScreenShader.SetTimeBuffer(context, m_time);
+	m_ScreenShader.SetAlphaBuffer(context, 0.4f);
+	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
+	m_ScreenShader.SetStressBuffer(context, m_lSystem.GetIntensity());
+	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
+	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
+	m_Screen.Render(context);
+
+	// Draw Text to the screen
+	//m_sprites->Begin();
+	//m_font->DrawString(m_sprites.get(), m_lSystem.GetSentence().c_str(), XMFLOAT2(10, 10), Colors::White);
+	//m_sprites->End();
 
     // Show the new frame.
     m_deviceResources->Present();
 }
+
+
 
 // Rendering Models
 void Game::RenderSkyboxOnto(Camera* camera)
@@ -444,7 +427,28 @@ void Game::CreateDeviceDependentResources()
 	m_HexBoard.Initialize(device, 4, 32);
 	m_add = 0;
 
+	// L-Systems
+	//m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
+	//m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
+	//m_lSystem.InitializeSentence(std::vector<std::string>{"A"}, 8);
+
+	//m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
+	//m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
+	//m_lSystem.InitializeSentence(std::vector<std::string>{"B", "^", "[", "^", "+", "B", "A", "]", "B", "^", "[", "^", "-", "A", "]", "B", "A"}, 6);
+	
+	//m_lSystem.InitializeProductionRule("F", std::vector<std::string>{"F", "-", "G", "+", "F", "+", "G", "-", "F"});
+	//m_lSystem.InitializeProductionRule("G", std::vector<std::string>{"G", "G"});
+	//m_lSystem.InitializeSentence(std::vector<std::string>{"F", "-", "G", "-", "G"}, 6);
+
+	m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"^", "B", "A"});
+	m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
+	m_lSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
+	
+	m_lSystem.Initialize(device);
+
 	// Models
+	m_Screen.Initialize(device);
+
 	m_Cube.InitializeModel(device, "cube.obj");
 
 	// Shaders
@@ -453,30 +457,38 @@ void Game::CreateDeviceDependentResources()
 	m_FieldRendering.InitAlphaBuffer(device);
 	m_FieldRendering.InitLightBuffer(device);
 
+	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
+	m_NeutralShader.InitMatrixBuffer(device);
+
+	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"hex_vignette_ps_004.cso");
+	m_ScreenShader.InitMatrixBuffer(device);
+	m_ScreenShader.InitTimeBuffer(device);
+	m_ScreenShader.InitAlphaBuffer(device);
+	m_ScreenShader.InitAspectRatioBuffer(device);
+	m_ScreenShader.InitStressBuffer(device);
+
 	//load Textures
 	CreateDDSTextureFromFile(device, L"sample_nm.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());
 
-	//Initialise Render to texture
-
 	m_preRendered = false;
+
+	//Initialise Render to texture
+	m_PhysicalRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
+	m_VeinsRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
 void Game::CreateWindowSizeDependentResources()
 {
-    auto size = m_deviceResources->GetOutputSize();
-    float aspectRatio = float(size.right) / float(size.bottom);
-    float fovAngleY = 50.0f * XM_PI / 180.0f;
+	auto size = m_deviceResources->GetOutputSize();
 
-    // This is a simple example of change that can be made when the app is in
-    // portrait or snapped view.
-    //if (aspectRatio < 1.0f)
-    //{
-    //    fovAngleY *= 2.0f;
-    //}
+	m_width = size.right;
+	m_height = size.bottom;
+	m_aspectRatio = (float)m_width/m_height;
+	m_fov = 50.0f * XM_PI / 180.0f;
 
     // This sample makes use of a right-handed coordinate system using row-major matrices.
-	m_Camera.setPerspective(fovAngleY, aspectRatio, 0.01f, 100.0f);
+	m_Camera.setPerspective(m_fov, m_aspectRatio, 0.01f, 100.0f);
 }
 
 

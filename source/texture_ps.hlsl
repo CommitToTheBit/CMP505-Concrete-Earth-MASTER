@@ -4,10 +4,10 @@ SamplerState SampleType;
 struct InputType
 {
     float4 position : SV_POSITION;
-    float3 tex3D : TEXCOORD0;
+    float2 tex : TEXCOORD0;
 };
 
 float4 main(InputType input) : SV_TARGET
 {
-    return float4(input.tex3D.x, input.tex3D.y, input.tex3D.z, 1.0f);
+    return textures[0].Sample(SampleType, input.tex);
 }

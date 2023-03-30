@@ -20,11 +20,11 @@
     <Filter Include="Modelling">
       <UniqueIdentifier>{60b172f8-1be2-47b7-bad2-e00b1eaefc1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets\Shader Textures">
-      <UniqueIdentifier>{7ac1a878-5bec-414d-8036-e0357d223468}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Assets\Shaders">
       <UniqueIdentifier>{f529fe65-ede5-4321-b5c9-5a9385d2396f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Narrative">
+      <UniqueIdentifier>{aea32c18-7af7-410b-ab35-f575c3a51aaf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +74,12 @@
     <ClInclude Include="Shader.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="LSystem.h">
+      <Filter>Modelling</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -117,6 +123,12 @@
       <Filter>Modelling</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="LSystem.cpp">
+      <Filter>Modelling</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
@@ -167,10 +179,40 @@
     <FxCompile Include="light3D_vs.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="colour3D_ps.hlsl">
+    <FxCompile Include="neutral_ps.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="colour3D_vs.hlsl">
+    <FxCompile Include="neutral_vs.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="texture_ps.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="texture_vs.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="vignette_ps_001.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="vignette_vs.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="vignette_ps_002.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="vignette_ps_003.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="hex_vignette_ps_001.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="hex_vignette_ps_002.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="hex_vignette_ps_003.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="hex_vignette_ps_004.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

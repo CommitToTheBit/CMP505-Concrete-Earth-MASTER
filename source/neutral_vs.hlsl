@@ -17,7 +17,6 @@ struct InputType
 struct OutputType
 {
 	float4 position : SV_POSITION;
-	float3 tex3D : TEXCOORD0;
 };
 
 OutputType main(InputType input)
@@ -31,9 +30,6 @@ OutputType main(InputType input)
 	output.position = mul(input.position, worldMatrix);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
-
-	// Store the texture coordinates for the pixel shader.
-	output.tex3D = input.position;
 
 	return output;
 }

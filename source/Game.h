@@ -11,6 +11,9 @@
 #include "RenderTexture.h"
 
 #include "HexBoard.h"
+#include "LSystem.h"
+
+#include "Screen.h"
 
 #include "Camera.h"
 #include "EnvironmentCamera.h"
@@ -77,6 +80,9 @@ private:
 
     // Device resources.
     std::unique_ptr<DX::DeviceResources>    m_deviceResources;
+    int                                     m_width, m_height;
+    float                                   m_aspectRatio;
+    float                                   m_fov;
 
     // Rendering loop timer.
     DX::StepTimer                           m_timer;
@@ -99,28 +105,40 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11InputLayout>                               m_batchInputLayout;
 	std::unique_ptr<DirectX::GeometricPrimitive>                            m_testmodel;
 
-	//lights
+	// lights
 	Light																	m_Light;
     DirectX::SimpleMath::Vector4                                            m_Ambience;
 
-	//Cameras
+	// Cameras
 	Camera																	m_Camera;
     EnvironmentCamera                                                       m_environmentCamera;
 
-	//textures
+	// textures
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>                        m_normalMap;
 
-	//Shaders
+	// Shaders
     Shader                                                                  m_FieldRendering;
+
+    // Shader Textures
+    Shader                                                                  m_NeutralShader;
+
+    // Render-to-Textures
+    Screen                                                                  m_Screen;
+    Shader                                                                  m_ScreenShader;
+
+    RenderTexture*                                                          m_PhysicalRenderPass;
+    RenderTexture*                                                          m_VeinsRenderPass;
 
     // Models
     HexBoard                                                                m_HexBoard;
     int                                                                     m_add; // DEBUG...
 
+    // L-Systems
+    LSystem                                                                 m_lSystem;
+
     ModelClass																m_Cube;
 
-	// Generated Textures
-    // NB: Come back to these...
+
 
 
 #ifdef DXTK_AUDIO

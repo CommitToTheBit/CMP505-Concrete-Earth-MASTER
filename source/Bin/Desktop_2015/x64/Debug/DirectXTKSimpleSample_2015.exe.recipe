@@ -7,7 +7,16 @@
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\colour3D_vs.cso</FullPath>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_001.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_002.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_003.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_004.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light3D_ps.cso</FullPath>
@@ -16,7 +25,28 @@
       <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light3D_vs.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\colour3D_ps.cso</FullPath>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\neutral_ps.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\neutral_vs.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_ps_003.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\texture_ps.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\texture_vs.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_ps_001.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_ps_002.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_vs.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

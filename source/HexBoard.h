@@ -25,7 +25,7 @@ public:
 	void Interpolate(float t);
 
 	// DEBUG: Testing interactivity...
-	void AddThorn(ID3D11Device*, int hex);
+	void AddThorns(ID3D11Device*, int hex, int thorns);
 
 private:
 	void SetInterpolationPerimeter();

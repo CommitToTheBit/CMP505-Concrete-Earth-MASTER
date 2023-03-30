@@ -18,12 +18,14 @@ void Input::Initialise(HWND window)
 	//m_mouse->SetMode(DirectX::Mouse::MODE_RELATIVE); // NB: Mode is absolute, for third-person picking...
 	m_quitApp = false;
 
-	m_GameInput.forward		= false;
-	m_GameInput.back		= false;
-	m_GameInput.right		= false;
-	m_GameInput.left		= false;
-	m_GameInput.up          = false;
-	m_GameInput.down		= false;
+	m_GameInput.forward			= false;
+	m_GameInput.back			= false;
+	m_GameInput.right			= false;
+	m_GameInput.left			= false;
+	m_GameInput.clockwise		= false;
+	m_GameInput.anticlockwise	= false;
+	m_GameInput.up				= false;
+	m_GameInput.down			= false;
 
 	m_GameInput.generate	= false;
 
@@ -42,12 +44,14 @@ void Input::Update()
 		m_quitApp = true;
 	}
 
-	m_GameInput.forward		= kb.W;
-	m_GameInput.back		= kb.S;
-	m_GameInput.right		= kb.D;
-	m_GameInput.left		= kb.A;
-	m_GameInput.up			= kb.Space;
-	m_GameInput.down		= kb.LeftShift;
+	m_GameInput.forward			= kb.W;
+	m_GameInput.back			= kb.S;
+	m_GameInput.right			= kb.D;
+	m_GameInput.left			= kb.A;
+	m_GameInput.clockwise		= kb.E;
+	m_GameInput.anticlockwise	= kb.Q;
+	m_GameInput.up				= kb.Space;
+	m_GameInput.down			= kb.LeftShift;
 
 	m_GameInput.generate	= kb.Tab;
 
