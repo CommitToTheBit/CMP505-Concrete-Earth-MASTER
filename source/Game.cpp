@@ -13,6 +13,7 @@ extern void ExitGame();
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
+using namespace ImGui;
 
 using Microsoft::WRL::ComPtr;
 
@@ -54,6 +55,8 @@ void Game::Initialize(HWND window, int width, int height)
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(window);		//tie to our window
 	ImGui_ImplDX11_Init(m_deviceResources->GetD3DDevice(), m_deviceResources->GetD3DDeviceContext());	//tie to directx
+
+	m_defaultFont = io.Fonts->AddFontFromFileTTF("beneg___.ttf", 54); // NB: pt-to-px conversion: px = (4.0f/3.0f)*pt
 
 	//setup light
 	m_Ambience = Vector4(0.15f, 0.15f, 0.15f, 1.0f);
@@ -164,7 +167,11 @@ void Game::Update(DX::StepTimer const& timer)
 		if (m_gameInputCommands.anticlockwise)
 			deltaInterpolation -= 1.0f;
 			
-		m_lSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
+		m_LSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
+	}
+	else
+	{
+		m_LSystem.Update(device, 0.0f, 0.0f); // Update based on GUI...
 	}
 
 	// WORLD MATRICES:
@@ -259,7 +266,7 @@ void Game::Render()
 
 		m_NeutralShader.EnableShader(context);
 		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio, 0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f)*Matrix::CreateScale(pow(m_aspectRatio, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-		m_lSystem.Render(context);
+		m_LSystem.Render(context);
 	}
 
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
@@ -269,14 +276,14 @@ void Game::Render()
 	m_ScreenShader.SetTimeBuffer(context, m_time);
 	m_ScreenShader.SetAlphaBuffer(context, 0.6f);
 	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
-	m_ScreenShader.SetStressBuffer(context, *m_lSystem.GetIntensity());
+	m_ScreenShader.SetStressBuffer(context, *m_LSystem.GetIntensity());
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
 	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
 	m_Screen.Render(context);
 
 	// Draw Text to the screen
 	//m_sprites->Begin();
-	//m_font->DrawString(m_sprites.get(), m_lSystem.GetSentence().c_str(), XMFLOAT2(10, 10), Colors::White);
+	//m_font->DrawString(m_sprites.get(), m_LSystem.GetSentence().c_str(), XMFLOAT2(10, 10), Colors::White);
 	//m_sprites->End();
 
 	//render our GUI
@@ -446,23 +453,23 @@ void Game::CreateDeviceDependentResources()
 	m_add = 0;
 
 	// L-Systems
-	//m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
-	//m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	//m_lSystem.InitializeSentence(std::vector<std::string>{"A"}, 8);
+	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
+	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
+	//m_LSystem.InitializeSentence(std::vector<std::string>{"A"}, 8);
 
-	//m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
-	//m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	//m_lSystem.InitializeSentence(std::vector<std::string>{"B", "^", "[", "^", "+", "B", "A", "]", "B", "^", "[", "^", "-", "A", "]", "B", "A"}, 6);
+	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
+	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
+	//m_LSystem.InitializeSentence(std::vector<std::string>{"B", "^", "[", "^", "+", "B", "A", "]", "B", "^", "[", "^", "-", "A", "]", "B", "A"}, 6);
 	
-	//m_lSystem.InitializeProductionRule("F", std::vector<std::string>{"F", "-", "G", "+", "F", "+", "G", "-", "F"});
-	//m_lSystem.InitializeProductionRule("G", std::vector<std::string>{"G", "G"});
-	//m_lSystem.InitializeSentence(std::vector<std::string>{"F", "-", "G", "-", "G"}, 6);
+	//m_LSystem.InitializeProductionRule("F", std::vector<std::string>{"F", "-", "G", "+", "F", "+", "G", "-", "F"});
+	//m_LSystem.InitializeProductionRule("G", std::vector<std::string>{"G", "G"});
+	//m_LSystem.InitializeSentence(std::vector<std::string>{"F", "-", "G", "-", "G"}, 6);
 
-	m_lSystem.InitializeProductionRule("A", std::vector<std::string>{"^", "B", "A"});
-	m_lSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	m_lSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
+	m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"^", "B", "A"});
+	m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
+	m_LSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
 	
-	m_lSystem.Initialize(device);
+	m_LSystem.Initialize(device);
 
 	// Models
 	m_Screen.Initialize(device);
@@ -517,8 +524,10 @@ void Game::SetupGUI()
 	ImGui::NewFrame();
 
 	ImGui::Begin("Sin Wave Parameters");
-	ImGui::SliderFloat("Wave Amplitude", m_lSystem.GetIntensity(), 0.0f, 1.0f);
+	ImGui::SliderFloat("Wave Amplitude", m_LSystem.GetIntensity(), 0.0f, 1.0f);
 	ImGui::End();
+
+	ImGui::EndFrame();
 }
 
 void Game::OnDeviceLost()
