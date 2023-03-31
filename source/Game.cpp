@@ -45,6 +45,16 @@ void Game::Initialize(HWND window, int width, int height)
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
 
+	//setup imgui.  its up here cos we need the window handle too
+	//pulled from imgui directx11 example
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(window);		//tie to our window
+	ImGui_ImplDX11_Init(m_deviceResources->GetD3DDevice(), m_deviceResources->GetD3DDeviceContext());	//tie to directx
+
 	//setup light
 	m_Ambience = Vector4(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
@@ -162,6 +172,9 @@ void Game::Update(DX::StepTimer const& timer)
 	m_projection = m_Camera.getPerspective();
 	m_world = Matrix::Identity;
 
+	/*create our UI*/
+	SetupGUI();
+
 #ifdef DXTK_AUDIO
     m_audioTimerAcc -= (float)timer.GetElapsedSeconds();
     if (m_audioTimerAcc < 0)
@@ -254,9 +267,9 @@ void Game::Render()
 	m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
 	m_ScreenShader.SetTimeBuffer(context, m_time);
-	m_ScreenShader.SetAlphaBuffer(context, 0.4f);
+	m_ScreenShader.SetAlphaBuffer(context, 0.6f);
 	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
-	m_ScreenShader.SetStressBuffer(context, m_lSystem.GetIntensity());
+	m_ScreenShader.SetStressBuffer(context, *m_lSystem.GetIntensity());
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
 	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
 	m_Screen.Render(context);
@@ -265,6 +278,11 @@ void Game::Render()
 	//m_sprites->Begin();
 	//m_font->DrawString(m_sprites.get(), m_lSystem.GetSentence().c_str(), XMFLOAT2(10, 10), Colors::White);
 	//m_sprites->End();
+
+	//render our GUI
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
 
     // Show the new frame.
     m_deviceResources->Present();
@@ -460,7 +478,7 @@ void Game::CreateDeviceDependentResources()
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
 
-	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"hex_vignette_ps_004.cso");
+	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps_003.cso");
 	m_ScreenShader.InitMatrixBuffer(device);
 	m_ScreenShader.InitTimeBuffer(device);
 	m_ScreenShader.InitAlphaBuffer(device);
@@ -491,6 +509,17 @@ void Game::CreateWindowSizeDependentResources()
 	m_Camera.setPerspective(m_fov, m_aspectRatio, 0.01f, 100.0f);
 }
 
+void Game::SetupGUI()
+{
+
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::Begin("Sin Wave Parameters");
+	ImGui::SliderFloat("Wave Amplitude", m_lSystem.GetIntensity(), 0.0f, 1.0f);
+	ImGui::End();
+}
 
 void Game::OnDeviceLost()
 {

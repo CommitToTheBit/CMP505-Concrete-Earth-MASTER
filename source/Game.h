@@ -77,6 +77,7 @@ private:
     void Clear();
     void CreateDeviceDependentResources();
     void CreateWindowSizeDependentResources();
+    void SetupGUI();
 
     // Device resources.
     std::unique_ptr<DX::DeviceResources>    m_deviceResources;
