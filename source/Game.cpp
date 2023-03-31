@@ -169,10 +169,10 @@ void Game::Update(DX::StepTimer const& timer)
 			
 		m_LSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
 	}
-	else
+	/*else
 	{
-		m_LSystem.Update(device, 0.0f, 0.0f); // Update based on GUI...
-	}
+		//m_LSystem.Update(device, 0.0f, 0.0f); // Update based on GUI...
+	}*/
 
 	// WORLD MATRICES:
 	m_view = m_Camera.getCameraMatrix();
@@ -449,7 +449,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 32);
+	m_HexBoard.Initialize(device, 4, 1);
 	m_add = 0;
 
 	// L-Systems
