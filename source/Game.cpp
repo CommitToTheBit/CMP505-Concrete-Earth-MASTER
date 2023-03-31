@@ -259,8 +259,8 @@ void Game::Render()
 	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
 
 	// VEINS RENDER:
-	m_VeinsRenderPass->setRenderTarget(context);
-	m_VeinsRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
+	m_AlphaVeinsRenderPass->setRenderTarget(context);
+	m_AlphaVeinsRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
 
 	for (float theta = 0.0f; theta < XM_2PI; theta += XM_2PI/20.0f)
 	{
@@ -273,16 +273,44 @@ void Game::Render()
 		m_LSystem.Render(context);
 	}
 
+	// VIGNETTE RENDER:
+	m_AlphaVignetteRenderPass->setRenderTarget(context);
+	m_AlphaVignetteRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
+
+	m_VignetteShader.EnableShader(context);
+	m_VignetteShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
+	m_VignetteShader.SetTimeBuffer(context, m_time);
+	m_VignetteShader.SetAlphaBuffer(context, 1.0f);
+	m_VignetteShader.SetAspectRatioBuffer(context, m_aspectRatio);
+	m_VignetteShader.SetStressBuffer(context, *m_LSystem.GetIntensity());
+	m_VignetteShader.SetShaderTexture(context, m_AlphaVeinsRenderPass->getShaderResourceView(), -1, 0);
+	m_Screen.Render(context);
+
+	m_AlphaVignetteBrightPass->setRenderTarget(context);
+	m_AlphaVignetteBrightPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
+
+	m_BrightShader.EnableShader(context);
+	m_BrightShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
+	//m_BrightShader.SetStressBuffer(context, (0.5f/0.6f)*0.4f*(*m_LSystem.GetIntensity()));
+	m_BrightShader.SetShaderTexture(context, m_AlphaVignetteRenderPass->getShaderResourceView(), -1, 0);
+	m_Screen.Render(context);
+
+	m_AlphaVignetteBloomPass->setRenderTarget(context);
+	m_AlphaVignetteBloomPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
+
+	m_BloomShader.EnableShader(context);
+	m_BloomShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
+	m_BloomShader.SetShaderTexture(context, m_AlphaVignetteRenderPass->getShaderResourceView(), -1, 0);
+	m_BloomShader.SetShaderTexture(context, m_AlphaVignetteBrightPass->getShaderResourceView(), -1, 1);
+	m_Screen.Render(context);
+
+	// SCREEN RENDER:
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
 
 	m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
-	m_ScreenShader.SetTimeBuffer(context, m_time);
-	m_ScreenShader.SetAlphaBuffer(context, 0.6f);
-	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
-	m_ScreenShader.SetStressBuffer(context, *m_LSystem.GetIntensity());
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
-	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
+	m_ScreenShader.SetShaderTexture(context, m_AlphaVignetteBloomPass->getShaderResourceView(), -1, 1);
 	m_Screen.Render(context);
 
 	// Draw Text to the screen
@@ -488,12 +516,22 @@ void Game::CreateDeviceDependentResources()
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
 
-	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps_003.cso");
+	m_VignetteShader.InitShader(device, L"post_process_vs.cso", L"vignette_ps_004.cso");
+	m_VignetteShader.InitMatrixBuffer(device);
+	m_VignetteShader.InitTimeBuffer(device);
+	m_VignetteShader.InitAlphaBuffer(device);
+	m_VignetteShader.InitAspectRatioBuffer(device);
+	m_VignetteShader.InitStressBuffer(device);
+
+	m_BrightShader.InitShader(device, L"post_process_vs.cso", L"bright_ps.cso");
+	m_BrightShader.InitMatrixBuffer(device);
+	m_BrightShader.InitStressBuffer(device); // FIXME: Create separate bright buffer...
+
+	m_BloomShader.InitShader(device, L"post_process_vs.cso", L"bloom_ps.cso");
+	m_BloomShader.InitMatrixBuffer(device);
+
+	m_ScreenShader.InitShader(device, L"post_process_vs.cso", L"screen_ps_001.cso");
 	m_ScreenShader.InitMatrixBuffer(device);
-	m_ScreenShader.InitTimeBuffer(device);
-	m_ScreenShader.InitAlphaBuffer(device);
-	m_ScreenShader.InitAspectRatioBuffer(device);
-	m_ScreenShader.InitStressBuffer(device);
 
 	//load Textures
 	CreateDDSTextureFromFile(device, L"sample_nm.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());
@@ -502,7 +540,11 @@ void Game::CreateDeviceDependentResources()
 
 	//Initialise Render to texture
 	m_PhysicalRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
-	m_VeinsRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
+
+	m_AlphaVeinsRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
+	m_AlphaVignetteRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
+	m_AlphaVignetteBrightPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
+	m_AlphaVignetteBloomPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.

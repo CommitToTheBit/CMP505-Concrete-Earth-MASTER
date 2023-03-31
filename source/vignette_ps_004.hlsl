@@ -1,6 +1,6 @@
 #define PI 3.1415926538
 
-Texture2D textures[2];
+Texture2D textures[1];
 SamplerState SampleType;
 
 cbuffer TimeBuffer : register(b1)
@@ -39,7 +39,7 @@ float4 main(InputType input) : SV_TARGET
     float radialAlpha = clamp(radius-radialBound, 0.0, 1.0);
 
     // STEP 3: Read arterial component from map...
-    float arterialAlpha = textures[1].Sample(SampleType, input.tex);
+    float arterialAlpha = textures[0].Sample(SampleType, input.tex);
 
     // STEP 4: Use audio to add any bloom...
     float bpm = 120.0f; // 80.0f+140.0f*stress; a poor approximation, in that we have 'period clipping' when this isn't carefully passed in...
@@ -49,7 +49,7 @@ float4 main(InputType input) : SV_TARGET
     float radialBloom = 0.05f;
     radialAlpha += radialBloom*volume;
 
-    float arterialBloom = 0.6f;
+    float arterialBloom = 0.5f;
     arterialAlpha *= 1.0f+arterialBloom*volume;
 
     // STEP 5: 
@@ -57,5 +57,5 @@ float4 main(InputType input) : SV_TARGET
     float a = (1.0f-t)*radialAlpha+t*arterialAlpha;
     a *= alpha;
 
-    return max(1.0f-a, 0.0f)*textures[0].Sample(SampleType, input.tex)+a*float4(1.0f,0.0f,0.0f,1.0f);
+    return float4(a, a, a, 1.0f);
 }
