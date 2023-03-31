@@ -1,5 +1,0 @@
-﻿C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_004.hlsl(91,5-89): warning X3206: implicit truncation of vector type
-C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_004.hlsl(99,11-37): warning X3206: implicit truncation of vector type
-  
-  compilation object save succeeded; see C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_004.cso
-  DirectXTKSimpleSample_2015.vcxproj -> C:\Users\samdr\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe

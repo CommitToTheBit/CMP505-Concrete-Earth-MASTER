@@ -77,6 +77,7 @@ private:
     void Clear();
     void CreateDeviceDependentResources();
     void CreateWindowSizeDependentResources();
+    void SetupGUI();
 
     // Device resources.
     std::unique_ptr<DX::DeviceResources>    m_deviceResources;
@@ -134,12 +135,12 @@ private:
     int                                                                     m_add; // DEBUG...
 
     // L-Systems
-    LSystem                                                                 m_lSystem;
+    LSystem                                                                 m_LSystem;
 
     ModelClass																m_Cube;
 
-
-
+    // GUI
+    ImFont*                                                                 m_defaultFont;
 
 #ifdef DXTK_AUDIO
     std::unique_ptr<DirectX::AudioEngine>                                   m_audEngine;

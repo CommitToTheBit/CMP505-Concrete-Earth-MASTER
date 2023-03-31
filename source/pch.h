@@ -64,6 +64,10 @@
 #include "VertexTypes.h"
 #include "ReadData.h"
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+
 namespace DX
 {
     // Helper class for COM exceptions
