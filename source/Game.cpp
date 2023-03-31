@@ -84,7 +84,7 @@ void Game::Initialize(HWND window, int width, int height)
     m_audioTimerAcc = 10.f;
     m_retryDefault = false;
 
-    //m_waveBank = std::make_unique<WaveBank>(m_audEngine.get(), L"adpcmdroid.xwb");
+    m_waveBank = std::make_unique<WaveBank>(m_audEngine.get(), L"adpcmdroid.xwb");
 
     m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"616516__justlaz__geiger_tick_low.wav");
     m_effect1 = m_soundEffect->CreateInstance();
@@ -205,6 +205,10 @@ void Game::Update(DX::StepTimer const& timer)
                 m_audioEvent = 0;
         }
     }
+
+	//m_effect1->
+	//m_audEngine->
+	//m_effect1->
 #endif
 
   
