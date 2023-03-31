@@ -273,6 +273,7 @@ void Game::Render()
 		m_LSystem.Render(context);
 	}
 
+	// COMPOSITE RENDER:
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
 
 	m_ScreenShader.EnableShader(context);
