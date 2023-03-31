@@ -518,12 +518,17 @@ void Game::CreateWindowSizeDependentResources()
 
 void Game::SetupGUI()
 {
-
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	ImGui::Begin("Sin Wave Parameters");
+	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoBackground;
+	window_flags |= ImGuiWindowFlags_NoResize;
+	window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
+	window_flags |= ImGuiWindowFlags_NoCollapse;
+
+	ImGui::Begin("Sin Wave Parameters", (bool*)true, window_flags);
 	ImGui::SliderFloat("Wave Amplitude", m_LSystem.GetIntensity(), 0.0f, 1.0f);
 	ImGui::End();
 
