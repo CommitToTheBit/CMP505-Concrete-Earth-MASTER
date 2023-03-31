@@ -84,14 +84,14 @@ void Game::Initialize(HWND window, int width, int height)
     m_audioTimerAcc = 10.f;
     m_retryDefault = false;
 
-    m_waveBank = std::make_unique<WaveBank>(m_audEngine.get(), L"adpcmdroid.xwb");
+    //m_waveBank = std::make_unique<WaveBank>(m_audEngine.get(), L"adpcmdroid.xwb");
 
-    m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"MusicMono_adpcm.wav");
+    m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"616516__justlaz__geiger_tick_low.wav");
     m_effect1 = m_soundEffect->CreateInstance();
-    m_effect2 = m_waveBank->CreateInstance(10);
+    //m_effect2 = m_waveBank->CreateInstance(10);
 
     m_effect1->Play(true);
-    m_effect2->Play();
+    //m_effect2->Play();
 #endif
 }
 
@@ -290,7 +290,6 @@ void Game::Render()
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-
     // Show the new frame.
     m_deviceResources->Present();
 }
@@ -449,7 +448,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 1);
+	m_HexBoard.Initialize(device, 4, 32);
 	m_add = 0;
 
 	// L-Systems
