@@ -259,8 +259,8 @@ void Game::Render()
 	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
 
 	// VEINS RENDER:
-	m_AVeinsRenderPass->setRenderTarget(context);
-	m_AVeinsRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
+	m_VeinsRenderPass->setRenderTarget(context);
+	m_VeinsRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
 
 	for (float theta = 0.0f; theta < XM_2PI; theta += XM_2PI/20.0f)
 	{
@@ -273,34 +273,16 @@ void Game::Render()
 		m_LSystem.Render(context);
 	}
 
-	// VIGNETTE RENDER:
-	m_AVignetteRenderPass->setRenderTarget(context);
-	m_AVignetteRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
-
-	m_VignetteShader.EnableShader(context);
-	m_VignetteShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
-	m_VignetteShader.SetTimeBuffer(context, m_time);
-	m_VignetteShader.SetAlphaBuffer(context, 0.6f);
-	m_VignetteShader.SetAspectRatioBuffer(context, m_aspectRatio);
-	m_VignetteShader.SetStressBuffer(context, *m_LSystem.GetIntensity());
-	m_VignetteShader.SetShaderTexture(context, m_AVeinsRenderPass->getShaderResourceView(), -1, 0);
-	m_Screen.Render(context);
-
-	m_AVignetteBlurPass->setRenderTarget(context);
-	m_AVignetteBlurPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
-
-	m_BlurShader.EnableShader(context);
-	m_BlurShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
-	m_BlurShader.SetShaderTexture(context, m_AVignetteRenderPass->getShaderResourceView(), -1, 0);
-	m_Screen.Render(context);
-
-	// SCREEN RENDER:
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
 
 	m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
+	m_ScreenShader.SetTimeBuffer(context, m_time);
+	m_ScreenShader.SetAlphaBuffer(context, 0.6f);
+	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
+	m_ScreenShader.SetStressBuffer(context, *m_LSystem.GetIntensity());
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
-	m_ScreenShader.SetShaderTexture(context, m_AVignetteBlurPass->getShaderResourceView(), -1, 1);
+	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
 	m_Screen.Render(context);
 
 	// Draw Text to the screen
@@ -506,18 +488,12 @@ void Game::CreateDeviceDependentResources()
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
 
-	m_VignetteShader.InitShader(device, L"post_process_vs.cso", L"vignette_ps_004.cso");
-	m_VignetteShader.InitMatrixBuffer(device);
-	m_VignetteShader.InitTimeBuffer(device);
-	m_VignetteShader.InitAlphaBuffer(device);
-	m_VignetteShader.InitAspectRatioBuffer(device);
-	m_VignetteShader.InitStressBuffer(device);
-
-	m_BlurShader.InitShader(device, L"post_process_vs.cso", L"blur_ps.cso");
-	m_BlurShader.InitMatrixBuffer(device);
-
-	m_ScreenShader.InitShader(device, L"post_process_vs.cso", L"screen_ps_001.cso");
+	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps_003.cso");
 	m_ScreenShader.InitMatrixBuffer(device);
+	m_ScreenShader.InitTimeBuffer(device);
+	m_ScreenShader.InitAlphaBuffer(device);
+	m_ScreenShader.InitAspectRatioBuffer(device);
+	m_ScreenShader.InitStressBuffer(device);
 
 	//load Textures
 	CreateDDSTextureFromFile(device, L"sample_nm.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());
@@ -526,10 +502,7 @@ void Game::CreateDeviceDependentResources()
 
 	//Initialise Render to texture
 	m_PhysicalRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
-
-	m_AVeinsRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
-	m_AVignetteRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
-	m_AVignetteBlurPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
+	m_VeinsRenderPass = new RenderTexture(device, 1920, 1080, 1, 2); // FIXME: How do I make this 2048x2048?
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.

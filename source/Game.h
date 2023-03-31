@@ -125,15 +125,10 @@ private:
 
     // Render-to-Textures
     Screen                                                                  m_Screen;
-    Shader                                                                  m_VignetteShader;
-    Shader                                                                  m_BlurShader;
     Shader                                                                  m_ScreenShader;
 
     RenderTexture*                                                          m_PhysicalRenderPass;
-
-    RenderTexture*                                                          m_AVeinsRenderPass;
-    RenderTexture*                                                          m_AVignetteRenderPass;
-    RenderTexture*                                                          m_AVignetteBlurPass;
+    RenderTexture*                                                          m_VeinsRenderPass;
 
     // Models
     HexBoard                                                                m_HexBoard;

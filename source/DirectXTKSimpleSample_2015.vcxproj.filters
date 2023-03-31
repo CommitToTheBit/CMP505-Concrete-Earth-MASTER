@@ -237,7 +237,7 @@
     <FxCompile Include="vignette_ps_001.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="post_process_vs.hlsl">
+    <FxCompile Include="vignette_vs.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="vignette_ps_002.hlsl">
@@ -256,15 +256,6 @@
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="hex_vignette_ps_004.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="vignette_ps_004.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="screen_ps_001.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="blur_ps.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
