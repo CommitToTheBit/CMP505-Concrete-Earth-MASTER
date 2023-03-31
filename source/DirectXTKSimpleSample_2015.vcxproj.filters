@@ -264,10 +264,7 @@
     <FxCompile Include="screen_ps_001.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="bloom_ps.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="bright_ps.hlsl">
+    <FxCompile Include="blur_ps.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
