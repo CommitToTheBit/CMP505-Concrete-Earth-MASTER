@@ -58,5 +58,6 @@ float4 main(InputType input) : SV_TARGET
     float a = (1.0f-t)*radialAlpha+t*arterialAlpha;
     a *= alpha;
 
+    //return float4(1.0f-0.4f*a, 1.0f-0.5f*a, 1.0f-0.5f*a, 1.0f); // NB: Monochrome, for presentation purposes!
     return max(1.0f-a, 0.0f)*textures[0].Sample(SampleType, input.tex)+a*float4(1.0f,0.0f,0.0f,1.0f);
 }

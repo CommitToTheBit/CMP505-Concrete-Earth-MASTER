@@ -532,9 +532,9 @@ void Game::SetupGUI()
 	window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 
-	ImGui::Begin("Sin Wave Parameters", (bool*)true, window_flags);
-	ImGui::SliderFloat("Wave Amplitude", m_LSystem.GetIntensity(), 0.0f, 1.0f);
-	ImGui::End();
+	//ImGui::Begin("Sin Wave Parameters", (bool*)true, window_flags);
+	//ImGui::SliderFloat("Wave Amplitude", m_LSystem.GetIntensity(), 0.0f, 1.0f);
+	//ImGui::End();
 
 	ImGui::EndFrame();
 }
