@@ -7,7 +7,7 @@
 
 #include <WinSDKVer.h>
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0600
+#define _WIN32_WINNT 0x0602 // NB: Updated from 0x0600, just to get headers in "Audio.h" working properly...
 #endif
 #include <SDKDDKVer.h>
 
@@ -18,6 +18,9 @@
 #define NODRAWTEXT
 #define NOGDI
 #define NOBITMAP
+
+// Include audio...
+#define DXTK_AUDIO
 
 // Include <mcx.h> if you need this
 #define NOMCX

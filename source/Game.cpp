@@ -86,12 +86,10 @@ void Game::Initialize(HWND window, int width, int height)
 
     m_waveBank = std::make_unique<WaveBank>(m_audEngine.get(), L"adpcmdroid.xwb");
 
-    m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"MusicMono_adpcm.wav");
+    m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"616516__justlaz__geiger_tick_low.wav");
     m_effect1 = m_soundEffect->CreateInstance();
-    m_effect2 = m_waveBank->CreateInstance(10);
 
     m_effect1->Play(true);
-    m_effect2->Play();
 #endif
 }
 
@@ -169,10 +167,10 @@ void Game::Update(DX::StepTimer const& timer)
 			
 		m_LSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
 	}
-	else
+	/*else
 	{
-		m_LSystem.Update(device, 0.0f, 0.0f); // Update based on GUI...
-	}
+		//m_LSystem.Update(device, 0.0f, 0.0f); // Update based on GUI...
+	}*/
 
 	// WORLD MATRICES:
 	m_view = m_Camera.getCameraMatrix();
@@ -205,6 +203,7 @@ void Game::Update(DX::StepTimer const& timer)
                 m_audioEvent = 0;
         }
     }
+
 #endif
 
   
@@ -269,6 +268,7 @@ void Game::Render()
 		m_LSystem.Render(context);
 	}
 
+	// COMPOSITE RENDER:
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
 
 	m_ScreenShader.EnableShader(context);
@@ -289,7 +289,6 @@ void Game::Render()
 	//render our GUI
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
 
     // Show the new frame.
     m_deviceResources->Present();
@@ -528,9 +527,9 @@ void Game::SetupGUI()
 	window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 
-	ImGui::Begin("Sin Wave Parameters", (bool*)true, window_flags);
-	ImGui::SliderFloat("Wave Amplitude", m_LSystem.GetIntensity(), 0.0f, 1.0f);
-	ImGui::End();
+	//ImGui::Begin("Sin Wave Parameters", (bool*)true, window_flags);
+	//ImGui::SliderFloat("Wave Amplitude", m_LSystem.GetIntensity(), 0.0f, 1.0f);
+	//ImGui::End();
 
 	ImGui::EndFrame();
 }
