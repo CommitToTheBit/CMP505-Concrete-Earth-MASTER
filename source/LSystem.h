@@ -36,17 +36,19 @@ public:
 	~LSystem();
 
 	bool Initialize(ID3D11Device*);
-	void InitializeProductionRule(std::string A, std::vector<std::string> alpha);
-	void InitializeSentence(std::vector<std::string> S, int iterations);
-
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 
+	void InitializeProductionRule(std::string A, std::vector<std::string> alpha);
+	void InitializeSentence(std::vector<std::string> S, int iterations);
+
+	void InitializeRotationRule(std::string A, float theta, float randomness = 0.0f);
+	void InitializeDrawing();
+
 	void Update(ID3D11Device*, float deltaTime, float deltaIntensity);
 
-	float* GetIntensity();
-
 	// DEBUG:
+	float* GetIntensity();
 	std::string GetSentence();
 
 private:
@@ -63,6 +65,14 @@ private:
 	std::map<std::string, std::vector<std::vector<std::string>>> m_productionRules;
 	std::map<std::string, std::vector<std::vector<std::string>>> m_productionWeights;
 	std::vector<std::string> m_sentence;
+
+	std::map<std::string, float> m_rotationRules;
+	std::map<std::string, float> m_rotationRandomness;
+	float m_length;
+
+	SimplexNoise m_simplex;
+	float m_seed;
+	std::vector<DirectX::SimpleMath::Vector2> m_positionSeed;
 
 	float m_time, m_intensity;
 	std::vector<TreeVertexType> m_treeVertices;

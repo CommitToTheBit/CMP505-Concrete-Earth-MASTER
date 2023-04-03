@@ -269,8 +269,8 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	m_intensity += deltaIntensity;
 	m_intensity = std::max(0.0f, std::min(m_intensity, 1.0f));
 
-	float length = pow(2.0f, -10.0f); // NB: pow(2.0f,iterations)
-	float radius = pow(2.0f, -7.0f);
+	float length = 1.5*pow(2.0f, -5.0f); // NB: pow(2.0f,iterations)
+	float radius = pow(2.0f, -5.0f);
 	int maxDepth = INT_MAX;
 
 	float radiusBase = 1.5f;
@@ -312,25 +312,18 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 			parentIndices.pop_back();
 			vertexDepths.pop_back();
 		}
-		else if (alpha == "+")
-		{
-			//vertexDepth++;
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((15.0f)*DirectX::XM_PI/180.0f)*localTransform;
-
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((120.0f)*DirectX::XM_PI/180.0f)*localTransform;
-		}
-		else if (alpha == "-")
-		{
-			//vertexDepth++;
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((-15.0f)*DirectX::XM_PI/180.0f)*localTransform;
-
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((-120.0f)*DirectX::XM_PI/180.0f)*localTransform;
-		}
 		else if (alpha == "^")
 		{
 			vertexDepth++;
 
 			depthReached = std::max(vertexDepth, depthReached);
+		}
+		else if (m_rotationRules.count(alpha))
+		{
+			//vertexDepth++;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotationRules[alpha]+(-1.0f+2.0f*std::rand()/RAND_MAX)*m_rotationRandomness[alpha])*localTransform;
+
+			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((120.0f)*DirectX::XM_PI/180.0f)*localTransform;
 		}
 		else
 		{
@@ -338,7 +331,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.25f*cos(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(pow(2.0f,vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*simplex.FBMNoise(0.1f*m_time, 0.1f*m_treeVertices[parentIndex].position.x, m_treeVertices[parentIndex].position.y, 8)*DirectX::XM_PI/180.0f)*localTransform;
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(4.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)*localTransform;
 
 			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
 
@@ -433,6 +426,15 @@ std::vector<std::string> LSystem::GetProductionRule(std::string A)
 
 	// FIXME: Add stochastic components here... 
 	return m_productionRules[A][0];
+}
+
+void LSystem::InitializeRotationRule(std::string A, float theta, float randomness)
+{
+	if (!m_rotationRules.count(A))
+	{
+		m_rotationRules.insert({ A, theta });
+		m_rotationRandomness.insert({ A, randomness });
+	}
 }
 
 std::string LSystem::GetSentence()

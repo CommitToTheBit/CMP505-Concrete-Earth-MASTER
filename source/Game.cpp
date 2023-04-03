@@ -271,15 +271,20 @@ void Game::Render()
 	// COMPOSITE RENDER:
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
 
-	m_ScreenShader.EnableShader(context);
+	/*m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
 	m_ScreenShader.SetTimeBuffer(context, m_time);
 	m_ScreenShader.SetAlphaBuffer(context, 0.6f);
 	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
 	m_ScreenShader.SetStressBuffer(context, *m_LSystem.GetIntensity());
-	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
+	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 0);
 	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
-	m_Screen.Render(context);
+	m_Screen.Render(context);*/
+
+	// DEBUG: Display a single, normalised L-system...
+	m_NeutralShader.EnableShader(context);
+	m_NeutralShader.SetMatrixBuffer(context, &Matrix::CreateTranslation(0.0f,-1.0f,0.0f), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_LSystem.Render(context);
 
 	// Draw Text to the screen
 	//m_sprites->Begin();
@@ -448,13 +453,13 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 32);
+	m_HexBoard.Initialize(device, 4, 1);
 	m_add = 0;
 
 	// L-Systems
-	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
-	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	//m_LSystem.InitializeSentence(std::vector<std::string>{"A"}, 8);
+	m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
+	m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
+	m_LSystem.InitializeSentence(std::vector<std::string>{"A"}, 5);
 
 	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
 	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
@@ -464,9 +469,12 @@ void Game::CreateDeviceDependentResources()
 	//m_LSystem.InitializeProductionRule("G", std::vector<std::string>{"G", "G"});
 	//m_LSystem.InitializeSentence(std::vector<std::string>{"F", "-", "G", "-", "G"}, 6);
 
-	m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"^", "B", "A"});
-	m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	m_LSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
+	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"^", "B", "A"});
+	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
+	//m_LSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
+
+	m_LSystem.InitializeRotationRule("+", 45.0f*XM_PI/180.0f, 15.0f*XM_PI/180.0f);
+	m_LSystem.InitializeRotationRule("-", -45.0f*XM_PI/180.0f, 15.0f*XM_PI/180.0f);
 	
 	m_LSystem.Initialize(device);
 
