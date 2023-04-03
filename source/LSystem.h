@@ -31,6 +31,14 @@ protected:
 		float radius;
 	};
 
+	// Scale vertex information, used for normalising turtle drawings...
+	struct ScaleVertexType
+	{
+		int parent;
+		DirectX::SimpleMath::Matrix transform;
+		DirectX::SimpleMath::Vector3 position;
+	};
+
 public:
 	LSystem();
 	~LSystem();
@@ -43,7 +51,7 @@ public:
 	void InitializeSentence(std::vector<std::string> S, int iterations);
 
 	void InitializeRotationRule(std::string A, float theta, float randomness = 0.0f);
-	void InitializeDrawing();
+	void InitializeScale();
 
 	void Update(ID3D11Device*, float deltaTime, float deltaIntensity);
 
@@ -62,17 +70,18 @@ private:
 	std::vector<std::string> GetProductionRule(std::string A);
 
 private:
+	SimplexNoise m_simplex;
+	float m_seed;
+
 	std::map<std::string, std::vector<std::vector<std::string>>> m_productionRules;
 	std::map<std::string, std::vector<std::vector<std::string>>> m_productionWeights;
 	std::vector<std::string> m_sentence;
 
 	std::map<std::string, float> m_rotationRules;
 	std::map<std::string, float> m_rotationRandomness;
-	float m_length;
 
-	SimplexNoise m_simplex;
-	float m_seed;
-	std::vector<DirectX::SimpleMath::Vector2> m_positionSeed;
+	float m_length;
+	std::vector<ScaleVertexType> m_scaledVertices;
 
 	float m_time, m_intensity;
 	std::vector<TreeVertexType> m_treeVertices;

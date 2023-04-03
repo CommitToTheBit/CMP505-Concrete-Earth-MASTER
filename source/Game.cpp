@@ -283,7 +283,7 @@ void Game::Render()
 
 	// DEBUG: Display a single, normalised L-system...
 	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &Matrix::CreateTranslation(0.0f,-1.0f,0.0f), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateScale(1.5f)*Matrix::CreateTranslation(0.0f,-1.0f,0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 	m_LSystem.Render(context);
 
 	// Draw Text to the screen
@@ -473,8 +473,9 @@ void Game::CreateDeviceDependentResources()
 	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
 	//m_LSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
 
-	m_LSystem.InitializeRotationRule("+", 45.0f*XM_PI/180.0f, 15.0f*XM_PI/180.0f);
-	m_LSystem.InitializeRotationRule("-", -45.0f*XM_PI/180.0f, 15.0f*XM_PI/180.0f);
+	m_LSystem.InitializeRotationRule("+", 45.0f*XM_PI/180.0f, 0.0f*15.0f*XM_PI/180.0f);
+	m_LSystem.InitializeRotationRule("-", -45.0f*XM_PI/180.0f, 0.0f*15.0f*XM_PI/180.0f);
+	m_LSystem.InitializeScale();
 	
 	m_LSystem.Initialize(device);
 
