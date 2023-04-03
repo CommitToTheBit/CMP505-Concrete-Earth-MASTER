@@ -88,10 +88,8 @@ void Game::Initialize(HWND window, int width, int height)
 
     m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"616516__justlaz__geiger_tick_low.wav");
     m_effect1 = m_soundEffect->CreateInstance();
-    //m_effect2 = m_waveBank->CreateInstance(10);
 
     m_effect1->Play(true);
-    //m_effect2->Play();
 #endif
 }
 
@@ -206,9 +204,6 @@ void Game::Update(DX::StepTimer const& timer)
         }
     }
 
-	//m_effect1->
-	//m_audEngine->
-	//m_effect1->
 #endif
 
   
