@@ -282,12 +282,6 @@ void Game::Render()
 	m_Screen.Render(context);*/
 
 	// DEBUG: Display a single, normalised L-system...
-	m_LightShader.EnableShader(context);
-	m_LightShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(0.0f, 0.0f, 0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_LightShader.SetAlphaBuffer(context, 1.0f);
-	m_LightShader.SetLightBuffer(context, &m_Light);
-	m_Cube.Render(context);
-
 	m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 	m_LSystem.Render(context);
@@ -465,7 +459,7 @@ void Game::CreateDeviceDependentResources()
 	// L-Systems
 	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
 	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	//m_LSystem.InitializeSentence(std::vector<std::string>{"A"}, 5);
+	//m_LSystem.InitializeSentence(std::vector<std::string>{"A"}, 7);
 
 	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
 	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
@@ -475,17 +469,17 @@ void Game::CreateDeviceDependentResources()
 	//m_LSystem.InitializeProductionRule("G", std::vector<std::string>{"G", "G"});
 	//m_LSystem.InitializeSentence(std::vector<std::string>{"F", "-", "G", "-", "G"}, 6);
 
-	m_LSystem.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
-	m_LSystem.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
-	m_LSystem.InitializeSentence(std::vector<std::string>{"F", "G"}, 11);
+	//m_LSystem.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
+	//m_LSystem.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
+	//m_LSystem.InitializeSentence(std::vector<std::string>{"F", "G"}, 7);
 
-	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"^", "B", "A"});
-	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	//m_LSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
+	m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"^", "B", "A"});
+	m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
+	m_LSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
 
-	m_LSystem.InitializeRotationRule("+", 90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_LSystem.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_LSystem.InitializeScale(0.005f);
+	m_LSystem.InitializeRotationRule("+", 15.0f*XM_PI/180.0f, 5.0f*XM_PI/180.0f);
+	m_LSystem.InitializeRotationRule("-", -15.0f*XM_PI/180.0f, 5.0f*XM_PI/180.0f);
+	m_LSystem.InitializeScale(0.5f, 0.02f, 0.0f);
 	
 	m_LSystem.Initialize(device);
 

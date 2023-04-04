@@ -260,9 +260,7 @@ void LSystem::Update(ID3D11Device* device, float deltaTime, float intensity)
 
 void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 {
-	std::srand(0);
-
-	SimplexNoise simplex = SimplexNoise();
+	std::srand(m_seed);
 
 	m_time += deltaTime;
 
@@ -271,7 +269,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 
 	float length = m_length;// 1.5*pow(2.0f, -5.0f); // NB: pow(2.0f,iterations)
 	float radius = m_width;
-	int maxDepth = 0;// INT_MAX;
+	int maxDepth = INT_MAX;
 
 	float radiusBase = 1.5f;
 
@@ -284,8 +282,10 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	m_treeVertices[0].depth = 0;
 	m_treeVertices[0].degree = 0;
 	m_treeVertices[0].childDepth = maxDepth;
-	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2)*DirectX::SimpleMath::Matrix::CreateTranslation(m_scaledVertices[0].position); // NB: Assumes we've initialised m_scaledVertices!
+	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation)*DirectX::SimpleMath::Matrix::CreateTranslation(m_scaledVertices[0].position); // NB: Assumes we've initialised m_scaledVertices!
 	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
+
+	int childIndex = 0;
 
 	int parentIndex = 0;
 	std::vector<int> parentIndices = std::vector<int>();
@@ -330,7 +330,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.25f*cos(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(pow(2.0f,vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*simplex.FBMNoise(0.1f*m_time, 0.1f*m_treeVertices[parentIndex].position.x, m_treeVertices[parentIndex].position.y, 8)*DirectX::XM_PI/180.0f)*localTransform;
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(2.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)* localTransform;
 
 			//localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
 			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*length, 0.0f, 0.0f)*localTransform;
@@ -347,6 +347,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 			m_treeVertices[parentIndex].degree++;
 			m_treeVertices[parentIndex].childDepth = std::min(vertexDepth,m_treeVertices[parentIndex].childDepth);
 
+			childIndex = m_scaledVertices.size();
 			parentIndex = m_treeVertices.size()-1;
 			localTransform = DirectX::SimpleMath::Matrix::Identity;
 		}
@@ -362,8 +363,8 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	{
 		for (int i = 1; i < m_treeVertices.size(); i++)
 		{
-			m_treeVertices[i].radius = m_intensity*radius; // DEBUG: Keeps a consistent width...
-			continue; // DEBUG: Keeps a consistent width...
+			//m_treeVertices[i].radius = m_intensity*radius; // DEBUG: Keeps a consistent width...
+			//continue; // DEBUG: Keeps a consistent width...
 
 			if (m_treeVertices[i].depth == m_treeVertices[i].childDepth || m_treeVertices[i].depth != d)
 				continue;
@@ -440,13 +441,18 @@ void LSystem::InitializeRotationRule(std::string A, float theta, float randomnes
 	}
 }
 
-void LSystem::InitializeScale(float relativeWidth) // NB: Add alignment options?
+void LSystem::InitializeScale(float seed, float width, float rotation) // NB: Add alignment options?
 {
+	m_seed = seed;
+	m_length = 1.0f;
+	m_width = width;
+	m_rotation = rotation;
+
 	m_scaledVertices = std::vector<ScaleVertexType>();
 
 	m_scaledVertices.push_back(ScaleVertexType());
 	m_scaledVertices[0].parent = 0;
-	m_scaledVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2); // FIXME: This value can be exposed!
+	m_scaledVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation); // FIXME: This value can be exposed!
 	m_scaledVertices[0].position = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
 
 	int childIndex = 0;
@@ -454,6 +460,7 @@ void LSystem::InitializeScale(float relativeWidth) // NB: Add alignment options?
 	int parentIndex = 0;
 	std::vector<int> parentIndices = std::vector<int>();
 
+	SimplexNoise simplex = SimplexNoise();
 	DirectX::SimpleMath::Matrix localTransform = DirectX::SimpleMath::Matrix::Identity;
 
 	// STEP 1: Create branching structure...
@@ -479,14 +486,14 @@ void LSystem::InitializeScale(float relativeWidth) // NB: Add alignment options?
 		}
 		else
 		{
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(1.0f, 0.0f, 0.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_length, 0.0f, 0.0f)*localTransform;
 
-			childIndex = m_scaledVertices.size();
 			m_scaledVertices.push_back(ScaleVertexType());
 			m_scaledVertices[childIndex].parent = parentIndex;
 			m_scaledVertices[childIndex].transform = localTransform*m_scaledVertices[parentIndex].transform;
 			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_scaledVertices[childIndex].transform, m_scaledVertices[childIndex].position);
 
+			childIndex = m_scaledVertices.size();
 			parentIndex = m_scaledVertices.size()-1;
 			localTransform = DirectX::SimpleMath::Matrix::Identity;
 		}
@@ -517,15 +524,9 @@ void LSystem::InitializeScale(float relativeWidth) // NB: Add alignment options?
 
 	// NB: In the case of a point, scaling won't matter
 	if (maxDelta == 0.0f)
-	{
-		m_length = 1.0f;
-		m_width = 1.0f;
-
 		return;
-	}
 
-	m_length = 1.0f/maxDelta;
-	m_width = relativeWidth;
+	m_length /= maxDelta;
 
 	// STEP 3: Rescale... 
 	// NB: We can now ignore the transforms, as these won't be used again...
@@ -539,6 +540,9 @@ void LSystem::InitializeScale(float relativeWidth) // NB: Add alignment options?
 	{
 		m_scaledVertices[i].position.x = xBorder+(m_scaledVertices[i].position.x-xMin)/maxDelta;
 		m_scaledVertices[i].position.y = yBorder+(m_scaledVertices[i].position.y-yMin)/maxDelta;
+
+		// FIXME: Simplex noise... still not working?
+		m_scaledVertices[i].simplex = simplex.FBMNoise(m_seed, m_scaledVertices[i].position.x, m_scaledVertices[i].position.y, 8);
 	}
 }
 
