@@ -118,7 +118,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>                        m_normalMap;
 
 	// Shaders
-    Shader                                                                  m_FieldRendering;
+    Shader                                                                  m_LightShader;
 
     // Shader Textures
     Shader                                                                  m_NeutralShader;

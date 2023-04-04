@@ -270,8 +270,8 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	m_intensity = std::max(0.0f, std::min(m_intensity, 1.0f));
 
 	float length = m_length;// 1.5*pow(2.0f, -5.0f); // NB: pow(2.0f,iterations)
-	float radius = pow(2.0f, -5.0f);
-	int maxDepth = INT_MAX;
+	float radius = pow(2.0f, -9.0f);
+	int maxDepth = 0;// INT_MAX;
 
 	float radiusBase = 1.5f;
 
@@ -284,7 +284,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	m_treeVertices[0].depth = 0;
 	m_treeVertices[0].degree = 0;
 	m_treeVertices[0].childDepth = maxDepth;
-	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2)*DirectX::SimpleMath::Matrix::CreateTranslation(0.0f, 0.0f, 0.0f);
+	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(DirectX::XM_PIDIV2)*DirectX::SimpleMath::Matrix::CreateTranslation(m_scaledVertices[0].position); // NB: Assumes we've initialised m_scaledVertices!
 	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
 
 	int parentIndex = 0;
@@ -330,7 +330,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.25f*cos(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(pow(2.0f,vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*simplex.FBMNoise(0.1f*m_time, 0.1f*m_treeVertices[parentIndex].position.x, m_treeVertices[parentIndex].position.y, 8)*DirectX::XM_PI/180.0f)*localTransform;
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)*localTransform;
 
 			//localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
 			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*length, 0.0f, 0.0f)*localTransform;
@@ -362,6 +362,9 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	{
 		for (int i = 1; i < m_treeVertices.size(); i++)
 		{
+			m_treeVertices[i].radius = m_intensity*radius; // DEBUG: Keeps a consistent width...
+			continue; // DEBUG: Keeps a consistent width...
+
 			if (m_treeVertices[i].depth == m_treeVertices[i].childDepth || m_treeVertices[i].depth != d)
 				continue;
 
@@ -508,14 +511,29 @@ void LSystem::InitializeScale() // NB: Add alignment options?
 			yMax = scaleVertex.position.y;
 	}
 
-	float scaling = std::max(xMax-xMin, yMax-yMin);
-	if (scaling == 0.0f)
+	float xDelta = xMax-xMin;
+	float yDelta = yMax-yMin;
+	float maxDelta = std::max(xDelta, yDelta);
+
+	// NB: In the case of a point, scaling won't matter
+	if (maxDelta == 0.0f)
 		return;
 
-	m_length = 1.0f/scaling;
+	m_length = 1.0f/maxDelta;
 
 	// STEP 3: Rescale... 
 	// NB: We can now ignore the transforms, as these won't be used again...
+	float xAnchoring = 0.5f; // NB: Expose this...
+	float yAnchoring = 0.5f; // NB: Expose this...
+
+	float xBorder = xAnchoring*(1.0f-xDelta/maxDelta);
+	float yBorder = yAnchoring*(1.0f-yDelta/maxDelta);
+
+	for (int i = 0; i < m_scaledVertices.size(); i++)
+	{
+		m_scaledVertices[i].position.x = xBorder+(m_scaledVertices[i].position.x-xMin)/xDelta;
+		m_scaledVertices[i].position.y = yBorder+(m_scaledVertices[i].position.y-yMin)/yDelta;
+	}
 }
 
 std::string LSystem::GetSentence()

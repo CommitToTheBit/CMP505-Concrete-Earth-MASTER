@@ -251,7 +251,7 @@ void Game::Render()
 	
 	// Render board...
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_HexBoard.Render(context, &m_FieldRendering, displacement, &m_Camera, m_time, &m_Light);
+	m_HexBoard.Render(context, &m_LightShader, displacement, &m_Camera, m_time, &m_Light);
 
 	// VEINS RENDER:
 	m_VeinsRenderPass->setRenderTarget(context);
@@ -282,8 +282,14 @@ void Game::Render()
 	m_Screen.Render(context);*/
 
 	// DEBUG: Display a single, normalised L-system...
+	m_LightShader.EnableShader(context);
+	m_LightShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(0.0f, 0.0f, 0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_LightShader.SetAlphaBuffer(context, 1.0f);
+	m_LightShader.SetLightBuffer(context, &m_Light);
+	m_Cube.Render(context);
+
 	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateScale(1.5f)*Matrix::CreateTranslation(0.0f,-1.0f,0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 	m_LSystem.Render(context);
 
 	// Draw Text to the screen
@@ -457,9 +463,9 @@ void Game::CreateDeviceDependentResources()
 	m_add = 0;
 
 	// L-Systems
-	m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
-	m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	m_LSystem.InitializeSentence(std::vector<std::string>{"A"}, 5);
+	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
+	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
+	//m_LSystem.InitializeSentence(std::vector<std::string>{"A"}, 5);
 
 	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
 	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
@@ -469,12 +475,16 @@ void Game::CreateDeviceDependentResources()
 	//m_LSystem.InitializeProductionRule("G", std::vector<std::string>{"G", "G"});
 	//m_LSystem.InitializeSentence(std::vector<std::string>{"F", "-", "G", "-", "G"}, 6);
 
+	m_LSystem.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
+	m_LSystem.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
+	m_LSystem.InitializeSentence(std::vector<std::string>{"F", "G"}, 11);
+
 	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"^", "B", "A"});
 	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
 	//m_LSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
 
-	m_LSystem.InitializeRotationRule("+", 45.0f*XM_PI/180.0f, 0.0f*15.0f*XM_PI/180.0f);
-	m_LSystem.InitializeRotationRule("-", -45.0f*XM_PI/180.0f, 0.0f*15.0f*XM_PI/180.0f);
+	m_LSystem.InitializeRotationRule("+", 90.0f*XM_PI/180.0f, 0.0f*15.0f*XM_PI/180.0f);
+	m_LSystem.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*15.0f*XM_PI/180.0f);
 	m_LSystem.InitializeScale();
 	
 	m_LSystem.Initialize(device);
@@ -485,10 +495,10 @@ void Game::CreateDeviceDependentResources()
 	m_Cube.InitializeModel(device, "cube.obj");
 
 	// Shaders
-	m_FieldRendering.InitShader(device, L"light3D_vs.cso", L"light3D_ps.cso");
-	m_FieldRendering.InitMatrixBuffer(device);
-	m_FieldRendering.InitAlphaBuffer(device);
-	m_FieldRendering.InitLightBuffer(device);
+	m_LightShader.InitShader(device, L"light3D_vs.cso", L"light3D_ps.cso");
+	m_LightShader.InitMatrixBuffer(device);
+	m_LightShader.InitAlphaBuffer(device);
+	m_LightShader.InitLightBuffer(device);
 
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
