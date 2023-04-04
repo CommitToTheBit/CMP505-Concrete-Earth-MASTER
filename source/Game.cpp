@@ -483,9 +483,9 @@ void Game::CreateDeviceDependentResources()
 	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
 	//m_LSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
 
-	m_LSystem.InitializeRotationRule("+", 90.0f*XM_PI/180.0f, 0.0f*15.0f*XM_PI/180.0f);
-	m_LSystem.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*15.0f*XM_PI/180.0f);
-	m_LSystem.InitializeScale();
+	m_LSystem.InitializeRotationRule("+", 90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
+	m_LSystem.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
+	m_LSystem.InitializeScale(0.005f);
 	
 	m_LSystem.Initialize(device);
 

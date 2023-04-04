@@ -270,7 +270,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	m_intensity = std::max(0.0f, std::min(m_intensity, 1.0f));
 
 	float length = m_length;// 1.5*pow(2.0f, -5.0f); // NB: pow(2.0f,iterations)
-	float radius = pow(2.0f, -9.0f);
+	float radius = m_width;
 	int maxDepth = 0;// INT_MAX;
 
 	float radiusBase = 1.5f;
@@ -330,7 +330,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.25f*cos(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(pow(2.0f,vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*simplex.FBMNoise(0.1f*m_time, 0.1f*m_treeVertices[parentIndex].position.x, m_treeVertices[parentIndex].position.y, 8)*DirectX::XM_PI/180.0f)*localTransform;
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)*localTransform;
+			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)*localTransform;
 
 			//localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
 			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*length, 0.0f, 0.0f)*localTransform;
@@ -440,7 +440,7 @@ void LSystem::InitializeRotationRule(std::string A, float theta, float randomnes
 	}
 }
 
-void LSystem::InitializeScale() // NB: Add alignment options?
+void LSystem::InitializeScale(float relativeWidth) // NB: Add alignment options?
 {
 	m_scaledVertices = std::vector<ScaleVertexType>();
 
@@ -517,9 +517,15 @@ void LSystem::InitializeScale() // NB: Add alignment options?
 
 	// NB: In the case of a point, scaling won't matter
 	if (maxDelta == 0.0f)
+	{
+		m_length = 1.0f;
+		m_width = 1.0f;
+
 		return;
+	}
 
 	m_length = 1.0f/maxDelta;
+	m_width = relativeWidth;
 
 	// STEP 3: Rescale... 
 	// NB: We can now ignore the transforms, as these won't be used again...
@@ -531,8 +537,8 @@ void LSystem::InitializeScale() // NB: Add alignment options?
 
 	for (int i = 0; i < m_scaledVertices.size(); i++)
 	{
-		m_scaledVertices[i].position.x = xBorder+(m_scaledVertices[i].position.x-xMin)/xDelta;
-		m_scaledVertices[i].position.y = yBorder+(m_scaledVertices[i].position.y-yMin)/yDelta;
+		m_scaledVertices[i].position.x = xBorder+(m_scaledVertices[i].position.x-xMin)/maxDelta;
+		m_scaledVertices[i].position.y = yBorder+(m_scaledVertices[i].position.y-yMin)/maxDelta;
 	}
 }
 

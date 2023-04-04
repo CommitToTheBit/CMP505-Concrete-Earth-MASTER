@@ -51,7 +51,7 @@ public:
 	void InitializeSentence(std::vector<std::string> S, int iterations);
 
 	void InitializeRotationRule(std::string A, float theta, float randomness = 0.0f);
-	void InitializeScale();
+	void InitializeScale(float relativeWidth);
 
 	void Update(ID3D11Device*, float deltaTime, float deltaIntensity);
 
@@ -80,7 +80,7 @@ private:
 	std::map<std::string, float> m_rotationRules;
 	std::map<std::string, float> m_rotationRandomness;
 
-	float m_length;
+	float m_length, m_width;
 	std::vector<ScaleVertexType> m_scaledVertices;
 
 	float m_time, m_intensity;
