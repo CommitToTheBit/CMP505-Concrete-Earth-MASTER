@@ -5,4 +5,10 @@ Bourke, P.  \harvardyearleft 1994\harvardyearright , `{Polygonising a Scalar
   Field}', Available at: \url{http://paulbourke.net/geometry/polygonise/}.
 \newblock (Accessed: 9 February 2023).
 
+\harvarditem[Hopcroft et~al.]{Hopcroft, Motwani \harvardand\
+  Ullman}{2000}{hopcroftFormalLanguages}
+Hopcroft, J., Motwani, R. \harvardand\ Ullman, J.~D.  \harvardyearleft
+  2000\harvardyearright , {\em {Introduction to Automata Theory, Languages, and
+  Computation}}, $2^{\textrm{nd}}$ edn, Boston, MA, USA: Addison-Wesley.
+
 \end{thebibliography}

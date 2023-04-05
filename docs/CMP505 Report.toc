@@ -1,17 +1,19 @@
 \contentsline {section}{\numberline {1}Summary}{1}{section.1}%
 \contentsline {section}{\numberline {2}User Controls}{1}{section.2}%
 \contentsline {section}{\numberline {3}Features}{1}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Procedural Terrain Generation}{1}{subsection.3.1}%
-\contentsline {subsubsection}{\numberline {3.1.1}Marching Cubes}{1}{subsubsection.3.1.1}%
-\contentsline {subsubsection}{\numberline {3.1.2}Field Design}{2}{subsubsection.3.1.2}%
-\contentsline {subsection}{\numberline {3.2}Procedural Narrative Generation}{2}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}Text Generation}{2}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}Picking}{2}{subsubsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.3}Psychoacoustics}{2}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Post-Processing}{2}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.1}Noise}{1}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Procedural Terrain}{1}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Case Study: Hexes}{2}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Case Study: Landmarks}{2}{subsubsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.3}Procedural Screen Textures}{2}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Case Study: Blood Vessels}{2}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Case Study: Runes}{2}{subsubsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.4}Procedural Narrative}{2}{subsection.3.4}%
 \contentsline {section}{\numberline {4}Code Organisation}{2}{section.4}%
-\contentsline {section}{\numberline {5}Evaluation}{2}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Features}{2}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Code Organisation}{2}{subsection.5.2}%
-\contentsline {section}{\numberline {6}Conclusions}{2}{section.6}%
-\contentsline {section}{References}{2}{section*.2}%
+\contentsline {subsection}{\numberline {4.1}Post-Processing}{2}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}GUI}{2}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Evaluation}{3}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Features}{3}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Code Organisation}{3}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Conclusions}{3}{section.6}%
+\contentsline {section}{References}{3}{section*.3}%
