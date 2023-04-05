@@ -268,7 +268,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 
 	float length = m_length;// 1.5*pow(2.0f, -5.0f); // NB: pow(2.0f,iterations)
 	float radius = m_width;
-	int maxDepth = INT_MAX;
+	int maxDepth = 0;// INT_MAX;
 
 	float radiusBase = 1.5f;
 
@@ -328,7 +328,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.25f*cos(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(pow(2.0f,vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
 			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*simplex.FBMNoise(0.1f*m_time, 0.1f*m_treeVertices[parentIndex].position.x, m_treeVertices[parentIndex].position.y, 8)*DirectX::XM_PI/180.0f)*localTransform;
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(2.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)* localTransform;
+			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(2.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)* localTransform;
 
 			//localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
 			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*length, 0.0f, 0.0f)*localTransform;
@@ -361,8 +361,8 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	{
 		for (int i = 1; i < m_treeVertices.size(); i++)
 		{
-			//m_treeVertices[i].radius = m_intensity*radius; // DEBUG: Keeps a consistent width...
-			//continue; // DEBUG: Keeps a consistent width...
+			m_treeVertices[i].radius = m_intensity*radius; // DEBUG: Keeps a consistent width...
+			continue; // DEBUG: Keeps a consistent width...
 
 			if (m_treeVertices[i].depth == m_treeVertices[i].childDepth || m_treeVertices[i].depth != d)
 				continue;

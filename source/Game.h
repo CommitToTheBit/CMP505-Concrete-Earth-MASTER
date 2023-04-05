@@ -137,6 +137,13 @@ private:
     // L-Systems
     LSystem                                                                 m_LSystem;
 
+    LSystem                                                                 m_DragonCurve2;
+    LSystem                                                                 m_DragonCurve4;
+    LSystem                                                                 m_DragonCurve6;
+    LSystem                                                                 m_DragonCurve8;
+    LSystem                                                                 m_DragonCurve10;
+    LSystem                                                                 m_DragonCurve12;
+
     ModelClass																m_Cube;
 
     // GUI
