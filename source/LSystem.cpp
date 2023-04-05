@@ -87,7 +87,6 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 
 		// FIXME: Work out perpendicular component here...
 
-
 		vertices[4*i].position = parentVertex.position+parentVertex.radius*orthogonal;
 		vertices[4*i+1].position = parentVertex.position-parentVertex.radius*orthogonal;
 		vertices[4*i+2].position = treeVertex.position-treeVertex.radius*orthogonal;
@@ -285,8 +284,6 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation)*DirectX::SimpleMath::Matrix::CreateTranslation(m_scaledVertices[0].position); // NB: Assumes we've initialised m_scaledVertices!
 	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
 
-	int childIndex = 0;
-
 	int parentIndex = 0;
 	std::vector<int> parentIndices = std::vector<int>();
 
@@ -296,6 +293,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	DirectX::SimpleMath::Matrix localTransform = DirectX::SimpleMath::Matrix::Identity;
 
 	// STEP 1: Create branching structure...
+	int childIndex = 1;
 	for each (std::string alpha in m_sentence)
 	{
 		if (alpha == "[")
@@ -455,8 +453,6 @@ void LSystem::InitializeScale(float seed, float width, float rotation) // NB: Ad
 	m_scaledVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation); // FIXME: This value can be exposed!
 	m_scaledVertices[0].position = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
 
-	int childIndex = 0;
-
 	int parentIndex = 0;
 	std::vector<int> parentIndices = std::vector<int>();
 
@@ -464,6 +460,7 @@ void LSystem::InitializeScale(float seed, float width, float rotation) // NB: Ad
 	DirectX::SimpleMath::Matrix localTransform = DirectX::SimpleMath::Matrix::Identity;
 
 	// STEP 1: Create branching structure...
+	int childIndex = 1;
 	for each (std::string alpha in m_sentence)
 	{
 		if (alpha == "[")
@@ -505,17 +502,17 @@ void LSystem::InitializeScale(float seed, float width, float rotation) // NB: Ad
 	float xMax = 0.0f; 
 	float yMax = 0.0f;
 
-	for each (ScaleVertexType scaleVertex in m_scaledVertices)
+	for (int i = 0; i < m_scaledVertices.size(); i++)
 	{
-		if (scaleVertex.position.x < xMin)
-			xMin = scaleVertex.position.x;
-		else if (scaleVertex.position.x > xMax)
-			xMax = scaleVertex.position.x;
+		if (m_scaledVertices[i].position.x < xMin)
+			xMin = m_scaledVertices[i].position.x;
+		else if (m_scaledVertices[i].position.x > xMax)
+			xMax = m_scaledVertices[i].position.x;
 
-		if (scaleVertex.position.y < yMin)
-			yMin = scaleVertex.position.y;
-		else if (scaleVertex.position.y > yMax)
-			yMax = scaleVertex.position.y;
+		if (m_scaledVertices[i].position.y < yMin)
+			yMin = m_scaledVertices[i].position.y;
+		else if (m_scaledVertices[i].position.y > yMax)
+			yMax = m_scaledVertices[i].position.y;
 	}
 
 	float xDelta = xMax-xMin;

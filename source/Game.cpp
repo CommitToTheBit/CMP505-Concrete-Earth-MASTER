@@ -479,7 +479,7 @@ void Game::CreateDeviceDependentResources()
 
 	m_LSystem.InitializeRotationRule("+", 15.0f*XM_PI/180.0f, 5.0f*XM_PI/180.0f);
 	m_LSystem.InitializeRotationRule("-", -15.0f*XM_PI/180.0f, 5.0f*XM_PI/180.0f);
-	m_LSystem.InitializeScale(0.5f, 0.02f, 0.0f);
+	m_LSystem.InitializeScale(0.5f, 0.02f, XM_PIDIV2);
 	
 	m_LSystem.Initialize(device);
 
