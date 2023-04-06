@@ -65,18 +65,19 @@ Definitive... Paul Bourke's \textit{Polygonising a scalar field} \citeyearpar{bo
 [\textit{Untitled} uses screen textures, based on l-systems...]. 
 
 \vspace{5pt}\noindent
-In formal languages, a \textit{grammar} is a tuple $G = (N,\Sigma,P,\omega_0)$. This contains two disjoint sets of symbols: \textit{nonterminals} $A, B, \dots \in N$, and \textit{terminals} $a, b, \dots \in \Sigma$. The \textit{production rules} in $P$ map nonterminals to strings $\alpha, \beta, \dots \in (N\cup\Sigma)^*$; applied recursively to the \textit{axiom} $\omega_0 \in (N\cup\Sigma)^*$, these rules can produce increasingly complex strings of terminals and/or nonterminals.\footnote{In mathematical literature, $
-\omega_0 \in N$ \citep*{hopcroftFormalLanguages}, but this paper is happy with a more informal approach.}
+In formal languages, a grammar is a tuple $G = (N,\Sigma,P,\omega_0)$. This contains two disjoint sets of symbols: nonterminals $A, B, \dots \in N$, and terminals $a, b, \dots \in \Sigma$. The production rules in $P$ map nonterminals to strings $\alpha, \beta, \dots \in (N\cup\Sigma)^*$; applied recursively to the axiom $\omega_0 \in (N\cup\Sigma)^*$, these rules can produce increasingly complex strings of terminals and/or nonterminals.\footnote{In mathematical literature, $
+\omega_0 \in N$ \citep*{hopcroftFormalLanguages}, but this paper takes an informal approach.}
 
 \vspace{5pt}\noindent
-The Chomsky hierarchy [citations] categorises grammars, according to the form of their production rules:
+The Chomsky hierarchy \citep{chomskyHierarchy} % NB: Is this *strictly* true?
+classifies grammars by their production rules:
 \begin{enumerate}[label=]
-\item \textit{Type-3}. \textit{Regular grammars} map $A \mapsto a$ or $A \mapsto aB$
-\item \textit{Type-2}. \textit{Context-free grammars} map $A \mapsto $
-\item \textit{Type-1}. \textit{Context-sensitive grammars}
-\item \textit{Type-0}. \textit{Unrestricted grammars} map $A$
+\item \textit{Type-3}. \textit{Regular grammars} map $A \mapsto a$ or $A \mapsto aB$.
+\item \textit{Type-2}. \textit{Context-free grammars} map $A \mapsto \alpha$.
+\item \textit{Type-1}. \textit{Context-sensitive grammars} $\alpha A\beta \mapsto \alpha\gamma\beta$.
+\item \textit{Type-0}. \textit{Unrestricted grammars} map $\alpha \mapsto \beta$, where $\alpha$ is non-empty.
 \end{enumerate}
-Note that [subsets].
+Note that all Type-3 grammars are also Type-2, all Type-2 grammars also Type-1, and so on.
 
 \vspace{5pt}\noindent
 Suppose, for example, that $N = \{F, G\}$, $\Sigma = \{+, -\}$, $P = \{F \mapsto F+G, G \mapsto F-G\}$, $\omega_0 = F$.
@@ -89,6 +90,7 @@ $$\begin{matrix*}[l]
 \end{matrix*}$$
 
 \vspace{5pt}\noindent
+While the above defintions are rather abstract, they come with a surprising practical application. \citet{lindenmayerLSystems} introduces the L-system, ... 
 [Introduce basics of L-systems, include the angles used for dragon curves...] produces the dragon curves in Figure \ref{Dragon Curves}.
 
 \begin{figure}[h]
@@ -100,9 +102,23 @@ $$\begin{matrix*}[l]
 
 \vspace{5pt}\noindent
 
+\subsubsection{Case Study: Runes}
+
+Parametric L-systems \citep{hananParametricLSystems} exist as a generalisation of the above... [theory].
+
+\vspace{5pt}\noindent
+[Move into code... what parameters will we consider?]
+
+\vspace{5pt}\noindent
+[Example: various geometric runes!].
+
 \subsubsection{Case Study: Blood Vessels} % Include post-processing!
 
-\subsubsection{Case Study: Runes}
+\citet{zamirArterialBranchingLSystems} uses parametric L-systems... equations for bifurcation...
+
+\vspace{5pt}\noindent
+\citet{liuSimulationBloodVessels} further introduce a stochastic component...
+
 
 \subsection{Procedural Narrative} % TECHNIQUE: 'Improv-lite' text generation...
 

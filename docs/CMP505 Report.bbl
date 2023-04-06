@@ -5,10 +5,33 @@ Bourke, P.  \harvardyearleft 1994\harvardyearright , `{Polygonising a Scalar
   Field}', Available at: \url{http://paulbourke.net/geometry/polygonise/}.
 \newblock (Accessed: 9 February 2023).
 
+\harvarditem{Chomsky}{1956}{chomskyHierarchy}
+Chomsky, N.  \harvardyearleft 1956\harvardyearright , `{Three Models for the
+  Description of Language}', {\em IRE Transactions on Information Theory} {\bf
+  2}(3),~113--124.
+
 \harvarditem[Hopcroft et~al.]{Hopcroft, Motwani \harvardand\
   Ullman}{2000}{hopcroftFormalLanguages}
 Hopcroft, J., Motwani, R. \harvardand\ Ullman, J.~D.  \harvardyearleft
   2000\harvardyearright , {\em {Introduction to Automata Theory, Languages, and
   Computation}}, $2^{\textrm{nd}}$ edn, Boston, MA, USA: Addison-Wesley.
+
+\harvarditem{Lindenmayer}{1968}{lindenmayerLSystems}
+Lindenmayer, A.  \harvardyearleft 1968\harvardyearright , `{Mathematical Models
+  for Cellular Interactions in Development II. Simple and Branching Filaments
+  With Two-Sided Inputs}', {\em Journal of Theoretical Biology} {\bf
+  18}(3),~300--315.
+
+\harvarditem[Liu et~al.]{Liu, Liu, Hao \harvardand\
+  Zhao}{2010}{liuSimulationBloodVessels}
+Liu, X., Liu, H., Hao, A. \harvardand\ Zhao, Q.  \harvardyearleft
+  2010\harvardyearright , {Simulation of Blood Vessels for Surgery Simulators},
+  {\em in} `\textit{2010 International Conference on Machine Vision and
+  Human-machine Interface}', pp.~377--380.
+
+\harvarditem{Zamir}{2001}{zamirArterialBranchingLSystems}
+Zamir, M.  \harvardyearleft 2001\harvardyearright , `{Arterial Branching Within
+  the Confines of Fractal L-System Formalism}', {\em The Journal of General
+  Physiology} {\bf 118},~267--276.
 
 \end{thebibliography}

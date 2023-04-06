@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  5 APR 2023 18:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  6 APR 2023 17:03
 entering extended mode
 **"./CMP505 Report.tex"
 (CMP505 Report.tex
@@ -906,27 +906,35 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
  [1
 
 {C:/Users/samdr/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-<./Images//Dragon Curves.png, id=117, 1445.4pt x 768.62157pt>
+<./Images//Dragon Curves.png, id=121, 1445.4pt x 768.62157pt>
 File: ./Images//Dragon Curves.png Graphic file (type png)
 <use ./Images//Dragon Curves.png>
-Package pdftex.def Info: ./Images//Dragon Curves.png  used on input line 96.
+Package pdftex.def Info: ./Images//Dragon Curves.png  used on input line 98.
 (pdftex.def)             Requested size: 319.2417pt x 169.76578pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[2] (CMP505 Report.bbl) [3 <./Images//Dragon Curves.png>] (CMP505 Report.aux)
+
+Package natbib Warning: Citation `hananParametricLSystems' on page 2 undefined 
+on input line 107.
+
+[2] (CMP505 Report.bbl)
+
+Package natbib Warning: There were undefined citations.
+
+[3 <./Images//Dragon Curves.png>] (CMP505 Report.aux)
 Package rerunfilecheck Info: File `"CMP505 Report".out' has not changed.
-(rerunfilecheck)             Checksum: 6836B0E04DEF8A4E4617711BFFF68778;2424.
+(rerunfilecheck)             Checksum: 8F8D336E81B001F1A12FA912B59B0D27;2424.
  ) 
 Here is how much of TeX's memory you used:
- 22979 strings out of 479300
- 418215 string characters out of 2853552
- 707886 words of memory out of 3000000
- 40000 multiletter control sequences out of 15000+200000
+ 22995 strings out of 479300
+ 418691 string characters out of 2853552
+ 709015 words of memory out of 3000000
+ 40012 multiletter control sequences out of 15000+200000
  418758 words of font info for 83 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 87i,18n,89p,567b,517s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 87i,18n,89p,521b,509s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
 /cm/cmbx10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
 blic/amsfonts/cm/cmbx12.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/f
@@ -946,9 +954,9 @@ amdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb
 cm/cmsy9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
 ic/amsfonts/cm/cmti10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fon
 ts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on "CMP505 Report.pdf" (3 pages, 237266 bytes).
+Output written on "CMP505 Report.pdf" (3 pages, 245008 bytes).
 PDF statistics:
- 206 PDF objects out of 1000 (max. 8388607)
- 32 named destinations out of 1000 (max. 500000)
+ 218 PDF objects out of 1000 (max. 8388607)
+ 36 named destinations out of 1000 (max. 500000)
  170 words of extra memory for PDF output out of 10000 (max. 10000000)
 
