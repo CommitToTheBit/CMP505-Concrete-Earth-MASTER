@@ -399,40 +399,51 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	// ...and linearly interpolate width over that path!
 }
 
-void LSystem::InitializeProductionRule(std::string A, std::vector<std::string> alpha)
+void LSystem::InitializeProductionRule(std::string letter, ProductionRuleType productionRule)
 {
-	if (!m_productionRules.count(A))
-		m_productionRules.insert({ A, std::vector<std::vector<std::string>>{alpha} });
+	if (!m_productionRules.count(letter))
+		m_productionRules.insert({ letter, std::vector<ProductionRuleType>{ productionRule } });
 	else
-		m_productionRules[A].push_back(alpha);
+		m_productionRules[letter].push_back(productionRule);
 }
 
-void LSystem::InitializeSentence(std::vector<std::string> startSentence, int iterations)
+void LSystem::InitializeSentence(std::vector<ModuleType> axiom, int iterations)
 {
-	m_sentence = startSentence;
+	m_sentence = axiom;
 
-	std::vector<std::string> iteratedSentence;
+	std::vector<ModuleType> iteratedSentence;
 	for (int i = 0; i < iterations; i++)
 	{
-		iteratedSentence = std::vector<std::string>();
-		for each (std::string A in m_sentence)
-			for each (std::string alpha in GetProductionRule(A))
-				iteratedSentence.push_back(alpha);
+		iteratedSentence = std::vector<ModuleType>();
+		for each (ModuleType LModule in m_sentence)
+		{
+			ModuleType productionModule = LModule;
+			for each (std::function<ModuleType(ModuleType)> production in GetProductionRule(LModule.letter).productions)
+			{
+				productionModule = production(productionModule);
+				iteratedSentence.push_back(productionModule);
+			}
+		}
 
 		m_sentence = iteratedSentence;
 	}
 }
 
-std::vector<std::string> LSystem::GetProductionRule(std::string A)
+LSystem::ProductionRuleType LSystem::GetProductionRule(std::string letter)
 {
-	if (!m_productionRules.count(A))
-		return std::vector<std::string>{A};
+	if (!m_productionRules.count(letter))
+	{
+		ProductionRuleType identity;
+		identity.productions.push_back([](LSystem::ModuleType LModule) { return LModule; });
+		identity.weight = 1.0f;
+		return identity;
+	}
 
 	// FIXME: Add stochastic components here... 
-	return m_productionRules[A][0];
+	return m_productionRules[letter][0];
 }
 
-void LSystem::InitializeRotationRule(std::string A, float theta, float randomness)
+/*void LSystem::InitializeRotationRule(std::string A, float theta, float randomness)
 {
 	if (!m_rotationRules.count(A))
 	{
@@ -543,18 +554,18 @@ void LSystem::InitializeScale(float seed, float width, float rotation) // NB: Ad
 		// FIXME: Simplex noise... still not working?
 		m_scaledVertices[i].simplex = simplex.FBMNoise(m_seed, m_scaledVertices[i].position.x, m_scaledVertices[i].position.y, 8);
 	}
-}
+}*/
 
 std::string LSystem::GetSentence()
 {
 	std::string text = "";
 
 	int count = 0;
-	for each (std::string alpha in m_sentence)
+	for each (ModuleType LModule in m_sentence)
 	{
-		for each (char letter in alpha)
+		for each (char character in LModule.letter)
 		{
-			text += letter;
+			text += character;
 			if (++count >= 140)
 			{
 				text += "\n  ";

@@ -165,15 +165,7 @@ void Game::Update(DX::StepTimer const& timer)
 		if (m_gameInputCommands.anticlockwise)
 			deltaInterpolation -= 1.0f;
 			
-		m_LSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
-
-		// DEBUG Dragon curves...
-		m_DragonCurve2.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
-		m_DragonCurve4.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
-		m_DragonCurve6.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
-		m_DragonCurve8.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
-		m_DragonCurve10.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
-		m_DragonCurve12.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
+		//m_LSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
 	}
 	/*else
 	{
@@ -293,31 +285,6 @@ void Game::Render()
 	//m_NeutralShader.EnableShader(context);
 	//m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 	//m_LSystem.Render(context);
-
-	// DEBUG: Display dragon curves...
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(0.9f)*Matrix::CreateTranslation(-1.0f, 0.4f, 0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_DragonCurve2.Render(context);
-
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(0.9f)*Matrix::CreateTranslation(0.0f, 0.4f, 0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_DragonCurve4.Render(context);
-
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(0.9f)*Matrix::CreateTranslation(1.0f, 0.4f, 0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_DragonCurve6.Render(context);
-
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(0.9f)*Matrix::CreateTranslation(-1.0f, -0.4f, 0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_DragonCurve8.Render(context);
-
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(0.9f)*Matrix::CreateTranslation(0.0f, -0.4f, 0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_DragonCurve10.Render(context);
-
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(0.9f)*Matrix::CreateTranslation(1.0f, -0.4f, 0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_DragonCurve12.Render(context);
 
 	// Draw Text to the screen
 	//m_sprites->Begin();
@@ -490,104 +457,35 @@ void Game::CreateDeviceDependentResources()
 	m_add = 0;
 
 	// L-Systems
-	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
-	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	//m_LSystem.InitializeSentence(std::vector<std::string>{"A"}, 7);
-
-	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"B", "[", "^", "+", "A", "]", "^", "-", "A"});
-	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	//m_LSystem.InitializeSentence(std::vector<std::string>{"B", "^", "[", "^", "+", "B", "A", "]", "B", "^", "[", "^", "-", "A", "]", "B", "A"}, 6);
-	
-	//m_LSystem.InitializeProductionRule("F", std::vector<std::string>{"F", "-", "G", "+", "F", "+", "G", "-", "F"});
-	//m_LSystem.InitializeProductionRule("G", std::vector<std::string>{"G", "G"});
-	//m_LSystem.InitializeSentence(std::vector<std::string>{"F", "-", "G", "-", "G"}, 6);
-
-	m_LSystem.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
-	m_LSystem.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
-	m_LSystem.InitializeSentence(std::vector<std::string>{"F"}, 2);
-
-	//m_LSystem.InitializeProductionRule("A", std::vector<std::string>{"^", "B", "A"});
-	//m_LSystem.InitializeProductionRule("B", std::vector<std::string>{"B", "B"});
-	//m_LSystem.InitializeSentence(std::vector<std::string>{"B", "[", "+", "+", "A", "]", "-", "B", "[", "^", "-", "A", "]", "+", "A"}, 8);
-
-	m_LSystem.InitializeRotationRule("+", 90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_LSystem.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_LSystem.InitializeScale(0.5f, 0.004f, XM_PIDIV2);
-	
-	m_LSystem.Initialize(device);
-
-	// Dragon Curves
-	m_DragonCurve2.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
-	m_DragonCurve2.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
-	m_DragonCurve2.InitializeSentence(std::vector<std::string>{"F"}, 2);
-	m_DragonCurve2.InitializeRotationRule("+", 90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve2.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve2.InitializeScale(0.5f, 0.004f, -XM_PIDIV2);
-	m_DragonCurve2.Initialize(device);
-
-	m_DragonCurve4.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
-	m_DragonCurve4.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
-	m_DragonCurve4.InitializeSentence(std::vector<std::string>{"F"}, 4);
-	m_DragonCurve4.InitializeRotationRule("+", 90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve4.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve4.InitializeScale(0.5f, 0.004f, -XM_PI);
-	m_DragonCurve4.Initialize(device);
-
-	m_DragonCurve6.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
-	m_DragonCurve6.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
-	m_DragonCurve6.InitializeSentence(std::vector<std::string>{"F"}, 6);
-	m_DragonCurve6.InitializeRotationRule("+", 90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve6.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve6.InitializeScale(0.5f, 0.004f, -3*XM_PIDIV2);
-	m_DragonCurve6.Initialize(device);
-
-	m_DragonCurve8.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
-	m_DragonCurve8.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
-	m_DragonCurve8.InitializeSentence(std::vector<std::string>{"F"}, 8);
-	m_DragonCurve8.InitializeRotationRule("+", 90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve8.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve8.InitializeScale(0.5f, 0.004f, -XM_2PI);
-	m_DragonCurve8.Initialize(device);
-
-	m_DragonCurve10.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
-	m_DragonCurve10.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
-	m_DragonCurve10.InitializeSentence(std::vector<std::string>{"F"}, 10);
-	m_DragonCurve10.InitializeRotationRule("+", 90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve10.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve10.InitializeScale(0.5f, 0.004f, -XM_PIDIV2);
-	m_DragonCurve10.Initialize(device);
-
-	m_DragonCurve12.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
-	m_DragonCurve12.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
-	m_DragonCurve12.InitializeSentence(std::vector<std::string>{"F"}, 12);
-	m_DragonCurve12.InitializeRotationRule("+", 90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve12.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
-	m_DragonCurve12.InitializeScale(0.5f, 0.004f, -XM_PI);
-	m_DragonCurve12.Initialize(device);
-
-	std::vector<std::function<LSystem::ModuleType(LSystem::ModuleType)>> F;
-	F.push_back([](LSystem::ModuleType FModule) {
+	LSystem::ProductionRuleType F;
+	F.productions.push_back([](LSystem::ModuleType FModule) {
 		LSystem::ModuleType productionModule;
 		productionModule.letter = "F";
 		productionModule.length = FModule.length;
 		productionModule.theta = FModule.theta;
 		return productionModule; 
 	});
-	F.push_back([](LSystem::ModuleType FModule) {
+	F.productions.push_back([](LSystem::ModuleType FModule) {
 		LSystem::ModuleType productionModule;
 		productionModule.letter = "G";
 		productionModule.length = FModule.length;
 		productionModule.theta = FModule.theta + 90.0f*XM_PI/180.0f;
 		return productionModule;
 		});
+	F.weight = 1.0f;
 
 	LSystem::ModuleType FModule;
 	FModule.letter = "F";
 	FModule.length = 1.0f;
 	FModule.theta = 0.0f;
 
-	F[0](FModule);
-	F[1](F[0](FModule));
+	F.productions[0](FModule);
+	F.productions[1](F.productions[0](FModule));
+
+	//m_LSystem.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
+	//m_LSystem.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
+	//m_LSystem.InitializeSentence(std::vector<std::string>{"F"}, 2);
+	//m_LSystem.Initialize(device);
 
 	// Models
 	m_Screen.Initialize(device);

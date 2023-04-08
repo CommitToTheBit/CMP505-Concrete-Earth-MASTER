@@ -41,13 +41,18 @@ protected:
 		float simplex;
 	};
 
-	// Module for parametric L-systems
 public:
 	struct ModuleType
 	{
 		std::string letter;
 		float length;
 		float theta;
+	};
+
+	struct ProductionRuleType
+	{
+		std::vector<std::function<ModuleType(ModuleType)>> productions;
+		float weight;
 	};
 
 public:
@@ -58,13 +63,19 @@ public:
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 
-	void InitializeProductionRule(std::string A, std::vector<std::string> alpha);
-	void InitializeSentence(std::vector<std::string> S, int iterations);
+	void InitializeProductionRule(std::string letter, ProductionRuleType productionRule);
+	void InitializeSentence(std::vector<ModuleType> axiom, int iterations);
 
-	void InitializeRotationRule(std::string A, float theta, float randomness = 0.0f);
-	void InitializeScale(float seed, float width, float rotation);
+	void Update(ID3D11Device*, float deltaTime, float deltaIntensity); // NB: Needs edited!
 
-	void Update(ID3D11Device*, float deltaTime, float deltaIntensity);
+	// DEPRECATED:
+	//void InitializeProductionRule(std::string A, std::vector<std::string> alpha);
+	//void InitializeSentence(std::vector<std::string> S, int iterations);
+
+	//void InitializeRotationRule(std::string A, float theta, float randomness = 0.0f);
+	//void InitializeScale(float seed, float width, float rotation);
+
+	//void Update(ID3D11Device*, float deltaTime, float deltaIntensity);
 
 	// DEBUG:
 	float* GetIntensity();
@@ -78,12 +89,11 @@ private:
 	void UpdateTree(float deltaTime, float intensity);
 	void DrawTree();
 
-	std::vector<std::string> GetProductionRule(std::string A);
+	ProductionRuleType GetProductionRule(std::string letter);
 
 private:
-	std::map<std::string, std::vector<std::vector<std::string>>> m_productionRules;
-	std::map<std::string, std::vector<std::vector<std::string>>> m_productionWeights;
-	std::vector<std::string> m_sentence;
+	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;
+	std::vector<ModuleType> m_sentence;
 
 	std::function<ModuleType()> m_moduleTransform;
 
