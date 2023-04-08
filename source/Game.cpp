@@ -319,27 +319,6 @@ void Game::Render()
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(0.9f)*Matrix::CreateTranslation(1.0f, -0.4f, 0.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 	m_DragonCurve12.Render(context);
 
-
-	/*m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_LSystem.Render(context);
-
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_LSystem.Render(context);
-
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_LSystem.Render(context);
-
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_LSystem.Render(context);
-
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_LSystem.Render(context);*/
-
 	// Draw Text to the screen
 	//m_sprites->Begin();
 	//m_font->DrawString(m_sprites.get(), m_LSystem.GetSentence().c_str(), XMFLOAT2(10, 10), Colors::White);
@@ -585,6 +564,30 @@ void Game::CreateDeviceDependentResources()
 	m_DragonCurve12.InitializeRotationRule("-", -90.0f*XM_PI/180.0f, 0.0f*XM_PI/180.0f);
 	m_DragonCurve12.InitializeScale(0.5f, 0.004f, -XM_PI);
 	m_DragonCurve12.Initialize(device);
+
+	std::vector<std::function<LSystem::ModuleType(LSystem::ModuleType)>> F;
+	F.push_back([](LSystem::ModuleType FModule) {
+		LSystem::ModuleType productionModule;
+		productionModule.letter = "F";
+		productionModule.length = FModule.length;
+		productionModule.theta = FModule.theta;
+		return productionModule; 
+	});
+	F.push_back([](LSystem::ModuleType FModule) {
+		LSystem::ModuleType productionModule;
+		productionModule.letter = "G";
+		productionModule.length = FModule.length;
+		productionModule.theta = FModule.theta + 90.0f*XM_PI/180.0f;
+		return productionModule;
+		});
+
+	LSystem::ModuleType FModule;
+	FModule.letter = "F";
+	FModule.length = 1.0f;
+	FModule.theta = 0.0f;
+
+	F[0](FModule);
+	F[1](F[0](FModule));
 
 	// Models
 	m_Screen.Initialize(device);

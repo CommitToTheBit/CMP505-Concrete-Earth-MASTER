@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <functional>
 
 class LSystem
 {
@@ -38,6 +39,15 @@ protected:
 		DirectX::SimpleMath::Matrix transform;
 		DirectX::SimpleMath::Vector3 position;
 		float simplex;
+	};
+
+	// Module for parametric L-systems
+public:
+	struct ModuleType
+	{
+		std::string letter;
+		float length;
+		float theta;
 	};
 
 public:
@@ -74,6 +84,8 @@ private:
 	std::map<std::string, std::vector<std::vector<std::string>>> m_productionRules;
 	std::map<std::string, std::vector<std::vector<std::string>>> m_productionWeights;
 	std::vector<std::string> m_sentence;
+
+	std::function<ModuleType()> m_moduleTransform;
 
 	std::map<std::string, float> m_rotationRules;
 	std::map<std::string, float> m_rotationRandomness;

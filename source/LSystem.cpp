@@ -5,6 +5,8 @@ LSystem::LSystem()
 {
 	m_time = 0.0f;
 	m_intensity = 0.0f;
+
+
 }
 
 
