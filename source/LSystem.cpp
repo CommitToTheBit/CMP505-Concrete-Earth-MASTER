@@ -6,7 +6,7 @@ LSystem::LSystem()
 	m_time = 0.0f;
 	m_intensity = 0.0f;
 
-
+	m_length = 1.0f;
 }
 
 
@@ -17,7 +17,7 @@ LSystem::~LSystem()
 
 bool LSystem::Initialize(ID3D11Device* device)
 {
-	//UpdateTree(0.0f, 0.0f);
+	UpdateTree(0.0f, 0.0f);
 	InitializeBuffers(device);
 
 	return true;
@@ -33,29 +33,6 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 
 	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
 	float weight = 0.0f;
-
-	// STEP 0: Generate graph...
-	/*int graphVertices = 1;
-	int graphEdges = 0;
-
-	int graphVertex = 0;
-	std::vector<int> pushedVertices;
-
-	for each (std::string alpha in m_sentence)
-	{
-		if (alpha != "[" && alpha != "]" && alpha != "+" && alpha != "-")
-		{
-			graphEdges++;
-			graphVertices++;
-		}
-		else if (alpha == "]" && graphVertices > 1) // NB: Popping means we start at an 'old' vertex..
-		{
-			graphVertices--;
-		}
-	}
-
-	m_vertexCount = 0*graphVertices+4*graphEdges; // NB: Prototype starts with disconnected lines only...
-	m_indexCount = 0*graphVertices+4*graphEdges;*/
 
 	m_vertexCount = std::max((int)(4*m_treeVertices.size())/*+17*/, 3); // NB: Using 16-gon to approximate a circle!
 	m_indexCount = std::max((int)(24*m_treeVertices.size())/*+6*16*/, 3);
@@ -270,11 +247,8 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 
 	float length = m_length;// 1.5*pow(2.0f, -5.0f); // NB: pow(2.0f,iterations)
 	float radius = m_width;
-	int maxDepth = 0;// INT_MAX;
 
 	float radiusBase = 1.5f;
-
-	int depthReached = 0;
 
 	m_treeVertices = std::vector<TreeVertexType>();
 
@@ -282,21 +256,56 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	m_treeVertices[0].parent = 0;
 	m_treeVertices[0].depth = 0;
 	m_treeVertices[0].degree = 0;
-	m_treeVertices[0].childDepth = maxDepth;
-	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation)*DirectX::SimpleMath::Matrix::CreateTranslation(m_scaledVertices[0].position); // NB: Assumes we've initialised m_scaledVertices!
+	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::Identity;// DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation)*DirectX::SimpleMath::Matrix::CreateTranslation(m_scaledVertices[0].position); // NB: Assumes we've initialised m_scaledVertices!
 	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
 
 	int parentIndex = 0;
 	std::vector<int> parentIndices = std::vector<int>();
 
-	int vertexDepth = 0;
-	std::vector<int> vertexDepths = std::vector<int>();
-
 	DirectX::SimpleMath::Matrix localTransform = DirectX::SimpleMath::Matrix::Identity;
 
 	// STEP 1: Create branching structure...
 	int childIndex = 1;
-	for each (std::string alpha in m_sentence)
+	for each (ModuleType LModule in m_sentence)
+	{
+		if (LModule.letter == "[")
+		{
+			parentIndices.push_back(parentIndex);
+		}
+		else if (LModule.letter == "]" && parentIndices.size() > 0)
+		{
+			parentIndex = parentIndices[parentIndices.size()-1];
+			parentIndices.pop_back();
+		}
+		else
+		{
+			// DEBUG:
+			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.25f*cos(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
+			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(pow(2.0f,vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
+			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*simplex.FBMNoise(0.1f*m_time, 0.1f*m_treeVertices[parentIndex].position.x, m_treeVertices[parentIndex].position.y, 8)*DirectX::XM_PI/180.0f)*localTransform;
+			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(2.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)* localTransform;
+
+			//localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_length*LModule.length*cos(LModule.rotation), m_length*LModule.length*sin(LModule.rotation), 0.0f) * localTransform;
+
+			m_treeVertices.push_back(TreeVertexType());
+
+			m_treeVertices[childIndex].parent = parentIndex;
+			m_treeVertices[childIndex].degree = 1;
+			m_treeVertices[childIndex].radius = m_length*LModule.width;
+			m_treeVertices[childIndex].transform = localTransform*m_treeVertices[parentIndex].transform;
+			m_treeVertices[childIndex].position = m_treeVertices[parentIndex].position+m_length*LModule.length*DirectX::SimpleMath::Vector3(cos(LModule.rotation), sin(LModule.rotation), 0.0f);
+			//DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[childIndex].transform, m_treeVertices[childIndex].position);
+
+			m_treeVertices[parentIndex].degree++;
+
+			childIndex = m_scaledVertices.size();
+			parentIndex = m_treeVertices.size()-1;
+			localTransform = DirectX::SimpleMath::Matrix::Identity;
+		}
+	}
+
+	/*for each (std::string alpha in m_sentence)
 	{
 		if (alpha == "[")
 		{
@@ -396,7 +405,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	// If (degree 1 or all children have greater depth)
 	// ...set radius to function of child depth...
 	// ...count steps backwards up until parent has less depth...
-	// ...and linearly interpolate width over that path!
+	// ...and linearly interpolate width over that path!*/
 }
 
 void LSystem::InitializeProductionRule(std::string letter, ProductionRuleType productionRule)
@@ -415,9 +424,11 @@ void LSystem::InitializeSentence(std::vector<ModuleType> axiom, int iterations)
 	for (int i = 0; i < iterations; i++)
 	{
 		iteratedSentence = std::vector<ModuleType>();
+
+		ModuleType productionModule = m_sentence[0];
+
 		for each (ModuleType LModule in m_sentence)
 		{
-			ModuleType productionModule = LModule;
 			for each (std::function<ModuleType(ModuleType)> production in GetProductionRule(LModule.letter).productions)
 			{
 				productionModule = production(productionModule);
@@ -564,6 +575,16 @@ std::string LSystem::GetSentence()
 	for each (ModuleType LModule in m_sentence)
 	{
 		for each (char character in LModule.letter)
+		{
+			text += character;
+			if (++count >= 140)
+			{
+				text += "\n  ";
+				count = 0;
+			}
+		}
+
+		for each (char character in std::to_string((int)(180.0f*LModule.rotation/XM_PI)))
 		{
 			text += character;
 			if (++count >= 140)

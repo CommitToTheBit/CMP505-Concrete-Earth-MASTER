@@ -46,7 +46,8 @@ public:
 	{
 		std::string letter;
 		float length;
-		float theta;
+		float rotation;
+		float width;
 	};
 
 	struct ProductionRuleType
@@ -65,6 +66,7 @@ public:
 
 	void InitializeProductionRule(std::string letter, ProductionRuleType productionRule);
 	void InitializeSentence(std::vector<ModuleType> axiom, int iterations);
+	void InitializeTree();
 
 	void Update(ID3D11Device*, float deltaTime, float deltaIntensity); // NB: Needs edited!
 

@@ -282,9 +282,9 @@ void Game::Render()
 	m_Screen.Render(context);*/
 
 	// DEBUG: Display a single, normalised L-system...
-	//m_NeutralShader.EnableShader(context);
-	//m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	//m_LSystem.Render(context);
+	m_NeutralShader.EnableShader(context);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_LSystem.Render(context);
 
 	// Draw Text to the screen
 	//m_sprites->Begin();
@@ -462,30 +462,53 @@ void Game::CreateDeviceDependentResources()
 		LSystem::ModuleType productionModule;
 		productionModule.letter = "F";
 		productionModule.length = FModule.length;
-		productionModule.theta = FModule.theta;
+		productionModule.rotation = FModule.rotation;
+		productionModule.width = FModule.width;
 		return productionModule; 
 	});
 	F.productions.push_back([](LSystem::ModuleType FModule) {
 		LSystem::ModuleType productionModule;
 		productionModule.letter = "G";
 		productionModule.length = FModule.length;
-		productionModule.theta = FModule.theta + 90.0f*XM_PI/180.0f;
+		productionModule.rotation = FModule.rotation+90.0f*XM_PI/180.0f;
+		productionModule.width = FModule.width;
 		return productionModule;
 		});
 	F.weight = 1.0f;
 
+	// L-Systems
+	LSystem::ProductionRuleType G;
+	G.productions.push_back([](LSystem::ModuleType GModule) {
+		LSystem::ModuleType productionModule;
+		productionModule.letter = "F";
+		productionModule.length = GModule.length;
+		productionModule.rotation = GModule.rotation;
+		productionModule.width = GModule.width;
+		return productionModule;
+		});
+	G.productions.push_back([](LSystem::ModuleType GModule) {
+		LSystem::ModuleType productionModule;
+		productionModule.letter = "G";
+		productionModule.length = GModule.length;
+		productionModule.rotation = GModule.rotation-90.0f*XM_PI/180.0f;
+		productionModule.width = GModule.width;
+		return productionModule;
+		});
+	G.weight = 1.0f;
+
 	LSystem::ModuleType FModule;
 	FModule.letter = "F";
-	FModule.length = 1.0f;
-	FModule.theta = 0.0f;
+	FModule.length = 0.5f;
+	FModule.rotation = 0.0f;
+	FModule.width = 0.05f;
 
 	F.productions[0](FModule);
 	F.productions[1](F.productions[0](FModule));
 
-	//m_LSystem.InitializeProductionRule("F", std::vector<std::string>{"F", "+", "G"});
-	//m_LSystem.InitializeProductionRule("G", std::vector<std::string>{"F", "-", "G"});
-	//m_LSystem.InitializeSentence(std::vector<std::string>{"F"}, 2);
-	//m_LSystem.Initialize(device);
+	m_LSystem.InitializeProductionRule("F", F);
+	m_LSystem.InitializeProductionRule("G", G);
+	m_LSystem.InitializeSentence(std::vector<LSystem::ModuleType>{ FModule }, 3);
+	m_LSystem.Initialize(device);
 
 	// Models
 	m_Screen.Initialize(device);
@@ -544,9 +567,9 @@ void Game::SetupGUI()
 	window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 
-	//ImGui::Begin("Sin Wave Parameters", (bool*)true, window_flags);
-	//ImGui::SliderFloat("Wave Amplitude", m_LSystem.GetIntensity(), 0.0f, 1.0f);
-	//ImGui::End();
+	ImGui::Begin(m_LSystem.GetSentence().c_str(), (bool*)true, window_flags);
+	ImGui::SliderFloat("Wave Amplitude", m_LSystem.GetIntensity(), 0.0f, 1.0f);
+	ImGui::End();
 
 	ImGui::EndFrame();
 }
