@@ -6,7 +6,7 @@ LSystem::LSystem()
 	m_time = 0.0f;
 	m_intensity = 0.0f;
 
-	m_length = 1.0f;
+	m_length = 0.05f;
 }
 
 
@@ -245,18 +245,11 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	m_intensity += deltaIntensity;
 	m_intensity = std::max(0.0f, std::min(m_intensity, 1.0f));
 
-	float length = m_length;// 1.5*pow(2.0f, -5.0f); // NB: pow(2.0f,iterations)
-	float radius = m_width;
-
-	float radiusBase = 1.5f;
-
 	m_treeVertices = std::vector<TreeVertexType>();
 
 	m_treeVertices.push_back(TreeVertexType());
 	m_treeVertices[0].parent = 0;
-	m_treeVertices[0].depth = 0;
-	m_treeVertices[0].degree = 0;
-	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::Identity;// DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation)*DirectX::SimpleMath::Matrix::CreateTranslation(m_scaledVertices[0].position); // NB: Assumes we've initialised m_scaledVertices!
+	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateTranslation(0.0f, 0.0f, 0.0f);//Identity;// DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation)*DirectX::SimpleMath::Matrix::CreateTranslation(m_scaledVertices[0].position); // NB: Assumes we've initialised m_scaledVertices!
 	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
 
 	int parentIndex = 0;
@@ -279,133 +272,29 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 		}
 		else
 		{
-			// DEBUG:
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.25f*cos(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(pow(2.0f,vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*simplex.FBMNoise(0.1f*m_time, 0.1f*m_treeVertices[parentIndex].position.x, m_treeVertices[parentIndex].position.y, 8)*DirectX::XM_PI/180.0f)*localTransform;
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(2.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)* localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(LModule.rotation) * localTransform;
 
-			//localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_length*LModule.length*cos(LModule.rotation), m_length*LModule.length*sin(LModule.rotation), 0.0f) * localTransform;
+			if (LModule.length == 0.0f)
+				continue;
+
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_length*LModule.length, 0.0f, 0.0f) * localTransform;
 
 			m_treeVertices.push_back(TreeVertexType());
 
 			m_treeVertices[childIndex].parent = parentIndex;
 			m_treeVertices[childIndex].degree = 1;
 			m_treeVertices[childIndex].radius = m_length*LModule.width;
-			m_treeVertices[childIndex].transform = localTransform*m_treeVertices[parentIndex].transform;
-			m_treeVertices[childIndex].position = m_treeVertices[parentIndex].position+m_length*LModule.length*DirectX::SimpleMath::Vector3(cos(LModule.rotation), sin(LModule.rotation), 0.0f);
-			//DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[childIndex].transform, m_treeVertices[childIndex].position);
+			m_treeVertices[childIndex].transform = localTransform * m_treeVertices[parentIndex].transform;
+			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[childIndex].transform, m_treeVertices[childIndex].position);
 
+			m_treeVertices[parentIndex].radius = std::max(m_length*LModule.width, m_treeVertices[parentIndex].radius);
 			m_treeVertices[parentIndex].degree++;
 
-			childIndex = m_scaledVertices.size();
+			childIndex = m_treeVertices.size();
 			parentIndex = m_treeVertices.size()-1;
 			localTransform = DirectX::SimpleMath::Matrix::Identity;
 		}
 	}
-
-	/*for each (std::string alpha in m_sentence)
-	{
-		if (alpha == "[")
-		{
-			parentIndices.push_back(parentIndex);
-			vertexDepths.push_back(vertexDepth);
-		}
-		else if (alpha == "]" && parentIndices.size() > 0)
-		{
-			parentIndex = parentIndices[parentIndices.size()-1];
-			vertexDepth = vertexDepths[vertexDepths.size()-1];
-
-			parentIndices.pop_back();
-			vertexDepths.pop_back();
-		}
-		else if (alpha == "^")
-		{
-			vertexDepth++;
-
-			depthReached = std::max(vertexDepth, depthReached);
-		}
-		else if (m_rotationRules.count(alpha))
-		{
-			//vertexDepth++;
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotationRules[alpha]+(-1.0f+2.0f*std::rand()/RAND_MAX)*m_rotationRandomness[alpha])*localTransform;
-
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ((120.0f)*DirectX::XM_PI/180.0f)*localTransform;
-		}
-		else
-		{
-			// DEBUG:
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(0.25f*cos(time/5.0f)*DirectX::XM_PI/180.0f)*localTransform;
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(pow(2.0f,vertexDepth)*(-1.0f+2.0f*std::rand()/RAND_MAX)*DirectX::XM_PI/180.0f)*localTransform;
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(1.0f*pow(2.0f, vertexDepth)*simplex.FBMNoise(0.1f*m_time, 0.1f*m_treeVertices[parentIndex].position.x, m_treeVertices[parentIndex].position.y, 8)*DirectX::XM_PI/180.0f)*localTransform;
-			//localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(2.0f*(-1.0f+2.0f*std::rand()/RAND_MAX)*cos(m_time/(3.0f+(m_treeVertices.size()-1)%5)+m_treeVertices.size()-1)*DirectX::XM_PI/180.0f)* localTransform;
-
-			//localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*(1.0f+0.25f*(-1.0f+2.0f*std::rand()/RAND_MAX))*length, 0.0f, 0.0f)*localTransform;
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(std::max(0.0f, (float)pow(2.0f, vertexDepth)*(m_intensity-1.0f)+1.0f)*length, 0.0f, 0.0f)*localTransform;
-
-			m_treeVertices.push_back(TreeVertexType());
-
-			m_treeVertices[m_treeVertices.size()-1].parent = parentIndex;
-			m_treeVertices[m_treeVertices.size()-1].depth = vertexDepth;
-			m_treeVertices[m_treeVertices.size()-1].degree = 1;
-			m_treeVertices[m_treeVertices.size()-1].childDepth = maxDepth;
-			m_treeVertices[m_treeVertices.size()-1].transform = localTransform*m_treeVertices[parentIndex].transform;
-			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[m_treeVertices.size()-1].transform, m_treeVertices[m_treeVertices.size()-1].position);
-
-			m_treeVertices[parentIndex].degree++;
-			m_treeVertices[parentIndex].childDepth = std::min(vertexDepth,m_treeVertices[parentIndex].childDepth);
-
-			childIndex = m_scaledVertices.size();
-			parentIndex = m_treeVertices.size()-1;
-			localTransform = DirectX::SimpleMath::Matrix::Identity;
-		}
-	}
-
-	// STEP 2: Assign widths based on depth...
-	float branchLength, branch;
-	float a, b;
-	int vertexIndex;
-
-	m_treeVertices[0].radius = m_intensity*radius; // NB: Set as an 'anchor'...
-	for (int d = 0; d <= depthReached; d++)
-	{
-		for (int i = 1; i < m_treeVertices.size(); i++)
-		{
-			m_treeVertices[i].radius = m_intensity*radius; // DEBUG: Keeps a consistent width...
-			continue; // DEBUG: Keeps a consistent width...
-
-			if (m_treeVertices[i].depth == m_treeVertices[i].childDepth || m_treeVertices[i].depth != d)
-				continue;
-
-			a = m_intensity*radius*pow(radiusBase, -m_treeVertices[i].childDepth);
-
-			branchLength = 0.0f;
-			vertexIndex = i;
-			while (m_treeVertices[vertexIndex].depth == m_treeVertices[i].depth && vertexIndex != m_treeVertices[vertexIndex].parent)
-			{
-				branchLength += (m_treeVertices[m_treeVertices[vertexIndex].parent].position-m_treeVertices[vertexIndex].position).Length();
-				vertexIndex = m_treeVertices[vertexIndex].parent;
-			}
-
-			b = (m_treeVertices[vertexIndex].childDepth > m_treeVertices[vertexIndex].depth) ? m_intensity*radius*(float)pow(radiusBase, -m_treeVertices[i].depth) : std::min(m_intensity*radius*(float)pow(radiusBase, -m_treeVertices[i].depth), m_treeVertices[vertexIndex].radius);
-
-			branch = 0.0f;
-			vertexIndex = i;
-			while (m_treeVertices[vertexIndex].depth == m_treeVertices[i].depth && vertexIndex != m_treeVertices[vertexIndex].parent)
-			{
-				branch += (m_treeVertices[m_treeVertices[vertexIndex].parent].position-m_treeVertices[vertexIndex].position).Length()/branchLength;
-				m_treeVertices[vertexIndex].radius = std::max((1.0f-branch)*a+branch*b, m_treeVertices[vertexIndex].radius);
-				vertexIndex = m_treeVertices[vertexIndex].parent;
-			}
-			//m_treeVertices[vertexIndex].radius = std::max(b, m_treeVertices[vertexIndex].radius);
-		}
-	}
-
-	// If (degree 1 or all children have greater depth)
-	// ...set radius to function of child depth...
-	// ...count steps backwards up until parent has less depth...
-	// ...and linearly interpolate width over that path!*/
 }
 
 void LSystem::InitializeProductionRule(std::string letter, ProductionRuleType productionRule)
@@ -425,14 +314,12 @@ void LSystem::InitializeSentence(std::vector<ModuleType> axiom, int iterations)
 	{
 		iteratedSentence = std::vector<ModuleType>();
 
-		ModuleType productionModule = m_sentence[0];
-
 		for each (ModuleType LModule in m_sentence)
 		{
+			ModuleType productionModule = LModule;
 			for each (std::function<ModuleType(ModuleType)> production in GetProductionRule(LModule.letter).productions)
 			{
-				productionModule = production(productionModule);
-				iteratedSentence.push_back(productionModule);
+				iteratedSentence.push_back(production(LModule));
 			}
 		}
 
@@ -454,16 +341,7 @@ LSystem::ProductionRuleType LSystem::GetProductionRule(std::string letter)
 	return m_productionRules[letter][0];
 }
 
-/*void LSystem::InitializeRotationRule(std::string A, float theta, float randomness)
-{
-	if (!m_rotationRules.count(A))
-	{
-		m_rotationRules.insert({ A, theta });
-		m_rotationRandomness.insert({ A, randomness });
-	}
-}
-
-void LSystem::InitializeScale(float seed, float width, float rotation) // NB: Add alignment options?
+/*void LSystem::InitializeScale(float seed, float width, float rotation) // NB: Add alignment options?
 {
 	m_seed = seed;
 	m_length = 1.0f;
@@ -575,16 +453,6 @@ std::string LSystem::GetSentence()
 	for each (ModuleType LModule in m_sentence)
 	{
 		for each (char character in LModule.letter)
-		{
-			text += character;
-			if (++count >= 140)
-			{
-				text += "\n  ";
-				count = 0;
-			}
-		}
-
-		for each (char character in std::to_string((int)(180.0f*LModule.rotation/XM_PI)))
 		{
 			text += character;
 			if (++count >= 140)

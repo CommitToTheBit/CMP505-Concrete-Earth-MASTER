@@ -24,9 +24,7 @@ protected:
 	struct TreeVertexType
 	{
 		int parent;
-		int depth;
 		int degree;
-		int childDepth;
 		DirectX::SimpleMath::Matrix transform;
 		DirectX::SimpleMath::Vector3 position;
 		float radius;
@@ -71,10 +69,6 @@ public:
 	void Update(ID3D11Device*, float deltaTime, float deltaIntensity); // NB: Needs edited!
 
 	// DEPRECATED:
-	//void InitializeProductionRule(std::string A, std::vector<std::string> alpha);
-	//void InitializeSentence(std::vector<std::string> S, int iterations);
-
-	//void InitializeRotationRule(std::string A, float theta, float randomness = 0.0f);
 	//void InitializeScale(float seed, float width, float rotation);
 
 	//void Update(ID3D11Device*, float deltaTime, float deltaIntensity);

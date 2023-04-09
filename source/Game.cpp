@@ -462,15 +462,23 @@ void Game::CreateDeviceDependentResources()
 		LSystem::ModuleType productionModule;
 		productionModule.letter = "F";
 		productionModule.length = FModule.length;
-		productionModule.rotation = FModule.rotation;
+		productionModule.rotation = 0.0f;
 		productionModule.width = FModule.width;
 		return productionModule; 
 	});
 	F.productions.push_back([](LSystem::ModuleType FModule) {
 		LSystem::ModuleType productionModule;
+		productionModule.letter = "+";
+		productionModule.length = 0.0f;
+		productionModule.rotation = 90.0f*XM_PI/180.0f;
+		productionModule.width = FModule.width;
+		return productionModule;
+		});
+	F.productions.push_back([](LSystem::ModuleType FModule) {
+		LSystem::ModuleType productionModule;
 		productionModule.letter = "G";
 		productionModule.length = FModule.length;
-		productionModule.rotation = FModule.rotation+90.0f*XM_PI/180.0f;
+		productionModule.rotation = 0.0f;
 		productionModule.width = FModule.width;
 		return productionModule;
 		});
@@ -482,7 +490,15 @@ void Game::CreateDeviceDependentResources()
 		LSystem::ModuleType productionModule;
 		productionModule.letter = "F";
 		productionModule.length = GModule.length;
-		productionModule.rotation = GModule.rotation;
+		productionModule.rotation = 0.0f;
+		productionModule.width = GModule.width;
+		return productionModule;
+		});
+	G.productions.push_back([](LSystem::ModuleType GModule) {
+		LSystem::ModuleType productionModule;
+		productionModule.letter = "-";
+		productionModule.length = 0.0f;
+		productionModule.rotation = -90.0f*XM_PI/180.0f;
 		productionModule.width = GModule.width;
 		return productionModule;
 		});
@@ -490,7 +506,7 @@ void Game::CreateDeviceDependentResources()
 		LSystem::ModuleType productionModule;
 		productionModule.letter = "G";
 		productionModule.length = GModule.length;
-		productionModule.rotation = GModule.rotation-90.0f*XM_PI/180.0f;
+		productionModule.rotation = 0.0f;
 		productionModule.width = GModule.width;
 		return productionModule;
 		});
@@ -499,15 +515,12 @@ void Game::CreateDeviceDependentResources()
 	LSystem::ModuleType FModule;
 	FModule.letter = "F";
 	FModule.length = 0.5f;
-	FModule.rotation = 0.0f;
+	FModule.rotation = XM_PIDIV4;
 	FModule.width = 0.05f;
-
-	F.productions[0](FModule);
-	F.productions[1](F.productions[0](FModule));
 
 	m_LSystem.InitializeProductionRule("F", F);
 	m_LSystem.InitializeProductionRule("G", G);
-	m_LSystem.InitializeSentence(std::vector<LSystem::ModuleType>{ FModule }, 3);
+	m_LSystem.InitializeSentence(std::vector<LSystem::ModuleType>{ FModule }, 8);
 	m_LSystem.Initialize(device);
 
 	// Models
