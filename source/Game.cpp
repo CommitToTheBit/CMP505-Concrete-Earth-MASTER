@@ -165,7 +165,7 @@ void Game::Update(DX::StepTimer const& timer)
 		if (m_gameInputCommands.anticlockwise)
 			deltaInterpolation -= 1.0f;
 			
-		//m_DragonCurve.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
+		m_DragonCurve.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
 	}
 	/*else
 	{
@@ -257,7 +257,7 @@ void Game::Render()
 	m_VeinsRenderPass->setRenderTarget(context);
 	m_VeinsRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
 
-	for (float theta = 0.0f; theta < XM_2PI; theta += XM_2PI/20.0f)
+	/*for (float theta = 0.0f; theta < XM_2PI; theta += XM_2PI/20.0f)
 	{
 		// CONSIDER: pow(1.0f+pow(1920.0f/1080.0f, 2.0f), 0.5f) AT... atan(ADJ/OPP) = atan(1080.0f/1920.0f)... x = acos(theta)... a = 1.0f/cos(atan(1080.0f/1920.0f)...
 
@@ -266,25 +266,30 @@ void Game::Render()
 		m_NeutralShader.EnableShader(context);
 		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio, 0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f)*Matrix::CreateScale(pow(m_aspectRatio, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 		m_DragonCurve.Render(context);
-	}
+	}*/
+
+	// DEBUG: Render a sphinx tiling in the background...
+	m_NeutralShader.EnableShader(context);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -3.0f/8.0f, 0.0f)*Matrix::CreateScale(8.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_SphinxTiling.Render(context);
 
 	// COMPOSITE RENDER:
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
 
-	/*m_ScreenShader.EnableShader(context);
+	m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
 	m_ScreenShader.SetTimeBuffer(context, m_time);
 	m_ScreenShader.SetAlphaBuffer(context, 0.6f);
 	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
-	m_ScreenShader.SetStressBuffer(context, *m_LSystem.GetIntensity());
+	m_ScreenShader.SetStressBuffer(context, *m_DragonCurve.GetIntensity());
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
 	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
-	m_Screen.Render(context);*/
+	m_Screen.Render(context);
 
 	// DEBUG: Display a single, normalised L-system...
-	m_NeutralShader.EnableShader(context);
+	/*m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_SphinxTiling.Render(context);
+	m_DragonCurve.Render(context);*/
 
 	// Draw Text to the screen
 	//m_sprites->Begin();
@@ -458,7 +463,7 @@ void Game::CreateDeviceDependentResources()
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.1f, 9);
-	m_SphinxTiling.Initialize(device, 0.01f, 2);
+	m_SphinxTiling.Initialize(device, 0.001f, 7);
 
 	// Models
 	m_Screen.Initialize(device);
