@@ -458,7 +458,7 @@ void Game::CreateDeviceDependentResources()
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.1f, 9);
-	m_SphinxTiling.Initialize(device, 0.01f, 5);
+	m_SphinxTiling.Initialize(device, 0.01f, 2);
 
 	// Models
 	m_Screen.Initialize(device);

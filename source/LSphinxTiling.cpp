@@ -15,85 +15,144 @@ LSphinxTiling::~LSphinxTiling()
 bool LSphinxTiling::Initialize(ID3D11Device* device, float width, int iterations, float seed)
 {
 	// STEP 1: Write production rules...
-	ProductionRuleType F;
-	F.productions.push_back([](LModuleType FModule) {
-		LModuleType productionModule = FModule;
-		productionModule.letter = "X";
+	ProductionRuleType FAntiClockwise;
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
+		productionModule.letter = "FClockwise";
+		productionModule.staticLength = FAntiClockwiseModule.staticLength/2.0f;
+		//productionModule.staticRotation = 0.0f;
 		return productionModule;
 		});
-	F.productions.push_back([](LModuleType FModule) {
-		LModuleType productionModule = FModule;
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
 		productionModule.letter = "[";
 		return productionModule;
 		});
-	F.productions.push_back([](LModuleType FModule) {
-		LModuleType productionModule = FModule;
-		productionModule.letter = "F";
-		productionModule.staticLength = FModule.staticLength/2.0f;
-		productionModule.staticRotation = -2.0f*DirectX::XM_PI/3.0f;
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
+		productionModule.letter = "HClockwise";
+		productionModule.staticLength = FAntiClockwiseModule.staticLength/3.0f;
+		productionModule.staticRotation = 2.0f*DirectX::XM_PI/3.0f;
 		return productionModule;
 		});
-	F.productions.push_back([](LModuleType FModule) {
-		LModuleType productionModule = FModule;
-		productionModule.letter = "G";
-		productionModule.staticLength = FModule.staticLength/2.0f;
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
+		productionModule.letter = "X";
+		productionModule.staticLength = FAntiClockwiseModule.staticLength/6.0f;
+		productionModule.staticRotation = 2.0f*DirectX::XM_PI/3.0f;
+		return productionModule;
+		});
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
+		productionModule.letter = "GClockwise";
+		productionModule.staticLength = FAntiClockwiseModule.staticLength/6.0f;
+		productionModule.staticRotation = -DirectX::XM_PI/3.0f;
+		return productionModule;
+		});
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
+		productionModule.letter = "~X";
+		productionModule.staticLength = FAntiClockwiseModule.staticLength/6.0f;
 		productionModule.staticRotation = DirectX::XM_PI/3.0f;
 		return productionModule;
 		});
-	F.productions.push_back([](LModuleType FModule) {
-		LModuleType productionModule = FModule;
-		productionModule.letter = "Y";
-		productionModule.staticLength = FModule.staticLength/2.0f;
-		productionModule.staticRotation = -DirectX::XM_PI/3.0f;
-		return productionModule;
-		});
-	F.productions.push_back([](LModuleType FModule) {
-		LModuleType productionModule = FModule;
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
 		productionModule.letter = "]";
 		return productionModule;
 		});
-	F.weight = 1.0f;
-	AddProductionRule("F", F);
-
-	ProductionRuleType G;
-	G.productions.push_back([](LModuleType GModule) {
-		LModuleType productionModule = GModule;
-		productionModule.letter = "Z";
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
+		productionModule.letter = "FClockwise";
+		productionModule.staticLength = FAntiClockwiseModule.staticLength/2.0f;
+		productionModule.staticRotation = 0.0f;
 		return productionModule;
 		});
-	G.productions.push_back([](LModuleType GModule) {
-		LModuleType productionModule = GModule;
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
+		productionModule.letter = "HClockwise";
+		productionModule.staticLength = FAntiClockwiseModule.staticLength/3.0f;
+		productionModule.staticRotation = 2.0f*DirectX::XM_PI/3.0f;
+		return productionModule;
+		});
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
 		productionModule.letter = "[";
 		return productionModule;
 		});
-	G.productions.push_back([](LModuleType GModule) {
-		LModuleType productionModule = GModule;
-		productionModule.letter = "Y";
-		productionModule.staticLength = GModule.staticLength/2.0f;
-		productionModule.staticRotation = -2.0f*DirectX::XM_PI/3.0f;
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
+		productionModule.letter = "X";
+		productionModule.staticLength = FAntiClockwiseModule.staticLength/6.0f;
+		productionModule.staticRotation = 2.0f*DirectX::XM_PI/3.0f;
 		return productionModule;
 		});
-	G.productions.push_back([](LModuleType GModule) {
-		LModuleType productionModule = GModule;
-		productionModule.letter = "G";
-		productionModule.staticLength = GModule.staticLength/2.0f;
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
+		productionModule.letter = "GClockwise";
+		productionModule.staticLength = FAntiClockwiseModule.staticLength/6.0f;
 		productionModule.staticRotation = -DirectX::XM_PI/3.0f;
 		return productionModule;
 		});
-	G.productions.push_back([](LModuleType GModule) {
-		LModuleType productionModule = GModule;
-		productionModule.letter = "Y";
-		productionModule.staticLength = FModule.staticLength/2.0f;
-		productionModule.staticRotation = -DirectX::XM_PI/3.0f;
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
+		productionModule.letter = "~X";
+		productionModule.staticLength = FAntiClockwiseModule.staticLength/6.0f;
+		productionModule.staticRotation = DirectX::XM_PI/3.0f;
 		return productionModule;
 		});
-	G.productions.push_back([](LModuleType GModule) {
-		LModuleType productionModule = GModule;
+	FAntiClockwise.productions.push_back([](LModuleType FAntiClockwiseModule) {
+		LModuleType productionModule = FAntiClockwiseModule;
 		productionModule.letter = "]";
 		return productionModule;
 		});
-	G.weight = 1.0f;
-	AddProductionRule("G", G);
+	FAntiClockwise.weight = 1.0f;
+	AddProductionRule("FAntiClockwise", FAntiClockwise);
+
+	ProductionRuleType GAntiClockwise;
+	GAntiClockwise.productions.push_back([](LModuleType GAntiClockwiseModule) {
+		LModuleType productionModule = GAntiClockwiseModule;
+		productionModule.letter = "[";
+		return productionModule;
+		});
+	GAntiClockwise.productions.push_back([](LModuleType GAntiClockwiseModule) {
+		LModuleType productionModule = GAntiClockwiseModule;
+		productionModule.letter = "FClockwise";
+		productionModule.staticLength = 3.0f*GAntiClockwiseModule.staticLength/2.0f;
+		return productionModule;
+		});
+	GAntiClockwise.productions.push_back([](LModuleType GAntiClockwiseModule) {
+		LModuleType productionModule = GAntiClockwiseModule;
+		productionModule.letter = "]";
+		return productionModule;
+		});
+	GAntiClockwise.productions.push_back([](LModuleType GAntiClockwiseModule) {
+		LModuleType productionModule = GAntiClockwiseModule;
+		productionModule.letter = "X";
+		return productionModule;
+		});
+	GAntiClockwise.weight = 1.0f;
+	AddProductionRule("GAntiClockwise", GAntiClockwise);
+
+	ProductionRuleType HAntiClockwise;
+	HAntiClockwise.productions.push_back([](LModuleType HAntiClockwiseModule) {
+		LModuleType productionModule = HAntiClockwiseModule;
+		productionModule.letter = "FClockwise";
+		productionModule.staticLength = 3.0f*HAntiClockwiseModule.staticLength/4.0f;
+		return productionModule;
+		});
+	HAntiClockwise.productions.push_back([](LModuleType HAntiClockwiseModule) {
+		LModuleType productionModule = HAntiClockwiseModule;
+		productionModule.letter = "~X";
+		productionModule.staticRotation = 0.0f;
+		return productionModule;
+		});
+	HAntiClockwise.weight = 1.0f;
+	AddProductionRule("HAntiClockwise", HAntiClockwise);
+
+	ProductionRuleType X;
+	X.weight = 1.0f;
+	AddProductionRule("~X", X);
 
 	// STEP 2: Write axiom...
 	// FIXME: Add constructor...
@@ -116,35 +175,32 @@ bool LSphinxTiling::Initialize(ID3D11Device* device, float width, int iterations
 	BaseModule.periodicWidth = 0.0f;
 	BaseModule.randomPeriodicWidth = 0.0f;
 
-	LModuleType XModule = BaseModule;
-	XModule.letter = "X";
-	XModule.staticLength = 2.0f;
-	XModule.staticRotation = DirectX::XM_PI/3.0f;
+	LModuleType FAntiClockwiseModule = BaseModule;
+	FAntiClockwiseModule.letter = "FAntiClockwise";
+	FAntiClockwiseModule.staticLength = 3.0f;
+	FAntiClockwiseModule.staticRotation = 0.0f;
 
-	LModuleType FModule = BaseModule;
-	FModule.letter = "F";
-	FModule.staticLength = 1.0f;
-	FModule.staticRotation = -2.0f*DirectX::XM_PI/3.0f;
+	LModuleType XModule1 = BaseModule;
+	XModule1.letter = "~X";
+	XModule1.staticLength = 1.0f;
+	XModule1.staticRotation = 2.0f*DirectX::XM_PI/3.0f;
 
-	LModuleType GModule = BaseModule;
-	GModule.letter = "G";
-	GModule.staticLength = 1.0f;
-	GModule.staticRotation = DirectX::XM_PI/3.0f;
+	LModuleType GAntiClockwiseModule = BaseModule;
+	GAntiClockwiseModule.letter = "GAntiClockwise";
+	GAntiClockwiseModule.staticLength = 1.0f;
+	GAntiClockwiseModule.staticRotation = DirectX::XM_PI/3.0f;
 
-	LModuleType YModule = BaseModule;
-	YModule.letter = "Y";
-	YModule.staticLength = 1.0f;
-	YModule.staticRotation = -DirectX::XM_PI/3.0f;
+	LModuleType XModule2 = BaseModule;
+	XModule2.letter = "Y";
+	XModule2.staticLength = 1.0f;
+	XModule2.staticRotation = -DirectX::XM_PI/3.0f;
 
-	LModuleType ZModule = BaseModule;
-	ZModule.letter = "Z";
-	ZModule.staticLength = 3.0f;
-	ZModule.staticRotation = -2.0f*DirectX::XM_PI/3.0f;
+	LModuleType HAntiClockwiseModule = BaseModule;
+	HAntiClockwiseModule.letter = "HAntiClockwise";
+	HAntiClockwiseModule.staticLength = 2.0f;
+	HAntiClockwiseModule.staticRotation = 2.0f*DirectX::XM_PI/3.0f;
 
-	LModuleType LoopModule = XModule;
-	LoopModule.staticRotation = -2.0f*DirectX::XM_PI/3.0f;
-
-	std::vector<LModuleType> axiom = std::vector<LModuleType>{ XModule, FModule, GModule, YModule, ZModule, LoopModule };
+	std::vector<LModuleType> axiom = std::vector<LModuleType>{ FAntiClockwiseModule, XModule1, GAntiClockwiseModule, XModule2, HAntiClockwiseModule };
 
 	// STEP 3: Initialise...
 	return __super::Initialize(device, axiom, iterations, seed, 0.0f); // NB: Oriented to best 'tend towards a limit'...
