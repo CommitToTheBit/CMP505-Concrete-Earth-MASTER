@@ -3,10 +3,7 @@
 
 LSystem::LSystem()
 {
-	m_time = 0.0f;
-	m_intensity = 0.0f;
 
-	m_length = 0.05f;
 }
 
 
@@ -15,9 +12,15 @@ LSystem::~LSystem()
 
 }
 
-bool LSystem::Initialize(ID3D11Device* device)
+bool LSystem::Initialize(ID3D11Device* device, std::vector<LModuleType> axiom, int iterations, DirectX::SimpleMath::Vector2 anchoring, float seed)
 {
-	UpdateTree(0.0f, 0.0f);
+	// STEP 1: Initialize sentence, using grammar...
+	InitializeSentence(axiom, iterations);
+
+	// STEP 2: Initialize tree, to scale...
+	InitializeTree(anchoring, seed);
+
+	// STEP 3:
 	InitializeBuffers(device);
 
 	return true;
@@ -71,56 +74,25 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 		vertices[4*i+2].position = treeVertex.position-treeVertex.radius*orthogonal;
 		vertices[4*i+3].position = treeVertex.position+treeVertex.radius*orthogonal;
 
-		indices[24*i] = 4*treeVertex.parent+2;
-		indices[24*i+1] = 4*treeVertex.parent+3;
-		indices[24*i+2] = 4*i;
-
-		indices[24*i+3] = 4*treeVertex.parent+2;
-		indices[24*i+4] = 4*i;
-		indices[24*i+5] = 4*i+1;
-
-		indices[24*i+6] = 4*treeVertex.parent+2;
-		indices[24*i+7] = 4*i;
-		indices[24*i+8] = 4*treeVertex.parent+3;
-
-		indices[24*i+9] = 4*treeVertex.parent+2;
-		indices[24*i+10] = 4*i+1;
-		indices[24*i+11] = 4*i;
-
-		indices[24*i+12] = 4*i;
-		indices[24*i+13] = 4*i+1;
-		indices[24*i+14] = 4*i+2;
-
-		indices[24*i+15] = 4*i;
-		indices[24*i+16] = 4*i+2;
-		indices[24*i+17] = 4*i+3;
-
-		indices[24*i+18] = 4*i;
-		indices[24*i+19] = 4*i+2;
-		indices[24*i+20] = 4*i+1;
-
-		indices[24*i+21] = 4*i;
-		indices[24*i+22] = 4*i+3;
-		indices[24*i+23] = 4*i+2;
-	}
-
-	/*if (m_treeVertices.size() > 0)
-	{
-		for (int i = 0; i < 16; i++)
-			vertices[4*m_treeVertices.size()+i].position = m_treeVertices[0].position+DirectX::SimpleMath::Vector3(m_treeVertices[0].radius*cos(((float)i/16.0f)*DirectX::XM_2PI), m_treeVertices[0].radius*sin(((float)i/16.0f)*DirectX::XM_2PI), 0.0f);
-		vertices[4*m_treeVertices.size()+16].position = m_treeVertices[0].position;
-
-		for (int i = 0; i < 16; i++)
+		for (int j = 0; j < 2; j++) // NB: j loops over 'both sides' of culling...
 		{
-			indices[24*m_treeVertices.size()+6*i] = 4*m_treeVertices.size()+16;
-			indices[24*m_treeVertices.size()+6*i+1] = 4*m_treeVertices.size()+i;
-			indices[24*m_treeVertices.size()+6*i+2] = 4*m_treeVertices.size()+(i+1)%16;
+			indices[24*i+12*j] = 4*treeVertex.parent+2;
+			indices[24*i+12*j+1+j] = 4*treeVertex.parent+3;
+			indices[24*i+12*j+2-j] = 4*i;
 
-			indices[24*m_treeVertices.size()+6*i+3] = 4*m_treeVertices.size()+16;
-			indices[24*m_treeVertices.size()+6*i+4] = 4*m_treeVertices.size()+(i+1)%16;
-			indices[24*m_treeVertices.size()+6*i+5] = 4*m_treeVertices.size()+i;
+			indices[24*i+12*j+3] = 4*treeVertex.parent+2;
+			indices[24*i+12*j+4+j] = 4*i;
+			indices[24*i+12*j+5-j] = 4*i+1;
+
+			indices[24*i+12*j+6] = 4*i;
+			indices[24*i+12*j+7+j] = 4*i+1;
+			indices[24*i+12*j+8-j] = 4*i+2;
+
+			indices[24*i+12*j+9] = 4*i;
+			indices[24*i+12*j+10+j] = 4*i+2;
+			indices[24*i+12*j+11-j] = 4*i+3;
 		}
-	}*/
+	}
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -202,6 +174,13 @@ void LSystem::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 void LSystem::Shutdown()
 {
+	ShutdownBuffers();
+
+	return;
+}
+
+void LSystem::ShutdownBuffers()
+{
 	// Release the index buffer.
 	if (m_indexBuffer)
 	{
@@ -219,38 +198,61 @@ void LSystem::Shutdown()
 	return;
 }
 
-void LSystem::ShutdownBuffers()
-{
-	return;
-}
-
 void LSystem::Update(ID3D11Device* device, float deltaTime, float intensity)
 {
 	// STEP 1: Clear buffers...
-	Shutdown();
+	ShutdownBuffers();
 
 	// STEP 2: Update tree topology using new parameters...
 	UpdateTree(deltaTime, intensity);
 
 	// STEP 3: Re-initialise buffers...
-	Initialize(device);
+	InitializeBuffers(device);
 }
 
-void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
+void LSystem::AddProductionRule(std::string letter, ProductionRuleType productionRule)
 {
-	std::srand(m_seed);
+	if (!m_productionRules.count(letter))
+		m_productionRules.insert({ letter, std::vector<ProductionRuleType>{ productionRule } });
+	else
+		m_productionRules[letter].push_back(productionRule);
+}
 
-	m_time += deltaTime;
+void LSystem::InitializeSentence(std::vector<LModuleType> axiom, int iterations)
+{
+	m_sentence = axiom;
 
-	m_intensity += deltaIntensity;
-	m_intensity = std::max(0.0f, std::min(m_intensity, 1.0f));
+	std::vector<LModuleType> iteratedSentence;
+	for (int i = 0; i < iterations; i++)
+	{
+		iteratedSentence = std::vector<LModuleType>();
 
-	m_treeVertices = std::vector<TreeVertexType>();
+		for each (LModuleType LModule in m_sentence)
+		{
+			LModuleType productionModule = LModule;
+			for each (std::function<LModuleType(LModuleType)> production in GetProductionRule(LModule.letter).productions)
+			{
+				iteratedSentence.push_back(production(LModule));
+			}
+		}
 
-	m_treeVertices.push_back(TreeVertexType());
-	m_treeVertices[0].parent = 0;
-	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateTranslation(0.0f, 0.0f, 0.0f);//Identity;// DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation)*DirectX::SimpleMath::Matrix::CreateTranslation(m_scaledVertices[0].position); // NB: Assumes we've initialised m_scaledVertices!
-	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
+		m_sentence = iteratedSentence;
+	}
+}
+
+void LSystem::InitializeTree(DirectX::SimpleMath::Vector2 anchoring, float seed) // NB: Add alignment options?
+{
+	m_seed = seed;
+	m_scale = 1.0f;
+	m_time = 0.0f;
+	m_intensity = 0.0f;
+
+	m_seedVertices = std::vector<SeedVertexType>();
+
+	m_seedVertices.push_back(SeedVertexType());
+	m_seedVertices[0].parent = 0;
+	m_seedVertices[0].transform = DirectX::SimpleMath::Matrix::Identity;// DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation); // FIXME: This value can be exposed!
+	m_seedVertices[0].position = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
 
 	int parentIndex = 0;
 	std::vector<int> parentIndices = std::vector<int>();
@@ -259,7 +261,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 
 	// STEP 1: Create branching structure...
 	int childIndex = 1;
-	for each (ModuleType LModule in m_sentence)
+	for each (LModuleType LModule in m_sentence)
 	{
 		if (LModule.letter == "[")
 		{
@@ -277,17 +279,115 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 			if (LModule.length == 0.0f)
 				continue;
 
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_length*LModule.length, 0.0f, 0.0f) * localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_scale*LModule.length, 0.0f, 0.0f) * localTransform;
+
+			m_seedVertices.push_back(SeedVertexType());
+
+			m_seedVertices[childIndex].parent = parentIndex;
+			m_seedVertices[childIndex].transform = localTransform * m_seedVertices[parentIndex].transform;
+			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_seedVertices[childIndex].transform, m_seedVertices[childIndex].position);
+
+			childIndex = m_seedVertices.size();
+			parentIndex = m_seedVertices.size()-1;
+			localTransform = DirectX::SimpleMath::Matrix::Identity;
+		}
+	}
+
+	// STEP 2: Calculate bounds...
+	DirectX::SimpleMath::Vector2 minima = DirectX::SimpleMath::Vector2(0.0f, 0.0f);
+	DirectX::SimpleMath::Vector2 maxima = DirectX::SimpleMath::Vector2(0.0f, 0.0f);
+	for (int i = 0; i < m_seedVertices.size(); i++)
+	{
+		if (m_seedVertices[i].position.x < minima.x)
+			minima.x = m_seedVertices[i].position.x;
+		else if (m_seedVertices[i].position.x > maxima.x)
+			maxima.x = m_seedVertices[i].position.x;
+
+		if (m_seedVertices[i].position.y < minima.y)
+			minima.y = m_seedVertices[i].position.y;
+		else if (m_seedVertices[i].position.y > maxima.y)
+			maxima.y = m_seedVertices[i].position.y;
+	}
+
+	DirectX::SimpleMath::Vector2 delta = maxima-minima;
+	float maxDelta = std::max(delta.x,delta.y);
+
+	// NB: In the case of a point, scaling won't matter
+	if (maxDelta > 0.0f)
+		m_scale /= maxDelta;
+
+	// STEP 3: Rescale... 
+	float xBorder = anchoring.x*(1.0f-delta.x/maxDelta);
+	float yBorder = anchoring.y*(1.0f-delta.y/maxDelta);
+
+	for (int i = 0; i < m_seedVertices.size(); i++)
+	{
+		m_seedVertices[i].position.x = xBorder+(m_seedVertices[i].position.x-minima.x)/maxDelta;
+		m_seedVertices[i].position.y = yBorder+(m_seedVertices[i].position.y-minima.y)/maxDelta;
+
+		// FIXME: Simplex noise... still not working?
+		m_seedVertices[i].simplex = 0.0f;
+	}
+
+	// STEP 4: Instantaneously 'update' m_treeVertices...
+	UpdateTree(0.0f, 0.0f);
+}
+
+void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
+{
+	std::srand(m_seed);
+
+	m_time += deltaTime;
+
+	m_intensity += deltaIntensity;
+	m_intensity = std::max(0.0f, std::min(m_intensity, 1.0f));
+
+	m_treeVertices = std::vector<TreeVertexType>();
+
+	m_treeVertices.push_back(TreeVertexType());
+	m_treeVertices[0].parent = 0;
+	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateTranslation(m_seedVertices[0].position); // NB: Assumes we've initialised m_seedVertices!
+	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
+
+	int parentIndex = 0;
+	std::vector<int> parentIndices = std::vector<int>();
+
+	DirectX::SimpleMath::Matrix localTransform = DirectX::SimpleMath::Matrix::Identity;
+
+	// STEP 1: Create branching structure...
+	int childIndex = 1;
+	float randomness;
+	for each (LModuleType LModule in m_sentence)
+	{
+		if (LModule.letter == "[")
+		{
+			parentIndices.push_back(parentIndex);
+		}
+		else if (LModule.letter == "]" && parentIndices.size() > 0)
+		{
+			parentIndex = parentIndices[parentIndices.size()-1];
+			parentIndices.pop_back();
+		}
+		else
+		{
+			randomness = (LModule.period > 0.0f) ? GetRNGRange()*cos(XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(LModule.rotation+randomness*LModule.randomRotation) * localTransform;
+
+			if (LModule.length == 0.0f)
+				continue;
+
+			randomness = (LModule.period > 0.0f) ? GetRNGRange()*cos(XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_scale*(LModule.length+randomness*LModule.randomLength), 0.0f, 0.0f) * localTransform;
 
 			m_treeVertices.push_back(TreeVertexType());
 
 			m_treeVertices[childIndex].parent = parentIndex;
 			m_treeVertices[childIndex].degree = 1;
-			m_treeVertices[childIndex].radius = m_length*LModule.width;
+			m_treeVertices[childIndex].radius = m_scale*LModule.width;
 			m_treeVertices[childIndex].transform = localTransform * m_treeVertices[parentIndex].transform;
 			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[childIndex].transform, m_treeVertices[childIndex].position);
 
-			m_treeVertices[parentIndex].radius = std::max(m_length*LModule.width, m_treeVertices[parentIndex].radius);
+			m_treeVertices[parentIndex].radius = std::max(m_scale*LModule.width, m_treeVertices[parentIndex].radius);
 			m_treeVertices[parentIndex].degree++;
 
 			childIndex = m_treeVertices.size();
@@ -297,42 +397,12 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	}
 }
 
-void LSystem::InitializeProductionRule(std::string letter, ProductionRuleType productionRule)
-{
-	if (!m_productionRules.count(letter))
-		m_productionRules.insert({ letter, std::vector<ProductionRuleType>{ productionRule } });
-	else
-		m_productionRules[letter].push_back(productionRule);
-}
-
-void LSystem::InitializeSentence(std::vector<ModuleType> axiom, int iterations)
-{
-	m_sentence = axiom;
-
-	std::vector<ModuleType> iteratedSentence;
-	for (int i = 0; i < iterations; i++)
-	{
-		iteratedSentence = std::vector<ModuleType>();
-
-		for each (ModuleType LModule in m_sentence)
-		{
-			ModuleType productionModule = LModule;
-			for each (std::function<ModuleType(ModuleType)> production in GetProductionRule(LModule.letter).productions)
-			{
-				iteratedSentence.push_back(production(LModule));
-			}
-		}
-
-		m_sentence = iteratedSentence;
-	}
-}
-
 LSystem::ProductionRuleType LSystem::GetProductionRule(std::string letter)
 {
 	if (!m_productionRules.count(letter))
 	{
 		ProductionRuleType identity;
-		identity.productions.push_back([](LSystem::ModuleType LModule) { return LModule; });
+		identity.productions.push_back([](LSystem::LModuleType LModule) { return LModule; });
 		identity.weight = 1.0f;
 		return identity;
 	}
@@ -341,116 +411,18 @@ LSystem::ProductionRuleType LSystem::GetProductionRule(std::string letter)
 	return m_productionRules[letter][0];
 }
 
-/*void LSystem::InitializeScale(float seed, float width, float rotation) // NB: Add alignment options?
+float LSystem::GetRNGRange(float a, float b)
 {
-	m_seed = seed;
-	m_length = 1.0f;
-	m_width = width;
-	m_rotation = rotation;
-
-	m_scaledVertices = std::vector<ScaleVertexType>();
-
-	m_scaledVertices.push_back(ScaleVertexType());
-	m_scaledVertices[0].parent = 0;
-	m_scaledVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation); // FIXME: This value can be exposed!
-	m_scaledVertices[0].position = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
-
-	int parentIndex = 0;
-	std::vector<int> parentIndices = std::vector<int>();
-
-	SimplexNoise simplex = SimplexNoise();
-	DirectX::SimpleMath::Matrix localTransform = DirectX::SimpleMath::Matrix::Identity;
-
-	// STEP 1: Create branching structure...
-	int childIndex = 1;
-	for each (std::string alpha in m_sentence)
-	{
-		if (alpha == "[")
-		{
-			parentIndices.push_back(parentIndex);
-		}
-		else if (alpha == "]" && parentIndices.size() > 0)
-		{
-			parentIndex = parentIndices[parentIndices.size()-1];
-
-			parentIndices.pop_back();
-		}
-		else if (alpha == "^")
-		{
-
-		}
-		else if (m_rotationRules.count(alpha))
-		{
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotationRules[alpha])*localTransform;
-		}
-		else
-		{
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_length, 0.0f, 0.0f)*localTransform;
-
-			m_scaledVertices.push_back(ScaleVertexType());
-			m_scaledVertices[childIndex].parent = parentIndex;
-			m_scaledVertices[childIndex].transform = localTransform*m_scaledVertices[parentIndex].transform;
-			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_scaledVertices[childIndex].transform, m_scaledVertices[childIndex].position);
-
-			childIndex = m_scaledVertices.size();
-			parentIndex = m_scaledVertices.size()-1;
-			localTransform = DirectX::SimpleMath::Matrix::Identity;
-		}
-	}
-
-	// STEP 2: Calculate bounds...
-	float xMin = 0.0f;
-	float yMin = 0.0f;
-	float xMax = 0.0f; 
-	float yMax = 0.0f;
-
-	for (int i = 0; i < m_scaledVertices.size(); i++)
-	{
-		if (m_scaledVertices[i].position.x < xMin)
-			xMin = m_scaledVertices[i].position.x;
-		else if (m_scaledVertices[i].position.x > xMax)
-			xMax = m_scaledVertices[i].position.x;
-
-		if (m_scaledVertices[i].position.y < yMin)
-			yMin = m_scaledVertices[i].position.y;
-		else if (m_scaledVertices[i].position.y > yMax)
-			yMax = m_scaledVertices[i].position.y;
-	}
-
-	float xDelta = xMax-xMin;
-	float yDelta = yMax-yMin;
-	float maxDelta = std::max(xDelta, yDelta);
-
-	// NB: In the case of a point, scaling won't matter
-	if (maxDelta == 0.0f)
-		return;
-
-	m_length /= maxDelta;
-
-	// STEP 3: Rescale... 
-	// NB: We can now ignore the transforms, as these won't be used again...
-	float xAnchoring = 0.5f; // NB: Expose this...
-	float yAnchoring = 0.5f; // NB: Expose this...
-
-	float xBorder = xAnchoring*(1.0f-xDelta/maxDelta);
-	float yBorder = yAnchoring*(1.0f-yDelta/maxDelta);
-
-	for (int i = 0; i < m_scaledVertices.size(); i++)
-	{
-		m_scaledVertices[i].position.x = xBorder+(m_scaledVertices[i].position.x-xMin)/maxDelta;
-		m_scaledVertices[i].position.y = yBorder+(m_scaledVertices[i].position.y-yMin)/maxDelta;
-
-		// FIXME: Simplex noise... still not working?
-		m_scaledVertices[i].simplex = simplex.FBMNoise(m_seed, m_scaledVertices[i].position.x, m_scaledVertices[i].position.y, 8);
-	}
-}*/
+	// FIXME: Rework this around simplex noise in the future?
+	return a+(b-a)*std::rand()/RAND_MAX;
+}
 
 std::string LSystem::GetSentence()
 {
 	std::string text = "";
 
 	int count = 0;
-	for each (ModuleType LModule in m_sentence)
+	for each (LModuleType LModule in m_sentence)
 	{
 		for each (char character in LModule.letter)
 		{

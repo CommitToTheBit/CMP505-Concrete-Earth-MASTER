@@ -20,6 +20,15 @@ protected:
 		DirectX::SimpleMath::Vector3 binormal;
 	};
 
+	// Seed vertex information, used for normalising turtle drawings...
+	struct SeedVertexType
+	{
+		int parent;
+		DirectX::SimpleMath::Matrix transform;
+		DirectX::SimpleMath::Vector3 position;
+		float simplex;
+	};
+
 	// Tree vertex information, used for 'structuring' turtle drawings...
 	struct TreeVertexType
 	{
@@ -30,27 +39,29 @@ protected:
 		float radius;
 	};
 
-	// Scale vertex information, used for normalising turtle drawings...
-	struct ScaleVertexType
-	{
-		int parent;
-		DirectX::SimpleMath::Matrix transform;
-		DirectX::SimpleMath::Vector3 position;
-		float simplex;
-	};
-
 public:
-	struct ModuleType
+	struct LModuleType
 	{
 		std::string letter;
+
 		float length;
 		float rotation;
 		float width;
+		// FIXME: Add 'growth' terms!
+
+		float period;
+		float aperiodicity;
+
+		float synchronisation;
+		float asynchronicity;
+
+		float randomLength;
+		float randomRotation;
 	};
 
 	struct ProductionRuleType
 	{
-		std::vector<std::function<ModuleType(ModuleType)>> productions;
+		std::vector<std::function<LModuleType(LModuleType)>> productions;
 		float weight;
 	};
 
@@ -58,20 +69,13 @@ public:
 	LSystem();
 	~LSystem();
 
-	bool Initialize(ID3D11Device*);
+	bool Initialize(ID3D11Device*, std::vector<LModuleType> axiom, int iterations, DirectX::SimpleMath::Vector2 anchoring = DirectX::SimpleMath::Vector2(0.5f, 0.5f), float seed = 0.0f);
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 
-	void InitializeProductionRule(std::string letter, ProductionRuleType productionRule);
-	void InitializeSentence(std::vector<ModuleType> axiom, int iterations);
-	void InitializeTree();
+	void Update(ID3D11Device*, float deltaTime, float deltaIntensity);
 
-	void Update(ID3D11Device*, float deltaTime, float deltaIntensity); // NB: Needs edited!
-
-	// DEPRECATED:
-	//void InitializeScale(float seed, float width, float rotation);
-
-	//void Update(ID3D11Device*, float deltaTime, float deltaIntensity);
+	void AddProductionRule(std::string letter, ProductionRuleType productionRule);
 
 	// DEBUG:
 	float* GetIntensity();
@@ -82,22 +86,19 @@ private:
 	void RenderBuffers(ID3D11DeviceContext*);
 	void ShutdownBuffers();
 
+	void InitializeSentence(std::vector<LModuleType> axiom, int iterations);
+	void InitializeTree(DirectX::SimpleMath::Vector2 anchoring, float seed);
 	void UpdateTree(float deltaTime, float intensity);
-	void DrawTree();
 
 	ProductionRuleType GetProductionRule(std::string letter);
+	float GetRNGRange(float a = -1.0f, float b = 1.0f);
 
 private:
 	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;
-	std::vector<ModuleType> m_sentence;
+	std::vector<LModuleType> m_sentence;
 
-	std::function<ModuleType()> m_moduleTransform;
-
-	std::map<std::string, float> m_rotationRules;
-	std::map<std::string, float> m_rotationRandomness;
-
-	float m_seed, m_length, m_width, m_rotation;
-	std::vector<ScaleVertexType> m_scaledVertices;
+	float m_seed, m_scale;
+	std::vector<SeedVertexType> m_seedVertices;
 
 	float m_time, m_intensity;
 	std::vector<TreeVertexType> m_treeVertices;

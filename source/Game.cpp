@@ -165,7 +165,7 @@ void Game::Update(DX::StepTimer const& timer)
 		if (m_gameInputCommands.anticlockwise)
 			deltaInterpolation -= 1.0f;
 			
-		//m_LSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
+		m_LSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
 	}
 	/*else
 	{
@@ -458,70 +458,65 @@ void Game::CreateDeviceDependentResources()
 
 	// L-Systems
 	LSystem::ProductionRuleType F;
-	F.productions.push_back([](LSystem::ModuleType FModule) {
-		LSystem::ModuleType productionModule;
+	F.productions.push_back([](LSystem::LModuleType FModule) {
+		LSystem::LModuleType productionModule = FModule;
 		productionModule.letter = "F";
-		productionModule.length = FModule.length;
 		productionModule.rotation = 0.0f;
-		productionModule.width = FModule.width;
 		return productionModule; 
 	});
-	F.productions.push_back([](LSystem::ModuleType FModule) {
-		LSystem::ModuleType productionModule;
+	F.productions.push_back([](LSystem::LModuleType FModule) {
+		LSystem::LModuleType productionModule = FModule;
 		productionModule.letter = "+";
 		productionModule.length = 0.0f;
 		productionModule.rotation = 90.0f*XM_PI/180.0f;
-		productionModule.width = FModule.width;
 		return productionModule;
 		});
-	F.productions.push_back([](LSystem::ModuleType FModule) {
-		LSystem::ModuleType productionModule;
+	F.productions.push_back([](LSystem::LModuleType FModule) {
+		LSystem::LModuleType productionModule = FModule;
 		productionModule.letter = "G";
-		productionModule.length = FModule.length;
 		productionModule.rotation = 0.0f;
-		productionModule.width = FModule.width;
 		return productionModule;
 		});
 	F.weight = 1.0f;
 
 	// L-Systems
 	LSystem::ProductionRuleType G;
-	G.productions.push_back([](LSystem::ModuleType GModule) {
-		LSystem::ModuleType productionModule;
+	G.productions.push_back([](LSystem::LModuleType GModule) {
+		LSystem::LModuleType productionModule = GModule;
 		productionModule.letter = "F";
-		productionModule.length = GModule.length;
 		productionModule.rotation = 0.0f;
-		productionModule.width = GModule.width;
 		return productionModule;
 		});
-	G.productions.push_back([](LSystem::ModuleType GModule) {
-		LSystem::ModuleType productionModule;
+	G.productions.push_back([](LSystem::LModuleType GModule) {
+		LSystem::LModuleType productionModule = GModule;
 		productionModule.letter = "-";
 		productionModule.length = 0.0f;
 		productionModule.rotation = -90.0f*XM_PI/180.0f;
-		productionModule.width = GModule.width;
 		return productionModule;
 		});
-	G.productions.push_back([](LSystem::ModuleType GModule) {
-		LSystem::ModuleType productionModule;
+	G.productions.push_back([](LSystem::LModuleType GModule) {
+		LSystem::LModuleType productionModule = GModule;
 		productionModule.letter = "G";
-		productionModule.length = GModule.length;
 		productionModule.rotation = 0.0f;
-		productionModule.width = GModule.width;
 		return productionModule;
 		});
 	G.weight = 1.0f;
 
-	LSystem::ModuleType FModule;
+	LSystem::LModuleType FModule;
 	FModule.letter = "F";
-	FModule.length = 0.5f;
+	FModule.length = 1.0f;
 	FModule.rotation = XM_PIDIV4;
-	FModule.width = 0.05f;
+	FModule.width = 0.1f;
+	FModule.randomLength = 0.0f;
+	FModule.randomRotation = 0.01f;
+	FModule.period = 3.0f;
+	FModule.aperiodicity = 0.0f;
+	FModule.synchronisation = 0.0f;
+	FModule.asynchronicity = 1.0f;
 
-	m_LSystem.InitializeProductionRule("F", F);
-	m_LSystem.InitializeProductionRule("G", G);
-	m_LSystem.InitializeSentence(std::vector<LSystem::ModuleType>{ FModule }, 8);
-	m_LSystem.Initialize(device);
+	m_LSystem.AddProductionRule("F", F);
+	m_LSystem.AddProductionRule("G", G);
+	m_LSystem.Initialize(device, std::vector<LSystem::LModuleType>{ FModule }, 9);
 
 	// Models
 	m_Screen.Initialize(device);
