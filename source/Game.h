@@ -11,7 +11,8 @@
 #include "RenderTexture.h"
 
 #include "HexBoard.h"
-#include "LSystem.h"
+
+#include "LDragonCurve.h"
 
 #include "Screen.h"
 
@@ -135,14 +136,7 @@ private:
     int                                                                     m_add; // DEBUG...
 
     // L-Systems
-    LSystem                                                                 m_LSystem;
-
-    LSystem                                                                 m_DragonCurve2;
-    LSystem                                                                 m_DragonCurve4;
-    LSystem                                                                 m_DragonCurve6;
-    LSystem                                                                 m_DragonCurve8;
-    LSystem                                                                 m_DragonCurve10;
-    LSystem                                                                 m_DragonCurve12;
+    LDragonCurve                                                            m_DragonCurve;
 
     ModelClass																m_Cube;
 

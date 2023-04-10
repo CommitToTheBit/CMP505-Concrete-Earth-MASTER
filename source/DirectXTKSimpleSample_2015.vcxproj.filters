@@ -29,6 +29,9 @@
     <Filter Include="Imgui">
       <UniqueIdentifier>{f4975539-b864-4273-aaa3-fe56ef605678}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Modelling\LSystemModels">
+      <UniqueIdentifier>{7c029aef-a104-4f86-8481-dfc903e20eee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -105,6 +108,9 @@
     <ClInclude Include="imstb_truetype.h">
       <Filter>Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="LDragonCurve.h">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -173,6 +179,9 @@
     </ClCompile>
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="LDragonCurve.cpp">
+      <Filter>Modelling\LSystemModels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

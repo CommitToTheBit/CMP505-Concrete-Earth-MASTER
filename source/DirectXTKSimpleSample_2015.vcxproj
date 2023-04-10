@@ -172,6 +172,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ClassicNoise.h" />
     <ClInclude Include="DeviceResources.h" />
+    <ClInclude Include="LDragonCurve.h" />
     <ClInclude Include="EnvironmentCamera.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="HexBoard.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ClassicNoise.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
+    <ClCompile Include="LDragonCurve.cpp" />
     <ClCompile Include="EnvironmentCamera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HexBoard.cpp" />

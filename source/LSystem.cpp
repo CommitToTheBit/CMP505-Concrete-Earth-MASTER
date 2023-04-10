@@ -371,7 +371,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 		}
 		else
 		{
-			period = (LModule.period > 0.0f) ? cos(XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
+			period = (LModule.period > 0.0f) ? cos(DirectX::XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
 			staticRotation = LModule.staticRotation+GetRNGRange()*LModule.randomStaticRotation;
 			periodicRotation = period*(LModule.periodicRotation+GetRNGRange()*LModule.randomPeriodicRotation);
 			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(staticRotation+periodicRotation) * localTransform;
@@ -379,12 +379,12 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 			if (LModule.staticLength == 0.0f)
 				continue;
 
-			period = (LModule.period > 0.0f) ? cos(XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
+			period = (LModule.period > 0.0f) ? cos(DirectX::XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
 			staticLength = LModule.staticLength+GetRNGRange()*LModule.randomStaticLength;
 			periodicLength = period*(LModule.periodicLength+GetRNGRange()*LModule.randomPeriodicLength);
 			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_scale*(staticLength+periodicLength), 0.0f, 0.0f) * localTransform;
 
-			period = (LModule.period > 0.0f) ? cos(XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
+			period = (LModule.period > 0.0f) ? cos(DirectX::XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
 			staticWidth = LModule.staticWidth+GetRNGRange()*LModule.randomStaticWidth;
 			periodicWidth = period*(LModule.periodicWidth+GetRNGRange()*LModule.randomPeriodicWidth);
 

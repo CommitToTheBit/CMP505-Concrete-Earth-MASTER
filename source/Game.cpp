@@ -165,7 +165,7 @@ void Game::Update(DX::StepTimer const& timer)
 		if (m_gameInputCommands.anticlockwise)
 			deltaInterpolation -= 1.0f;
 			
-		m_LSystem.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
+		//m_DragonCurve.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
 	}
 	/*else
 	{
@@ -265,7 +265,7 @@ void Game::Render()
 
 		m_NeutralShader.EnableShader(context);
 		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio, 0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f)*Matrix::CreateScale(pow(m_aspectRatio, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-		m_LSystem.Render(context);
+		m_DragonCurve.Render(context);
 	}
 
 	// COMPOSITE RENDER:
@@ -284,7 +284,7 @@ void Game::Render()
 	// DEBUG: Display a single, normalised L-system...
 	m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_LSystem.Render(context);
+	m_DragonCurve.Render(context);
 
 	// Draw Text to the screen
 	//m_sprites->Begin();
@@ -457,73 +457,7 @@ void Game::CreateDeviceDependentResources()
 	m_add = 0;
 
 	// L-Systems
-	LSystem::ProductionRuleType F;
-	F.productions.push_back([](LSystem::LModuleType FModule) {
-		LSystem::LModuleType productionModule = FModule;
-		productionModule.letter = "F";
-		productionModule.staticRotation = 0.0f;
-		return productionModule; 
-	});
-	F.productions.push_back([](LSystem::LModuleType FModule) {
-		LSystem::LModuleType productionModule = FModule;
-		productionModule.letter = "+";
-		productionModule.staticLength = 0.0f;
-		productionModule.staticRotation = 90.0f*XM_PI/180.0f;
-		return productionModule;
-		});
-	F.productions.push_back([](LSystem::LModuleType FModule) {
-		LSystem::LModuleType productionModule = FModule;
-		productionModule.letter = "G";
-		productionModule.staticRotation = 0.0f;
-		return productionModule;
-		});
-	F.weight = 1.0f;
-
-	// L-Systems
-	LSystem::ProductionRuleType G;
-	G.productions.push_back([](LSystem::LModuleType GModule) {
-		LSystem::LModuleType productionModule = GModule;
-		productionModule.letter = "F";
-		productionModule.staticRotation = 0.0f;
-		return productionModule;
-		});
-	G.productions.push_back([](LSystem::LModuleType GModule) {
-		LSystem::LModuleType productionModule = GModule;
-		productionModule.letter = "-";
-		productionModule.staticLength = 0.0f;
-		productionModule.staticRotation = -90.0f*XM_PI/180.0f;
-		return productionModule;
-		});
-	G.productions.push_back([](LSystem::LModuleType GModule) {
-		LSystem::LModuleType productionModule = GModule;
-		productionModule.letter = "G";
-		productionModule.staticRotation = 0.0f;
-		return productionModule;
-		});
-	G.weight = 1.0f;
-
-	LSystem::LModuleType FModule;
-	FModule.letter = "F";
-	FModule.period = 0.0f;
-	FModule.aperiodicity = 0.0f;
-	FModule.synchronisation = 0.0f;
-	FModule.asynchronicity = 0.0f;
-	FModule.staticLength = 1.0f;
-	FModule.randomStaticLength = 0.0f;
-	FModule.periodicLength = 0.0f;
-	FModule.randomPeriodicLength = 0.0f;
-	FModule.staticRotation = 0.0f;
-	FModule.randomStaticRotation = 0.0f;
-	FModule.periodicRotation = 0.0f;
-	FModule.randomPeriodicRotation = 0.0f;
-	FModule.staticWidth = 0.125f;
-	FModule.randomStaticWidth = 0.0f;
-	FModule.periodicWidth = 0.0f;
-	FModule.randomPeriodicWidth = 0.0f;
-
-	m_LSystem.AddProductionRule("F", F);
-	m_LSystem.AddProductionRule("G", G);
-	m_LSystem.Initialize(device, std::vector<LSystem::LModuleType>{ FModule }, 9, 0.0f, 0.0f);
+	m_DragonCurve.Initialize(device, 0.1f, 9);
 
 	// Models
 	m_Screen.Initialize(device);

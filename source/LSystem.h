@@ -1,6 +1,4 @@
 #pragma once
-#include "ClassicNoise.h"
-#include "SimplexNoise.h"
 
 #include <map>
 #include <string>
@@ -77,7 +75,7 @@ public:
 	LSystem();
 	~LSystem();
 
-	bool Initialize(ID3D11Device*, std::vector<LModuleType> axiom, int iterations, float seed = 0.0f, float rotation = 0.0f, DirectX::SimpleMath::Vector2 anchoring = DirectX::SimpleMath::Vector2(0.5f, 0.5f));
+	virtual bool Initialize(ID3D11Device*, std::vector<LModuleType> axiom, int iterations, float seed = 0.0f, float rotation = 0.0f, DirectX::SimpleMath::Vector2 anchoring = DirectX::SimpleMath::Vector2(0.5f, 0.5f));
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 
