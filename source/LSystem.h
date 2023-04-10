@@ -44,19 +44,27 @@ public:
 	{
 		std::string letter;
 
-		float length;
-		float rotation;
-		float width;
-		// FIXME: Add 'growth' terms!
-
 		float period;
 		float aperiodicity;
-
 		float synchronisation;
 		float asynchronicity;
 
-		float randomLength;
-		float randomRotation;
+		float staticLength;
+		float randomStaticLength;
+		float periodicLength;
+		float randomPeriodicLength;
+
+		float staticRotation;
+		float randomStaticRotation;
+		float periodicRotation;
+		float randomPeriodicRotation;
+
+		float staticWidth;
+		float randomStaticWidth;
+		float periodicWidth;
+		float randomPeriodicWidth;
+
+		// FIXME: Add 'growth' terms!
 	};
 
 	struct ProductionRuleType
@@ -69,7 +77,7 @@ public:
 	LSystem();
 	~LSystem();
 
-	bool Initialize(ID3D11Device*, std::vector<LModuleType> axiom, int iterations, DirectX::SimpleMath::Vector2 anchoring = DirectX::SimpleMath::Vector2(0.5f, 0.5f), float seed = 0.0f);
+	bool Initialize(ID3D11Device*, std::vector<LModuleType> axiom, int iterations, float seed = 0.0f, float rotation = 0.0f, DirectX::SimpleMath::Vector2 anchoring = DirectX::SimpleMath::Vector2(0.5f, 0.5f));
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 
@@ -87,7 +95,7 @@ private:
 	void ShutdownBuffers();
 
 	void InitializeSentence(std::vector<LModuleType> axiom, int iterations);
-	void InitializeTree(DirectX::SimpleMath::Vector2 anchoring, float seed);
+	void InitializeTree(float seed, float rotation, DirectX::SimpleMath::Vector2 anchoring);
 	void UpdateTree(float deltaTime, float intensity);
 
 	ProductionRuleType GetProductionRule(std::string letter);
@@ -97,7 +105,7 @@ private:
 	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;
 	std::vector<LModuleType> m_sentence;
 
-	float m_seed, m_scale;
+	float m_seed, m_rotation, m_scale;
 	std::vector<SeedVertexType> m_seedVertices;
 
 	float m_time, m_intensity;

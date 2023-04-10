@@ -12,13 +12,13 @@ LSystem::~LSystem()
 
 }
 
-bool LSystem::Initialize(ID3D11Device* device, std::vector<LModuleType> axiom, int iterations, DirectX::SimpleMath::Vector2 anchoring, float seed)
+bool LSystem::Initialize(ID3D11Device* device, std::vector<LModuleType> axiom, int iterations, float seed, float rotation, DirectX::SimpleMath::Vector2 anchoring)
 {
 	// STEP 1: Initialize sentence, using grammar...
 	InitializeSentence(axiom, iterations);
 
 	// STEP 2: Initialize tree, to scale...
-	InitializeTree(anchoring, seed);
+	InitializeTree(seed, rotation, anchoring);
 
 	// STEP 3:
 	InitializeBuffers(device);
@@ -240,9 +240,10 @@ void LSystem::InitializeSentence(std::vector<LModuleType> axiom, int iterations)
 	}
 }
 
-void LSystem::InitializeTree(DirectX::SimpleMath::Vector2 anchoring, float seed) // NB: Add alignment options?
+void LSystem::InitializeTree(float seed, float rotation, DirectX::SimpleMath::Vector2 anchoring)
 {
 	m_seed = seed;
+	m_rotation = rotation;
 	m_scale = 1.0f;
 	m_time = 0.0f;
 	m_intensity = 0.0f;
@@ -251,7 +252,7 @@ void LSystem::InitializeTree(DirectX::SimpleMath::Vector2 anchoring, float seed)
 
 	m_seedVertices.push_back(SeedVertexType());
 	m_seedVertices[0].parent = 0;
-	m_seedVertices[0].transform = DirectX::SimpleMath::Matrix::Identity;// DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation); // FIXME: This value can be exposed!
+	m_seedVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation);
 	m_seedVertices[0].position = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
 
 	int parentIndex = 0;
@@ -274,12 +275,12 @@ void LSystem::InitializeTree(DirectX::SimpleMath::Vector2 anchoring, float seed)
 		}
 		else
 		{
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(LModule.rotation) * localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(LModule.staticRotation) * localTransform;
 
-			if (LModule.length == 0.0f)
+			if (LModule.staticLength == 0.0f)
 				continue;
 
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_scale*LModule.length, 0.0f, 0.0f) * localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(LModule.staticLength, 0.0f, 0.0f) * localTransform;
 
 			m_seedVertices.push_back(SeedVertexType());
 
@@ -346,7 +347,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 
 	m_treeVertices.push_back(TreeVertexType());
 	m_treeVertices[0].parent = 0;
-	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateTranslation(m_seedVertices[0].position); // NB: Assumes we've initialised m_seedVertices!
+	m_treeVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation)*DirectX::SimpleMath::Matrix::CreateTranslation(m_seedVertices[0].position); // NB: Assumes we've initialised m_seedVertices!
 	DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[0].transform, m_treeVertices[0].position);
 
 	int parentIndex = 0;
@@ -356,7 +357,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 
 	// STEP 1: Create branching structure...
 	int childIndex = 1;
-	float randomness;
+	float staticLength, periodicLength, staticRotation, periodicRotation, staticWidth, periodicWidth, period;
 	for each (LModuleType LModule in m_sentence)
 	{
 		if (LModule.letter == "[")
@@ -370,24 +371,32 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 		}
 		else
 		{
-			randomness = (LModule.period > 0.0f) ? GetRNGRange()*cos(XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
-			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(LModule.rotation+randomness*LModule.randomRotation) * localTransform;
+			period = (LModule.period > 0.0f) ? cos(XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
+			staticRotation = LModule.staticRotation+GetRNGRange()*LModule.randomStaticRotation;
+			periodicRotation = period*(LModule.periodicRotation+GetRNGRange()*LModule.randomPeriodicRotation);
+			localTransform = DirectX::SimpleMath::Matrix::CreateRotationZ(staticRotation+periodicRotation) * localTransform;
 
-			if (LModule.length == 0.0f)
+			if (LModule.staticLength == 0.0f)
 				continue;
 
-			randomness = (LModule.period > 0.0f) ? GetRNGRange()*cos(XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_scale*(LModule.length+randomness*LModule.randomLength), 0.0f, 0.0f) * localTransform;
+			period = (LModule.period > 0.0f) ? cos(XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
+			staticLength = LModule.staticLength+GetRNGRange()*LModule.randomStaticLength;
+			periodicLength = period*(LModule.periodicLength+GetRNGRange()*LModule.randomPeriodicLength);
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_scale*(staticLength+periodicLength), 0.0f, 0.0f) * localTransform;
+
+			period = (LModule.period > 0.0f) ? cos(XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
+			staticWidth = LModule.staticWidth+GetRNGRange()*LModule.randomStaticWidth;
+			periodicWidth = period*(LModule.periodicWidth+GetRNGRange()*LModule.randomPeriodicWidth);
 
 			m_treeVertices.push_back(TreeVertexType());
 
 			m_treeVertices[childIndex].parent = parentIndex;
 			m_treeVertices[childIndex].degree = 1;
-			m_treeVertices[childIndex].radius = m_scale*LModule.width;
+			m_treeVertices[childIndex].radius = m_scale*(staticWidth+periodicWidth);
 			m_treeVertices[childIndex].transform = localTransform * m_treeVertices[parentIndex].transform;
 			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_treeVertices[childIndex].transform, m_treeVertices[childIndex].position);
 
-			m_treeVertices[parentIndex].radius = std::max(m_scale*LModule.width, m_treeVertices[parentIndex].radius);
+			m_treeVertices[parentIndex].radius = std::max(m_treeVertices[childIndex].radius, m_treeVertices[parentIndex].radius);
 			m_treeVertices[parentIndex].degree++;
 
 			childIndex = m_treeVertices.size();

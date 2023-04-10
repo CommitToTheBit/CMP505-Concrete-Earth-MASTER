@@ -277,13 +277,13 @@ void Game::Render()
 	m_ScreenShader.SetAlphaBuffer(context, 0.6f);
 	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
 	m_ScreenShader.SetStressBuffer(context, *m_LSystem.GetIntensity());
-	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 0);
+	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
 	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
 	m_Screen.Render(context);*/
 
 	// DEBUG: Display a single, normalised L-system...
 	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 	m_LSystem.Render(context);
 
 	// Draw Text to the screen
@@ -461,20 +461,20 @@ void Game::CreateDeviceDependentResources()
 	F.productions.push_back([](LSystem::LModuleType FModule) {
 		LSystem::LModuleType productionModule = FModule;
 		productionModule.letter = "F";
-		productionModule.rotation = 0.0f;
+		productionModule.staticRotation = 0.0f;
 		return productionModule; 
 	});
 	F.productions.push_back([](LSystem::LModuleType FModule) {
 		LSystem::LModuleType productionModule = FModule;
 		productionModule.letter = "+";
-		productionModule.length = 0.0f;
-		productionModule.rotation = 90.0f*XM_PI/180.0f;
+		productionModule.staticLength = 0.0f;
+		productionModule.staticRotation = 90.0f*XM_PI/180.0f;
 		return productionModule;
 		});
 	F.productions.push_back([](LSystem::LModuleType FModule) {
 		LSystem::LModuleType productionModule = FModule;
 		productionModule.letter = "G";
-		productionModule.rotation = 0.0f;
+		productionModule.staticRotation = 0.0f;
 		return productionModule;
 		});
 	F.weight = 1.0f;
@@ -484,43 +484,49 @@ void Game::CreateDeviceDependentResources()
 	G.productions.push_back([](LSystem::LModuleType GModule) {
 		LSystem::LModuleType productionModule = GModule;
 		productionModule.letter = "F";
-		productionModule.rotation = 0.0f;
+		productionModule.staticRotation = 0.0f;
 		return productionModule;
 		});
 	G.productions.push_back([](LSystem::LModuleType GModule) {
 		LSystem::LModuleType productionModule = GModule;
 		productionModule.letter = "-";
-		productionModule.length = 0.0f;
-		productionModule.rotation = -90.0f*XM_PI/180.0f;
+		productionModule.staticLength = 0.0f;
+		productionModule.staticRotation = -90.0f*XM_PI/180.0f;
 		return productionModule;
 		});
 	G.productions.push_back([](LSystem::LModuleType GModule) {
 		LSystem::LModuleType productionModule = GModule;
 		productionModule.letter = "G";
-		productionModule.rotation = 0.0f;
+		productionModule.staticRotation = 0.0f;
 		return productionModule;
 		});
 	G.weight = 1.0f;
 
 	LSystem::LModuleType FModule;
 	FModule.letter = "F";
-	FModule.length = 1.0f;
-	FModule.rotation = XM_PIDIV4;
-	FModule.width = 0.1f;
-	FModule.randomLength = 0.0f;
-	FModule.randomRotation = 0.01f;
-	FModule.period = 3.0f;
+	FModule.period = 0.0f;
 	FModule.aperiodicity = 0.0f;
 	FModule.synchronisation = 0.0f;
-	FModule.asynchronicity = 1.0f;
+	FModule.asynchronicity = 0.0f;
+	FModule.staticLength = 1.0f;
+	FModule.randomStaticLength = 0.0f;
+	FModule.periodicLength = 0.0f;
+	FModule.randomPeriodicLength = 0.0f;
+	FModule.staticRotation = 0.0f;
+	FModule.randomStaticRotation = 0.0f;
+	FModule.periodicRotation = 0.0f;
+	FModule.randomPeriodicRotation = 0.0f;
+	FModule.staticWidth = 0.125f;
+	FModule.randomStaticWidth = 0.0f;
+	FModule.periodicWidth = 0.0f;
+	FModule.randomPeriodicWidth = 0.0f;
 
 	m_LSystem.AddProductionRule("F", F);
 	m_LSystem.AddProductionRule("G", G);
-	m_LSystem.Initialize(device, std::vector<LSystem::LModuleType>{ FModule }, 9);
+	m_LSystem.Initialize(device, std::vector<LSystem::LModuleType>{ FModule }, 9, 0.0f, 0.0f);
 
 	// Models
 	m_Screen.Initialize(device);
-
 	m_Cube.InitializeModel(device, "cube.obj");
 
 	// Shaders
@@ -575,9 +581,9 @@ void Game::SetupGUI()
 	window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 
-	ImGui::Begin(m_LSystem.GetSentence().c_str(), (bool*)true, window_flags);
-	ImGui::SliderFloat("Wave Amplitude", m_LSystem.GetIntensity(), 0.0f, 1.0f);
-	ImGui::End();
+	//ImGui::Begin(m_LSystem.GetSentence().c_str(), (bool*)true, window_flags);
+	//ImGui::SliderFloat("Wave Amplitude", m_LSystem.GetIntensity(), 0.0f, 1.0f);
+	//ImGui::End();
 
 	ImGui::EndFrame();
 }
