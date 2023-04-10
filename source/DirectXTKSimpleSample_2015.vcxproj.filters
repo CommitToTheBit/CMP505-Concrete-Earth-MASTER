@@ -111,6 +111,9 @@
     <ClInclude Include="LDragonCurve.h">
       <Filter>Modelling\LSystemModels</Filter>
     </ClInclude>
+    <ClInclude Include="LSphinxTiling.h">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -181,6 +184,9 @@
       <Filter>Imgui</Filter>
     </ClCompile>
     <ClCompile Include="LDragonCurve.cpp">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClCompile>
+    <ClCompile Include="LSphinxTiling.cpp">
       <Filter>Modelling\LSystemModels</Filter>
     </ClCompile>
   </ItemGroup>

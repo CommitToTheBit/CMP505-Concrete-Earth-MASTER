@@ -13,6 +13,7 @@
 #include "HexBoard.h"
 
 #include "LDragonCurve.h"
+#include "LSphinxTiling.h"
 
 #include "Screen.h"
 
@@ -137,6 +138,7 @@ private:
 
     // L-Systems
     LDragonCurve                                                            m_DragonCurve;
+    LSphinxTiling                                                           m_SphinxTiling;
 
     ModelClass																m_Cube;
 
