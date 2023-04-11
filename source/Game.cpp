@@ -165,7 +165,7 @@ void Game::Update(DX::StepTimer const& timer)
 		if (m_gameInputCommands.anticlockwise)
 			deltaInterpolation -= 1.0f;
 			
-		m_DragonCurve.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
+		m_BloodVessel.Update(device, 3.0f*m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
 	}
 	/*else
 	{
@@ -289,7 +289,7 @@ void Game::Render()
 	// DEBUG: Display a single, normalised L-system...
 	m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_SphinxTiling.Render(context);
+	m_BloodVessel.Render(context);
 
 	// Draw Text to the screen
 	//m_sprites->Begin();
@@ -464,6 +464,7 @@ void Game::CreateDeviceDependentResources()
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.1f, 9);
 	m_SphinxTiling.Initialize(device, 0.01f, 5);
+	m_BloodVessel.Initialize(device, 0.1f, 5);
 
 	// Models
 	m_Screen.Initialize(device);

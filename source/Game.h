@@ -14,6 +14,7 @@
 
 #include "LDragonCurve.h"
 #include "LSphinxTiling.h"
+#include "LBloodVessel.h"
 
 #include "Screen.h"
 
@@ -139,6 +140,7 @@ private:
     // L-Systems
     LDragonCurve                                                            m_DragonCurve;
     LSphinxTiling                                                           m_SphinxTiling;
+    LBloodVessel                                                            m_BloodVessel;
 
     ModelClass																m_Cube;
 
