@@ -63,6 +63,8 @@ public:
 		float randomPeriodicWidth;
 
 		// FIXME: Add 'growth' terms!
+
+		LModuleType();
 	};
 
 	struct ProductionRuleType

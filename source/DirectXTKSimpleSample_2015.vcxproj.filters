@@ -114,6 +114,9 @@
     <ClInclude Include="LSphinxTiling.h">
       <Filter>Modelling\LSystemModels</Filter>
     </ClInclude>
+    <ClInclude Include="LBloodVessel.h">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -187,6 +190,9 @@
       <Filter>Modelling\LSystemModels</Filter>
     </ClCompile>
     <ClCompile Include="LSphinxTiling.cpp">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClCompile>
+    <ClCompile Include="LBloodVessel.cpp">
       <Filter>Modelling\LSystemModels</Filter>
     </ClCompile>
   </ItemGroup>

@@ -188,6 +188,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="LSphinxTiling.h" />
     <ClInclude Include="LSystem.h" />
+    <ClInclude Include="LBloodVessel.h" />
     <ClInclude Include="MarchingCubes.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="pch.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LSphinxTiling.cpp" />
     <ClCompile Include="LSystem.cpp" />
+    <ClCompile Include="LBloodVessel.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MarchingCubes.cpp" />
     <ClCompile Include="modelclass.cpp" />

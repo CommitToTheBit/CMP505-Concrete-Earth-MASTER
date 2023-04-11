@@ -12,6 +12,31 @@ LSystem::~LSystem()
 
 }
 
+LSystem::LModuleType::LModuleType()
+{
+	letter = "";
+
+	period = 0.0f;
+	aperiodicity = 0.0f;
+	synchronisation = 0.0f;
+	asynchronicity = 0.0f;
+
+	staticLength = 0.0f;
+	randomStaticLength = 0.0f;
+	periodicLength = 0.0f;
+	randomPeriodicLength = 0.0f;
+
+	staticRotation = 0.0f;
+	randomStaticRotation = 0.0f;
+	periodicRotation = 0.0f;
+	randomPeriodicRotation = 0.0f;
+
+	staticWidth = 0.0f;
+	randomStaticWidth = 0.0f;
+	periodicWidth = 0.0f;
+	randomPeriodicWidth = 0.0f;
+}
+
 bool LSystem::Initialize(ID3D11Device* device, std::vector<LModuleType> axiom, int iterations, float seed, float rotation, DirectX::SimpleMath::Vector2 anchoring)
 {
 	// STEP 1: Initialize sentence, using grammar...

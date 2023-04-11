@@ -269,14 +269,14 @@ void Game::Render()
 	}*/
 
 	// DEBUG: Render a sphinx tiling in the background...
-	m_NeutralShader.EnableShader(context);
+	/*m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -3.0f/8.0f, 0.0f)*Matrix::CreateScale(8.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_SphinxTiling.Render(context);
+	m_SphinxTiling.Render(context);*/
 
 	// COMPOSITE RENDER:
 	context->OMSetRenderTargets(1, &renderTargetView, depthTargetView);
 
-	m_ScreenShader.EnableShader(context);
+	/*m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
 	m_ScreenShader.SetTimeBuffer(context, m_time);
 	m_ScreenShader.SetAlphaBuffer(context, 0.6f);
@@ -284,12 +284,12 @@ void Game::Render()
 	m_ScreenShader.SetStressBuffer(context, *m_DragonCurve.GetIntensity());
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
 	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
-	m_Screen.Render(context);
+	m_Screen.Render(context);*/
 
 	// DEBUG: Display a single, normalised L-system...
-	/*m_NeutralShader.EnableShader(context);
+	m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_DragonCurve.Render(context);*/
+	m_SphinxTiling.Render(context);
 
 	// Draw Text to the screen
 	//m_sprites->Begin();
@@ -463,7 +463,7 @@ void Game::CreateDeviceDependentResources()
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.1f, 9);
-	m_SphinxTiling.Initialize(device, 0.001f, 7);
+	m_SphinxTiling.Initialize(device, 0.01f, 5);
 
 	// Models
 	m_Screen.Initialize(device);
