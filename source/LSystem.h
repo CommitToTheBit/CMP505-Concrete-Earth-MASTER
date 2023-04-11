@@ -62,6 +62,12 @@ public:
 		float periodicWidth;
 		float randomPeriodicWidth;
 
+		float bakedAsymmetry;
+		float staticAsymmetry;
+		float randomStaticAsymmetry;
+		float periodicAsymmetry;
+		float randomPeriodicAsymmetry;
+
 		// FIXME: Add 'growth' terms!
 
 		LModuleType();

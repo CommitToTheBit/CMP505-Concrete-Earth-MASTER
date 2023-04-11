@@ -35,6 +35,12 @@ LSystem::LModuleType::LModuleType()
 	randomStaticWidth = 0.0f;
 	periodicWidth = 0.0f;
 	randomPeriodicWidth = 0.0f;
+
+	bakedAsymmetry = 0.0f;
+	staticAsymmetry = 0.0f;
+	randomStaticAsymmetry = 0.0f;
+	periodicAsymmetry = 0.0f;
+	randomPeriodicAsymmetry = 0.0f;
 }
 
 bool LSystem::Initialize(ID3D11Device* device, std::vector<LModuleType> axiom, int iterations, float seed, float rotation, DirectX::SimpleMath::Vector2 anchoring)
@@ -245,7 +251,11 @@ void LSystem::AddProductionRule(std::string letter, ProductionRuleType productio
 
 void LSystem::InitializeSentence(std::vector<LModuleType> axiom, int iterations)
 {
+	srand(0);
+
 	m_sentence = axiom;
+
+	float asymmetry;
 
 	std::vector<LModuleType> iteratedSentence;
 	for (int i = 0; i < iterations; i++)
@@ -258,6 +268,9 @@ void LSystem::InitializeSentence(std::vector<LModuleType> axiom, int iterations)
 			for each (std::function<LModuleType(LModuleType)> production in GetProductionRule(LModule.letter).productions)
 			{
 				iteratedSentence.push_back(production(LModule));
+
+				// DEBUG?
+				iteratedSentence.at(iteratedSentence.size()-1).bakedAsymmetry = iteratedSentence.at(iteratedSentence.size()-1).staticAsymmetry+GetRNGRange()*iteratedSentence.at(iteratedSentence.size()-1).randomStaticAsymmetry;
 			}
 		}
 
