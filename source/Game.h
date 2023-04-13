@@ -142,6 +142,9 @@ private:
     LSphinxTiling                                                           m_SphinxTiling;
     LBloodVessel                                                            m_BloodVessel;
 
+    int                                                                     m_BloodVesselCount;
+    std::vector<LBloodVessel>                                               m_BloodVessels;
+
     ModelClass																m_Cube;
 
     // GUI

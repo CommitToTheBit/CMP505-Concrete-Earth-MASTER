@@ -50,11 +50,11 @@ float4 main(InputType input) : SV_TARGET
     float radialBloom = 0.05f;
     radialAlpha += radialBloom*volume;
 
-    float arterialBloom = 0.6f;
+    float arterialBloom = 3.0f;
     arterialAlpha *= 1.0f+arterialBloom*volume;
 
     // STEP 5: 
-    float t = 0.25f;
+    float t = 0.1f;
     float a = (1.0f-t)*radialAlpha+t*arterialAlpha;
     a *= alpha;
 
