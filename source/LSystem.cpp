@@ -46,7 +46,7 @@ LSystem::LModuleType::LModuleType()
 bool LSystem::Initialize(ID3D11Device* device, std::vector<LModuleType> axiom, int iterations, float seed, float rotation, DirectX::SimpleMath::Vector2 anchoring)
 {
 	// STEP 1: Initialize sentence, using grammar...
-	InitializeSentence(axiom, iterations);
+	InitializeSentence(seed, axiom, iterations);
 
 	// STEP 2: Initialize tree, to scale...
 	InitializeTree(seed, rotation, anchoring);
@@ -249,9 +249,9 @@ void LSystem::AddProductionRule(std::string letter, ProductionRuleType productio
 		m_productionRules[letter].push_back(productionRule);
 }
 
-void LSystem::InitializeSentence(std::vector<LModuleType> axiom, int iterations)
+void LSystem::InitializeSentence(float seed, std::vector<LModuleType> axiom, int iterations)
 {
-	srand(0);
+	srand(seed);
 
 	m_sentence = axiom;
 	for (int i = 0; i < axiom.size(); i++)
@@ -461,7 +461,29 @@ LSystem::ProductionRuleType LSystem::GetProductionRule(std::string letter)
 	}
 
 	// FIXME: Add stochastic components here... 
-	return m_productionRules[letter][0];
+	float totalWeight = 0.0f;
+	for each (ProductionRuleType productionRule in m_productionRules[letter])
+	{
+		totalWeight += productionRule.weight;
+	}
+
+	int index = 0;
+	float weight = GetRNGRange(0.0f, totalWeight);
+	float summedWeight = 0.0f;
+	for each (ProductionRuleType productionRule in m_productionRules[letter])
+	{
+		if (weight > summedWeight+productionRule.weight)
+		{
+			summedWeight += productionRule.weight;
+			index++;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	return m_productionRules[letter][index];
 }
 
 float LSystem::GetRNGRange(float a, float b)

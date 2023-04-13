@@ -100,7 +100,7 @@ private:
 	void RenderBuffers(ID3D11DeviceContext*);
 	void ShutdownBuffers();
 
-	void InitializeSentence(std::vector<LModuleType> axiom, int iterations);
+	void InitializeSentence(float seed, std::vector<LModuleType> axiom, int iterations);
 	void InitializeTree(float seed, float rotation, DirectX::SimpleMath::Vector2 anchoring);
 	void UpdateTree(float deltaTime, float intensity);
 

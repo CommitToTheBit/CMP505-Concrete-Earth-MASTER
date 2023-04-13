@@ -464,7 +464,7 @@ void Game::CreateDeviceDependentResources()
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.1f, 9);
 	m_SphinxTiling.Initialize(device, 0.01f, 5);
-	m_BloodVessel.Initialize(device, 0.05f, 6);
+	m_BloodVessel.Initialize(device, 0.2f, 12);
 
 	// Models
 	m_Screen.Initialize(device);
@@ -522,9 +522,9 @@ void Game::SetupGUI()
 	window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 
-	ImGui::Begin(m_BloodVessel.GetSentence().c_str(), (bool*)true, window_flags);
-	ImGui::SliderFloat("Wave Amplitude", m_BloodVessel.GetIntensity(), 0.0f, 1.0f);
-	ImGui::End();
+	//ImGui::Begin(m_BloodVessel.GetSentence().c_str(), (bool*)true, window_flags);
+	//ImGui::SliderFloat("Wave Amplitude", m_BloodVessel.GetIntensity(), 0.0f, 1.0f);
+	//ImGui::End();
 
 	ImGui::EndFrame();
 }
