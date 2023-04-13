@@ -474,7 +474,7 @@ void Game::CreateDeviceDependentResources()
 	m_SphinxTiling.Initialize(device, 0.01f, 5);
 	m_BloodVessel.Initialize(device, 0.2f, 12);
 
-	m_BloodVesselCount = 8;
+	m_BloodVesselCount = 16;
 	for (int i = 0; i < m_BloodVesselCount; i++)
 	{
 		m_BloodVessels.push_back(LBloodVessel());
