@@ -194,13 +194,13 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 	CModule.synchronisation = 0.0f;
 	CModule.asynchronicity = 1.0f;
 	CModule.staticLength = 1.0f;
-	//CModule.randomStaticLength = 0.5f;
+	CModule.randomStaticLength = 0.4f;
 	CModule.staticRotation = 0.0f;
-	//CModule.randomStaticRotation = 25.0f*DirectX::XM_PI/180.0f;
-	//CModule.randomPeriodicRotation = 5.0f*DirectX::XM_PI/180.0f;
+	CModule.randomStaticRotation = 25.0f*DirectX::XM_PI/180.0f;
+	CModule.randomPeriodicRotation = 5.0f*DirectX::XM_PI/180.0f;
 	CModule.staticWidth = width;
-	CModule.staticAsymmetry = 0.8f;
-	CModule.randomStaticAsymmetry = 0.0f;
+	CModule.staticAsymmetry = 0.9f;
+	CModule.randomStaticAsymmetry = 0.1f;
 
 	std::vector<LModuleType> axiom = std::vector<LModuleType>{ CModule };
 

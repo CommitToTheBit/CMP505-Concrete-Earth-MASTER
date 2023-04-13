@@ -254,6 +254,12 @@ void LSystem::InitializeSentence(std::vector<LModuleType> axiom, int iterations)
 	srand(0);
 
 	m_sentence = axiom;
+	for (int i = 0; i < axiom.size(); i++)
+	{
+		// DEBUG?
+		// CHECKME: Why does this *need* initialised??
+		m_sentence[i].bakedAsymmetry = m_sentence[i].staticAsymmetry+GetRNGRange()*m_sentence[i].randomStaticAsymmetry;
+	}
 
 	float asymmetry;
 
