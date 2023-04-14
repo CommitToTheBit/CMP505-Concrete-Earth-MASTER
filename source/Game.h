@@ -140,7 +140,6 @@ private:
     // L-Systems
     LDragonCurve                                                            m_DragonCurve;
     LSphinxTiling                                                           m_SphinxTiling;
-    LBloodVessel                                                            m_BloodVessel;
 
     int                                                                     m_BloodVesselCount;
     std::vector<LBloodVessel>                                               m_BloodVessels;

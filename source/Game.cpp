@@ -157,24 +157,23 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 
 	// VIGNETTE INPUTS:
-	if (m_gameInputCommands.clockwise || m_gameInputCommands.anticlockwise)
+	if (m_HexBoard.m_interpolating) //m_gameInputCommands.clockwise || m_gameInputCommands.anticlockwise)
 	{
 		float deltaInterpolation = 0.0f;
-		if (m_gameInputCommands.clockwise)
+		//if (m_gameInputCommands.clockwise)
+		//	deltaInterpolation += 1.0f;
+		//if (m_gameInputCommands.anticlockwise)
+		//	deltaInterpolation -= 1.0f;
+		if (m_gameInputCommands.forward)
 			deltaInterpolation += 1.0f;
-		if (m_gameInputCommands.anticlockwise)
+		if (m_gameInputCommands.back)
 			deltaInterpolation -= 1.0f;
 			
-		m_BloodVessel.Update(device, m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
 		for (int i = 0; i < m_BloodVesselCount; i++)
 		{
-			m_BloodVessels[i].Update(device, m_timer.GetElapsedSeconds(), 0.38f*deltaInterpolation*m_timer.GetElapsedSeconds());
+			m_BloodVessels[i].Update(device, m_timer.GetElapsedSeconds(), 0.08f*deltaInterpolation*m_timer.GetElapsedSeconds());
 		}
 	}
-	/*else
-	{
-		//m_LSystem.Update(device, 0.0f, 0.0f); // Update based on GUI...
-	}*/
 
 	// WORLD MATRICES:
 	m_view = m_Camera.getCameraMatrix();
@@ -287,9 +286,9 @@ void Game::Render()
 	m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
 	m_ScreenShader.SetTimeBuffer(context, m_time);
-	m_ScreenShader.SetAlphaBuffer(context, 0.6f);
+	m_ScreenShader.SetAlphaBuffer(context, 0.5f);
 	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
-	m_ScreenShader.SetStressBuffer(context, *m_BloodVessel.GetIntensity());
+	m_ScreenShader.SetStressBuffer(context, (m_BloodVesselCount > 0) ? *m_BloodVessels[0].GetIntensity() : 0.0f);
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
 	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
 	m_Screen.Render(context);
@@ -297,7 +296,7 @@ void Game::Render()
 	// DEBUG: Display a single, normalised L-system...
 	/*m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_BloodVessel.Render(context);*/
+	m_BDragonCurve.Render(context);*/
 
 	// Draw Text to the screen
 	//m_sprites->Begin();
@@ -466,19 +465,18 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 32);
+	m_HexBoard.Initialize(device, 4, 1);
 	m_add = 0;
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);
 	m_SphinxTiling.Initialize(device, 0.01f, 5);
-	m_BloodVessel.Initialize(device, 0.2f, 12);
 
 	m_BloodVesselCount = 16;
 	for (int i = 0; i < m_BloodVesselCount; i++)
 	{
 		m_BloodVessels.push_back(LBloodVessel());
-		m_BloodVessels[i].Initialize(device, 0.1f, 10, i);
+		m_BloodVessels[i].Initialize(device, 0.1f, 8, i);
 	}
 
 	// Models
@@ -537,9 +535,12 @@ void Game::SetupGUI()
 	window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 
-	//ImGui::Begin(m_BloodVessel.GetSentence().c_str(), (bool*)true, window_flags);
-	//ImGui::SliderFloat("Wave Amplitude", m_BloodVessel.GetIntensity(), 0.0f, 1.0f);
-	//ImGui::End();
+	if (m_BloodVesselCount > 0)
+	{
+		//ImGui::Begin(m_BloodVessels[0].GetSentence().c_str(), (bool*)true, window_flags);
+		//ImGui::SliderFloat("Wave Amplitude", m_BloodVessels[0].GetIntensity(), 0.0f, 1.0f);
+		//ImGui::End();
+	}
 
 	ImGui::EndFrame();
 }
