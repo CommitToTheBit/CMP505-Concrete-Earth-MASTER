@@ -48,6 +48,7 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 		productionModule.staticLength = LModule.staticLength/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
 		productionModule.randomStaticLength = LModule.randomStaticLength/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
 		productionModule.staticRotation = acos((pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 4.0f/3.0f)+1.0f-pow(LModule.bakedAsymmetry, 4.0f))/(2.0f*pow(LModule.bakedAsymmetry, 0.0f)*pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 2.0f/3.0f)));
+		productionModule.randomPeriodicRotation = (1.0f+0.5f/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f))*LModule.randomPeriodicRotation;
 		productionModule.staticWidth = 0.95f*LModule.staticWidth/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
 		return productionModule;
 		});
@@ -61,7 +62,8 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 		productionModule.letter = "R";
 		productionModule.staticLength = pow(0.75f, 2.0f)*LModule.staticLength*LModule.bakedAsymmetry/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
 		productionModule.randomStaticLength = pow(0.75f, 2.0f)*LModule.randomStaticLength*LModule.bakedAsymmetry/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
-		productionModule.staticRotation = -0.625f*acos((pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 4.0f/3.0f)+pow(LModule.bakedAsymmetry, 4.0f)-1.0f)/(2.0f*pow(LModule.bakedAsymmetry, 2.0f)*pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 2.0f/3.0f)));
+		productionModule.staticRotation = -acos((pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 4.0f/3.0f)+pow(LModule.bakedAsymmetry, 4.0f)-1.0f)/(2.0f*pow(LModule.bakedAsymmetry, 2.0f)*pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 2.0f/3.0f)));
+		productionModule.randomPeriodicRotation = (1.0f+0.5f*LModule.bakedAsymmetry/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f))*LModule.randomPeriodicRotation;
 		productionModule.staticWidth = pow(0.95f,2.0f)*LModule.staticWidth*LModule.bakedAsymmetry/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
 		return productionModule;
 		});
@@ -85,6 +87,7 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 		productionModule.staticLength = LModule.staticLength/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
 		productionModule.randomStaticLength = LModule.randomStaticLength/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
 		productionModule.staticRotation = -acos((pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 4.0f/3.0f)+1.0f-pow(LModule.bakedAsymmetry, 4.0f))/(2.0f*pow(LModule.bakedAsymmetry, 0.0f)*pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 2.0f/3.0f)));
+		productionModule.randomPeriodicRotation = (1.0f+0.5f/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f))*LModule.randomPeriodicRotation;
 		productionModule.staticWidth = 0.95f*LModule.staticWidth/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
 		return productionModule;
 		});
@@ -98,7 +101,8 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 		productionModule.letter = "L";
 		productionModule.staticLength = pow(0.75f, 2.0f)*LModule.staticLength*LModule.bakedAsymmetry/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
 		productionModule.randomStaticLength = pow(0.75f, 2.0f)*LModule.randomStaticLength*LModule.bakedAsymmetry/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
-		productionModule.staticRotation = 0.625f*acos((pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 4.0f/3.0f)+pow(LModule.bakedAsymmetry, 4.0f)-1.0f)/(2.0f*pow(LModule.bakedAsymmetry, 2.0f)*pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 2.0f/3.0f)));
+		productionModule.staticRotation = acos((pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 4.0f/3.0f)+pow(LModule.bakedAsymmetry, 4.0f)-1.0f)/(2.0f*pow(LModule.bakedAsymmetry, 2.0f)*pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 2.0f/3.0f)));
+		productionModule.randomPeriodicRotation = (1.0f+0.5f*LModule.bakedAsymmetry/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f))*LModule.randomPeriodicRotation;
 		productionModule.staticWidth = pow(0.95f, 2.0f)*LModule.staticWidth*LModule.bakedAsymmetry/pow(1.0f+pow(LModule.bakedAsymmetry, 3.0f), 1.0f/3.0f);
 		return productionModule;
 		});
@@ -187,18 +191,18 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 	// STEP 2: Write axiom...
 	LModuleType CModule;
 	CModule.letter = "C";
-	CModule.period = 5.0f;
-	CModule.aperiodicity = 5.0f;
+	CModule.period = 16.0f;
+	CModule.aperiodicity = 128.0f;
 	CModule.synchronisation = 0.0f;
 	CModule.asynchronicity = 1.0f;
 	CModule.staticLength = 1.0f;
-	CModule.randomStaticLength = 0.2f;
+	CModule.randomStaticLength = 0.4f;
 	CModule.staticRotation = 0.0f;
-	//CModule.randomStaticRotation = 5.0f*DirectX::XM_PI/180.0f;
-	CModule.randomPeriodicRotation = 1.0f*DirectX::XM_PI/180.0f;
+	CModule.randomStaticRotation = 2.0f*DirectX::XM_PI/180.0f;
+	CModule.randomPeriodicRotation = 2.0f*DirectX::XM_PI/180.0f;
 	CModule.staticWidth = width;
 	CModule.staticAsymmetry = 0.8f;
-	//CModule.randomStaticAsymmetry = 0.1f;
+	CModule.randomStaticAsymmetry = 0.1f;
 
 	std::vector<LModuleType> axiom = std::vector<LModuleType>{ CModule };
 

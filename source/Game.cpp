@@ -269,10 +269,10 @@ void Game::Render()
 	float theta;
 	for (int i = 0; i < m_BloodVesselCount; i++)
 	{
-		theta = i*XM_2PI/m_BloodVesselCount+XM_PIDIV4;
+		theta = i*XM_2PI/m_BloodVesselCount;
 
 		m_NeutralShader.EnableShader(context);
-		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(1.05f*Vector3(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio, 0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f))*Matrix::CreateScale(pow(m_aspectRatio, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PI/m_aspectRatio)*Matrix::CreateTranslation(1.05f*Vector3(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio, 0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f))*Matrix::CreateScale(pow(m_aspectRatio, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 		m_BloodVessels[i].Render(context);
 	}
 
@@ -474,7 +474,7 @@ void Game::CreateDeviceDependentResources()
 	m_SphinxTiling.Initialize(device, 0.01f, 5);
 	m_BloodVessel.Initialize(device, 0.2f, 12);
 
-	m_BloodVesselCount = 16;
+	m_BloodVesselCount = 12;
 	for (int i = 0; i < m_BloodVesselCount; i++)
 	{
 		m_BloodVessels.push_back(LBloodVessel());
