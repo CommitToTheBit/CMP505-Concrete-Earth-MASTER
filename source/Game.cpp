@@ -269,10 +269,10 @@ void Game::Render()
 	float theta;
 	for (int i = 0; i < m_BloodVesselCount; i++)
 	{
-		theta = i*XM_2PI/m_BloodVesselCount;
+		theta = i*XM_2PI/m_BloodVesselCount+XM_PI/m_BloodVesselCount;
 
 		m_NeutralShader.EnableShader(context);
-		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateRotationZ(theta+XM_PI/m_aspectRatio)*Matrix::CreateTranslation(1.05f*Vector3(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio, 0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f))*Matrix::CreateScale(pow(m_aspectRatio, 0.25f))), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(1.0f)*Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(0.85f*Vector3(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio, 0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f))*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 		m_BloodVessels[i].Render(context);
 	}
 
@@ -287,7 +287,7 @@ void Game::Render()
 	m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
 	m_ScreenShader.SetTimeBuffer(context, m_time);
-	m_ScreenShader.SetAlphaBuffer(context, 0.5f);
+	m_ScreenShader.SetAlphaBuffer(context, 0.6f);
 	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
 	m_ScreenShader.SetStressBuffer(context, *m_BloodVessel.GetIntensity());
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
@@ -466,7 +466,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 1);
+	m_HexBoard.Initialize(device, 4, 32);
 	m_add = 0;
 
 	// L-Systems
@@ -474,11 +474,11 @@ void Game::CreateDeviceDependentResources()
 	m_SphinxTiling.Initialize(device, 0.01f, 5);
 	m_BloodVessel.Initialize(device, 0.2f, 12);
 
-	m_BloodVesselCount = 12;
+	m_BloodVesselCount = 16;
 	for (int i = 0; i < m_BloodVesselCount; i++)
 	{
 		m_BloodVessels.push_back(LBloodVessel());
-		m_BloodVessels[i].Initialize(device, 0.2f, 12, i);
+		m_BloodVessels[i].Initialize(device, 0.1f, 10, i);
 	}
 
 	// Models

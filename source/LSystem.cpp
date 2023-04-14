@@ -229,13 +229,16 @@ void LSystem::ShutdownBuffers()
 	return;
 }
 
-void LSystem::Update(ID3D11Device* device, float deltaTime, float intensity)
+void LSystem::Update(ID3D11Device* device, float deltaTime, float deltaIntensity)
 {
+	if (m_intensity == std::max(0.0f, std::min(m_intensity+deltaIntensity, 1.0f)))
+		return;
+
 	// STEP 1: Clear buffers...
 	ShutdownBuffers();
 
 	// STEP 2: Update tree topology using new parameters...
-	UpdateTree(deltaTime, intensity);
+	UpdateTree(deltaTime, deltaIntensity);
 
 	// STEP 3: Re-initialise buffers...
 	InitializeBuffers(device);
