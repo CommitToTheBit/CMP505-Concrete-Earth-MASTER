@@ -68,8 +68,8 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 	DirectX::SimpleMath::Vector3 normal, tangent, binormal;
 	float weight = 0.0f;
 
-	m_vertexCount = std::max((int)(4*m_treeVertices.size())/*+17*/, 3); // NB: Using 16-gon to approximate a circle!
-	m_indexCount = std::max((int)(24*m_treeVertices.size())/*+6*16*/, 3);
+	m_vertexCount = std::max((int)(4*m_treeVertices.size()), 3); // NB: Use 16-gon to approximate a circle at joints?
+	m_indexCount = std::max((int)(12*m_treeVertices.size()), 3);
 
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
@@ -105,24 +105,21 @@ bool LSystem::InitializeBuffers(ID3D11Device* device)
 		vertices[4*i+2].position = treeVertex.position-treeVertex.radius*orthogonal;
 		vertices[4*i+3].position = treeVertex.position+treeVertex.radius*orthogonal;
 
-		for (int j = 0; j < 2; j++) // NB: j loops over 'both sides' of culling...
-		{
-			indices[24*i+12*j] = 4*treeVertex.parent+2;
-			indices[24*i+12*j+1+j] = 4*treeVertex.parent+3;
-			indices[24*i+12*j+2-j] = 4*i;
+		indices[12*i] = 4*treeVertex.parent+2;
+		indices[12*i+1] = 4*treeVertex.parent+3;
+		indices[12*i+2] = 4*i;
 
-			indices[24*i+12*j+3] = 4*treeVertex.parent+2;
-			indices[24*i+12*j+4+j] = 4*i;
-			indices[24*i+12*j+5-j] = 4*i+1;
+		indices[12*i+3] = 4*treeVertex.parent+2;
+		indices[12*i+4] = 4*i;
+		indices[12*i+5] = 4*i+1;
 
-			indices[24*i+12*j+6] = 4*i;
-			indices[24*i+12*j+7+j] = 4*i+1;
-			indices[24*i+12*j+8-j] = 4*i+2;
+		indices[12*i+6] = 4*i;
+		indices[12*i+7] = 4*i+1;
+		indices[12*i+8] = 4*i+2;
 
-			indices[24*i+12*j+9] = 4*i;
-			indices[24*i+12*j+10+j] = 4*i+2;
-			indices[24*i+12*j+11-j] = 4*i+3;
-		}
+		indices[12*i+9] = 4*i;
+		indices[12*i+10] = 4*i+2;
+		indices[12*i+11] = 4*i+3;
 	}
 
 	// Set up the description of the static vertex buffer.

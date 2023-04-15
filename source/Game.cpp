@@ -259,6 +259,9 @@ void Game::Render()
 	// DEBUG: Render a dragon curve...
 	/*m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5, 0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	context->RSSetState(m_states->CullCounterClockwise());
+	m_DragonCurve.Render(context)
+	context->RSSetState(m_states->CullClockwise());
 	m_DragonCurve.Render(context);*/
 
 	// VEINS RENDER:
@@ -272,12 +275,18 @@ void Game::Render()
 
 		m_NeutralShader.EnableShader(context);
 		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(1.0f)*Matrix::CreateRotationZ(theta+XM_PIDIV2)*Matrix::CreateTranslation(0.85f*Vector3(pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*cos(theta), pow(1.0f/m_aspectRatio, 0.5f)*pow(1.0f+pow(m_aspectRatio, 2.0f), 0.5f)*sin(theta), 0.0f))*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+		context->RSSetState(m_states->CullCounterClockwise()); // NB: MatrixBuffer uses 'true' on both sides, since we aren't applying lighting to the model anyway!
+		m_BloodVessels[i].Render(context);
+		context->RSSetState(m_states->CullClockwise());
 		m_BloodVessels[i].Render(context);
 	}
 
 	// DEBUG: Render a sphinx tiling in the background...
 	/*m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -3.0f/8.0f, 0.0f)*Matrix::CreateScale(8.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	context->RSSetState(m_states->CullCounterClockwise());
+	m_SphinxTiling.Render(context)
+	context->RSSetState(m_states->CullClockwise());
 	m_SphinxTiling.Render(context);*/
 
 	// COMPOSITE RENDER:
@@ -286,7 +295,7 @@ void Game::Render()
 	m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
 	m_ScreenShader.SetTimeBuffer(context, m_time);
-	m_ScreenShader.SetAlphaBuffer(context, 0.75f);
+	m_ScreenShader.SetAlphaBuffer(context, 2.0f/3.0f);
 	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
 	m_ScreenShader.SetStressBuffer(context, (m_BloodVesselCount > 0) ? *m_BloodVessels[0].GetIntensity() : 0.0f);
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
@@ -296,7 +305,10 @@ void Game::Render()
 	// DEBUG: Display a single, normalised L-system...
 	/*m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_BDragonCurve.Render(context);*/
+	context->RSSetState(m_states->CullCounterClockwise());
+	m_DragonCurve.Render(context)
+	context->RSSetState(m_states->CullClockwise());
+	m_DragonCurve.Render(context);*/
 
 	// Draw Text to the screen
 	//m_sprites->Begin();
