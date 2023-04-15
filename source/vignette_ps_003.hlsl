@@ -43,19 +43,19 @@ float4 main(InputType input) : SV_TARGET
     float arterialAlpha = textures[1].Sample(SampleType, input.tex);
 
     // STEP 4: Use audio to add any bloom...
-    float bpm = 120.0f; // 80.0f+140.0f*stress; a poor approximation, in that we have 'period clipping' when this isn't carefully passed in...
-    float volume = abs(cos((0.5f*bpm/60.0f)*PI*time+0.25f*radius)); // NB: Substitute for actual audio being passed in...
+    float bpm = 140.0f; // 80.0f+140.0f*stress; a poor approximation, in that we have 'period clipping' when this isn't carefully passed in...
+    float volume = abs(cos((0.5f*bpm/60.0f)*PI*time+0.15f*radius)); // NB: Substitute for actual audio being passed in...
     volume = pow(radialAlpha,1.0f)*pow(volume, 4.0f+16.0f*(1.0f-radialAlpha));
 
     float radialBloom = 0.05f;
     radialAlpha += radialBloom*volume;
 
-    float arterialBloom = 0.6f;
+    float arterialBloom = radialBloom+0.5f*stress;
     arterialAlpha *= 1.0f+arterialBloom*volume;
 
     // STEP 5: 
-    float t = 0.25f;
-    float a = (1.0f-t)*radialAlpha+t*arterialAlpha;
+    float t = 1.0f/6.0f;
+    float a = (1.0f-t)*max((radialAlpha-0.2f)/(1.0f-0.2f), 0.0f)+t*arterialAlpha;
     a *= alpha;
 
     //return float4(1.0f-0.4f*a, 1.0f-0.5f*a, 1.0f-0.5f*a, 1.0f); // NB: Monochrome, for presentation purposes!

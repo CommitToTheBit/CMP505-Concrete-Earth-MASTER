@@ -11,7 +11,10 @@
 #include "RenderTexture.h"
 
 #include "HexBoard.h"
-#include "LSystem.h"
+
+#include "LDragonCurve.h"
+#include "LSphinxTiling.h"
+#include "LBloodVessel.h"
 
 #include "Screen.h"
 
@@ -118,7 +121,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>                        m_normalMap;
 
 	// Shaders
-    Shader                                                                  m_FieldRendering;
+    Shader                                                                  m_LightShader;
 
     // Shader Textures
     Shader                                                                  m_NeutralShader;
@@ -135,7 +138,11 @@ private:
     int                                                                     m_add; // DEBUG...
 
     // L-Systems
-    LSystem                                                                 m_LSystem;
+    LDragonCurve                                                            m_DragonCurve;
+    LSphinxTiling                                                           m_SphinxTiling;
+
+    int                                                                     m_BloodVesselCount;
+    std::vector<LBloodVessel>                                               m_BloodVessels;
 
     ModelClass																m_Cube;
 

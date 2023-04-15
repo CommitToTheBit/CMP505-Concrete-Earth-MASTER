@@ -172,6 +172,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ClassicNoise.h" />
     <ClInclude Include="DeviceResources.h" />
+    <ClInclude Include="LDragonCurve.h" />
     <ClInclude Include="EnvironmentCamera.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="HexBoard.h" />
@@ -185,7 +186,9 @@
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LSphinxTiling.h" />
     <ClInclude Include="LSystem.h" />
+    <ClInclude Include="LBloodVessel.h" />
     <ClInclude Include="MarchingCubes.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="pch.h" />
@@ -202,6 +205,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ClassicNoise.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
+    <ClCompile Include="LDragonCurve.cpp" />
     <ClCompile Include="EnvironmentCamera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HexBoard.cpp" />
@@ -213,7 +217,9 @@
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LSphinxTiling.cpp" />
     <ClCompile Include="LSystem.cpp" />
+    <ClCompile Include="LBloodVessel.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MarchingCubes.cpp" />
     <ClCompile Include="modelclass.cpp" />
