@@ -537,9 +537,9 @@ void Game::SetupGUI()
 
 	if (m_BloodVesselCount > 0)
 	{
-		ImGui::Begin(m_BloodVessels[0].GetSentence().c_str(), (bool*)true, window_flags);
-		ImGui::SliderFloat("Wave Amplitude", m_BloodVessels[0].GetIntensity(), 0.0f, 1.0f);
-		ImGui::End();
+		//ImGui::Begin(m_BloodVessels[0].GetSentence().c_str(), (bool*)true, window_flags);
+		//ImGui::SliderFloat("Wave Amplitude", m_BloodVessels[0].GetIntensity(), 0.0f, 1.0f);
+		//ImGui::End();
 	}
 
 	ImGui::EndFrame();

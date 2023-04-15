@@ -441,7 +441,7 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 
 			period = (LModule.period > 0.0f) ? cos(DirectX::XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
 			staticWidth = LModule.staticWidth+GetRNGRange()*LModule.randomStaticWidth;
-			periodicWidth = period*(LModule.periodicWidth+GetRNGRange()*LModule.randomPeriodicWidth);
+			periodicWidth = creep*period*(LModule.periodicWidth+GetRNGRange()*LModule.randomPeriodicWidth);
 
 			m_treeVertices.push_back(TreeVertexType());
 
