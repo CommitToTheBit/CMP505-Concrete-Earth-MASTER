@@ -286,7 +286,7 @@ void Game::Render()
 	m_ScreenShader.EnableShader(context);
 	m_ScreenShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
 	m_ScreenShader.SetTimeBuffer(context, m_time);
-	m_ScreenShader.SetAlphaBuffer(context, 0.5f);
+	m_ScreenShader.SetAlphaBuffer(context, 1.0f);
 	m_ScreenShader.SetAspectRatioBuffer(context, m_aspectRatio);
 	m_ScreenShader.SetStressBuffer(context, (m_BloodVesselCount > 0) ? *m_BloodVessels[0].GetIntensity() : 0.0f);
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
@@ -476,7 +476,7 @@ void Game::CreateDeviceDependentResources()
 	for (int i = 0; i < m_BloodVesselCount; i++)
 	{
 		m_BloodVessels.push_back(LBloodVessel());
-		m_BloodVessels[i].Initialize(device, 0.1f, 8, i);
+		m_BloodVessels[i].Initialize(device, 0.1f, 12, i);
 	}
 
 	// Models
@@ -537,9 +537,9 @@ void Game::SetupGUI()
 
 	if (m_BloodVesselCount > 0)
 	{
-		//ImGui::Begin(m_BloodVessels[0].GetSentence().c_str(), (bool*)true, window_flags);
-		//ImGui::SliderFloat("Wave Amplitude", m_BloodVessels[0].GetIntensity(), 0.0f, 1.0f);
-		//ImGui::End();
+		ImGui::Begin(m_BloodVessels[0].GetSentence().c_str(), (bool*)true, window_flags);
+		ImGui::SliderFloat("Wave Amplitude", m_BloodVessels[0].GetIntensity(), 0.0f, 1.0f);
+		ImGui::End();
 	}
 
 	ImGui::EndFrame();

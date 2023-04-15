@@ -301,6 +301,7 @@ void LSystem::InitializeTree(float seed, float rotation, DirectX::SimpleMath::Ve
 	m_seedVertices[0].parent = 0;
 	m_seedVertices[0].transform = DirectX::SimpleMath::Matrix::CreateRotationZ(m_rotation);
 	m_seedVertices[0].position = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
+	m_seedVertices[0].length = 0.0f;
 
 	int parentIndex = 0;
 	std::vector<int> parentIndices = std::vector<int>();
@@ -334,6 +335,7 @@ void LSystem::InitializeTree(float seed, float rotation, DirectX::SimpleMath::Ve
 			m_seedVertices[childIndex].parent = parentIndex;
 			m_seedVertices[childIndex].transform = localTransform * m_seedVertices[parentIndex].transform;
 			DirectX::SimpleMath::Vector3::Transform(DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f), m_seedVertices[childIndex].transform, m_seedVertices[childIndex].position);
+			m_seedVertices[parentIndex].length = LModule.staticLength + m_seedVertices[parentIndex].length;
 
 			childIndex = m_seedVertices.size();
 			parentIndex = m_seedVertices.size()-1;
@@ -368,10 +370,14 @@ void LSystem::InitializeTree(float seed, float rotation, DirectX::SimpleMath::Ve
 	float xBorder = anchoring.x*(1.0f-delta.x/maxDelta);
 	float yBorder = anchoring.y*(1.0f-delta.y/maxDelta);
 
+	m_maxLength = 0.0f;
 	for (int i = 0; i < m_seedVertices.size(); i++)
 	{
 		m_seedVertices[i].position.x = xBorder+(m_seedVertices[i].position.x-minima.x)/maxDelta;
 		m_seedVertices[i].position.y = yBorder+(m_seedVertices[i].position.y-minima.y)/maxDelta;
+
+		m_seedVertices[i].length *= m_scale;
+		m_maxLength = std::max(m_seedVertices[i].length, m_maxLength);
 
 		// FIXME: Simplex noise... still not working?
 		m_seedVertices[i].simplex = 0.0f;
@@ -426,10 +432,12 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 			if (LModule.staticLength == 0.0f)
 				continue;
 
+			float creep = (m_seedVertices[childIndex].length > 0.0f) ? std::max(0.0f,std::min((1.0f-m_maxLength/m_seedVertices[childIndex].length)+(m_maxLength/m_seedVertices[childIndex].length)*m_intensity, 1.0f)) : 0.0f;
+
 			period = (LModule.period > 0.0f) ? cos(DirectX::XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
 			staticLength = LModule.staticLength+GetRNGRange()*LModule.randomStaticLength;
 			periodicLength = period*(LModule.periodicLength+GetRNGRange()*LModule.randomPeriodicLength);
-			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(m_scale*(staticLength+periodicLength), 0.0f, 0.0f) * localTransform;
+			localTransform = DirectX::SimpleMath::Matrix::CreateTranslation(creep*m_scale*(staticLength+periodicLength), 0.0f, 0.0f) * localTransform;
 
 			period = (LModule.period > 0.0f) ? cos(DirectX::XM_2PI*(m_time/(LModule.period+GetRNGRange(0.0f, std::max(LModule.aperiodicity, 0.0f)))+(LModule.synchronisation+GetRNGRange(0.0f, LModule.asynchronicity)))) : 0.0f;
 			staticWidth = LModule.staticWidth+GetRNGRange()*LModule.randomStaticWidth;

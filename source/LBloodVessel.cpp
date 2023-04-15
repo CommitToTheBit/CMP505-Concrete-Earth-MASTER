@@ -221,7 +221,7 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 	CModule.randomStaticLength = 0.5f;
 	CModule.randomPeriodicLength = 0.125f;
 	CModule.staticRotation = 0.0f;
-	CModule.randomStaticRotation = 3.0f*DirectX::XM_PI/180.0f;
+	CModule.randomStaticRotation = 4.0f*DirectX::XM_PI/180.0f;
 	CModule.periodicRotation = 0.1f*DirectX::XM_PI/180.0f;
 	CModule.randomPeriodicRotation = 1.0f*DirectX::XM_PI/180.0f;
 	CModule.staticWidth = width;

@@ -24,6 +24,7 @@ protected:
 		int parent;
 		DirectX::SimpleMath::Matrix transform;
 		DirectX::SimpleMath::Vector3 position;
+		float length;
 		float simplex;
 	};
 
@@ -111,7 +112,7 @@ private:
 	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;
 	std::vector<LModuleType> m_sentence;
 
-	float m_seed, m_rotation, m_scale;
+	float m_seed, m_rotation, m_scale, m_maxLength;
 	std::vector<SeedVertexType> m_seedVertices;
 
 	float m_time, m_intensity;
