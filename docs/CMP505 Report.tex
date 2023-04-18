@@ -100,9 +100,6 @@ While the above defintions are rather abstract, they come with a surprising prac
 \label{Dragon Curves}
 \end{figure}
 
-\vspace{5pt}\noindent
-Quick test!
-
 \subsubsection{Case Study: Runes}
 
 Parametric L-systems \citep{hananParametricLSystems} exist as a generalisation of the above... [theory].
@@ -125,13 +122,16 @@ $$\theta_M = \arccos\left(\frac{\left(1+\alpha^3\right)^{4/3}+1-\alpha^4}{2\left
 
 \vspace{5pt}\noindent
 $$\begin{matrix*}[l]
-\mathbf{C} &\mapsto &\mathbf{X}[\mathbf{C}]\mathbf{C} \\
+\mathbf{C} &\mapsto &\mathbf{X}[+\mathbf{C}]-\mathbf{C} \\
 \mathbf{X} &\mapsto &\mathbf{X}\mathbf{X}
 \end{matrix*}$$
 
 \vspace{5pt}\noindent
 $$\begin{matrix*}[l]
-\mathbf{C} &\mapsto &\mathbf{X}[\mathbf{C}]\mathbf{C}
+\mathbf{C}, \\
+\mathbf{X}[+\mathbf{C}]-\mathbf{C}, \\
+\mathbf{X}\mathbf{X}[+\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}[+\mathbf{C}]-\mathbf{C}, \\
+\mathbf{X}\mathbf{X}\mathbf{X}\mathbf{X}[+\mathbf{X}\mathbf{X}[+\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}\mathbf{X}[+\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}[+\mathbf{C}]-\mathbf{C}, \;\; \cdots
 \end{matrix*}$$
 
 \vspace{5pt}\noindent
