@@ -117,6 +117,9 @@
     <ClInclude Include="LBloodVessel.h">
       <Filter>Modelling\LSystemModels</Filter>
     </ClInclude>
+    <ClInclude Include="Grammar.h">
+      <Filter>Narrative</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -194,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="LBloodVessel.cpp">
       <Filter>Modelling\LSystemModels</Filter>
+    </ClCompile>
+    <ClCompile Include="Grammar.cpp">
+      <Filter>Narrative</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

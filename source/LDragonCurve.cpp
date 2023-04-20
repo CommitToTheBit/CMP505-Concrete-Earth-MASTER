@@ -15,7 +15,7 @@ LDragonCurve::~LDragonCurve()
 bool LDragonCurve::Initialize(ID3D11Device* device, float width, int iterations, float seed)
 {
 	// STEP 1: Write production rules...
-	ProductionRuleType F;
+	LProductionRuleType F;
 	F.productions.push_back([](LModuleType LModule) {
 		LModuleType KModule = LModule;
 		KModule.letter = "F";
@@ -38,7 +38,7 @@ bool LDragonCurve::Initialize(ID3D11Device* device, float width, int iterations,
 	F.weight = 1.0f;
 	AddProductionRule("F", F);
 
-	ProductionRuleType G;
+	LProductionRuleType G;
 	G.productions.push_back([](LModuleType LModule) {
 		LModuleType KModule = LModule;
 		KModule.letter = "F";

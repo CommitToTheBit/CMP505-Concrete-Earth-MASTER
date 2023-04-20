@@ -68,7 +68,7 @@ void Game::Initialize(HWND window, int width, int height)
 
 	// FIXME: Refactor this, for 'cleaner' board set-up?
 	float twist = XM_PI/12.0f;
-	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(twist));
+	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f)-0.075f, cos(1.0f*XM_PI/5.0f))*cos(twist));
 	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+180.0f*twist/XM_PI, 0.0f));
 	
 #ifdef DXTK_AUDIO
@@ -254,7 +254,7 @@ void Game::Render()
 	
 	// Render board...
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_HexBoard.Render(context, &m_LightShader, displacement, &m_Camera, m_time, &m_Light);
+	m_HexBoard.Render(context, &m_LightShader, displacement, 0.9f, 0.9f, &m_Camera, m_time, &m_Light);
 
 	// DEBUG: Render a dragon curve...
 	/*m_NeutralShader.EnableShader(context);

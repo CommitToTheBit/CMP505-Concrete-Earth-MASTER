@@ -26,7 +26,7 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 	};
 
 	// STEP 1: Write production rules...
-	ProductionRuleType CForward;
+	LProductionRuleType CForward;
 	CForward.productions.push_back(XProduction);
 	CForward.productions.push_back([](LModuleType LModule) {
 		LModuleType KModule = LModule;
@@ -38,7 +38,7 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 	CForward.weight = 0.1f;
 	AddProductionRule("C", CForward);
 
-	ProductionRuleType CLeft;
+	LProductionRuleType CLeft;
 	CLeft.productions.push_back(XProduction);
 	CLeft.productions.push_back([](LModuleType LModule) {
 		LModuleType KModule = LModule;
@@ -77,7 +77,7 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 	CLeft.weight = 0.45f;
 	AddProductionRule("C", CLeft);
 
-	ProductionRuleType CRight;
+	LProductionRuleType CRight;
 	CRight.productions.push_back(XProduction);
 	CRight.productions.push_back([](LModuleType LModule) {
 		LModuleType KModule = LModule;
@@ -116,7 +116,7 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 	CRight.weight = 0.45f;
 	AddProductionRule("C", CRight);
 
-	ProductionRuleType L;
+	LProductionRuleType L;
 	L.productions.push_back(XProduction);
 	L.productions.push_back([](LModuleType LModule) {
 		LModuleType KModule = LModule;
@@ -131,7 +131,7 @@ bool LBloodVessel::Initialize(ID3D11Device* device, float width, int iterations,
 	L.weight = 1.0f;
 	AddProductionRule("L", L);
 
-	ProductionRuleType R;
+	LProductionRuleType R;
 	R.productions.push_back(XProduction);
 	R.productions.push_back([](LModuleType LModule) {
 		LModuleType KModule = LModule;

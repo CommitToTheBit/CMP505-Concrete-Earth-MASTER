@@ -76,7 +76,7 @@ public:
 		LModuleType();
 	};
 
-	struct ProductionRuleType
+	struct LProductionRuleType
 	{
 		std::vector<std::function<LModuleType(LModuleType)>> productions;
 		float weight;
@@ -91,7 +91,7 @@ public:
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 
-	void AddProductionRule(std::string letter, ProductionRuleType productionRule);
+	void AddProductionRule(std::string letter, LProductionRuleType productionRule);
 
 	// DEBUG:
 	float* GetIntensity();
@@ -107,11 +107,11 @@ private:
 
 	void UpdateTree(float deltaTime, float intensity);
 
-	ProductionRuleType GetProductionRule(std::string letter);
+	LProductionRuleType GetProductionRule(std::string letter);
 	float GetRNGRange(float a = -1.0f, float b = 1.0f);
 
 private:
-	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;
+	std::map<std::string, std::vector<LProductionRuleType>> m_productionRules;
 	std::vector<LModuleType> m_sentence;
 
 	float m_seed, m_rotation, m_scale, m_depth;

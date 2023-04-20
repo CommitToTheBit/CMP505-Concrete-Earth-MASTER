@@ -14,9 +14,11 @@ public:
 	bool Initialize(ID3D11Device*, int hexRadius, int cells);
 
 	// Rendering...
-	void Render(ID3D11DeviceContext*, 
+	void Render(ID3D11DeviceContext*,
 		Shader* shader,
 		DirectX::SimpleMath::Vector3 boardPosition,
+		float boardScale,
+		float tileScale,
 		Camera* camera, 
 		float time,
 		Light* light);

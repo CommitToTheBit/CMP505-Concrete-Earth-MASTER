@@ -464,19 +464,19 @@ void LSystem::UpdateTree(float deltaTime, float deltaIntensity)
 	}
 }
 
-void LSystem::AddProductionRule(std::string letter, ProductionRuleType productionRule)
+void LSystem::AddProductionRule(std::string letter, LProductionRuleType productionRule)
 {
 	if (!m_productionRules.count(letter))
-		m_productionRules.insert({ letter, std::vector<ProductionRuleType>{ productionRule } });
+		m_productionRules.insert({ letter, std::vector<LProductionRuleType>{ productionRule } });
 	else
 		m_productionRules[letter].push_back(productionRule);
 }
 
-LSystem::ProductionRuleType LSystem::GetProductionRule(std::string letter)
+LSystem::LProductionRuleType LSystem::GetProductionRule(std::string letter)
 {
 	if (!m_productionRules.count(letter))
 	{
-		ProductionRuleType identity;
+		LProductionRuleType identity;
 		identity.productions.push_back([](LSystem::LModuleType LModule) { return LModule; });
 		identity.weight = 1.0f;
 		return identity;
@@ -484,7 +484,7 @@ LSystem::ProductionRuleType LSystem::GetProductionRule(std::string letter)
 
 	// FIXME: Add stochastic components here... 
 	float totalWeight = 0.0f;
-	for each (ProductionRuleType productionRule in m_productionRules[letter])
+	for each (LProductionRuleType productionRule in m_productionRules[letter])
 	{
 		totalWeight += productionRule.weight;
 	}
@@ -492,7 +492,7 @@ LSystem::ProductionRuleType LSystem::GetProductionRule(std::string letter)
 	int index = 0;
 	float weight = GetRNGRange(0.0f, totalWeight);
 	float summedWeight = 0.0f;
-	for each (ProductionRuleType productionRule in m_productionRules[letter])
+	for each (LProductionRuleType productionRule in m_productionRules[letter])
 	{
 		if (weight > summedWeight+productionRule.weight)
 		{

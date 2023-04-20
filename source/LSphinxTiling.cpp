@@ -15,7 +15,7 @@ LSphinxTiling::~LSphinxTiling()
 bool LSphinxTiling::Initialize(ID3D11Device* device, float width, int iterations, float seed)
 {
 	// STEP 1: Write production rules...
-	ProductionRuleType FClockwise;
+	LProductionRuleType FClockwise;
 	FClockwise.productions.push_back([](LModuleType LModule) {
 		LModuleType KModule = LModule;
 		KModule.letter = "";
@@ -95,7 +95,7 @@ bool LSphinxTiling::Initialize(ID3D11Device* device, float width, int iterations
 	FClockwise.weight = 1.0f;
 	AddProductionRule("FClockwise", FClockwise);
 
-	ProductionRuleType FAntiClockwise;
+	LProductionRuleType FAntiClockwise;
 	FAntiClockwise.productions.push_back([](LModuleType LModule) {
 		LModuleType KModule = LModule;
 		KModule.letter = "";
