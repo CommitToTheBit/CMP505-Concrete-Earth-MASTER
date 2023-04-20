@@ -36,5 +36,7 @@ private:
 	//nlohmann::json m_alphabet;
 	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;
 	std::string m_sentence;
+
+	float m_seed;
 };
 

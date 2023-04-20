@@ -175,7 +175,7 @@ void Game::Update(DX::StepTimer const& timer)
 			
 		for (int i = 0; i < m_BloodVesselCount; i++)
 		{
-			m_BloodVessels[i].Update(device, m_timer.GetElapsedSeconds(), 0.0f);// 0.08f*deltaInterpolation*m_timer.GetElapsedSeconds()); // FIXME: Why does only this last line cause a bug?
+			m_BloodVessels[i].Update(device, m_timer.GetElapsedSeconds(), 0.08f*deltaInterpolation*m_timer.GetElapsedSeconds());
 		}
 	}
 
