@@ -17,46 +17,46 @@ bool LDragonCurve::Initialize(ID3D11Device* device, float width, int iterations,
 	// STEP 1: Write production rules...
 	ProductionRuleType F;
 	F.productions.push_back([](LModuleType LModule) {
-		LModuleType productionModule = LModule;
-		productionModule.letter = "F";
-		productionModule.staticRotation = 0.0f;
-		return productionModule;
+		LModuleType KModule = LModule;
+		KModule.letter = "F";
+		KModule.staticRotation = 0.0f;
+		return KModule;
 		});
 	F.productions.push_back([](LModuleType LModule) {
-		LModuleType productionModule = LModule;
-		productionModule.letter = "+";
-		productionModule.staticLength = 0.0f;
-		productionModule.staticRotation = 90.0f*DirectX::XM_PI/180.0f;
-		return productionModule;
+		LModuleType KModule = LModule;
+		KModule.letter = "+";
+		KModule.staticLength = 0.0f;
+		KModule.staticRotation = 90.0f*DirectX::XM_PI/180.0f;
+		return KModule;
 		});
 	F.productions.push_back([](LModuleType LModule) {
-		LModuleType productionModule = LModule;
-		productionModule.letter = "G";
-		productionModule.staticRotation = 0.0f;
-		return productionModule;
+		LModuleType KModule = LModule;
+		KModule.letter = "G";
+		KModule.staticRotation = 0.0f;
+		return KModule;
 		});
 	F.weight = 1.0f;
 	AddProductionRule("F", F);
 
 	ProductionRuleType G;
 	G.productions.push_back([](LModuleType LModule) {
-		LModuleType productionModule = LModule;
-		productionModule.letter = "F";
-		productionModule.staticRotation = 0.0f;
-		return productionModule;
+		LModuleType KModule = LModule;
+		KModule.letter = "F";
+		KModule.staticRotation = 0.0f;
+		return KModule;
 		});
 	G.productions.push_back([](LModuleType LModule) {
-		LModuleType productionModule = LModule;
-		productionModule.letter = "-";
-		productionModule.staticLength = 0.0f;
-		productionModule.staticRotation = -90.0f*DirectX::XM_PI/180.0f;
-		return productionModule;
+		LModuleType KModule = LModule;
+		KModule.letter = "-";
+		KModule.staticLength = 0.0f;
+		KModule.staticRotation = -90.0f*DirectX::XM_PI/180.0f;
+		return KModule;
 		});
 	G.productions.push_back([](LModuleType LModule) {
-		LModuleType productionModule = LModule;
-		productionModule.letter = "G";
-		productionModule.staticRotation = 0.0f;
-		return productionModule;
+		LModuleType KModule = LModule;
+		KModule.letter = "G";
+		KModule.staticRotation = 0.0f;
+		return KModule;
 		});
 	G.weight = 1.0f;
 	AddProductionRule("G", G);
