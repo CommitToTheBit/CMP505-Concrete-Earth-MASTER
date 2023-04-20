@@ -154,6 +154,10 @@ void Game::Update(DX::StepTimer const& timer)
 		//	m_HexBoard.SetInterpolation(-1, 1);
 		//	m_HexBoard.SetInterpolation(-1, -1);
 		//	m_HexBoard.AddThorns(device, m_add++, 3);
+
+		// DEBUG:
+		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
+			m_Grammar.GenerateSentence("Flip!");
 	}
 
 	// VIGNETTE INPUTS:
@@ -171,7 +175,7 @@ void Game::Update(DX::StepTimer const& timer)
 			
 		for (int i = 0; i < m_BloodVesselCount; i++)
 		{
-			m_BloodVessels[i].Update(device, m_timer.GetElapsedSeconds(), 0.08f*deltaInterpolation*m_timer.GetElapsedSeconds());
+			m_BloodVessels[i].Update(device, m_timer.GetElapsedSeconds(), 0.0f);// 0.08f*deltaInterpolation*m_timer.GetElapsedSeconds()); // FIXME: Why does only this last line cause a bug?
 		}
 	}
 
@@ -179,6 +183,7 @@ void Game::Update(DX::StepTimer const& timer)
 	m_view = m_Camera.getCameraMatrix();
 	m_projection = m_Camera.getPerspective();
 	m_world = Matrix::Identity;
+
 
 	/*create our UI*/
 	SetupGUI();
@@ -480,6 +485,9 @@ void Game::CreateDeviceDependentResources()
 	m_HexBoard.Initialize(device, 4, 32);
 	m_add = 0;
 
+	// Narrative // FIXME: Move to board?
+	//m_Grammar.Initialize("");
+
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);
 	m_SphinxTiling.Initialize(device, 0.01f, 5);
@@ -547,11 +555,11 @@ void Game::SetupGUI()
 	window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 
-	if (m_BloodVesselCount > 0)
+	if (m_Grammar.GetSentence().length() > 0 && m_BloodVesselCount > 0)
 	{
-		//ImGui::Begin(m_BloodVessels[0].GetSentence().c_str(), (bool*)true, window_flags);
-		//ImGui::SliderFloat("Wave Amplitude", m_BloodVessels[0].GetIntensity(), 0.0f, 1.0f);
-		//ImGui::End();
+		ImGui::Begin(m_Grammar.GetSentence().c_str(), (bool*)true, window_flags);
+		ImGui::Text(m_Grammar.GetSentence().c_str());
+		ImGui::End();
 	}
 
 	ImGui::EndFrame();

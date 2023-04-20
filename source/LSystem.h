@@ -95,7 +95,6 @@ public:
 
 	// DEBUG:
 	float* GetIntensity();
-	std::string GetSentence();
 
 private:
 	bool InitializeBuffers(ID3D11Device*);

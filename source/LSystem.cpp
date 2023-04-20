@@ -514,27 +514,6 @@ float LSystem::GetRNGRange(float a, float b)
 	return a+(b-a)*std::rand()/RAND_MAX;
 }
 
-std::string LSystem::GetSentence()
-{
-	std::string text = "";
-
-	int count = 0;
-	for each (LModuleType LModule in m_sentence)
-	{
-		for each (char character in LModule.letter)
-		{
-			text += character;
-			if (++count >= 140)
-			{
-				text += "\n  ";
-				count = 0;
-			}
-		}
-	}
-
-	return text;
-}
-
 float* LSystem::GetIntensity()
 {
 	return &m_intensity;

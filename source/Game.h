@@ -16,6 +16,8 @@
 #include "LSphinxTiling.h"
 #include "LBloodVessel.h"
 
+#include "Grammar.h"
+
 #include "Screen.h"
 
 #include "Camera.h"
@@ -145,6 +147,9 @@ private:
     std::vector<LBloodVessel>                                               m_BloodVessels;
 
     ModelClass																m_Cube;
+
+    // Narrative
+    Grammar                                                                 m_Grammar;
 
     // GUI
     ImFont*                                                                 m_defaultFont;
