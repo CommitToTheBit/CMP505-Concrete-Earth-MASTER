@@ -33,8 +33,8 @@ struct InputType
 float4 main(InputType input) : SV_TARGET
 {
     // STEP 1: Use a distance metric to calculate distance from centre of screen...
-    float2 st = 2.0f*input.tex-float2(1.0f,1.0f);
-    float radius = pow(pow(length(st.x), 2.2f)+pow(length(st.y), 2.2f), 1.0f/2.2f);
+    float2 st = 2.0f*(input.tex-float2(0.5f,0.4f)); // NB: Shifting 'focal point' upward...
+    float radius = pow(pow(length(st.x), 2.5f)+pow(length(st.y), 2.5f), 1.0f/2.5f);
 
     // STEP 2: Calculate radial alpha of the vignette...
     float radialBound = pow(2.0f, 0.5f)-stress;
@@ -56,7 +56,7 @@ float4 main(InputType input) : SV_TARGET
 
     // STEP 5: 
     float t = 1.0f/7.0f;
-    float a = (1.0f-t)*max((radialAlpha-0.1f)/(1.0f-0.1f), 0.0f)+t*arterialAlpha;
+    float a = (1.0f-t)*max((radialAlpha-1.0f/7.0f)/(1.0f-1.0f/7.0f), 0.0f)+t*arterialAlpha;
     a *= alpha;
 
     //return float4(1.0f-0.4f*a, 1.0f-0.5f*a, 1.0f-0.5f*a, 1.0f); // NB: Monochrome, for presentation purposes!
