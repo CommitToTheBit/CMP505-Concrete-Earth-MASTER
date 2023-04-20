@@ -51,12 +51,12 @@ float4 main(InputType input) : SV_TARGET
     float radialBloom = 0.05f;
     radialAlpha += radialBloom*volume;
 
-    float arterialBloom = radialBloom+0.5f*stress;
+    float arterialBloom = radialBloom+0.5f*stress*stress;
     arterialAlpha *= 1.0f+arterialBloom*volume;
 
     // STEP 5: 
-    float t = 1.0f/6.0f;
-    float a = (1.0f-t)*max((radialAlpha-0.2f)/(1.0f-0.2f), 0.0f)+t*arterialAlpha;
+    float t = 1.0f/7.0f;
+    float a = (1.0f-t)*max((radialAlpha-0.1f)/(1.0f-0.1f), 0.0f)+t*arterialAlpha;
     a *= alpha;
 
     //return float4(1.0f-0.4f*a, 1.0f-0.5f*a, 1.0f-0.5f*a, 1.0f); // NB: Monochrome, for presentation purposes!

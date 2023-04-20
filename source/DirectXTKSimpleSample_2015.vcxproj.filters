@@ -215,6 +215,9 @@
       <Filter>Assets</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="Alphabet.json">
+      <Filter>Narrative</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">

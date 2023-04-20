@@ -16,6 +16,11 @@ Grammar::~Grammar()
 void Grammar::Initialize(std::string jsonPath, float seed)
 {
 	m_seed = seed;
+
+	std::ifstream f("Alphabet.json");
+	nlohmann::json alphabet = nlohmann::json::parse(f);
+
+	m_sentence = alphabet["Lorem"].value("Ipsum", "Failed!"); // FIXME: Figure out further json functionality! See https://stackoverflow.com/questions/42887392/how-to-get-array-from-nlohmann-json...
 }
 
 void Grammar::GenerateSentence(std::string axiom)

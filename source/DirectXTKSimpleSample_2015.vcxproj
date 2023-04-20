@@ -245,6 +245,7 @@
     <Manifest Include="settings.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Alphabet.json" />
     <None Include="packages.config" />
     <None Include="SegoeUI_18.spritefont" />
   </ItemGroup>

@@ -486,7 +486,7 @@ void Game::CreateDeviceDependentResources()
 	m_add = 0;
 
 	// Narrative // FIXME: Move to board?
-	//m_Grammar.Initialize("");
+	m_Grammar.Initialize("");
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);
