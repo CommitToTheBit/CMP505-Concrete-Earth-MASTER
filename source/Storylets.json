@@ -1,0 +1,32 @@
+{
+  "Amputation": {
+    "Text": "The #PASSIVE#'s #APPENDAGE# must be amputated...",
+    "Passive Conditions": {
+      "Malaise": "> 0.75"
+    },
+    "Choice": {
+      "Pray": {
+        "Text": "Thee #ACTIVE# lays on their healing hands...",
+        "Active Conditions": {
+          "Faith": "Cloth"
+        },
+        "Hint": "Here is a pop-up description of success...",
+        "Success": {
+          "Text": "The #PASSIVE# is reinvigorated!",
+          "Passive Conditions": {
+            "Faith": "Cloth || Land"
+          },
+          "Passive Effect": {
+            "Sanity": "- 0.1"
+          }
+        },
+        "Failure": {
+          "Text": "Nothing occurs..."
+        }
+      },
+      "Neglect": {
+        "Text": "Do nothing."
+      }
+    }
+  }
+}

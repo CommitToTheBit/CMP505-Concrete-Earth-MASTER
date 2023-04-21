@@ -248,6 +248,7 @@
     <None Include="Alphabet.json" />
     <None Include="packages.config" />
     <None Include="SegoeUI_18.spritefont" />
+    <None Include="Storylets.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="brine_texture.dds" />
