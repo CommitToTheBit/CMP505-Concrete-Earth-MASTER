@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <algorithm>
 
 class Grammar
 {
@@ -36,13 +37,14 @@ public:
 private:
 	void AddProductionRule(std::string letter, ProductionRuleType productionRule);
 
-	ProductionRuleType Grammar::GetProductionRule(std::string letter, int turn = -1);
+	ProductionRuleType Grammar::GetProductionRule(std::string letter, bool generation = true);
+	float GetWeight(ProductionRuleType productionRule, std::string letter);
 	float GetRNGRange(float a = -1.0f, float b = 1.0f);
 
 private:
-	//nlohmann::json m_alphabet;
 	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;
 	std::string m_sentence;
+	int m_generations;
 
 	float m_seed;
 };

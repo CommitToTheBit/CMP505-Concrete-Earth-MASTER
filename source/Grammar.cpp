@@ -3,8 +3,10 @@
 
 Grammar::Grammar()
 {
-	m_sentence = "";
 	m_seed = 0;
+
+	m_sentence = "";
+	m_generations = 0;
 }
 
 
@@ -38,7 +40,7 @@ void Grammar::Initialize(std::string jsonPath, float seed)
 		}
 	}
 
-	//m_sentence = alphabet["non-Euclidean"]["productions"][0];// .value("Ipsum", "Failed!"); // FIXME: Figure out further json functionality! See https://stackoverflow.com/questions/42887392/how-to-get-array-from-nlohmann-json...
+	m_generations = 0;
 }
 
 void Grammar::GenerateSentence(std::string axiom)
@@ -59,20 +61,18 @@ void Grammar::GenerateSentence(std::string axiom)
 
 			if (m_sentence.find("}") != -1)
 			{
-				iteratedSentence += GetProductionRule(m_sentence.substr(0, m_sentence.find("}"))).production;
+				ProductionRuleType productionRule = GetProductionRule(m_sentence.substr(0, m_sentence.find("}")));
+				iteratedSentence += productionRule.production;
+				iteratedSentence += " ("+std::to_string(productionRule.dryness)+")"; // DEBUG...
 				m_sentence.erase(m_sentence.begin(), m_sentence.begin() + m_sentence.find("}") + 1);
 			}
 		}
 		iteratedSentence += m_sentence;
 
-		m_sentence = iteratedSentence;
+		m_sentence = iteratedSentence+"; ";
 	}
 
-	// DEBUG:
-	//if (axiom.length() == 0)
-	//	m_sentence = axiom;
-
-	//m_sentence = "You flip a coin... it wobbles in the air... you catch it on the back of your hand... " + (std::string)((GetRNGRange() > 0.0f) ? "heads!" : "tails!");
+	m_generations++;
 }
 
 std::string Grammar::GetSentence()
@@ -88,7 +88,7 @@ void Grammar::AddProductionRule(std::string letter, ProductionRuleType productio
 		m_productionRules[letter].push_back(productionRule);
 }
 
-Grammar::ProductionRuleType Grammar::GetProductionRule(std::string letter, int turn)
+Grammar::ProductionRuleType Grammar::GetProductionRule(std::string letter, bool generation)
 {
 	if (!m_productionRules.count(letter))
 	{
@@ -103,7 +103,7 @@ Grammar::ProductionRuleType Grammar::GetProductionRule(std::string letter, int t
 	float totalWeight = 0.0f;
 	for each (ProductionRuleType productionRule in m_productionRules[letter])
 	{
-		totalWeight += productionRule.weight;
+		totalWeight += GetWeight(productionRule, letter);
 	}
 
 	int index = 0;
@@ -111,21 +111,46 @@ Grammar::ProductionRuleType Grammar::GetProductionRule(std::string letter, int t
 	float summedWeight = 0.0f;
 	for each (ProductionRuleType productionRule in m_productionRules[letter])
 	{
-		if (weight > summedWeight+productionRule.weight)
+		if (weight > summedWeight + GetWeight(productionRule, letter))
 		{
-			summedWeight += productionRule.weight;
+			summedWeight += GetWeight(productionRule, letter);
 			index++;
 		}
 		else
 		{
+			//summedWeight += GetWeight(productionRule, letter);
 			break;
 		}
 	}
 
 	// Remember this has been used...
-	m_productionRules[letter][index].dryness = std::max(m_productionRules[letter][index].dryness, turn);
+	if (generation)
+		m_productionRules[letter][index].dryness = m_generations;
 
 	return m_productionRules[letter][index];
+}
+
+float Grammar::GetWeight(ProductionRuleType productionRule, std::string letter)
+{
+	float weight = productionRule.weight;
+
+	// STEP 1: Scale by dryness...
+	// Order... lowest to highest?
+	std::vector<int> generations = std::vector<int>();
+	for (ProductionRuleType rule : m_productionRules[letter])
+	{
+		generations.push_back(rule.dryness);
+	}
+	std::sort(generations.begin(), generations.end());
+
+	weight *= (productionRule.dryness < m_generations) ? pow(2.0f, -std::distance(generations.begin(),std::find(generations.begin(), generations.end(), productionRule.dryness))) : 0.0f; // NB: Explicitely blocks the uses of the same production rule (though not the same word!) in one generation...
+
+	//m_sentence += std::to_string(productionRule.dryness)+";";
+	//m_sentence += std::to_string(std::distance(generations.begin(), std::find(generations.begin(), generations.end(), productionRule.dryness)))+"/";
+	//m_sentence += std::to_string(pow(10000000.0f, -std::distance(generations.begin(), std::find(generations.begin(), generations.end(), productionRule.dryness))))+"/";
+
+	return weight;
+
 }
 
 float Grammar::GetRNGRange(float a, float b)
