@@ -199,6 +199,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="StepTimer.h" />
+    <ClInclude Include="StoryCharacter.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Field.h" />
   </ItemGroup>
@@ -235,6 +236,7 @@
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />
+    <ClCompile Include="StoryCharacter.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Field.cpp" />
   </ItemGroup>

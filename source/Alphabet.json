@@ -1,8 +1,22 @@
 {
-  "Lorem": {
-    "Ipsum": "Success!"
+  "non-Euclidean": {
+    "productions": [
+      "LANDMARK ADJECTIVE"
+    ]
   },
-  "Foo": [
-    "Bar"
-  ]
+  "jagged": {
+    "productions": [
+      "LANDMARK ADJECTIVE"
+    ]
+  },
+  "jutting": {
+    "productions": [
+      "LANDMARK ADJECTIVE"
+    ]
+  },
+  "ancient": {
+    "productions": [
+      "LANDMARK ADJECTIVE"
+    ]
+  }
 }

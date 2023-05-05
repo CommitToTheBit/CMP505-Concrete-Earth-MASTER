@@ -89,7 +89,7 @@ void Game::Initialize(HWND window, int width, int height)
     m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"616516__justlaz__geiger_tick_low.wav");
     m_effect1 = m_soundEffect->CreateInstance();
 
-    m_effect1->Play(true);
+    //m_effect1->Play(true); // DEBUG: Turned off temporarily...
 #endif
 }
 
@@ -157,7 +157,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 		// DEBUG:
 		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-			m_Grammar.GenerateSentence("Flip!");
+			m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE}");
 	}
 
 	// VIGNETTE INPUTS:
@@ -487,11 +487,12 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 32);
+	m_HexBoard.Initialize(device, 4, 1);// 32);
 	m_add = 0;
 
 	// Narrative // FIXME: Move to board?
 	m_Grammar.Initialize("");
+	m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE}");
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);

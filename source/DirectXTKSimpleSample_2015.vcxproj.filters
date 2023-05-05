@@ -120,6 +120,9 @@
     <ClInclude Include="Grammar.h">
       <Filter>Narrative</Filter>
     </ClInclude>
+    <ClInclude Include="StoryCharacter.h">
+      <Filter>Narrative</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -199,6 +202,9 @@
       <Filter>Modelling\LSystemModels</Filter>
     </ClCompile>
     <ClCompile Include="Grammar.cpp">
+      <Filter>Narrative</Filter>
+    </ClCompile>
+    <ClCompile Include="StoryCharacter.cpp">
       <Filter>Narrative</Filter>
     </ClCompile>
   </ItemGroup>
