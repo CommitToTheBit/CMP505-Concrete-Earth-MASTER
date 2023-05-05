@@ -120,26 +120,29 @@ $$l_M = \frac{l}{\left(1+\alpha^3\right)^{1/3}}, \;\; l_m = \frac{\alpha\cdot l}
 Furthermore, the branches diverge from their parent at angles
 $$\theta_M = \arccos\left(\frac{\left(1+\alpha^3\right)^{4/3}+1-\alpha^4}{2\left(1+\alpha^3\right)^{2/3}}\right), \;\; \theta_m = \arccos\left(\frac{\left(1+\alpha^3\right)^{4/3}+\alpha^4-1}{2\alpha^2\left(1+\alpha^3\right)^{2/3}}\right).$$
 
-\vspace{5pt}\noindent
-$$\begin{matrix*}[l]
-\mathbf{C} &\mapsto &\mathbf{X}[+\mathbf{C}]-\mathbf{C} \\
-\mathbf{X} &\mapsto &\mathbf{X}\mathbf{X}
-\end{matrix*}$$
+%\vspace{5pt}\noindent
+%$$\begin{matrix*}[l]
+%\mathbf{C} &\mapsto &\mathbf{X}[+\mathbf{C}]-\mathbf{C} \\
+%\mathbf{X} &\mapsto &\mathbf{X}\mathbf{X}
+%\end{matrix*}$$
+
+%\vspace{5pt}\noindent
+%$$\begin{matrix*}[l]
+%\mathbf{C}, \\
+%\mathbf{X}[+\mathbf{C}]-\mathbf{C}, \\
+%\mathbf{X}\mathbf{X}[+\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}[+\mathbf{C}]-\mathbf{C}, \\
+%\mathbf{X}\mathbf{X}\mathbf{X}\mathbf{X}[+\mathbf{X}\mathbf{X}[+\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}\mathbf{X}[+\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}[+\mathbf{C}]-\mathbf{C}, \;\; \cdots
+%\end{matrix*}$$
+
+%\vspace{5pt}\noindent
+%$$\begin{matrix*}[l]
+%\mathbf{C}(l,w,\theta) &\xmapsto[0.4]{} &\mathbf{X}(l,w,\theta)[\mathbf{C}(l_M,w_M,\theta+\theta_M)]\mathbf{C}(l_m,w_m,\theta-\theta_m) \\
+%\mathbf{C}(l,w,\theta) &\xmapsto[0.4]{} &\mathbf{X}(l,w,\theta)[\mathbf{C}(l_m,w_m,\theta+\theta_m)]\mathbf{C}(l_M,w_M,\theta-\theta_M) \\
+%\mathbf{C}(l,w,\theta) &\xmapsto[0.2]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l,w,\theta) \\
+%\end{matrix*}$$
 
 \vspace{5pt}\noindent
-$$\begin{matrix*}[l]
-\mathbf{C}, \\
-\mathbf{X}[+\mathbf{C}]-\mathbf{C}, \\
-\mathbf{X}\mathbf{X}[+\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}[+\mathbf{C}]-\mathbf{C}, \\
-\mathbf{X}\mathbf{X}\mathbf{X}\mathbf{X}[+\mathbf{X}\mathbf{X}[+\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}\mathbf{X}[+\mathbf{X}[+\mathbf{C}]-\mathbf{C}]-\mathbf{X}[+\mathbf{C}]-\mathbf{C}, \;\; \cdots
-\end{matrix*}$$
-
-\vspace{5pt}\noindent
-$$\begin{matrix*}[l]
-\mathbf{C}(l,w,\theta) &\xmapsto[0.4]{} &\mathbf{X}(l,w,\theta)[\mathbf{C}(l_M,w_M,\theta+\theta_M)]\mathbf{C}(l_m,w_m,\theta-\theta_m) \\
-\mathbf{C}(l,w,\theta) &\xmapsto[0.4]{} &\mathbf{X}(l,w,\theta)[\mathbf{C}(l_m,w_m,\theta+\theta_m)]\mathbf{C}(l_M,w_M,\theta-\theta_M) \\
-\mathbf{C}(l,w,\theta) &\xmapsto[0.2]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l,w,\theta) \\
-\end{matrix*}$$
+\citet{liuSimulationBloodVessels} expand on this by introducing a stochastic component - that is to say, they allow [a more random structure].
 
 \vspace{5pt}\noindent
 $$\begin{matrix*}[l]
@@ -151,16 +154,30 @@ $$\begin{matrix*}[l]
 & & \\
 \mathbf{R}(l,w,\theta) &\xmapsto[1.0]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l_M,w_M,\theta+\theta_M)
 \end{matrix*}$$
+This describes...
 
 \vspace{5pt}\noindent
-\citet{liuSimulationBloodVessels} further introduce a stochastic component...
-
+[Further random animation...]
 
 \subsection{Procedural Narrative} % TECHNIQUE: 'Improv-lite' text generation...
 
+\subsubsection{Grammars}
+
+Given their origin in linguistics, it is perhaps unsurprising that [...]. The classic example of this would be \citeauthor{comptonTracery}'s \textit{Tracery} \citeyearpar{comptonTracery}.
+
+\vspace{5pt}\noindent
+While [accessible], the trade-off is [memoryless!]. [Short; \textit{Improv}]
+
+\paragraph{Recency} [Or `dryness'].
+
+\subsubsection{Content Selection Architectures} \textit{Storylets} \citep{kreminskiStorylets} are [definition].
+
+\vspace{5pt}\noindent
+[Though conceptually no different, ... , our `narrative stack'...]
+ 
 \section{Code Organisation}
 
-%\subsection{HexBoard.cpp}
+%Mention use of `tags' in JSON?
 
 \subsection{Post-Processing}
 
