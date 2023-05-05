@@ -157,7 +157,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 		// DEBUG:
 		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-			m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE}");
+			m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}");
 	}
 
 	// VIGNETTE INPUTS:
@@ -492,7 +492,7 @@ void Game::CreateDeviceDependentResources()
 
 	// Narrative // FIXME: Move to board?
 	m_Grammar.Initialize("");
-	m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE}");
+	m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}");
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);

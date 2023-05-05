@@ -63,7 +63,7 @@ void Grammar::GenerateSentence(std::string axiom)
 			{
 				ProductionRuleType productionRule = GetProductionRule(m_sentence.substr(0, m_sentence.find("}")));
 				iteratedSentence += productionRule.production;
-				iteratedSentence += " ("+std::to_string(productionRule.dryness)+")"; // DEBUG...
+				//iteratedSentence += " ("+std::to_string(productionRule.dryness)+")"; // DEBUG...
 				m_sentence.erase(m_sentence.begin(), m_sentence.begin() + m_sentence.find("}") + 1);
 			}
 		}
@@ -143,11 +143,9 @@ float Grammar::GetWeight(ProductionRuleType productionRule, std::string letter)
 	}
 	std::sort(generations.begin(), generations.end());
 
-	weight *= (productionRule.dryness < m_generations) ? pow(2.0f, -std::distance(generations.begin(),std::find(generations.begin(), generations.end(), productionRule.dryness))) : 0.0f; // NB: Explicitely blocks the uses of the same production rule (though not the same word!) in one generation...
-
-	//m_sentence += std::to_string(productionRule.dryness)+";";
-	//m_sentence += std::to_string(std::distance(generations.begin(), std::find(generations.begin(), generations.end(), productionRule.dryness)))+"/";
-	//m_sentence += std::to_string(pow(10000000.0f, -std::distance(generations.begin(), std::find(generations.begin(), generations.end(), productionRule.dryness))))+"/";
+	float minimumWeighting = 0.01f;// pow(0.01f, generations.size()); // NB: The most recently-used production rule will be minimumWeighting times as likely to be surfaced as the least recent...
+	float exponent = ((float)std::distance(generations.begin(), std::find(generations.begin(), generations.end(), productionRule.dryness)))/generations.size();// /generations.size();
+	weight *= (productionRule.dryness < m_generations) ? pow(minimumWeighting, exponent) : 0.0f; // NB: Explicitely blocks the uses of the same production rule (though not the same word!) in one generation...
 
 	return weight;
 
