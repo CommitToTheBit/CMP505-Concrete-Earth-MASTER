@@ -50,15 +50,23 @@ The following is a technical discussion of the key features of \textit{Untitled}
 
 \subsection{Procedural Terrain} % TECHNIQUE: Marching cubes...
 
-[Starting point: the problem of concavity!]
+Given its grounding in nuclear semiotics, this game's terrain is of course intended to evoke a sense of ``shunned land'' \citep{trth93}. In generating the jutting thorns and blocks so essential to the post-nuclear setting, though, there comes a problem - concavity. Height maps are perfectly adequate for creating rolling hills and valleys, but the fact that each $(x,z)$-coordinate can correspond to only one $y$-value prevents any features that ominously overhang \textit{Untitled}'s barren earth (see Figure [reference]).
 
 \vspace{5pt}\noindent
-Introduce marching cubes as the central tenet of the modelling process...
+[Hand-drawn figure, demonstrating the shortcomings of thorns].
 
 \vspace{5pt}\noindent
-Definitive... Paul Bourke's \textit{Polygonising a scalar field} \citeyearpar{bourkeMarchingCubes}...
+\textit{Marching cubes} are therefore central to this modelling process. The concept here is best introduced in two dimensions.
+
+\vspace{5pt}\noindent
+In much the same way, [3D generalisation].
+
+\vspace{5pt}\noindent
+[These are just the broad strokes; nuance to, say, weighing vertex normals correctly]. Definitive... Paul Bourke's \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes}... [mention marching tetrahedra? While X, marching cubes have been perfectly adequate for the purposes set out below...].
 
 \subsubsection{Case Study: Hexes}
+
+%Footnote on floating islands here!
 
 \subsubsection{Case Study: Landmarks}
 
@@ -94,6 +102,7 @@ $$\begin{matrix*}[l]
 \vspace{5pt}\noindent
 While these defintions are rather abstract, \citet{lindenmayerLSystems} provides a remarkable application. Treating each symbol as an instruction like `go forward' or `turn right', \textit{L-systems} visualise sentences via `turtle graphics'; when those sentences have been generated recursively by a grammar, the line drawings inherit that same self-similar structure. In the above example, interpreting non-terminals $F$, $G$ as `draw a line while moving one unit forwards,' and terminals $\pm$ as `turn $\pm\, \pi/2$ on the spot,' produces the fractal dragon curves in Figure \ref{Dragon Curves}.
 
+%\vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.66\textwidth]{Dragon Curves}
@@ -109,20 +118,27 @@ While \textit{Untitled} only needs them to generate 2D alpha maps, note that L-s
 Parametric L-systems \citep{hananParametricLSystems} exist as a generalisation of the above. [theory].
 
 \vspace{5pt}\noindent
-The modules in \textit{Untitled}, then, 
+The modules in \textit{Untitled}, then, track three . More than anything, this offers a certain clarity of code - at least from a 
 
 \vspace{5pt}\noindent
 [Example: various geometric runes!].
 
 \subsubsection{Case Study: Blood Vessels} % Include post-processing!
 
-\citet{zamirArterialBranchingLSystems} uses parametric L-systems... equations for bifurcation...
-
-\vspace{5pt}\noindent
-Suppose a branch with length $l$, width $w$ bifurcates into two branches $M$ and $m$, such that $l_M \geq l_m$. Defining the \textit{asymmetry ratio} $\alpha = l_m/l_M$, it follows that
+\citet{zamirArterialBranchingLSystems}, meanwhile, uses parametric L-systems to visualise the bifurcation of blood vessels. Suppose a branch with length $l$, width $w$ bifurcates into two branches $M$ and $m$, such that $l_M \geq l_m$. Defining the \textit{asymmetry ratio} $\alpha = l_m/l_M$, it follows that
 $$l_M = \frac{l}{\left(1+\alpha^3\right)^{1/3}}, \;\; l_m = \frac{\alpha\cdot l}{\left(1+\alpha^3\right)^{1/3}}, \;\; w_M = \frac{w}{\left(1+\alpha^3\right)^{1/3}}, \;\; w_m = \frac{\alpha\cdot w}{\left(1+\alpha^3\right)^{1/3}}.$$
 Furthermore, the branches diverge from their parent at angles
 $$\theta_M = \arccos\left(\frac{\left(1+\alpha^3\right)^{4/3}+1-\alpha^4}{2\left(1+\alpha^3\right)^{2/3}}\right), \;\; \theta_m = \arccos\left(\frac{\left(1+\alpha^3\right)^{4/3}+\alpha^4-1}{2\alpha^2\left(1+\alpha^3\right)^{2/3}}\right).$$
+\textit{Untitled}'s framework is therefore capable of reproducing \citeauthor{zamirArterialBranchingLSystems}'s results (see Figure \ref{Zamir Branching}), using an L-system with the single production rule:  
+$$\mathbf{C}(l,w,\theta) \mapsto \mathbf{X}(l,w,\theta)[\mathbf{C}(l_M,w_M,\theta+\theta_M)]\mathbf{C}(l_m,w_m,\theta-\theta_m).$$
+
+%\vspace{5pt}\noindent
+\begin{figure}[h]
+\centering
+%\includegraphics[width=0.66\textwidth]{Dragon Curves}
+\caption{\citeauthor{zamirArterialBranchingLSystems}'s model of arterial branching, with asymmetry ratios $\alpha = 1.0, 0.8, \cdots, 0.2$.}
+\label{Zamir Branching}
+\end{figure}
 
 %\vspace{5pt}\noindent
 %$$\begin{matrix*}[l]
@@ -146,9 +162,7 @@ $$\theta_M = \arccos\left(\frac{\left(1+\alpha^3\right)^{4/3}+1-\alpha^4}{2\left
 %\end{matrix*}$$
 
 \vspace{5pt}\noindent
-\citet{liuSimulationBloodVessels} expand on this by introducing a stochastic component - that is to say, they allow [a more random structure].
-
-\vspace{5pt}\noindent
+\citet{liuSimulationBloodVessels} expand on this by introducing a stochastic component - that is to say, they allow [a more random structure]. \textit{Untitled} incorporates such randomness into its own rules for blood vessels:
 $$\begin{matrix*}[l]
 \mathbf{C}(l,w,\theta) &\xmapsto[0.4]{} &\mathbf{X}(l,w,\theta)[\mathbf{L}(l_M,w_M,\theta+\theta_M)]\mathbf{R}(l_m,w_m,\theta-\theta_m) \\
 \mathbf{C}(l,w,\theta) &\xmapsto[0.4]{} &\mathbf{X}(l,w,\theta)[\mathbf{L}(l_m,w_m,\theta+\theta_m)]\mathbf{R}(l_M,w_M,\theta-\theta_M) \\
@@ -158,10 +172,16 @@ $$\begin{matrix*}[l]
 & & \\
 \mathbf{R}(l,w,\theta) &\xmapsto[1.0]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l_M,w_M,\theta+\theta_M)
 \end{matrix*}$$
-This describes...
+These describe a capillary with a 40\% chance of bifurcating with branch $M$ tacking clockwise, a 40\% chance of bifurcating with $M$ tacking anticlockwise, and a 20\% chance of extending forwards without any branching. The determinstic production rules on $\mathbf{L}$, $\mathbf{R}$ provide course correction, guaranteeing the [...]; further informal tweaks can be found in the \texttt{LBloodVessel} class, all intended to get the final look of the L-systems `right' (see Figure [reference]). 
 
 \vspace{5pt}\noindent
-[Further random animation...]
+[Figure of blood vessels in isolation]
+
+\vspace{5pt}\noindent
+[Discussion of animation (and the shortcomings thereof)...]
+
+\vspace{5pt}\noindent
+[Figure of final render]
 
 \subsection{Procedural Narrative} % TECHNIQUE: 'Improv-lite' text generation...
 
@@ -198,6 +218,14 @@ While [accessible], the trade-off is [memoryless!]. [Short; \textit{Improv}]
 \subsection{Code Organisation}
 
 \section{Conclusions}
+
+[Coheres in a way that my CMP502 project absolutely didn't...]
+
+\vspace{5pt}\noindent
+Of course, there is a distinction to be drawn between \textit{Untitled}'s functionality as an interactive experience and as a game. [Perils of interactive narrative].
+
+\vspace{5pt}\noindent
+[What/how would I go about cannibalising this? Screen shader first/hexes... narrative much more an early experiment in structuring content selection architectures/context-sensitive grammars...]
 
 \bibliographystyle{agsm}
 \bibliography{../../Bibliography/Bibliography}
