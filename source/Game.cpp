@@ -518,7 +518,7 @@ void Game::CreateDeviceDependentResources()
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
 
-	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps_003.cso");
+	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps.cso");
 	m_ScreenShader.InitMatrixBuffer(device);
 	m_ScreenShader.InitTimeBuffer(device);
 	m_ScreenShader.InitAlphaBuffer(device);
