@@ -189,12 +189,17 @@ These describe a capillary with a 40\% chance of bifurcating with branch $M$ tac
 
 \subsubsection{Grammars}
 
-Given their origin in linguistics, it is perhaps unsurprising that grammars (see Section \ref{Procedural Screen Textures}) have found much use in the field of procedural narrative - \textit{Tracery} \citep{comptonTracery} being the prime example. In mathematical terms, it is a stochastic, context-free grammar, with uniformly-distributed production rules for each non-terminal; the tool iterates a given axiom until all such non-terminals (demarcated by \texttt{\#HASHTAG\#} delimiters) have been replaced. This generation process is streamlined by design, \citeauthor{comptonTracery}'s intention 
+Given their origin in linguistics, it is perhaps unsurprising that grammars (see Section \ref{Procedural Screen Textures}) are of use in the field of procedural narrative - \textit{Tracery} \citep{comptonTracery} being the prime example. From a mathematical perspective, this is a stochastic, context-free grammar, with uniformly-distributed production rules for each non-terminal; it iterates a given axiom until all non-terminals (demarcated by \texttt{\#HASHTAG\#} delimiters) have been replaced. To bemoan the generator as better suited to Twitter bots than immersive storytelling is to misunderstand its design. \citeauthor{comptonTracery} present a lightweight tool that is left \textit{deliberately} narrow, intended for ease-of-use amongst even the most fledgling authors.
 
 \vspace{5pt}\noindent
-While \textit{Tracery}'s lightweight, author-focused, the trade-off is [memoryless!]. [Short; \textit{Improv}] In \textit{Annals of the Parrigues}, sets out the need for a \textit{consistent} generator, one that ``defines any facts about the world that aren’t already defined at the moment of generation'' ( , p. 83). \textit{Voyageur} , meanwhile, integrates several weightings into distribution of production rules \citep{diasVoyageurDescriptions}. While [\textit{Untitled}] - the game uses an implementation of \textit{Tracery} with a couple of custom modifications...
+More substantial works, then, adapt \textit{Tracery}'s grammar-based approach to their own specifications. In \textit{The Annals of the Parrigues}, \citeauthor{shortParrigues} sets out the need for a consistent generator, one that ``defines any facts about the world that aren’t already defined at the moment of generation'' (\citeyear{shortParrigues}, p. 83). \textit{Voyageur} \citep{diasVoyageur} integrates several weightings into distribution of production rules \citep{diasVoyageurDescriptions}. While [this project], this project wears its influences on its sleeve - \textit{Untitled} uses an implementation of \textit{Tracery} with a couple of custom modifications...
 
 \paragraph{Recency} [Or `dryness'].
+
+$p^{n/(N-1)}$, such that (all other weightings being equal), the most recently used rule (with $n = N-1$) will be $p$ times as likely as the least recent ($n = 0$).
+
+\vspace{5pt}\noindent
+Note that [joint recency!].
 
 \subsubsection{Content Selection Architectures} \textit{Storylets} \citep{kreminskiStorylets} are [definition].
 
