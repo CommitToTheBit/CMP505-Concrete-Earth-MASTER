@@ -43,45 +43,57 @@ void Grammar::Initialize(std::string jsonPath, float seed)
 	m_generations = 0;
 }
 
-void Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character)
+std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character)
 {
 	srand(m_seed); // FIXME: Hacky, but a good patch in lieu of a better rng implementation?
 	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
+	m_generations++;
 
 	// FIXME: Generalise this to include nested brackets...
-	m_sentence = axiom;
+	std::string sentence = axiom;
 	std::string iteratedSentence;
-	while (m_sentence.find("{") != -1)
+	while (sentence.find("{") != -1)
 	{
 		iteratedSentence = "";
-		while (m_sentence.find("{") != -1)
+		while (sentence.find("{") != -1)
 		{
-			iteratedSentence += m_sentence.substr(0, m_sentence.find("{"));
-			m_sentence.erase(m_sentence.begin(), m_sentence.begin() + m_sentence.find("{") + 1);
+			iteratedSentence += sentence.substr(0, sentence.find("{"));
+			sentence.erase(sentence.begin(), sentence.begin() + sentence.find("{") + 1);
 
-			if (m_sentence.find("}") != -1)
+			if (sentence.find("}") == -1)
+				continue;
+
+			std::string production;
+			if (sentence.find("*") == 0)
 			{
-				ProductionRuleType productionRule = GetProductionRule(m_sentence.substr(0, m_sentence.find("}")));
-				iteratedSentence += productionRule.production;
-				//iteratedSentence += " ("+std::to_string(productionRule.dryness)+")"; // DEBUG...
-				m_sentence.erase(m_sentence.begin(), m_sentence.begin() + m_sentence.find("}") + 1);
-			}
-		}
-		iteratedSentence += m_sentence;
+				if (character && character->m_traits.find(sentence.substr(1, sentence.find("}") - 1)) != character->m_traits.end()) // NB: "-1" applies to length, not last index!
+				{
+					production = character->m_traits[sentence.substr(1, sentence.find("}") - 1)];
+				}
+				else
+				{
+					production = GetProductionRule(sentence.substr(1, sentence.find("}") - 1)).production;
 
-		m_sentence = iteratedSentence+"; ";
+					if (character)
+						character->m_traits[sentence.substr(1, sentence.find("}") - 1)] = production;
+				}
+			}
+			else
+			{
+				production = GetProductionRule(sentence.substr(0, sentence.find("}"))).production;
+			}
+
+			iteratedSentence += production;
+			sentence.erase(sentence.begin(), sentence.begin() + sentence.find("}") + 1);
+		}
+		sentence = iteratedSentence;
 	}
 
 	// DEBUG:
 	if (!character)
-		m_sentence = "(DEBUG) NULL CHARACTER: " + m_sentence;
+		sentence = "(NULLPTR) " + sentence;
 
-	m_generations++;
-}
-
-std::string Grammar::GetSentence()
-{
-	return m_sentence;
+	return sentence;
 }
 
 void Grammar::AddProductionRule(std::string letter, ProductionRuleType productionRule)
@@ -147,7 +159,7 @@ float Grammar::GetWeight(ProductionRuleType productionRule, std::string letter)
 	}
 	std::sort(generations.begin(), generations.end());
 
-	float minimumWeighting = 0.01f;// pow(0.01f, generations.size()); // NB: The most recently-used production rule will be minimumWeighting times as likely to be surfaced as the least recent...
+	float minimumWeighting = 0.01f; // 0.0f // pow(0.01f, generations.size()); // NB: The most recently-used production rule will be minimumWeighting times as likely to be surfaced as the least recent...
 	float exponent = ((float)std::distance(generations.begin(), std::find(generations.begin(), generations.end(), productionRule.dryness)))/generations.size();// /generations.size();
 	weight *= (productionRule.dryness < m_generations) ? pow(minimumWeighting, exponent) : 0.0f; // NB: Explicitely blocks the uses of the same production rule (though not the same word!) in one generation...
 

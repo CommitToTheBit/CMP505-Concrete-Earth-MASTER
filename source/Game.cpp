@@ -157,7 +157,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 		// DEBUG:
 		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-			m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}");
+			m_Grammar.m_sentence = m_Grammar.GenerateSentence("{*ARCHETYPE}: {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}", &m_Grammar.m_character);
 	}
 
 	// VIGNETTE INPUTS:
@@ -487,12 +487,12 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 1);// 32);
+	m_HexBoard.Initialize(device, 4, 32);
 	m_add = 0;
 
 	// Narrative // FIXME: Move to board?
 	m_Grammar.Initialize("");
-	m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}");
+	m_Grammar.m_sentence = m_Grammar.GenerateSentence("{*ARCHETYPE}: {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}");
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);
@@ -565,10 +565,10 @@ void Game::SetupGUI()
 
 	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.79f), ImGuiCond_Always, ImVec2(0.5f, 0.0f));
 
-	if (m_Grammar.GetSentence().length() > 0 && m_BloodVesselCount > 0)
+	if (m_Grammar.m_sentence.length() > 0 && m_BloodVesselCount > 0)
 	{
-		ImGui::Begin(m_Grammar.GetSentence().c_str(), (bool*)true, window_flags);
-		ImGui::Text(m_Grammar.GetSentence().c_str());
+		ImGui::Begin(m_Grammar.m_sentence.c_str(), (bool*)true, window_flags);
+		ImGui::Text(m_Grammar.m_sentence.c_str());
 		ImGui::End();
 	}
 

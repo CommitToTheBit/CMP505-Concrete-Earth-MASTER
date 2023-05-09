@@ -18,5 +18,20 @@
     "productions": [
       "LANDMARK ADJECTIVE"
     ]
+  },
+  "arithmetician": {
+    "productions": [
+      "ARCHETYPE"
+    ]
+  },
+  "polyglot": {
+    "productions": [
+      "ARCHETYPE"
+    ]
+  },
+  "exorcist": {
+    "productions": [
+      "ARCHETYPE"
+    ]
   }
 }

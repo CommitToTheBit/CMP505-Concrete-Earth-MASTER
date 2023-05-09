@@ -33,8 +33,7 @@ public:
 	void Initialize(std::string jsonPath, float seed = 0.0f);
 
 	// DEBUG:
-	void GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character = nullptr); // NB: Can equally apply this to character initialisation!
-	std::string GetSentence();
+	std::string GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character = nullptr); // NB: Can equally apply this to character initialisation!
 
 private:
 	void AddProductionRule(std::string letter, ProductionRuleType productionRule);
@@ -45,9 +44,13 @@ private:
 
 private:
 	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;
-	std::string m_sentence;
-	int m_generations;
 
 	float m_seed;
+	int m_generations;
+
+// DEBUG: These variables will later be handled in other classes...
+public:
+	std::string m_sentence;
+	Storyworld::StoryCharacter m_character;
 };
 
