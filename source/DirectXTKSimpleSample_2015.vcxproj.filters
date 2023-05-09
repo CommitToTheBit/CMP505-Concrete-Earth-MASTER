@@ -120,7 +120,7 @@
     <ClInclude Include="Grammar.h">
       <Filter>Narrative</Filter>
     </ClInclude>
-    <ClInclude Include="StoryCharacter.h">
+    <ClInclude Include="Storyworld.h">
       <Filter>Narrative</Filter>
     </ClInclude>
   </ItemGroup>
@@ -204,7 +204,7 @@
     <ClCompile Include="Grammar.cpp">
       <Filter>Narrative</Filter>
     </ClCompile>
-    <ClCompile Include="StoryCharacter.cpp">
+    <ClCompile Include="Storyworld.cpp">
       <Filter>Narrative</Filter>
     </ClCompile>
   </ItemGroup>

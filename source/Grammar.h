@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Storyworld.h"
+
 #include <iostream>
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -31,7 +33,7 @@ public:
 	void Initialize(std::string jsonPath, float seed = 0.0f);
 
 	// DEBUG:
-	void GenerateSentence(std::string axiom);
+	void GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character = nullptr); // NB: Can equally apply this to character initialisation!
 	std::string GetSentence();
 
 private:

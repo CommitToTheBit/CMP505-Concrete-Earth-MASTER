@@ -43,7 +43,7 @@ void Grammar::Initialize(std::string jsonPath, float seed)
 	m_generations = 0;
 }
 
-void Grammar::GenerateSentence(std::string axiom)
+void Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character)
 {
 	srand(m_seed); // FIXME: Hacky, but a good patch in lieu of a better rng implementation?
 	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
@@ -71,6 +71,10 @@ void Grammar::GenerateSentence(std::string axiom)
 
 		m_sentence = iteratedSentence+"; ";
 	}
+
+	// DEBUG:
+	if (!character)
+		m_sentence = "(DEBUG) NULL CHARACTER: " + m_sentence;
 
 	m_generations++;
 }
