@@ -56,7 +56,7 @@ void Game::Initialize(HWND window, int width, int height)
 	ImGui_ImplWin32_Init(window);		//tie to our window
 	ImGui_ImplDX11_Init(m_deviceResources->GetD3DDevice(), m_deviceResources->GetD3DDeviceContext());	//tie to directx
 
-	m_defaultFont = io.Fonts->AddFontFromFileTTF("beneg___.ttf", 54); // NB: pt-to-px conversion: px = (4.0f/3.0f)*pt
+	m_defaultFont = io.Fonts->AddFontFromFileTTF("beneg___.ttf", 48); // NB: pt-to-px conversion: px = (4.0f/3.0f)*pt
 
 	//setup light
 	m_Ambience = Vector4(0.15f, 0.15f, 0.15f, 1.0f);
@@ -68,7 +68,7 @@ void Game::Initialize(HWND window, int width, int height)
 
 	// FIXME: Refactor this, for 'cleaner' board set-up?
 	float twist = XM_PI/12.0f;
-	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f), cos(1.0f*XM_PI/5.0f))*cos(twist));
+	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f)-0.15f, cos(1.0f*XM_PI/5.0f))*cos(twist));
 	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+180.0f*twist/XM_PI, 0.0f));
 	
 #ifdef DXTK_AUDIO
@@ -89,7 +89,7 @@ void Game::Initialize(HWND window, int width, int height)
     m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"616516__justlaz__geiger_tick_low.wav");
     m_effect1 = m_soundEffect->CreateInstance();
 
-    m_effect1->Play(true);
+    //m_effect1->Play(true); // DEBUG: Turned off temporarily...
 #endif
 }
 
@@ -154,6 +154,10 @@ void Game::Update(DX::StepTimer const& timer)
 		//	m_HexBoard.SetInterpolation(-1, 1);
 		//	m_HexBoard.SetInterpolation(-1, -1);
 		//	m_HexBoard.AddThorns(device, m_add++, 3);
+
+		// DEBUG:
+		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
+			m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}");
 	}
 
 	// VIGNETTE INPUTS:
@@ -253,8 +257,14 @@ void Game::Render()
 	m_PhysicalRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
 	
 	// Render board...
+	/*context->OMSetDepthStencilState(m_states->DepthNone(), 0);
+	m_NeutralShader.EnableShader(context);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -3.0f/8.0f, 0.0f)*Matrix::CreateScale(8.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_Screen.Render(context);*/
+
+	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_HexBoard.Render(context, &m_LightShader, displacement, &m_Camera, m_time, &m_Light);
+	m_HexBoard.Render(context, &m_LightShader, displacement, 0.9f, 0.9f, &m_Camera, m_time, &m_Light);
 
 	// DEBUG: Render a dragon curve...
 	/*m_NeutralShader.EnableShader(context);
@@ -477,8 +487,12 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 32);
+	m_HexBoard.Initialize(device, 4, 1);// 32);
 	m_add = 0;
+
+	// Narrative // FIXME: Move to board?
+	m_Grammar.Initialize("");
+	m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}");
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);
@@ -504,7 +518,7 @@ void Game::CreateDeviceDependentResources()
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
 
-	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps_003.cso");
+	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps.cso");
 	m_ScreenShader.InitMatrixBuffer(device);
 	m_ScreenShader.InitTimeBuffer(device);
 	m_ScreenShader.InitAlphaBuffer(device);
@@ -542,16 +556,20 @@ void Game::SetupGUI()
 	ImGui::NewFrame();
 
 	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoTitleBar;
 	window_flags |= ImGuiWindowFlags_NoBackground;
 	window_flags |= ImGuiWindowFlags_NoResize;
 	window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
+	window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 
-	if (m_BloodVesselCount > 0)
+	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.79f), ImGuiCond_Always, ImVec2(0.5f, 0.0f));
+
+	if (m_Grammar.GetSentence().length() > 0 && m_BloodVesselCount > 0)
 	{
-		//ImGui::Begin(m_BloodVessels[0].GetSentence().c_str(), (bool*)true, window_flags);
-		//ImGui::SliderFloat("Wave Amplitude", m_BloodVessels[0].GetIntensity(), 0.0f, 1.0f);
-		//ImGui::End();
+		ImGui::Begin(m_Grammar.GetSentence().c_str(), (bool*)true, window_flags);
+		ImGui::Text(m_Grammar.GetSentence().c_str());
+		ImGui::End();
 	}
 
 	ImGui::EndFrame();

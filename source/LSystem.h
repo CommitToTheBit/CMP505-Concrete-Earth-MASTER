@@ -24,7 +24,9 @@ protected:
 		int parent;
 		DirectX::SimpleMath::Matrix transform;
 		DirectX::SimpleMath::Vector3 position;
-		float length;
+
+		// Extra, 'cosmetic' data...
+		float depth;
 		float simplex;
 	};
 
@@ -32,10 +34,12 @@ protected:
 	struct TreeVertexType
 	{
 		int parent;
-		int degree;
 		DirectX::SimpleMath::Matrix transform;
 		DirectX::SimpleMath::Vector3 position;
-		float radius;
+
+		// Extra, 'cosmetic' data...
+		float width;
+		int degree;
 	};
 
 public:
@@ -63,18 +67,16 @@ public:
 		float periodicWidth;
 		float randomPeriodicWidth;
 
-		float bakedAsymmetry;
+		float asymmetry;
 		float staticAsymmetry;
 		float randomStaticAsymmetry;
 		float periodicAsymmetry;
 		float randomPeriodicAsymmetry;
 
-		// FIXME: Add 'growth' terms!
-
 		LModuleType();
 	};
 
-	struct ProductionRuleType
+	struct LProductionRuleType
 	{
 		std::vector<std::function<LModuleType(LModuleType)>> productions;
 		float weight;
@@ -85,16 +87,14 @@ public:
 	~LSystem();
 
 	virtual bool Initialize(ID3D11Device*, std::vector<LModuleType> axiom, int iterations, float seed = 0.0f, float rotation = 0.0f, DirectX::SimpleMath::Vector2 anchoring = DirectX::SimpleMath::Vector2(0.5f, 0.5f));
+	void Update(ID3D11Device*, float deltaTime, float deltaIntensity);
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 
-	void Update(ID3D11Device*, float deltaTime, float deltaIntensity);
-
-	void AddProductionRule(std::string letter, ProductionRuleType productionRule);
+	void AddProductionRule(std::string letter, LProductionRuleType productionRule);
 
 	// DEBUG:
 	float* GetIntensity();
-	std::string GetSentence();
 
 private:
 	bool InitializeBuffers(ID3D11Device*);
@@ -103,16 +103,17 @@ private:
 
 	void InitializeSentence(float seed, std::vector<LModuleType> axiom, int iterations);
 	void InitializeTree(float seed, float rotation, DirectX::SimpleMath::Vector2 anchoring);
+
 	void UpdateTree(float deltaTime, float intensity);
 
-	ProductionRuleType GetProductionRule(std::string letter);
+	LProductionRuleType GetProductionRule(std::string letter);
 	float GetRNGRange(float a = -1.0f, float b = 1.0f);
 
 private:
-	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;
+	std::map<std::string, std::vector<LProductionRuleType>> m_productionRules;
 	std::vector<LModuleType> m_sentence;
 
-	float m_seed, m_rotation, m_scale, m_maxLength;
+	float m_seed, m_rotation, m_scale, m_depth;
 	std::vector<SeedVertexType> m_seedVertices;
 
 	float m_time, m_intensity;

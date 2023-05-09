@@ -117,6 +117,12 @@
     <ClInclude Include="LBloodVessel.h">
       <Filter>Modelling\LSystemModels</Filter>
     </ClInclude>
+    <ClInclude Include="Grammar.h">
+      <Filter>Narrative</Filter>
+    </ClInclude>
+    <ClInclude Include="StoryCharacter.h">
+      <Filter>Narrative</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -195,6 +201,12 @@
     <ClCompile Include="LBloodVessel.cpp">
       <Filter>Modelling\LSystemModels</Filter>
     </ClCompile>
+    <ClCompile Include="Grammar.cpp">
+      <Filter>Narrative</Filter>
+    </ClCompile>
+    <ClCompile Include="StoryCharacter.cpp">
+      <Filter>Narrative</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -209,6 +221,12 @@
       <Filter>Assets</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="Alphabet.json">
+      <Filter>Narrative</Filter>
+    </None>
+    <None Include="Storylets.json">
+      <Filter>Narrative</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">
@@ -264,7 +282,7 @@
     <FxCompile Include="vignette_ps_002.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="vignette_ps_003.hlsl">
+    <FxCompile Include="vignette_ps.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="hex_vignette_ps_001.hlsl">
@@ -277,6 +295,9 @@
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="hex_vignette_ps_004.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="vignette_ps_003.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
