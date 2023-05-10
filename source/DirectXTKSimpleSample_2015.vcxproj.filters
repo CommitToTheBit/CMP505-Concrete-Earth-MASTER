@@ -35,6 +35,9 @@
     <Filter Include="Assets\Shaders\Voronoi">
       <UniqueIdentifier>{a6ff0abe-3083-4ade-930b-699fd09a681b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Shaders\Terrain">
+      <UniqueIdentifier>{d732bebb-273b-43cb-8148-950df920e1e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -317,6 +320,9 @@
     </FxCompile>
     <FxCompile Include="euclidean_voronoi_3ps.hlsl">
       <Filter>Assets\Shaders\Voronoi</Filter>
+    </FxCompile>
+    <FxCompile Include="voronoi_terrain_3ps_001.hlsl">
+      <Filter>Assets\Shaders\Terrain</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

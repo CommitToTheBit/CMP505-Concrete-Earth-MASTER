@@ -258,10 +258,10 @@ void Game::Render()
 
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_HexBoard.Render(context, &m_LightShader, displacement, 0.9f, 0.9f, &m_Camera, m_time, &m_Light);
+	m_HexBoard.Render(context, &m_TerrainShader, displacement, 0.9f, 0.9f, &m_Camera, m_time, &m_Light);
 
 	// DEBUG: Render three (normalised) torii, for voxel texturing...
-	m_VoronoiShader.EnableShader(context);
+	/*m_VoronoiShader.EnableShader(context);
 	m_VoronoiShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateRotationY(-XM_PIDIV4)*Matrix::CreateTranslation(-1.0f, 0.0f, -1.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
 	m_VoronoiShader.SetTimeBuffer(context, m_timer.GetTotalSeconds());
 	m_Torus.Render(context);
@@ -274,7 +274,7 @@ void Game::Render()
 	m_VoronoiShader.EnableShader(context);
 	m_VoronoiShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateRotationY(XM_PIDIV4)*Matrix::CreateTranslation(1.0f, 0.0f, -1.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
 	m_VoronoiShader.SetTimeBuffer(context, m_timer.GetTotalSeconds());
-	m_Torus.Render(context);
+	m_Torus.Render(context);*/
 
 	// DEBUG: Render a dragon curve...
 	/*m_NeutralShader.EnableShader(context);
@@ -497,7 +497,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 1);// 32);
+	m_HexBoard.Initialize(device, 4, 32);
 	m_add = 0;
 
 	// Narrative // FIXME: Move to board?
@@ -525,13 +525,13 @@ void Game::CreateDeviceDependentResources()
 	m_Torus.Initialize(device, 32, toroidalField.m_field, 1.0f);
 
 	// Shaders
-	m_LightShader.InitShader(device, L"light_3vs.cso", L"light_3ps.cso");
-	m_LightShader.InitMatrixBuffer(device);
-	m_LightShader.InitAlphaBuffer(device);
-	m_LightShader.InitLightBuffer(device);
-
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
+
+	m_TerrainShader.InitShader(device, L"light_3vs.cso", L"light_3ps.cso");
+	m_TerrainShader.InitMatrixBuffer(device);
+	m_TerrainShader.InitAlphaBuffer(device);
+	m_TerrainShader.InitLightBuffer(device);
 
 	m_VoronoiShader.InitShader(device, L"texture_3vs.cso", L"manhattan_voronoi_3ps.cso");
 	m_VoronoiShader.InitMatrixBuffer(device);
@@ -584,7 +584,7 @@ void Game::SetupGUI()
 
 	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.79f), ImGuiCond_Always, ImVec2(0.5f, 0.0f));
 
-	if (false && m_Grammar.m_sentence.length() > 0 && m_BloodVesselCount > 0)
+	if (m_Grammar.m_sentence.length() > 0 && m_BloodVesselCount > 0)
 	{
 		ImGui::Begin(m_Grammar.m_sentence.c_str(), (bool*)true, window_flags);
 		ImGui::Text(m_Grammar.m_sentence.c_str());

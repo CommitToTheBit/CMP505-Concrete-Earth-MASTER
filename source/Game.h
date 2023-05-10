@@ -123,10 +123,10 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>                        m_normalMap;
 
 	// Shaders
-    Shader                                                                  m_LightShader;
-
     Shader                                                                  m_NeutralShader;
-    Shader                                                                  m_VoronoiShader;
+    Shader                                                                  m_TerrainShader;
+
+    Shader                                                                  m_VoronoiShader; // DEBUG...
 
     // Render-to-Textures
     Screen                                                                  m_Screen;
