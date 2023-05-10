@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  10 MAY 2023 17:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  10 MAY 2023 18:05
 entering extended mode
 **"./CMP505 Report.tex"
 (CMP505 Report.tex
@@ -950,20 +950,17 @@ LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `"CMP505 Report".out' has not changed.
-(rerunfilecheck)             Checksum: FA5073E13D10B885B1E10D9B1BDAC1B0;2649.
+(rerunfilecheck)             Checksum: 0AEEDF878251F541FAFBBB77237BA3E1;2649.
  ) 
 Here is how much of TeX's memory you used:
- 23101 strings out of 479300
- 421086 string characters out of 2853552
+ 23102 strings out of 479300
+ 421097 string characters out of 2853552
  712158 words of memory out of 3000000
  40083 multiletter control sequences out of 15000+200000
  419270 words of font info for 85 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 87i,24n,89p,895b,596s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 87i,24n,89p,895b,592s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
 /cm/cmbx10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
 blic/amsfonts/cm/cmbx12.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/f
@@ -988,9 +985,9 @@ l/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/samdr
 /AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt9.pfb><C:
 /Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/symb
 ols/msbm10.pfb>
-Output written on "CMP505 Report.pdf" (9 pages, 1410483 bytes).
+Output written on "CMP505 Report.pdf" (9 pages, 1411087 bytes).
 PDF statistics:
- 328 PDF objects out of 1000 (max. 8388607)
- 63 named destinations out of 1000 (max. 500000)
+ 329 PDF objects out of 1000 (max. 8388607)
+ 64 named destinations out of 1000 (max. 500000)
  193 words of extra memory for PDF output out of 10000 (max. 10000000)
 
