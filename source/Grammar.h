@@ -14,7 +14,6 @@
 
 class Grammar
 {
-
 private:
 	struct ProductionRuleType
 	{
@@ -30,7 +29,7 @@ public:
 	void Initialize(float seed = 0.0f);
 	void InitializeCorpus(std::string jsonPath);
 
-	std::string GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character = nullptr, bool nested = false); // NB: Can equally apply this to character initialisation!
+	std::string GenerateSentence(std::string axiom, Storyworld::StoryCharacter* subject = nullptr, Storyworld::StoryCharacter* object = nullptr, bool nested = false); // NB: Can equally apply this to character initialisation!
 
 private:
 	std::string PostProcessSentence(std::string sentence);
@@ -52,6 +51,6 @@ private:
 // DEBUG: These variables will later be handled in other classes...
 public:
 	std::string m_sentence;
-	Storyworld::StoryCharacter m_character;
+	Storyworld::StoryCharacter m_active, m_passive;
 };
 

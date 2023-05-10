@@ -48,7 +48,7 @@ void Grammar::InitializeCorpus(std::string jsonPath)
 	}
 }
 
-std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character, bool nested)
+std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharacter* active, Storyworld::StoryCharacter* passive, bool nested)
 {
 	srand(m_seed); // FIXME: Hacky, but a good patch in lieu of a better rng implementation?
 	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
@@ -77,8 +77,13 @@ std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharac
 			sentence.erase(sentence.begin(), sentence.begin() + 1); // NB: Must wait for FindClosingBracket call to erase opening bracket...
 			index--;
 
-			nestedSentence = GenerateSentence(sentence.substr(0, index), character, true); // NB: Recursive calls like this aren't ideal, but there'll never be too many nested brackets at once...
-			iteratedSentence += (nestedSentence.find("*") == 0) ? GetProductionRule(nestedSentence.substr(1), character) : GetProductionRule(nestedSentence); // NB: nullptr passed in as 'forgetfulness override'...
+			nestedSentence = GenerateSentence(sentence.substr(0, index), active, passive, true); // NB: Recursive calls like this aren't ideal, but there'll never be too many nested brackets at once...
+
+			if (nestedSentence.find("*") == 0)
+				iteratedSentence += (nestedSentence.find("*", 1) == 1) ? GetProductionRule(nestedSentence.substr(2), passive) : GetProductionRule(nestedSentence.substr(1), active);
+			else
+				iteratedSentence += GetProductionRule(nestedSentence); // NB: nullptr passed in as 'forgetfulness override'...
+
 			sentence.erase(sentence.begin(), sentence.begin() + index + 1);
 		}
 		iteratedSentence += sentence; // NB: Adds the remainder of the sentence, which doesn't need parsed...
