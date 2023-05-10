@@ -58,7 +58,7 @@ std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharac
 
 	// FIXME: Generalise this to include nested brackets...
 	std::string sentence = axiom;
-	std::string iteratedSentence;
+	std::string iteratedSentence, nestedSentence;
 	while (sentence.find("{") != -1)
 	{
 		iteratedSentence = "";
@@ -68,15 +68,16 @@ std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharac
 			// NB: Will need to capitalize anything nested...
 
 			iteratedSentence += sentence.substr(0, sentence.find("{"));
-			sentence.erase(sentence.begin(), sentence.begin() + sentence.find("{") + 1);
+			sentence.erase(sentence.begin(), sentence.begin() + sentence.find("{"));
 
-			int index = FindClosingBracket(sentence, 1);
-			if (index == -1)
+			int index = FindClosingBracket(sentence);
+			if (index < 1)
 				continue;
 
-			// FIXME: NEED TO APPLY A COUNT TO THIS SUBSTRING!
-			std::string nestedSentence = GenerateSentence(sentence.substr(0, index), character, true); // NB: Recursive calls like this aren't ideal, but there'll never be too many nested brackets at once...
+			sentence.erase(sentence.begin(), sentence.begin() + 1); // NB: Must wait for FindClosingBracket call to erase opening bracket...
+			index--;
 
+			nestedSentence = GenerateSentence(sentence.substr(0, index), character, true); // NB: Recursive calls like this aren't ideal, but there'll never be too many nested brackets at once...
 			iteratedSentence += (nestedSentence.find("*") == 0) ? GetProductionRule(nestedSentence.substr(1), character) : GetProductionRule(nestedSentence); // NB: nullptr passed in as 'forgetfulness override'...
 			sentence.erase(sentence.begin(), sentence.begin() + index + 1);
 		}
@@ -85,8 +86,37 @@ std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharac
 	}
 
 	if (nested)
+	{
 		for (int i = 0; i < sentence.length(); i++)
 			sentence[i] = std::toupper(sentence[i]);
+
+		return sentence;
+	}
+
+	return PostProcessSentence(sentence);
+}
+
+std::string Grammar::PostProcessSentence(std::string sentence)
+{
+	// STEP 1: Capitalise sentence...
+	// After the start of the sentence and after every full stop, ensure the next character that can be capitalised *is* capitalised...
+	// NB: Is "\n" treated as a single character? If so, should be handled without any special case...
+	int index = 0;
+	while (index < sentence.length() && index != -1)
+	{
+		if (std::tolower(sentence[index]) == std::toupper(sentence[index]))
+		{
+			index++;
+		}
+		else
+		{
+			sentence[index] = std::toupper(sentence[index]);
+			index = sentence.find(".", index + 1);
+		}
+	}
+
+	// STEP N: Add line breaks...
+	// FIXME: Handle this with -1/non-negative int case, with overflow allowed...
 
 	return sentence;
 }
@@ -167,9 +197,13 @@ float Grammar::GetRNGRange(float a, float b)
 	return a+(b-a)*std::rand()/RAND_MAX;
 }
 
-int Grammar::FindClosingBracket(std::string sentence, int depth)
+int Grammar::FindClosingBracket(std::string sentence)
 {
-	int index = -1;
+	if (sentence.find("{") != 0)
+		return -1;
+
+	int depth = 1;
+	int index = 0;
 	int openingIndex, closingIndex;
 	while (depth > 0)
 	{

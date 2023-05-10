@@ -30,17 +30,18 @@ public:
 	void Initialize(float seed = 0.0f);
 	void InitializeCorpus(std::string jsonPath);
 
-	// DEBUG:
 	std::string GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character = nullptr, bool nested = false); // NB: Can equally apply this to character initialisation!
 
 private:
+	std::string PostProcessSentence(std::string sentence);
+
 	void AddProductionRule(std::string letter, ProductionRuleType productionRule);
 
 	std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryCharacter* character = nullptr, bool generation = true);
 	float GetWeight(ProductionRuleType productionRule, std::string letter);
 	float GetRNGRange(float a = -1.0f, float b = 1.0f);
 
-	int FindClosingBracket(std::string sentence, int depth = 0);
+	int FindClosingBracket(std::string sentence);
 
 private:
 	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;

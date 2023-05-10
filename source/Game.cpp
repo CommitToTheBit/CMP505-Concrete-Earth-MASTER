@@ -157,7 +157,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 		// DEBUG:
 		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-			m_Grammar.m_sentence = m_Grammar.GenerateSentence("{*ARCHETYPE}: {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} ({{*GENDER} SUBJECT PRONOUN} met {{GENDER} OBJECT PRONOUN})", &m_Grammar.m_character);
+			m_Grammar.m_sentence = m_Grammar.GenerateSentence("... {*ARCHETYPE}... {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} ({{*GENDER} SUBJECT PRONOUN} met {{GENDER} OBJECT PRONOUN})", &m_Grammar.m_character);
 	}
 
 	// VIGNETTE INPUTS:
