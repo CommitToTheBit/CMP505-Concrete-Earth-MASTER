@@ -255,16 +255,15 @@ void Game::Render()
 	// PHYSICAL RENDER
 	m_PhysicalRenderPass->setRenderTarget(context);
 	m_PhysicalRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
-	
-	// Render board...
-	/*context->OMSetDepthStencilState(m_states->DepthNone(), 0);
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -3.0f/8.0f, 0.0f)*Matrix::CreateScale(8.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_Screen.Render(context);*/
 
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
 	m_HexBoard.Render(context, &m_LightShader, displacement, 0.9f, 0.9f, &m_Camera, m_time, &m_Light);
+
+	// DEBUG: Render a (normalised) torus, for voxel texturing...
+	m_VoxelShader.EnableShader(context);
+	m_VoxelShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,-0.5f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_Torus.Render(context);
 
 	// DEBUG: Render a dragon curve...
 	/*m_NeutralShader.EnableShader(context);
@@ -487,7 +486,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 32);
+	m_HexBoard.Initialize(device, 4, 1);// 32);
 	m_add = 0;
 
 	// Narrative // FIXME: Move to board?
@@ -509,14 +508,22 @@ void Game::CreateDeviceDependentResources()
 	m_Screen.Initialize(device);
 	m_Cube.InitializeModel(device, "cube.obj");
 
+	Field toroidalField = Field();
+	toroidalField.Initialise(32);
+	toroidalField.InitialiseToroidalField(0.67f, 0);
+	m_Torus.Initialize(device, 32, toroidalField.m_field, 1.0f);
+
 	// Shaders
-	m_LightShader.InitShader(device, L"light3D_vs.cso", L"light3D_ps.cso");
+	m_LightShader.InitShader(device, L"light_3vs.cso", L"light_3ps.cso");
 	m_LightShader.InitMatrixBuffer(device);
 	m_LightShader.InitAlphaBuffer(device);
 	m_LightShader.InitLightBuffer(device);
 
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
+
+	m_VoxelShader.InitShader(device, L"texture_3vs.cso", L"texture_coordinates_3ps.cso");
+	m_VoxelShader.InitMatrixBuffer(device);
 
 	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps.cso");
 	m_ScreenShader.InitMatrixBuffer(device);

@@ -125,8 +125,8 @@ private:
 	// Shaders
     Shader                                                                  m_LightShader;
 
-    // Shader Textures
     Shader                                                                  m_NeutralShader;
+    Shader                                                                  m_VoxelShader;
 
     // Render-to-Textures
     Screen                                                                  m_Screen;
@@ -138,6 +138,8 @@ private:
     // Models
     HexBoard                                                                m_HexBoard;
     int                                                                     m_add; // DEBUG...
+
+    MarchingCubes                                                           m_Torus; // DEBUG...
 
     // L-Systems
     LDragonCurve                                                            m_DragonCurve;

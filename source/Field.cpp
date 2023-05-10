@@ -47,7 +47,7 @@ void Field::InitialiseHorizontalField(int octaves, float amplitude)
 
 void Field::InitialiseSphericalField(int octaves, float amplitude)
 {
-	m_field = new FieldVertexType[(m_cells + 1) * (m_cells + 1) * (m_cells + 1)];
+	//m_field = new FieldVertexType[(m_cells + 1) * (m_cells + 1) * (m_cells + 1)];
 
 	SimplexNoise simplex = SimplexNoise();
 
@@ -63,7 +63,7 @@ void Field::InitialiseSphericalField(int octaves, float amplitude)
 
 void Field::InitialiseToroidalField(float R, int octaves, float amplitude)
 {
-	m_field = new FieldVertexType[(m_cells + 1) * (m_cells + 1) * (m_cells + 1)];
+	//m_field = new FieldVertexType[(m_cells + 1) * (m_cells + 1) * (m_cells + 1)];
 
 	SimplexNoise simplex = SimplexNoise();
 

@@ -258,10 +258,10 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="light3D_ps.hlsl">
+    <FxCompile Include="light_3ps.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="light3D_vs.hlsl">
+    <FxCompile Include="light_3vs.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="neutral_ps.hlsl">
@@ -301,6 +301,15 @@
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="vignette_ps_003.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="indexing_euclidean_voronoi_3ps.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="texture_3vs.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="texture_coordinates_3ps.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
