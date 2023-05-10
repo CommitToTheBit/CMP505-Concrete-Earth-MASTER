@@ -15,32 +15,38 @@ Grammar::~Grammar()
 
 }
 
-void Grammar::Initialize(std::string jsonPath, float seed)
+void Grammar::Initialize(float seed)
 {
 	m_seed = seed;
-
-	std::ifstream f("Alphabet.json");
-	nlohmann::json alphabet = nlohmann::json::parse(f);
+	m_generations = 0;
 
 	m_productionRules = std::map<std::string, std::vector<ProductionRuleType>>();
-	for (auto letter : alphabet.items())
+	InitializeCorpus("CorpusPronouns.json");
+	InitializeCorpus("CorpusMisc.json");
+}
+
+void Grammar::InitializeCorpus(std::string jsonPath)
+{
+	std::ifstream f(jsonPath);
+	nlohmann::json corpus = nlohmann::json::parse(f);
+
+	m_productionRules = std::map<std::string, std::vector<ProductionRuleType>>();
+	for (auto letter : corpus.items())
 	{
-		if (!alphabet[letter.key()].contains("productions"))
+		if (!corpus[letter.key()].contains("productions"))
 			continue;
 
-		for (std::string production : alphabet[letter.key()]["productions"])
+		for (std::string production : corpus[letter.key()]["productions"])
 		{
 			//m_sentence += production;
 			ProductionRuleType productionRule;
 			productionRule.production = letter.key();
-			productionRule.dryness = -1;
-			productionRule.weight = 1.0f;
+			productionRule.dryness = 0;
+			productionRule.weight = (corpus[letter.key()].contains("weight")) ? corpus[letter.key()]["weight"] : 1.0f;
 
 			AddProductionRule(production, productionRule);
 		}
 	}
-
-	m_generations = 0;
 }
 
 std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character)
@@ -57,33 +63,16 @@ std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharac
 		iteratedSentence = "";
 		while (sentence.find("{") != -1)
 		{
+			// FIXME: HANDLE NESTED BRACKETS!
+			// NB: Will need to capitalize anything nested...
+
 			iteratedSentence += sentence.substr(0, sentence.find("{"));
 			sentence.erase(sentence.begin(), sentence.begin() + sentence.find("{") + 1);
 
 			if (sentence.find("}") == -1)
 				continue;
 
-			std::string production;
-			if (sentence.find("*") == 0)
-			{
-				if (character && character->m_traits.find(sentence.substr(1, sentence.find("}") - 1)) != character->m_traits.end()) // NB: "-1" applies to length, not last index!
-				{
-					production = character->m_traits[sentence.substr(1, sentence.find("}") - 1)];
-				}
-				else
-				{
-					production = GetProductionRule(sentence.substr(1, sentence.find("}") - 1)).production;
-
-					if (character)
-						character->m_traits[sentence.substr(1, sentence.find("}") - 1)] = production;
-				}
-			}
-			else
-			{
-				production = GetProductionRule(sentence.substr(0, sentence.find("}"))).production;
-			}
-
-			iteratedSentence += production;
+			iteratedSentence += (sentence.find("*") == 0) ? GetProductionRule(sentence.substr(1, sentence.find("}") - 1), character) : GetProductionRule(sentence.substr(0, sentence.find("}"))); // NB: nullptr passed in as 'forgetfulness override'...
 			sentence.erase(sentence.begin(), sentence.begin() + sentence.find("}") + 1);
 		}
 		sentence = iteratedSentence;
@@ -104,16 +93,13 @@ void Grammar::AddProductionRule(std::string letter, ProductionRuleType productio
 		m_productionRules[letter].push_back(productionRule);
 }
 
-Grammar::ProductionRuleType Grammar::GetProductionRule(std::string letter, bool generation)
+std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryCharacter* character, bool generation)
 {
 	if (!m_productionRules.count(letter))
-	{
-		ProductionRuleType identity;
-		identity.production = letter; // DEBUG: "NULL("+letter+")";
-		identity.dryness = -1;
-		identity.weight = 1.0f;
-		return identity;
-	}
+		return letter; // DEBUG: "NULL("+letter+")";
+
+	if (character && character->m_traits.find(letter) != character->m_traits.end())
+		return character->m_traits[letter];
 
 	// FIXME: Add dryness assessment here?
 	float totalWeight = 0.0f;
@@ -139,11 +125,15 @@ Grammar::ProductionRuleType Grammar::GetProductionRule(std::string letter, bool 
 		}
 	}
 
+	// Add as consistent feature of world model...
+	if (character)
+		character->m_traits[letter] = m_productionRules[letter][index].production;
+
 	// Remember this has been used...
 	if (generation)
 		m_productionRules[letter][index].dryness = m_generations;
 
-	return m_productionRules[letter][index];
+	return m_productionRules[letter][index].production;
 }
 
 float Grammar::GetWeight(ProductionRuleType productionRule, std::string letter)

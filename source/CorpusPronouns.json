@@ -1,0 +1,72 @@
+{
+  "masculine": {
+    "productions": [
+      "GENDER"
+    ],
+    "weight": 0.48
+  },
+  "feminine": {
+    "productions": [
+      "GENDER"
+    ],
+    "weight": 0.48
+  },
+  "neuter": {
+    "productions": [
+      "GENDER"
+    ],
+    "weight": 0.04
+  },
+  "he": {
+    "productions": [
+      "MASCULINE SUBJECT PRONOUN"
+    ]
+  },
+  "him": {
+    "productions": [
+      "MASCULINE OBJECT PRONOUN"
+    ]
+  },
+  "his": {
+    "productions": [
+      "MASCULINE POSSESSIVE DETERMINER",
+      "MASCULINE POSSESSIVE PRONOUN"
+    ]
+  },
+  "she": {
+    "productions": [
+      "FEMININE SUBJECT PRONOUN"
+    ]
+  },
+  "her": {
+    "productions": [
+      "FEMININE OBJECT PRONOUN",
+      "FEMININE POSSESSIVE DETERMINER"
+    ]
+  },
+  "hers": {
+    "productions": [
+      "THIRD PERSON FEMININE POSSESSIVE PRONOUN"
+    ]
+  },
+  "they": {
+    "productions": [
+      "NEUTER SUBJECT PRONOUN"
+    ]
+  },
+  "them": {
+    "productions": [
+      "NEUTER OBJECT PRONOUN"
+    ]
+  },
+  "their": {
+    "productions": [
+      "NEUTER POSSESSIVE DETERMINER"
+    ]
+  },
+  "theirs": {
+    "productions": [
+      "NEUTER POSSESSIVE PRONOUN"
+    ]
+  }
+}

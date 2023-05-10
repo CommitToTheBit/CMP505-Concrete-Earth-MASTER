@@ -30,7 +30,8 @@ public:
 	Grammar();
 	~Grammar();
 
-	void Initialize(std::string jsonPath, float seed = 0.0f);
+	void Initialize(float seed = 0.0f);
+	void InitializeCorpus(std::string jsonPath);
 
 	// DEBUG:
 	std::string GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character = nullptr); // NB: Can equally apply this to character initialisation!
@@ -38,7 +39,7 @@ public:
 private:
 	void AddProductionRule(std::string letter, ProductionRuleType productionRule);
 
-	ProductionRuleType Grammar::GetProductionRule(std::string letter, bool generation = true);
+	std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryCharacter* character = nullptr, bool generation = true);
 	float GetWeight(ProductionRuleType productionRule, std::string letter);
 	float GetRNGRange(float a = -1.0f, float b = 1.0f);
 

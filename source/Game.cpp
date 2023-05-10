@@ -157,7 +157,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 		// DEBUG:
 		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-			m_Grammar.m_sentence = m_Grammar.GenerateSentence("{*ARCHETYPE}: {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}", &m_Grammar.m_character);
+			m_Grammar.m_sentence = m_Grammar.GenerateSentence("{*ARCHETYPE}: {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} {GENDER}", &m_Grammar.m_character);
 	}
 
 	// VIGNETTE INPUTS:
@@ -487,12 +487,12 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 32);
+	m_HexBoard.Initialize(device, 4, 8);// 32);
 	m_add = 0;
 
 	// Narrative // FIXME: Move to board?
-	m_Grammar.Initialize("");
-	m_Grammar.m_sentence = m_Grammar.GenerateSentence("{*ARCHETYPE}: {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}");
+	m_Grammar.Initialize();
+	m_Grammar.m_sentence = m_Grammar.GenerateSentence("{*ARCHETYPE}: {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} {GENDER}", &m_Grammar.m_character);
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);

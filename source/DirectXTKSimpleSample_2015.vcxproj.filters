@@ -221,10 +221,13 @@
       <Filter>Assets</Filter>
     </None>
     <None Include="packages.config" />
-    <None Include="Alphabet.json">
+    <None Include="CorpusMisc.json">
       <Filter>Narrative</Filter>
     </None>
     <None Include="Storylets.json">
+      <Filter>Narrative</Filter>
+    </None>
+    <None Include="CorpusPronouns.json">
       <Filter>Narrative</Filter>
     </None>
   </ItemGroup>
