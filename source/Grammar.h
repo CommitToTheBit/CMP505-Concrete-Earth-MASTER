@@ -31,7 +31,7 @@ public:
 	void InitializeCorpus(std::string jsonPath);
 
 	// DEBUG:
-	std::string GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character = nullptr); // NB: Can equally apply this to character initialisation!
+	std::string GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character = nullptr, bool nested = false); // NB: Can equally apply this to character initialisation!
 
 private:
 	void AddProductionRule(std::string letter, ProductionRuleType productionRule);
@@ -39,6 +39,8 @@ private:
 	std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryCharacter* character = nullptr, bool generation = true);
 	float GetWeight(ProductionRuleType productionRule, std::string letter);
 	float GetRNGRange(float a = -1.0f, float b = 1.0f);
+
+	int FindClosingBracket(std::string sentence, int depth = 0);
 
 private:
 	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;

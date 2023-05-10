@@ -48,11 +48,13 @@ void Grammar::InitializeCorpus(std::string jsonPath)
 	}
 }
 
-std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character)
+std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharacter* character, bool nested)
 {
 	srand(m_seed); // FIXME: Hacky, but a good patch in lieu of a better rng implementation?
 	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
-	m_generations++;
+
+	if (!nested)
+		m_generations++;
 
 	// FIXME: Generalise this to include nested brackets...
 	std::string sentence = axiom;
@@ -68,19 +70,23 @@ std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharac
 			iteratedSentence += sentence.substr(0, sentence.find("{"));
 			sentence.erase(sentence.begin(), sentence.begin() + sentence.find("{") + 1);
 
-			if (sentence.find("}") == -1)
+			int index = FindClosingBracket(sentence, 1);
+			if (index == -1)
 				continue;
 
-			iteratedSentence += (sentence.find("*") == 0) ? GetProductionRule(sentence.substr(1, sentence.find("}") - 1), character) : GetProductionRule(sentence.substr(0, sentence.find("}"))); // NB: nullptr passed in as 'forgetfulness override'...
-			sentence.erase(sentence.begin(), sentence.begin() + sentence.find("}") + 1);
+			// FIXME: NEED TO APPLY A COUNT TO THIS SUBSTRING!
+			std::string nestedSentence = GenerateSentence(sentence.substr(0, index), character, true); // NB: Recursive calls like this aren't ideal, but there'll never be too many nested brackets at once...
+
+			iteratedSentence += (nestedSentence.find("*") == 0) ? GetProductionRule(nestedSentence.substr(1), character) : GetProductionRule(nestedSentence); // NB: nullptr passed in as 'forgetfulness override'...
+			sentence.erase(sentence.begin(), sentence.begin() + index + 1);
 		}
 		iteratedSentence += sentence; // NB: Adds the remainder of the sentence, which doesn't need parsed...
 		sentence = iteratedSentence;
 	}
 
-	// DEBUG:
-	if (!character)
-		sentence = "(NULLPTR) " + sentence;
+	if (nested)
+		for (int i = 0; i < sentence.length(); i++)
+			sentence[i] = std::toupper(sentence[i]);
 
 	return sentence;
 }
@@ -159,4 +165,31 @@ float Grammar::GetWeight(ProductionRuleType productionRule, std::string letter)
 float Grammar::GetRNGRange(float a, float b)
 {
 	return a+(b-a)*std::rand()/RAND_MAX;
+}
+
+int Grammar::FindClosingBracket(std::string sentence, int depth)
+{
+	int index = -1;
+	int openingIndex, closingIndex;
+	while (depth > 0)
+	{
+		openingIndex = sentence.find("{", index+1);
+		closingIndex = sentence.find("}", index+1);
+
+		if (closingIndex == -1)
+			return closingIndex;
+
+		if (closingIndex < openingIndex || openingIndex == -1)
+		{
+			index = closingIndex;
+			depth--;
+		}
+		else
+		{
+			index = openingIndex;
+			depth++;
+		}
+	}
+
+	return index;
 }
