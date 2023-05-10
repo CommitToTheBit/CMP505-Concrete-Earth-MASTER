@@ -90,7 +90,7 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, Shader* shader, Direct
 
 			// FIXME: Refactor this, for 'cleaner' board set-up?
 			float l = (camera->getPosition()-boardPosition).Length();
-			DirectX::SimpleMath::Matrix ortho = DirectX::SimpleMath::Matrix::CreateOrthographic(l*1280.0f/720.0f, l*1.0f, 0.01f, 100.0f);
+			DirectX::SimpleMath::Matrix ortho = DirectX::SimpleMath::Matrix::CreateOrthographic(l*1920.0f/1080.0f, l*1.0f, 0.01f, 100.0f);
 
 			relativePosition = (i+ifrac)*m_p+(j+jfrac)*m_q;
 

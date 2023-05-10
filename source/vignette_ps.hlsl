@@ -1,4 +1,4 @@
-#define PI 3.1415926538
+#define PI 3.1415926538f
 
 Texture2D textures[2];
 SamplerState SampleType;

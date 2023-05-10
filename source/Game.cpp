@@ -260,9 +260,17 @@ void Game::Render()
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
 	m_HexBoard.Render(context, &m_LightShader, displacement, 0.9f, 0.9f, &m_Camera, m_time, &m_Light);
 
-	// DEBUG: Render a (normalised) torus, for voxel texturing...
+	// DEBUG: Render three (normalised) torii, for voxel texturing...
 	m_VoxelShader.EnableShader(context);
-	m_VoxelShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,-0.5f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_VoxelShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateRotationY(-XM_PIDIV4)*Matrix::CreateTranslation(-1.0f, 0.0f, -1.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+	m_Torus.Render(context);
+
+	m_VoxelShader.EnableShader(context);
+	m_VoxelShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateRotationY(0.0f)*Matrix::CreateTranslation(0.0f, 0.0f, -1.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+	m_Torus.Render(context);
+
+	m_VoxelShader.EnableShader(context);
+	m_VoxelShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateRotationY(XM_PIDIV4)*Matrix::CreateTranslation(1.0f, 0.0f, -1.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
 	m_Torus.Render(context);
 
 	// DEBUG: Render a dragon curve...
@@ -510,7 +518,7 @@ void Game::CreateDeviceDependentResources()
 
 	Field toroidalField = Field();
 	toroidalField.Initialise(32);
-	toroidalField.InitialiseToroidalField(0.67f, 0);
+	toroidalField.InitialiseToroidalField(0.75f, 0);
 	m_Torus.Initialize(device, 32, toroidalField.m_field, 1.0f);
 
 	// Shaders
@@ -522,7 +530,7 @@ void Game::CreateDeviceDependentResources()
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
 
-	m_VoxelShader.InitShader(device, L"texture_3vs.cso", L"texture_coordinates_3ps.cso");
+	m_VoxelShader.InitShader(device, L"texture_3vs.cso", L"indexing_euclidean_voronoi_3ps.cso");
 	m_VoxelShader.InitMatrixBuffer(device);
 
 	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps.cso");
@@ -572,7 +580,7 @@ void Game::SetupGUI()
 
 	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.79f), ImGuiCond_Always, ImVec2(0.5f, 0.0f));
 
-	if (m_Grammar.m_sentence.length() > 0 && m_BloodVesselCount > 0)
+	if (false && m_Grammar.m_sentence.length() > 0 && m_BloodVesselCount > 0)
 	{
 		ImGui::Begin(m_Grammar.m_sentence.c_str(), (bool*)true, window_flags);
 		ImGui::Text(m_Grammar.m_sentence.c_str());
