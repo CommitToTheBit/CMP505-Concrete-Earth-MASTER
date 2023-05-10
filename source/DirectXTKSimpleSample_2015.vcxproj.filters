@@ -236,6 +236,15 @@
     <None Include="CorpusPronouns.json">
       <Filter>Narrative</Filter>
     </None>
+    <None Include="CorpusForenames.json">
+      <Filter>Narrative</Filter>
+    </None>
+    <None Include="CorpusPatronymics.json">
+      <Filter>Narrative</Filter>
+    </None>
+    <None Include="CorpusSurnames.json">
+      <Filter>Narrative</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">

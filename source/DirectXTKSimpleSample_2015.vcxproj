@@ -247,8 +247,11 @@
     <Manifest Include="settings.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CorpusForenames.json" />
     <None Include="CorpusMisc.json" />
+    <None Include="CorpusPatronymics.json" />
     <None Include="CorpusPronouns.json" />
+    <None Include="CorpusSurnames.json" />
     <None Include="packages.config" />
     <None Include="SegoeUI_18.spritefont" />
     <None Include="Storylets.json" />
