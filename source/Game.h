@@ -126,7 +126,7 @@ private:
     Shader                                                                  m_LightShader;
 
     Shader                                                                  m_NeutralShader;
-    Shader                                                                  m_VoxelShader;
+    Shader                                                                  m_VoronoiShader;
 
     // Render-to-Textures
     Screen                                                                  m_Screen;

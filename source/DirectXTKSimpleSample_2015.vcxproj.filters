@@ -32,6 +32,9 @@
     <Filter Include="Modelling\LSystemModels">
       <UniqueIdentifier>{7c029aef-a104-4f86-8481-dfc903e20eee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Shaders\Voronoi">
+      <UniqueIdentifier>{a6ff0abe-3083-4ade-930b-699fd09a681b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -303,14 +306,17 @@
     <FxCompile Include="vignette_ps_003.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="indexing_euclidean_voronoi_3ps.hlsl">
-      <Filter>Assets\Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="texture_3vs.hlsl">
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="texture_coordinates_3ps.hlsl">
       <Filter>Assets\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="manhattan_voronoi_3ps.hlsl">
+      <Filter>Assets\Shaders\Voronoi</Filter>
+    </FxCompile>
+    <FxCompile Include="euclidean_voronoi_3ps.hlsl">
+      <Filter>Assets\Shaders\Voronoi</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
