@@ -30,7 +30,6 @@ void Grammar::InitializeCorpus(std::string jsonPath)
 	std::ifstream f(jsonPath);
 	nlohmann::json corpus = nlohmann::json::parse(f);
 
-	m_productionRules = std::map<std::string, std::vector<ProductionRuleType>>();
 	for (auto letter : corpus.items())
 	{
 		if (!corpus[letter.key()].contains("productions"))
@@ -41,8 +40,8 @@ void Grammar::InitializeCorpus(std::string jsonPath)
 			//m_sentence += production;
 			ProductionRuleType productionRule;
 			productionRule.production = letter.key();
-			productionRule.dryness = 0;
 			productionRule.weight = (corpus[letter.key()].contains("weight")) ? corpus[letter.key()]["weight"] : 1.0f;
+			productionRule.recency = 0;
 
 			AddProductionRule(production, productionRule);
 		}
@@ -75,6 +74,7 @@ std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharac
 			iteratedSentence += (sentence.find("*") == 0) ? GetProductionRule(sentence.substr(1, sentence.find("}") - 1), character) : GetProductionRule(sentence.substr(0, sentence.find("}"))); // NB: nullptr passed in as 'forgetfulness override'...
 			sentence.erase(sentence.begin(), sentence.begin() + sentence.find("}") + 1);
 		}
+		iteratedSentence += sentence; // NB: Adds the remainder of the sentence, which doesn't need parsed...
 		sentence = iteratedSentence;
 	}
 
@@ -131,7 +131,7 @@ std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryChar
 
 	// Remember this has been used...
 	if (generation)
-		m_productionRules[letter][index].dryness = m_generations;
+		m_productionRules[letter][index].recency = m_generations;
 
 	return m_productionRules[letter][index].production;
 }
@@ -140,18 +140,17 @@ float Grammar::GetWeight(ProductionRuleType productionRule, std::string letter)
 {
 	float weight = productionRule.weight;
 
-	// STEP 1: Scale by dryness...
-	// Order... lowest to highest?
+	// STEP 1: Scale by recency...
 	std::vector<int> generations = std::vector<int>();
 	for (ProductionRuleType rule : m_productionRules[letter])
 	{
-		generations.push_back(rule.dryness);
+		generations.push_back(rule.recency);
 	}
 	std::sort(generations.begin(), generations.end());
 
 	float minimumWeighting = 0.01f; // 0.0f // pow(0.01f, generations.size()); // NB: The most recently-used production rule will be minimumWeighting times as likely to be surfaced as the least recent...
-	float exponent = ((float)std::distance(generations.begin(), std::find(generations.begin(), generations.end(), productionRule.dryness)))/generations.size();// /generations.size();
-	weight *= (productionRule.dryness < m_generations) ? pow(minimumWeighting, exponent) : 0.0f; // NB: Explicitely blocks the uses of the same production rule (though not the same word!) in one generation...
+	float exponent = ((float)std::distance(generations.begin(), std::find(generations.begin(), generations.end(), productionRule.recency)))/generations.size();// /generations.size();
+	weight *= (productionRule.recency < m_generations) ? pow(minimumWeighting, exponent) : 0.0f; // NB: Explicitely blocks the uses of the same production rule (though not the same word!) in one generation (unless there are no other options)...
 
 	return weight;
 

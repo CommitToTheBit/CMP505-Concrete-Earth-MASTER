@@ -19,11 +19,8 @@ private:
 	struct ProductionRuleType
 	{
 		std::string production;
-		
-		//std::function<float(std::string)> context; // FIXME: Expand arguments of context function!
-
-		int dryness;
 		float weight;
+		int recency;
 	};
 
 public:

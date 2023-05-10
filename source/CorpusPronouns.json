@@ -3,19 +3,19 @@
     "productions": [
       "GENDER"
     ],
-    "weight": 0.48
+    "weight": 0.49
   },
   "feminine": {
     "productions": [
       "GENDER"
     ],
-    "weight": 0.48
+    "weight": 0.49
   },
   "neuter": {
     "productions": [
       "GENDER"
     ],
-    "weight": 0.04
+    "weight": 0.02
   },
   "he": {
     "productions": [
