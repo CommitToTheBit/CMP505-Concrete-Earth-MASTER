@@ -59,8 +59,16 @@ std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharac
 	if (!nested)
 		m_generations++;
 
+	// Handles 'one time only' consistency...
+	if (!active)
+		active = new Storyworld::StoryCharacter();
+
+	if (!passive)
+		passive = new Storyworld::StoryCharacter();
+
 	// FIXME: Generalise this to include nested brackets...
 	std::string sentence = axiom;
+
 	std::string iteratedSentence, nestedSentence;
 	while (sentence.find("{") != -1)
 	{
@@ -83,7 +91,7 @@ std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharac
 			nestedSentence = GenerateSentence(sentence.substr(0, index), active, passive, true); // NB: Recursive calls like this aren't ideal, but there'll never be too many nested brackets at once...
 
 			if (nestedSentence.find("*") == 0)
-				iteratedSentence += (nestedSentence.find("*", 1) == 1) ? GetProductionRule(nestedSentence.substr(2), passive) : GetProductionRule(nestedSentence.substr(1), active);
+				iteratedSentence += (nestedSentence.find("*", 1) == 1) ? GetProductionRule(nestedSentence.substr(2), passive, "**") : GetProductionRule(nestedSentence.substr(1), active, "*");
 			else
 				iteratedSentence += GetProductionRule(nestedSentence); // NB: nullptr passed in as 'forgetfulness override'...
 
@@ -137,7 +145,7 @@ void Grammar::AddProductionRule(std::string letter, ProductionRuleType productio
 		m_productionRules[letter].push_back(productionRule);
 }
 
-std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryCharacter* character, bool generation)
+std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryCharacter* character, std::string consistencyDelimiter, bool generation)
 {
 	if (!m_productionRules.count(letter))
 		return letter; // DEBUG: "NULL("+letter+")";
@@ -169,15 +177,34 @@ std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryChar
 		}
 	}
 
+	std::string production = m_productionRules[letter][index].production;
+	std::string iteratedProduction = "";
+
+	// Parse out "?" delimiters...
+	int consistencyIndex = production.find("{");
+	while (consistencyIndex != -1)
+	{	
+		if (production.find("?", consistencyIndex + 1) == consistencyIndex + 1) // FIXME: OOB?
+		{
+			iteratedProduction += production.substr(0, consistencyIndex) + "{" + "";// consistencyDelimiter; ONLY STARS BREAK THIS!
+			production.erase(production.begin(), production.begin() + consistencyIndex + 2);
+			consistencyIndex = 0;
+		}
+
+		consistencyIndex = production.find("{", consistencyIndex);
+	}
+	iteratedProduction += production;
+	production = iteratedProduction;
+
 	// Add as consistent feature of world model...
 	if (character)
-		character->m_traits[letter] = m_productionRules[letter][index].production;
+		character->m_traits[letter] = production;
 
 	// Remember this has been used...
 	if (generation)
 		m_productionRules[letter][index].recency = m_generations;
 
-	return m_productionRules[letter][index].production;
+	return production;
 }
 
 float Grammar::GetWeight(ProductionRuleType productionRule, std::string letter)

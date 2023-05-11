@@ -36,7 +36,7 @@ private:
 
 	void AddProductionRule(std::string letter, ProductionRuleType productionRule);
 
-	std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryCharacter* character = nullptr, bool generation = true);
+	std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryCharacter* character = nullptr, std::string consistencyDelimiter = "", bool generation = true);
 	float GetWeight(ProductionRuleType productionRule, std::string letter);
 	float GetRNGRange(float a = -1.0f, float b = 1.0f);
 

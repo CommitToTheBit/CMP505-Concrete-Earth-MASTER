@@ -157,7 +157,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 		// DEBUG:
 		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-			m_Grammar.m_sentence = m_Grammar.GenerateSentence("... {*ARCHETYPE}... {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} ({{*GENDER} SUBJECT PRONOUN} met {{**GENDER} OBJECT PRONOUN})... {*{*GENDER} FORENAME} {*SURNAME})", &m_Grammar.m_active, &m_Grammar.m_passive);
+			m_Grammar.m_sentence = m_Grammar.GenerateSentence("... {*ARCHETYPE}... {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} ({{*GENDER} SUBJECT PRONOUN} met {{**GENDER} OBJECT PRONOUN})... {*{*GENDER} FORENAME} {*SURNAME}... {*{*GENDER} FORENAME}", nullptr, &m_Grammar.m_passive);
 	}
 
 	// VIGNETTE INPUTS:
@@ -497,7 +497,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 32);
+	m_HexBoard.Initialize(device, 4, 4);
 	m_add = 0;
 
 	// Narrative // FIXME: Move to board?
