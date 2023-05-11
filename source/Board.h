@@ -31,7 +31,7 @@ public:
 	void AddThorns(ID3D11Device*, int hex, int thorns);
 
 	// Changing scene...
-
+	void Choose(int choice);
 	bool Paused();
 
 private:
@@ -60,5 +60,8 @@ public: // FIXME: Left off while still accessed in Game.cpp...
 
 	// Storylets...
 	StoryEngine::Scene m_scene;
+
+private:
+	StoryEngine m_storyEngine;
 };
 

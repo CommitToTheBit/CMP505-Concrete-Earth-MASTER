@@ -21,8 +21,6 @@ public:
 
 	void Initialize(float seed = 0.0f);
 
-	StoryWorld::StoryCharacter GenerateCharacter();
-
 	Scene StartScene(std::string landmark);
 	Scene ContinueScene(int choice);
 
@@ -30,6 +28,7 @@ public:
 	std::string GenerateSentence(std::string landmark); // NB: Make this into an interactive storylet!
 
 private:
+	StoryWorld::StoryCharacter GenerateCharacter();
 	//void UpdateStoryworld()
 
 private:

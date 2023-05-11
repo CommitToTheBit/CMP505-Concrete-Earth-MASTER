@@ -149,7 +149,7 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		m_Board.Interpolate(2.0f*timer.GetElapsedSeconds());
 	}
-	if (!m_Board.m_interpolating)// && !m_Board.Paused()) // NB: Not an 'if/else', since this would waste a frame! 
+	if (!m_Board.m_interpolating && !m_Board.Paused()) // NB: Not an 'if/else', since this would waste a frame! 
 	{
 		if (m_gameInputCommands.forward)
 			m_Board.SetInterpolation(1, 0);
@@ -615,7 +615,7 @@ void Game::SetupGUI()
 		ImGui::PushID(i);
 		if (ImGui::Button(("  "+std::to_string(i + 1)+". "+m_Board.m_scene.choices[i]).c_str(), ImVec2(0.9f*textWidth, 1.1f*m_choiceFont->FontSize)))
 		{
-			// Call m_Board with input i...
+			m_Board.Choose(i);
 		}
 		ImGui::PopID();
 	}

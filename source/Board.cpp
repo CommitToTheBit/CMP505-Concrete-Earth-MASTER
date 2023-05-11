@@ -9,6 +9,8 @@ Board::Board()
 {
 	std::srand(0);
 
+	m_interpolating = false;
+
 	// DEBUG:
 	m_scene.premise = "Exemplar text...!";
 }
@@ -73,6 +75,9 @@ bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 	m_direction = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
 
 	delete hexField;
+
+	// Storylets...
+	m_storyEngine.Initialize();
 
 	return true;
 }
@@ -139,6 +144,9 @@ void Board::Interpolate(float t)
 	m_t = 0.0f;
 	m_north = 0;
 	m_east = 0;
+
+	// FIXME: Make this dependent on hex landmark!
+	m_scene = m_storyEngine.StartScene("thorn");
 }
 
 void Board::SetInterpolationPerimeter()
@@ -290,6 +298,11 @@ void Board::AddThorns(ID3D11Device* device, int hex, int thorns)
 	m_hexModels[hex].Initialize(device, hexField->m_cells, hexField->m_field, m_hexIsolevels[hex]);
 
 	delete hexField;
+}
+
+void Board::Choose(int choice)
+{
+	m_scene = m_storyEngine.ContinueScene(choice);
 }
 
 bool Board::Paused()
