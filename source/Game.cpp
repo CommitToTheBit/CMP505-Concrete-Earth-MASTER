@@ -60,7 +60,7 @@ void Game::Initialize(HWND window, int width, int height)
 	m_choiceFont = io.Fonts->AddFontFromFileTTF("beneg___.ttf", 42);
 
 	ImGuiStyle& style = ImGui::GetStyle();
-	style.ButtonTextAlign = ImVec2(1.0f, 0.5f);
+	style.ButtonTextAlign = ImVec2(0.0f, 0.5f);
 	style.FrameRounding = 12.0f;
 	style.Colors[ImGuiCol_Button] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
 	style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.8f, 0.2f, 0.2f, 0.5f);
@@ -164,8 +164,8 @@ void Game::Update(DX::StepTimer const& timer)
 		//	m_Board.AddThorns(device, m_add++, 3);
 
 		// DEBUG:
-		//if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-		//	m_sentence = m_StoryEngine.GenerateSentence("salt");
+		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
+			m_sentence = m_StoryEngine.GenerateSentence("thorns");
 	}
 
 	// VIGNETTE INPUTS:
@@ -592,17 +592,18 @@ void Game::SetupGUI()
 
 	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.825f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
 
-	bool colour = false;
+	float textWidth = std::max(720.0f, std::min(ImGui::CalcTextSize(m_sentence.c_str()).x, 1440.0f));
 	if (m_sentence.length() > 0 && m_BloodVesselCount > 0)
 	{
 		ImGui::Begin(m_sentence.c_str(), (bool*)true, window_flags);
 
+		// FIXME: Attach StoryEngine body...
+		// FIXME: How do we right align wrapped text? (without a ridiculous amount of code...)
 		ImGui::PushItemWidth(1440.0f);
 		ImGui::PushTextWrapPos(1440.0f);
-		ImGui::Text(m_sentence.c_str(), ImVec2(1440.0f, 0.0f));
+		ImGui::Text(m_sentence.c_str(), ImVec2(textWidth, 0.0f));
 		ImGui::PopItemWidth();
 		ImGui::PopTextWrapPos();
-
 
 		// FIXME: StoryEngine buttons will be handled here...
 		ImGui::PushFont(m_choiceFont);
@@ -610,12 +611,13 @@ void Game::SetupGUI()
 		//ImGui::NewLine(); // FIXME: How does one centre this line?
 		for (int i = 0; i < 3; i++)
 		{
-			ImGui::Dummy(ImVec2(360.0f, 0.0f));
-			ImGui::SameLine();
+			// FIXME: Needed to right align buttons...
+			/*ImGui::Dummy(ImVec2(0.25f*textWidth, 0.0f));
+			ImGui::SameLine();*/
 
+			// FIXME: Attach StoryEngine choices...
 			ImGui::PushID(i);
-			//ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - ImGui::CalcTextSize(m_sentence.c_str()).x - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x);
-			if (ImGui::Button("  Test!  ", ImVec2(1080.0f, 1.1f*m_choiceFont->FontSize)))
+			if (ImGui::Button("  Test!  ", ImVec2(0.75f*textWidth, 1.1f*m_choiceFont->FontSize)))
 			{
 				m_sentence = std::to_string(i)+"!";
 			}
