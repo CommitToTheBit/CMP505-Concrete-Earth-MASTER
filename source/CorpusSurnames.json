@@ -1,5 +1,180 @@
 {
-  "": {
+  "{?SURNAME}-{?SURNAME}": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Arsenyev": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Beketov": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Chelyuskin": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Chicagov": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Chirikov": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Chukhnovsky": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Dezhnev": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Grshimailo": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Gvozdev": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Khabarov": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Klenova": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Kolchak": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Konyukhov": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Kozlov": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Krenitsyn": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Laptev": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Levashev": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Miklouho": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Moskvitin": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Nevelskoy": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Nikitin": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Popov": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Potatin": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Poyarkov": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Pribylov": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Pronchishchev": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Pronchishcheva": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Przhevalsky": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Roerich": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Rudanovsky": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Sagalevich": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Sannikov": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Sarychev": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Smurgis": {
+    "productions": [
+      "SURNAME"
+    ]
+  },
+  "Tebenkov": {
     "productions": [
       "SURNAME"
     ]
