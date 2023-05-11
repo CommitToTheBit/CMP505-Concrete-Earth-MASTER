@@ -1,22 +1,22 @@
 #include "pch.h"
-#include "HexBoard.h"
+#include "Board.h"
 
-const DirectX::SimpleMath::Vector3 HexBoard::m_origin = DirectX::SimpleMath::Vector3(-0.5f, 0.0f, -0.5f);
-const DirectX::SimpleMath::Vector3 HexBoard::m_p = DirectX::SimpleMath::Vector3(0.5f*(1.0f+cos(XM_PI/3.0f)), 0.0f, -0.5f*cos(XM_PI/6.0f)); // Points NE...
-const DirectX::SimpleMath::Vector3 HexBoard::m_q = DirectX::SimpleMath::Vector3(-0.5f*(1.0f+cos(XM_PI/3.0f)), 0.0f, -0.5f*cos(XM_PI/6.0f)); // Points NW...
+const DirectX::SimpleMath::Vector3 Board::m_origin = DirectX::SimpleMath::Vector3(-0.5f, 0.0f, -0.5f);
+const DirectX::SimpleMath::Vector3 Board::m_p = DirectX::SimpleMath::Vector3(0.5f*(1.0f+cos(XM_PI/3.0f)), 0.0f, -0.5f*cos(XM_PI/6.0f)); // Points NE...
+const DirectX::SimpleMath::Vector3 Board::m_q = DirectX::SimpleMath::Vector3(-0.5f*(1.0f+cos(XM_PI/3.0f)), 0.0f, -0.5f*cos(XM_PI/6.0f)); // Points NW...
 
-HexBoard::HexBoard()
+Board::Board()
 {
 	std::srand(0);
 }
 
 
-HexBoard::~HexBoard()
+Board::~Board()
 {
 
 }
 
-bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
+bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 {
 	m_hexRadius = hexRadius;
 	m_hexDiameter = (2*hexRadius+1);
@@ -74,7 +74,7 @@ bool HexBoard::Initialize(ID3D11Device* device, int hexRadius, int cells)
 	return true;
 }
 
-void HexBoard::Render(ID3D11DeviceContext* deviceContext, Shader* shader, DirectX::SimpleMath::Vector3 boardPosition, float boardScale, float tileScale, Camera* camera, float time, Light* light) // NB: Initlaise shader as part of HexBoard?
+void Board::Render(ID3D11DeviceContext* deviceContext, Shader* shader, DirectX::SimpleMath::Vector3 boardPosition, float boardScale, float tileScale, Camera* camera, float time, Light* light) // NB: Initlaise shader as part of Board?
 {
 	float ifrac = -m_t*((m_east != -m_north) ? m_north : 0);
 	float jfrac = -m_t*((m_east != m_north) ? m_north : 0);
@@ -111,7 +111,7 @@ void HexBoard::Render(ID3D11DeviceContext* deviceContext, Shader* shader, Direct
 	return;
 }
 
-void HexBoard::SetInterpolation(int north, int east)
+void Board::SetInterpolation(int north, int east)
 {
 	// ERROR-HANDLING: 'Normalise' direction...
 	m_north = (north != 0) ? north/abs(north) : 0;
@@ -124,7 +124,7 @@ void HexBoard::SetInterpolation(int north, int east)
 	SetInterpolationPerimeter();
 }
 
-void HexBoard::Interpolate(float t)
+void Board::Interpolate(float t)
 {
 	m_t += t;
 	if (m_t < 1.0f)
@@ -138,7 +138,7 @@ void HexBoard::Interpolate(float t)
 	m_east = 0;
 }
 
-void HexBoard::SetInterpolationPerimeter()
+void Board::SetInterpolationPerimeter()
 {
 	int ijColumn, ijColumnLength;
 	for (int j = -m_hexRadius-1; j <= m_hexRadius+1; j++)
@@ -201,7 +201,7 @@ void HexBoard::SetInterpolationPerimeter()
 	m_hexCoordinates[(m_hexDiameter+2)*(m_hexDiameter+2)-1] = m_hexCoordinates[(m_hexDiameter+2)+1];
 }
 
-void HexBoard::ApplyInterpolationPermutation()
+void Board::ApplyInterpolationPermutation()
 {
 	if (m_north == 0)
 		return;
@@ -252,7 +252,7 @@ void HexBoard::ApplyInterpolationPermutation()
 	m_hexPermutation = hexPermutation;
 }
 
-void HexBoard::AddThorns(ID3D11Device* device, int hex, int thorns)
+void Board::AddThorns(ID3D11Device* device, int hex, int thorns)
 {
 	hex = (hex%m_hexes+m_hexes)%m_hexes;
 

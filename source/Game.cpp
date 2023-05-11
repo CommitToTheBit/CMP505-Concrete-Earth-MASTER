@@ -62,7 +62,7 @@ void Game::Initialize(HWND window, int width, int height)
 	m_Ambience = Vector4(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light.setPosition(0.0f, 2.5f, 2.0f*m_HexBoard.m_hexRadius-1);
+	m_Light.setPosition(0.0f, 2.5f, 2.0f*m_Board.m_hexRadius-1);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
 	m_Light.setStrength(100.0f);
 
@@ -136,24 +136,24 @@ void Game::Update(DX::StepTimer const& timer)
 	// LIGHTING INPUTS:
 	//m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 1.0f, 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
 	
-	// HEXBOARD INPUTS:
-	if (m_HexBoard.m_interpolating)
+	// Board INPUTS:
+	if (m_Board.m_interpolating)
 	{
-		m_HexBoard.Interpolate(2.0f*timer.GetElapsedSeconds());
+		m_Board.Interpolate(2.0f*timer.GetElapsedSeconds());
 	}
-	if (!m_HexBoard.m_interpolating) // NB: Not an 'if/else', since this would waste a frame! 
+	if (!m_Board.m_interpolating) // NB: Not an 'if/else', since this would waste a frame! 
 	{
 		if (m_gameInputCommands.forward)
-			m_HexBoard.SetInterpolation(1, 0);
+			m_Board.SetInterpolation(1, 0);
 		if (m_gameInputCommands.left)
-			m_HexBoard.SetInterpolation(1, -1);
+			m_Board.SetInterpolation(1, -1);
 		if (m_gameInputCommands.right)
-			m_HexBoard.SetInterpolation(1, 1);
+			m_Board.SetInterpolation(1, 1);
 		if (m_gameInputCommands.back)
-			m_HexBoard.SetInterpolation(-1, 0);
-		//	m_HexBoard.SetInterpolation(-1, 1);
-		//	m_HexBoard.SetInterpolation(-1, -1);
-		//	m_HexBoard.AddThorns(device, m_add++, 3);
+			m_Board.SetInterpolation(-1, 0);
+		//	m_Board.SetInterpolation(-1, 1);
+		//	m_Board.SetInterpolation(-1, -1);
+		//	m_Board.AddThorns(device, m_add++, 3);
 
 		// DEBUG:
 		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
@@ -161,7 +161,7 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 
 	// VIGNETTE INPUTS:
-	if (m_HexBoard.m_interpolating) //m_gameInputCommands.clockwise || m_gameInputCommands.anticlockwise)
+	if (m_Board.m_interpolating) //m_gameInputCommands.clockwise || m_gameInputCommands.anticlockwise)
 	{
 		float deltaInterpolation = 0.0f;
 		//if (m_gameInputCommands.clockwise)
@@ -258,7 +258,7 @@ void Game::Render()
 
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_HexBoard.Render(context, &m_TerrainShader, displacement, 0.9f, 0.9f, &m_Camera, m_time, &m_Light);
+	m_Board.Render(context, &m_TerrainShader, displacement, 0.9f, 0.9f, &m_Camera, m_time, &m_Light);
 
 	// DEBUG: Render three (normalised) torii, for voxel texturing...
 	/*m_VoronoiShader.EnableShader(context);
@@ -497,7 +497,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 4);
+	m_Board.Initialize(device, 4, 4);
 	m_add = 0;
 
 	// Narrative // FIXME: Move to board?

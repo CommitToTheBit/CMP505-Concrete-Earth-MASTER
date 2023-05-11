@@ -2,13 +2,18 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
-class Storyworld
+struct StoryWorld
 {
-public:
 	struct StoryCharacter
 	{
-		std::map<std::string, std::string> m_traits;
+		std::map<std::string, std::string> traits;
+	};
+
+	struct StoryWagon
+	{
+		std::vector<StoryCharacter> characters;
 	};
 };
 

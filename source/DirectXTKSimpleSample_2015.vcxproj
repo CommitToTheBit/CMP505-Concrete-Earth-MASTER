@@ -171,12 +171,13 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ClassicNoise.h" />
+    <ClInclude Include="Architecture.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Grammar.h" />
     <ClInclude Include="LDragonCurve.h" />
     <ClInclude Include="EnvironmentCamera.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="HexBoard.h" />
+    <ClInclude Include="Board.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_dx11.h" />
@@ -199,19 +200,22 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="StepTimer.h" />
+    <ClInclude Include="StoryEngine.h" />
+    <ClInclude Include="Storylet.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Field.h" />
-    <ClInclude Include="Storyworld.h" />
+    <ClInclude Include="StoryWorld.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ClassicNoise.cpp" />
+    <ClCompile Include="Architecture.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="Grammar.cpp" />
     <ClCompile Include="LDragonCurve.cpp" />
     <ClCompile Include="EnvironmentCamera.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="HexBoard.cpp" />
+    <ClCompile Include="Board.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
@@ -236,9 +240,11 @@
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimplexNoise.cpp" />
+    <ClCompile Include="StoryEngine.cpp" />
+    <ClCompile Include="Storylet.cpp" />
+    <ClCompile Include="StoryWorld.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Field.cpp" />
-    <ClCompile Include="Storyworld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -247,12 +253,12 @@
     <Manifest Include="settings.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CorpusForenames.json" />
-    <None Include="CorpusMisc.json" />
-    <None Include="CorpusNamingConventions.json" />
-    <None Include="CorpusPatronymics.json" />
-    <None Include="CorpusPronouns.json" />
-    <None Include="CorpusSurnames.json" />
+    <None Include="ForenameCorpus.json" />
+    <None Include="MiscCorpus.json" />
+    <None Include="NamingConventionCorpus.json" />
+    <None Include="PatronymicCorpus.json" />
+    <None Include="PronounCorpus.json" />
+    <None Include="SurnameCorpus.json" />
     <None Include="packages.config" />
     <None Include="SegoeUI_18.spritefont" />
     <None Include="Storylets.json" />

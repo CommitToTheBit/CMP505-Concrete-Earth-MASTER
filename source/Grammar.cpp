@@ -21,14 +21,15 @@ void Grammar::Initialize(float seed)
 	m_generations = 0;
 
 	m_productionRules = std::map<std::string, std::vector<ProductionRuleType>>();
-	InitializeCorpus("CorpusPronouns.json");
 
-	InitializeCorpus("CorpusNamingConventions.json");
-	InitializeCorpus("CorpusForenames.json");
-	InitializeCorpus("CorpusPatronymics.json");
-	InitializeCorpus("CorpusSurnames.json");
+	InitializeCorpus("PronounCorpus.json");
 
-	InitializeCorpus("CorpusMisc.json");
+	InitializeCorpus("NamingConventionCorpus.json");
+	InitializeCorpus("ForenameCorpus.json");
+	InitializeCorpus("PatronymicCorpus.json");
+	InitializeCorpus("SurnameCorpus.json");
+
+	InitializeCorpus("MiscCorpus.json");
 }
 
 void Grammar::InitializeCorpus(std::string jsonPath)
@@ -54,7 +55,7 @@ void Grammar::InitializeCorpus(std::string jsonPath)
 	}
 }
 
-std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharacter* active, Storyworld::StoryCharacter* passive, bool nested)
+std::string Grammar::GenerateSentence(std::string axiom, StoryWorld::StoryCharacter* active, StoryWorld::StoryCharacter* passive, bool nested)
 {
 	srand(m_seed); // FIXME: Hacky, but a good patch in lieu of a better rng implementation?
 	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
@@ -64,10 +65,10 @@ std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharac
 
 	// Handles 'one time only' consistency...
 	if (!active)
-		active = new Storyworld::StoryCharacter();
+		active = new StoryWorld::StoryCharacter();
 
 	if (!passive)
-		passive = new Storyworld::StoryCharacter();
+		passive = new StoryWorld::StoryCharacter();
 
 	// FIXME: Generalise this to include nested brackets...
 	std::string sentence = axiom;
@@ -173,13 +174,13 @@ void Grammar::AddProductionRule(std::string letter, ProductionRuleType productio
 		m_productionRules[letter].push_back(productionRule);
 }
 
-std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryCharacter* character, std::string consistencyDelimiter, bool generation)
+std::string Grammar::GetProductionRule(std::string letter, StoryWorld::StoryCharacter* character, std::string consistencyDelimiter, bool generation)
 {
 	if (!m_productionRules.count(letter))
 		return "";
 
-	if (character && character->m_traits.find(letter) != character->m_traits.end())
-		return character->m_traits[letter];
+	if (character && character->traits.find(letter) != character->traits.end())
+		return character->traits[letter];
 
 	// FIXME: Add dryness assessment here?
 	float totalWeight = 0.0f;
@@ -226,7 +227,7 @@ std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryChar
 
 	// Add as consistent feature of world model...
 	if (character)
-		character->m_traits[letter] = production;
+		character->traits[letter] = production;
 
 	// Remember this has been used...
 	if (generation)

@@ -5,11 +5,11 @@
 
 #include "Shader.h"
 
-class HexBoard
+class Board
 {
 public:
-	HexBoard();
-	~HexBoard();
+	Board();
+	~Board();
 
 	bool Initialize(ID3D11Device*, int hexRadius, int cells);
 

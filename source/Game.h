@@ -10,7 +10,7 @@
 #include "Input.h"
 #include "RenderTexture.h"
 
-#include "HexBoard.h"
+#include "Board.h"
 
 #include "LDragonCurve.h"
 #include "LSphinxTiling.h"
@@ -136,7 +136,7 @@ private:
     RenderTexture*                                                          m_VeinsRenderPass;
 
     // Models
-    HexBoard                                                                m_HexBoard;
+    Board                                                                m_Board;
     int                                                                     m_add; // DEBUG...
 
     MarchingCubes                                                           m_Torus; // DEBUG...
