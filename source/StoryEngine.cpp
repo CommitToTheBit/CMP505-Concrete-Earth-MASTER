@@ -31,5 +31,5 @@ std::string StoryEngine::GenerateSentence(std::string suit)
 	if (suit == "salt")
 		return "";
 
-	return m_grammar.GenerateSentence("Might we meet {*FULL NAME},\nthe {*ARCHETYPE}, here?");
+	return m_grammar.GenerateSentence("Might we meet {*FULL NAME}, descendant of {FULL NAME} and {FULL NAME}, the {*ARCHETYPE}, here?");
 }

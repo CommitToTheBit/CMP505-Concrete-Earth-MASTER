@@ -60,7 +60,11 @@ void Game::Initialize(HWND window, int width, int height)
 	m_choiceFont = io.Fonts->AddFontFromFileTTF("beneg___.ttf", 42);
 
 	ImGuiStyle& style = ImGui::GetStyle();
+	style.ButtonTextAlign = ImVec2(1.0f, 0.5f);
+	style.FrameRounding = 12.0f;
 	style.Colors[ImGuiCol_Button] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+	style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.8f, 0.2f, 0.2f, 0.5f);
+	style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.8f, 0.2f, 0.2f, 0.75f);
 
 	//setup light
 	m_Ambience = Vector4(0.15f, 0.15f, 0.15f, 1.0f);
@@ -588,10 +592,17 @@ void Game::SetupGUI()
 
 	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.825f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
 
+	bool colour = false;
 	if (m_sentence.length() > 0 && m_BloodVesselCount > 0)
 	{
 		ImGui::Begin(m_sentence.c_str(), (bool*)true, window_flags);
-		ImGui::Text(m_sentence.c_str());
+
+		ImGui::PushItemWidth(1440.0f);
+		ImGui::PushTextWrapPos(1440.0f);
+		ImGui::Text(m_sentence.c_str(), ImVec2(1440.0f, 0.0f));
+		ImGui::PopItemWidth();
+		ImGui::PopTextWrapPos();
+
 
 		// FIXME: StoryEngine buttons will be handled here...
 		ImGui::PushFont(m_choiceFont);
@@ -599,9 +610,12 @@ void Game::SetupGUI()
 		//ImGui::NewLine(); // FIXME: How does one centre this line?
 		for (int i = 0; i < 3; i++)
 		{
+			ImGui::Dummy(ImVec2(360.0f, 0.0f));
+			ImGui::SameLine();
+
 			ImGui::PushID(i);
-			//ImGui::SameLine();
-			if (ImGui::Button("Test!", ImVec2(0.0f, 0.0f)))
+			//ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - ImGui::CalcTextSize(m_sentence.c_str()).x - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x);
+			if (ImGui::Button("  Test!  ", ImVec2(1080.0f, 1.1f*m_choiceFont->FontSize)))
 			{
 				m_sentence = std::to_string(i)+"!";
 			}
