@@ -8,6 +8,13 @@
 
 class StoryEngine
 {
+public:
+	struct Scene
+	{
+		std::string premise;
+		std::vector<std::string> choices;
+	};
+
 public: 
 	StoryEngine();
 	~StoryEngine();
@@ -16,8 +23,14 @@ public:
 
 	StoryWorld::StoryCharacter GenerateCharacter();
 
+	Scene StartScene(std::string landmark);
+	Scene ContinueScene(int choice);
+
 	// DEBUG:
 	std::string GenerateSentence(std::string landmark); // NB: Make this into an interactive storylet!
+
+private:
+	//void UpdateStoryworld()
 
 private:
 	Architecture m_architecture;
@@ -25,6 +38,6 @@ private:
 
 	StoryWorld m_world;
 
-	//Storylet m_storylet;
+	Storylet m_storylet;
 };
 

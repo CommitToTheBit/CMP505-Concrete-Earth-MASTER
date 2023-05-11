@@ -149,7 +149,7 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		m_Board.Interpolate(2.0f*timer.GetElapsedSeconds());
 	}
-	if (!m_Board.m_interpolating) // NB: Not an 'if/else', since this would waste a frame! 
+	if (!m_Board.m_interpolating)// && !m_Board.Paused()) // NB: Not an 'if/else', since this would waste a frame! 
 	{
 		if (m_gameInputCommands.forward)
 			m_Board.SetInterpolation(1, 0);
@@ -593,40 +593,35 @@ void Game::SetupGUI()
 	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.825f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
 
 	float textWidth = std::max(720.0f, std::min(ImGui::CalcTextSize(m_sentence.c_str()).x, 1440.0f));
-	if (m_sentence.length() > 0 && m_BloodVesselCount > 0)
+
+	ImGui::Begin((m_Board.m_scene.premise.length() > 0) ? m_Board.m_scene.premise.c_str() : " ", (bool*)true, window_flags); // NB: Nice, robust failsafe here?
+
+	// FIXME: Attach StoryEngine body...
+	// FIXME: How do we right align wrapped text? (without a ridiculous amount of code...)
+	ImGui::PushItemWidth(1440.0f);
+	ImGui::PushTextWrapPos(1440.0f);
+	ImGui::Text(m_Board.m_scene.premise.c_str(), ImVec2(textWidth, 0.0f));
+	ImGui::PopItemWidth();
+	ImGui::PopTextWrapPos();
+
+	// FIXME: StoryEngine buttons will be handled here...
+	ImGui::PushFont(m_choiceFont);
+	for (int i = 0; i < m_Board.m_scene.choices.size(); i++)
 	{
-		ImGui::Begin(m_sentence.c_str(), (bool*)true, window_flags);
+		// FIXME: Needed to right align buttons...
+		/*ImGui::Dummy(ImVec2(0.25f*textWidth, 0.0f));
+		ImGui::SameLine();*/
 
-		// FIXME: Attach StoryEngine body...
-		// FIXME: How do we right align wrapped text? (without a ridiculous amount of code...)
-		ImGui::PushItemWidth(1440.0f);
-		ImGui::PushTextWrapPos(1440.0f);
-		ImGui::Text(m_sentence.c_str(), ImVec2(textWidth, 0.0f));
-		ImGui::PopItemWidth();
-		ImGui::PopTextWrapPos();
-
-		// FIXME: StoryEngine buttons will be handled here...
-		ImGui::PushFont(m_choiceFont);
-		//ImGui::NewLine();
-		//ImGui::NewLine(); // FIXME: How does one centre this line?
-		for (int i = 0; i < 3; i++)
+		ImGui::PushID(i);
+		if (ImGui::Button(("  "+std::to_string(i + 1)+". "+m_Board.m_scene.choices[i]).c_str(), ImVec2(0.9f*textWidth, 1.1f*m_choiceFont->FontSize)))
 		{
-			// FIXME: Needed to right align buttons...
-			/*ImGui::Dummy(ImVec2(0.25f*textWidth, 0.0f));
-			ImGui::SameLine();*/
-
-			// FIXME: Attach StoryEngine choices...
-			ImGui::PushID(i);
-			if (ImGui::Button("  Test!  ", ImVec2(0.75f*textWidth, 1.1f*m_choiceFont->FontSize)))
-			{
-				m_sentence = std::to_string(i)+"!";
-			}
-			ImGui::PopID();
+			// Call m_Board with input i...
 		}
-		ImGui::PopFont();
-
-		ImGui::End();
+		ImGui::PopID();
 	}
+	ImGui::PopFont();
+
+	ImGui::End();
 
 	ImGui::EndFrame();
 }

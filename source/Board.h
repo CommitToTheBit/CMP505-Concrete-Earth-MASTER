@@ -1,5 +1,6 @@
 #pragma once
 #include "MarchingCubes.h"
+#include "StoryEngine.h"
 
 #include "Camera.h"
 
@@ -29,6 +30,10 @@ public:
 	// DEBUG: Testing interactivity...
 	void AddThorns(ID3D11Device*, int hex, int thorns);
 
+	// Changing scene...
+
+	bool Paused();
+
 private:
 	void SetInterpolationPerimeter();
 	void ApplyInterpolationPermutation();
@@ -52,5 +57,8 @@ public: // FIXME: Left off while still accessed in Game.cpp...
 	bool m_interpolating;
 	float m_t;
 	DirectX::SimpleMath::Vector3 m_direction;
+
+	// Storylets...
+	StoryEngine::Scene m_scene;
 };
 

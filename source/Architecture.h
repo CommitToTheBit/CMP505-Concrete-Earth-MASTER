@@ -16,13 +16,16 @@ public:
 	void Initialize(float seed = 0.0f);
 
 	// DEBUG:
-	// SurfacePremise();
-	// SurfaceChoices();
-	// SurfaceConsequence();
+	Storylet SelectBeginning();
+	void SelectMiddle(Storylet* storylet);
+	void SelectEnd(Storylet* storylet);
 
 private:
 	float m_seed;
 
 	StoryWorld* m_world;
+
+	// DEBUG:
+	Storylet m_storylet;
 };
 

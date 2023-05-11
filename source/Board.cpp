@@ -8,6 +8,9 @@ const DirectX::SimpleMath::Vector3 Board::m_q = DirectX::SimpleMath::Vector3(-0.
 Board::Board()
 {
 	std::srand(0);
+
+	// DEBUG:
+	m_scene.premise = "Exemplar text...!";
 }
 
 
@@ -287,4 +290,9 @@ void Board::AddThorns(ID3D11Device* device, int hex, int thorns)
 	m_hexModels[hex].Initialize(device, hexField->m_cells, hexField->m_field, m_hexIsolevels[hex]);
 
 	delete hexField;
+}
+
+bool Board::Paused()
+{
+	return m_scene.choices.size() > 0;
 }

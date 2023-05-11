@@ -6,21 +6,26 @@
 
 struct Storylet
 {
-	struct Ifs
+	struct Conditions
 	{
 
 	};
 
-	struct Thens
+	struct Effects
 	{
 
 	};
 
-	struct Beat
+	struct Text
 	{
 		std::string axiom;
-		Ifs ifs;
-		Thens thens;
+		Conditions conditions;
+		Effects effects;
 	};
+
+	int progress;
+	Text beginning;
+	std::vector<Text> middles;
+	std::vector<std::vector<Text>> ends;
 };
 
