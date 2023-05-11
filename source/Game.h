@@ -16,7 +16,7 @@
 #include "LSphinxTiling.h"
 #include "LBloodVessel.h"
 
-#include "Grammar.h"
+#include "StoryEngine.h"
 
 #include "Screen.h"
 
@@ -136,7 +136,7 @@ private:
     RenderTexture*                                                          m_VeinsRenderPass;
 
     // Models
-    Board                                                                m_Board;
+    Board                                                                   m_Board;
     int                                                                     m_add; // DEBUG...
 
     MarchingCubes                                                           m_Torus; // DEBUG...
@@ -151,7 +151,8 @@ private:
     ModelClass																m_Cube;
 
     // Narrative
-    Grammar                                                                 m_Grammar;
+    StoryEngine                                                             m_StoryEngine;
+    std::string                                                             m_sentence;
 
     // GUI
     ImFont*                                                                 m_defaultFont;

@@ -157,7 +157,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 		// DEBUG:
 		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-			m_Grammar.m_sentence = m_Grammar.GenerateSentence("... {*ARCHETYPE}... {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} ({{*GENDER} SUBJECT PRONOUN} met {{**GENDER} OBJECT PRONOUN})... {*FULL NAME}... {*FULL NAME}", nullptr, &m_Grammar.m_passive);
+			m_sentence = m_StoryEngine.GenerateSentence("salt");
 	}
 
 	// VIGNETTE INPUTS:
@@ -497,12 +497,12 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_Board.Initialize(device, 4, 4);
+	m_Board.Initialize(device, 4, 16);
 	m_add = 0;
 
 	// Narrative // FIXME: Move to board?
-	m_Grammar.Initialize();
-	m_Grammar.m_sentence = m_Grammar.GenerateSentence("{*ARCHETYPE}: {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} ({GENDER}... {FULL NAME}, {FULL NAME}, {FULL NAME}...)", &m_Grammar.m_active);
+	m_StoryEngine.Initialize();
+	m_sentence = m_StoryEngine.GenerateSentence("thorns");
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);
@@ -584,10 +584,10 @@ void Game::SetupGUI()
 
 	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.79f), ImGuiCond_Always, ImVec2(0.5f, 0.0f));
 
-	if (m_Grammar.m_sentence.length() > 0 && m_BloodVesselCount > 0)
+	if (m_sentence.length() > 0 && m_BloodVesselCount > 0)
 	{
-		ImGui::Begin(m_Grammar.m_sentence.c_str(), (bool*)true, window_flags);
-		ImGui::Text(m_Grammar.m_sentence.c_str());
+		ImGui::Begin(m_sentence.c_str(), (bool*)true, window_flags);
+		ImGui::Text(m_sentence.c_str());
 		ImGui::End();
 	}
 

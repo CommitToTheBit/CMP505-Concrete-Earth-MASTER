@@ -1,32 +1,26 @@
 {
-  "Amputation": {
-    "Text": "The #PASSIVE#'s #APPENDAGE# must be amputated...",
-    "Passive Conditions": {
-      "Malaise": "> 0.75"
+  "passenger embarks": {
+    "Premise": {
+      "Axiom": "{*FULL NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe." 
     },
-    "Choice": {
-      "Pray": {
-        "Text": "Thee #ACTIVE# lays on their healing hands...",
-        "Active Conditions": {
-          "Faith": "Cloth"
-        },
-        "Hint": "Here is a pop-up description of success...",
-        "Success": {
-          "Text": "The #PASSIVE# is reinvigorated!",
-          "Passive Conditions": {
-            "Faith": "Cloth || Land"
-          },
-          "Passive Effect": {
-            "Sanity": "- 0.1"
+    "Choices": [
+      {
+        "Axiom": "Accept...",
+        "Consequences": [
+          {
+            "Axiom": "you gladly take the {*ARCHETYPE}'s coin, and welcome {{*GENDER} OBJECT PRONOUN} aboard."
           }
-        },
-        "Failure": {
-          "Text": "Nothing occurs..."
-        }
+        ]
       },
-      "Neglect": {
-        "Text": "Do nothing."
+      {
+        "Axiom": "Reject...",
+        "Consequences": [
+
+        ]
       }
+    ],
+    "Consequence": {
+      "Axiom":  "you carry on, leaving poor {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} by the wayside."
     }
   }
 }
