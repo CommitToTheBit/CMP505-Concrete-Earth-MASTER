@@ -27,11 +27,12 @@ public:
 	~Grammar();
 
 	void Initialize(float seed = 0.0f);
-	void InitializeCorpus(std::string jsonPath);
 
 	std::string GenerateSentence(std::string axiom, StoryWorld::StoryCharacter* subject = nullptr, StoryWorld::StoryCharacter* object = nullptr, bool nested = false); // NB: Can equally apply this to character initialisation!
 
 private:
+	void InitializeCorpus(std::string jsonPath);
+
 	std::string PostProcessSentence(std::string sentence);
 
 	void AddProductionRule(std::string letter, ProductionRuleType productionRule);

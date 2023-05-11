@@ -1,26 +1,23 @@
 {
   "passenger embarks": {
-    "Premise": {
+    "Beginning": {
       "Axiom": "{*FULL NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe." 
     },
-    "Choices": [
+    "Middle": [
       {
-        "Axiom": "Accept...",
-        "Consequences": [
+        "Axiom": "accept {*{*GENDER} FORENAME}'s coin...",
+        "End": [
           {
-            "Axiom": "you gladly take the {*ARCHETYPE}'s coin, and welcome {{*GENDER} OBJECT PRONOUN} aboard."
+            "Axiom": "you extend your talon, and welcome the {*ARCHETYPE} aboard."
           }
         ]
       },
       {
-        "Axiom": "Reject...",
-        "Consequences": [
-
-        ]
+        "Axiom": "turn {{*GENDER} OBJECT PRONOUN} away..."
       }
     ],
-    "Consequence": {
-      "Axiom":  "you carry on, leaving poor {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} by the wayside."
+    "End": {
+      "Axiom": "you carry on, leaving poor {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} by the wayside."
     }
   }
 }

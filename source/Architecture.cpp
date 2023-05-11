@@ -16,24 +16,53 @@ void Architecture::Initialize(float seed)
 {
 	m_seed = seed;
 
+	m_storylets = std::vector<Storylet>();
+
 	// Initialize storylet bank...
 	std::ifstream f("Storylets.json");
-	nlohmann::json corpus = nlohmann::json::parse(f);
+	nlohmann::json data = nlohmann::json::parse(f);
 
-	for (auto letter : corpus.items())
+	for (auto datum : data.items())
 	{
-		/*if (!corpus[letter.key()].contains("productions"))
+		if (!data[datum.key()].contains("Beginning"))
 			continue;
 
-		for (std::string production : corpus[letter.key()]["productions"])
-		{
-			//m_sentence += production;
-			ProductionRuleType productionRule;
-			productionRule.production = letter.key();
-			productionRule.weight = (corpus[letter.key()].contains("weight")) ? corpus[letter.key()]["weight"] : 1.0f;
-			productionRule.recency = 0;
+		if (!data[datum.key()].contains("Middle") || !data[datum.key()]["Middle"].size() > 0)
+			continue;
 
-			AddProductionRule(production, productionRule);
-		}*/
+		if (!data[datum.key()].contains("End")) // FIXME: Add nuance here (and further down)...
+			continue;
+
+		Storylet storylet = Storylet();
+		storylet.progressed = false;
+
+		storylet.beginning = InitializeText(data[datum.key()]["Beginning"]);
+
+		storylet.middle = std::vector<Storylet::Text>(data[datum.key()]["Middle"].size());
+		for (int i = 0; i < data[datum.key()]["Middle"].size(); i++)
+			storylet.middle[i] = InitializeText(data[datum.key()]["Middle"][i]);
+
+		storylet.end = std::vector<std::vector<Storylet::Text>>(data[datum.key()]["Middle"].size());
+		for (int i = 0; i < data[datum.key()]["Middle"].size(); i++)
+		{
+			int J = (data[datum.key()]["Middle"][i].contains("End")) ? data[datum.key()]["Middle"][i]["End"].size() : 0;
+
+			storylet.end[i] = std::vector<Storylet::Text>(J + 1);
+			for (int j = 0; j < J; j++)
+				storylet.end[i][j] = InitializeText(data[datum.key()]["Middle"][i]["End"][j]);
+			storylet.end[i][J] = InitializeText(data[datum.key()]["End"]); 
+		}
+
+		m_storylets.push_back(storylet);
 	}
+}
+
+Storylet::Text Architecture::InitializeText(nlohmann::json data)
+{
+	Storylet::Text text;
+	text.axiom = (data.contains("Axiom")) ? data["Axiom"] : "";
+
+	// FIXME: Initialize causes, effects...
+
+	return text;
 }

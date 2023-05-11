@@ -4,7 +4,7 @@
 StoryEngine::StoryEngine()
 {
 	// DEBUG: Fixed storylet...
-	m_storylet.beginning.axiom = "{*FULL NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe.";
+	/*m_storylet.beginning.axiom = "{*FULL NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe.";
 
 	m_storylet.middle = std::vector<Storylet::Text>(2);
 	m_storylet.middle[0].axiom = "accept {*{*GENDER} FORENAME}'s coin...";
@@ -17,9 +17,7 @@ StoryEngine::StoryEngine()
 	m_storylet.end[1] = std::vector<Storylet::Text>(1);
 	m_storylet.end[1][0].axiom = "you carry on, leaving poor {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} by the wayside.";
 
-	m_storylet.progressed = false;
-
-
+	m_storylet.progressed = false;*/
 }
 
 StoryEngine::~StoryEngine()
@@ -40,7 +38,10 @@ StoryEngine::Scene StoryEngine::StartScene(std::string landmark)
 		return Scene();
 
 	// FIXME: Use architecture to choose a new storylet...
-	m_storylet.progressed = false;
+	if (m_architecture.m_storylets.size() == 0)
+		return Scene();
+
+	m_storylet = m_architecture.m_storylets[0];
 
 	Scene scene;
 	StoryWorld::StoryCharacter character; // FIXME: Contain within storyworld as a "local" character (as in, local to the hex...)

@@ -55,6 +55,8 @@ void Grammar::InitializeCorpus(std::string jsonPath)
 
 std::string Grammar::GenerateSentence(std::string axiom, StoryWorld::StoryCharacter* active, StoryWorld::StoryCharacter* passive, bool nested)
 {
+
+
 	srand(m_seed); // FIXME: Hacky, but a good patch in lieu of a better rng implementation?
 	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
 
@@ -138,7 +140,7 @@ std::string Grammar::PostProcessSentence(std::string sentence)
 	if (sentence.find(" ") == 0)
 		sentence.erase(sentence.begin(), sentence.begin() + 1);
 
-	if (sentence.find_last_of(" ") == sentence.length() - 1)
+	if (sentence.find_last_of(" ") == sentence.length() - 1 && sentence.length() > 0)
 		sentence.erase(sentence.end() - 1, sentence.end());
 
 	// STEP 2: Capitalise sentence...

@@ -21,8 +21,15 @@ public:
 	void SelectEnd(Storylet* storylet);
 
 private:
-	float m_seed;
+	Storylet::Text InitializeText(nlohmann::json data);
+	Storylet::Causes InitializeCauses(nlohmann::json data);
+	Storylet::Effects InitializeEffects(nlohmann::json data);
 
+private:
+public: // DBEUG...
+	std::vector<Storylet> m_storylets;
+
+	float m_seed;
 	StoryWorld* m_world;
 };
 

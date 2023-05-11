@@ -8,7 +8,7 @@
 
 struct Storylet
 {
-	struct Conditions
+	struct Causes
 	{
 
 	};
@@ -21,13 +21,17 @@ struct Storylet
 	struct Text
 	{
 		std::string axiom;
-		Conditions conditions;
+		Causes causes;
 		Effects effects;
+
+		Text();
 	};
 
 	Text beginning;
 	std::vector<Text> middle;
 	std::vector<std::vector<Text>> end;
 	bool progressed;
+
+	Storylet();
 };
 
