@@ -156,6 +156,7 @@ private:
 
     // GUI
     ImFont*                                                                 m_defaultFont;
+    ImFont*                                                                 m_choiceFont;
 
 #ifdef DXTK_AUDIO
     std::unique_ptr<DirectX::AudioEngine>                                   m_audEngine;

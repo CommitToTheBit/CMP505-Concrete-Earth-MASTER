@@ -24,6 +24,7 @@ private:
 	Grammar m_grammar;
 
 	StoryWorld m_world;
+
 	//Storylet m_storylet;
 };
 

@@ -50,13 +50,17 @@ void Game::Initialize(HWND window, int width, int height)
 	//pulled from imgui directx11 example
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGuiIO& io = ImGui::GetIO(); // FIXME: Is (void)io; necessary?
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(window);		//tie to our window
 	ImGui_ImplDX11_Init(m_deviceResources->GetD3DDevice(), m_deviceResources->GetD3DDeviceContext());	//tie to directx
 
-	m_defaultFont = io.Fonts->AddFontFromFileTTF("beneg___.ttf", 48); // NB: pt-to-px conversion: px = (4.0f/3.0f)*pt
+	m_defaultFont = io.Fonts->AddFontFromFileTTF("beneg___.ttf", 54); // NB: pt-to-px conversion: px = (4.0f/3.0f)*pt
+	m_choiceFont = io.Fonts->AddFontFromFileTTF("beneg___.ttf", 42);
+
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.Colors[ImGuiCol_Button] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	//setup light
 	m_Ambience = Vector4(0.15f, 0.15f, 0.15f, 1.0f);
@@ -68,8 +72,8 @@ void Game::Initialize(HWND window, int width, int height)
 
 	// FIXME: Refactor this, for 'cleaner' board set-up?
 	float twist = XM_PI/12.0f;
-	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f)-0.15f, cos(1.0f*XM_PI/5.0f))*cos(twist));
-	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+180.0f*twist/XM_PI, 0.0f));
+	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/8.0f)*sin(twist), sin(1.0f*XM_PI/8.0f)-0.15f, cos(1.0f*XM_PI/8.0f))*cos(twist));
+	m_Camera.setRotation(Vector3(-90.0f-22.5f, -180.0f+180.0f*twist/XM_PI, 0.0f));
 	
 #ifdef DXTK_AUDIO
     // Create DirectXTK for Audio objects
@@ -156,8 +160,8 @@ void Game::Update(DX::StepTimer const& timer)
 		//	m_Board.AddThorns(device, m_add++, 3);
 
 		// DEBUG:
-		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-			m_sentence = m_StoryEngine.GenerateSentence("salt");
+		//if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
+		//	m_sentence = m_StoryEngine.GenerateSentence("salt");
 	}
 
 	// VIGNETTE INPUTS:
@@ -257,8 +261,8 @@ void Game::Render()
 	m_PhysicalRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
 
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
-	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_Board.Render(context, &m_TerrainShader, displacement, 0.9f, 0.9f, &m_Camera, m_time, &m_Light);
+	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.4f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
+	m_Board.Render(context, &m_TerrainShader, displacement, 1.0f, 0.95f, &m_Camera, m_time, &m_Light);
 
 	// DEBUG: Render three (normalised) torii, for voxel texturing...
 	/*m_VoronoiShader.EnableShader(context);
@@ -582,12 +586,29 @@ void Game::SetupGUI()
 	window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 
-	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.79f), ImGuiCond_Always, ImVec2(0.5f, 0.0f));
+	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.825f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
 
 	if (m_sentence.length() > 0 && m_BloodVesselCount > 0)
 	{
 		ImGui::Begin(m_sentence.c_str(), (bool*)true, window_flags);
 		ImGui::Text(m_sentence.c_str());
+
+		// FIXME: StoryEngine buttons will be handled here...
+		ImGui::PushFont(m_choiceFont);
+		//ImGui::NewLine();
+		//ImGui::NewLine(); // FIXME: How does one centre this line?
+		for (int i = 0; i < 3; i++)
+		{
+			ImGui::PushID(i);
+			//ImGui::SameLine();
+			if (ImGui::Button("Test!", ImVec2(0.0f, 0.0f)))
+			{
+				m_sentence = std::to_string(i)+"!";
+			}
+			ImGui::PopID();
+		}
+		ImGui::PopFont();
+
 		ImGui::End();
 	}
 
