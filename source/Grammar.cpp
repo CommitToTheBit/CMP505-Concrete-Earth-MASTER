@@ -4,8 +4,6 @@
 Grammar::Grammar()
 {
 	m_seed = 0;
-
-	m_sentence = "";
 	m_generations = 0;
 }
 

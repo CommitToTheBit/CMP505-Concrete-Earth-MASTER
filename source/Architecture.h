@@ -24,8 +24,5 @@ private:
 	float m_seed;
 
 	StoryWorld* m_world;
-
-	// DEBUG:
-	Storylet m_storylet;
 };
 

@@ -4,12 +4,6 @@
 Architecture::Architecture()
 {
 	m_seed = 0;
-
-	// DEBUG:
-	m_storylet.progress = 0;
-	m_storylet.beginning.axiom = "{*FULL NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe.";
-	m_storylet.middles = std::vector<Storylet::Text>(2);
-	//m_storylet.middles[0].axiom = 
 }
 
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "StoryWorld.h"
+
 #include <map>
 #include <string>
 #include <vector>
@@ -23,9 +25,9 @@ struct Storylet
 		Effects effects;
 	};
 
-	int progress;
 	Text beginning;
-	std::vector<Text> middles;
-	std::vector<std::vector<Text>> ends;
+	std::vector<Text> middle;
+	std::vector<std::vector<Text>> end;
+	bool progressed;
 };
 

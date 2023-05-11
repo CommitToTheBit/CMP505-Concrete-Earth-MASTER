@@ -162,10 +162,6 @@ void Game::Update(DX::StepTimer const& timer)
 		//	m_Board.SetInterpolation(-1, 1);
 		//	m_Board.SetInterpolation(-1, -1);
 		//	m_Board.AddThorns(device, m_add++, 3);
-
-		// DEBUG:
-		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-			m_sentence = m_StoryEngine.GenerateSentence("thorns");
 	}
 
 	// VIGNETTE INPUTS:
@@ -508,10 +504,6 @@ void Game::CreateDeviceDependentResources()
 	m_Board.Initialize(device, 4, 16);
 	m_add = 0;
 
-	// Narrative // FIXME: Move to board?
-	m_StoryEngine.Initialize();
-	m_sentence = m_StoryEngine.GenerateSentence("thorns");
-
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);
 	m_SphinxTiling.Initialize(device, 0.01f, 5);
@@ -592,16 +584,13 @@ void Game::SetupGUI()
 
 	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.825f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
 
-	float textWidth = std::max(720.0f, std::min(ImGui::CalcTextSize(m_sentence.c_str()).x, 1440.0f));
+	float textWidth = std::max(720.0f, std::min(ImGui::CalcTextSize(m_Board.m_scene.premise.c_str()).x, 1440.0f));
 
 	ImGui::Begin((m_Board.m_scene.premise.length() > 0) ? m_Board.m_scene.premise.c_str() : " ", (bool*)true, window_flags); // NB: Nice, robust failsafe here?
 
-	// FIXME: Attach StoryEngine body...
 	// FIXME: How do we right align wrapped text? (without a ridiculous amount of code...)
-	ImGui::PushItemWidth(1440.0f);
 	ImGui::PushTextWrapPos(1440.0f);
 	ImGui::Text(m_Board.m_scene.premise.c_str(), ImVec2(textWidth, 0.0f));
-	ImGui::PopItemWidth();
 	ImGui::PopTextWrapPos();
 
 	// FIXME: StoryEngine buttons will be handled here...

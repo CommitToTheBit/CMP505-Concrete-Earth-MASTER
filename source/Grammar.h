@@ -47,10 +47,5 @@ private:
 
 	float m_seed;
 	int m_generations;
-
-// DEBUG: These variables will later be handled in other classes...
-public:
-	std::string m_sentence;
-	StoryWorld::StoryCharacter m_active, m_passive;
 };
 

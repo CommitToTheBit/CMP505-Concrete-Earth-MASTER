@@ -150,10 +150,6 @@ private:
 
     ModelClass																m_Cube;
 
-    // Narrative
-    StoryEngine                                                             m_StoryEngine;
-    std::string                                                             m_sentence;
-
     // GUI
     ImFont*                                                                 m_defaultFont;
     ImFont*                                                                 m_choiceFont;

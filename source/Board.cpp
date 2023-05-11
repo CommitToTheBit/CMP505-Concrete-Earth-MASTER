@@ -11,8 +11,6 @@ Board::Board()
 
 	m_interpolating = false;
 
-	// DEBUG:
-	m_scene.premise = "Exemplar text...!";
 }
 
 
@@ -78,6 +76,7 @@ bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 
 	// Storylets...
 	m_storyEngine.Initialize();
+	m_scene = m_storyEngine.StartScene("thorn");
 
 	return true;
 }
