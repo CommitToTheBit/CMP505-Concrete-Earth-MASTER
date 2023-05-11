@@ -114,10 +114,35 @@ std::string Grammar::GenerateSentence(std::string axiom, Storyworld::StoryCharac
 
 std::string Grammar::PostProcessSentence(std::string sentence)
 {
-	// STEP 1: Capitalise sentence...
+	int index;
+	std::string iteratedSentence;
+
+	// STEP 1: Remove unnecessary spaces...
+	index = sentence.find(" ");
+	iteratedSentence = "";
+	while (index != -1)
+	{
+		iteratedSentence += sentence.substr(0, index + 1);
+		sentence.erase(sentence.begin(), sentence.begin() + index + 1);
+		
+		while (sentence.find(" ") == 0)
+			sentence.erase(sentence.begin(), sentence.begin() + 1);
+
+		index = sentence.find(" ");
+	}
+	iteratedSentence += sentence;
+	sentence = iteratedSentence;
+
+	if (sentence.find(" ") == 0)
+		sentence.erase(sentence.begin(), sentence.begin() + 1);
+
+	if (sentence.find_last_of(" ") == sentence.length() - 1)
+		sentence.erase(sentence.end() - 1, sentence.end());
+
+	// STEP 2: Capitalise sentence...
 	// After the start of the sentence and after every full stop, ensure the next character that can be capitalised *is* capitalised...
 	// NB: Is "\n" treated as a single character? If so, should be handled without any special case...
-	int index = 0;
+	index = 0;
 	while (index < sentence.length() && index != -1)
 	{
 		if (std::tolower(sentence[index]) == std::toupper(sentence[index]))
@@ -148,7 +173,7 @@ void Grammar::AddProductionRule(std::string letter, ProductionRuleType productio
 std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryCharacter* character, std::string consistencyDelimiter, bool generation)
 {
 	if (!m_productionRules.count(letter))
-		return letter; // DEBUG: "NULL("+letter+")";
+		return "";
 
 	if (character && character->m_traits.find(letter) != character->m_traits.end())
 		return character->m_traits[letter];
@@ -186,7 +211,7 @@ std::string Grammar::GetProductionRule(std::string letter, Storyworld::StoryChar
 	{	
 		if (production.find("?", consistencyIndex + 1) == consistencyIndex + 1) // FIXME: OOB?
 		{
-			iteratedProduction += production.substr(0, consistencyIndex) + "{" + "";// consistencyDelimiter; ONLY STARS BREAK THIS!
+			iteratedProduction += production.substr(0, consistencyIndex) + "{" + consistencyDelimiter;// ONLY STARS BREAK THIS!
 			production.erase(production.begin(), production.begin() + consistencyIndex + 2);
 			consistencyIndex = 0;
 		}

@@ -1,7 +1,12 @@
 {
-  "Anatole": {
+  "Anatolyevich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
+    ]
+  },
+  "Anatolyevna": {
+    "productions": [
+      "FEMININE PATRONYMIC"
     ]
   },
   "Andrei": {

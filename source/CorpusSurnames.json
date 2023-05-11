@@ -1,182 +1,246 @@
 {
-  "{?SURNAME}-{?SURNAME}": {
+  "{?FIRST BARREL}-{?SECOND BARREL}": {
     "productions": [
       "SURNAME"
-    ]
+    ],
+    "weight": 25.0
   },
   "Arsenyev": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Beketov": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Chelyuskin": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Chicagov": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Chirikov": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Chukhnovsky": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Dezhnev": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Grshimailo": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Gvozdev": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Khabarov": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Klenova": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Kolchak": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Konyukhov": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Kozlov": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Krenitsyn": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Laptev": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Levashev": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Miklouho": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Moskvitin": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Nevelskoy": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Nikitin": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Popov": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Potatin": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Poyarkov": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Pribylov": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Pronchishchev": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Pronchishcheva": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Przhevalsky": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Roerich": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Rudanovsky": {
     "productions": [
-      "SURNAME"
-    ]
-  },
-  "Sagalevich": {
-    "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Sannikov": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Sarychev": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Smurgis": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   },
   "Tebenkov": {
     "productions": [
-      "SURNAME"
+      "SURNAME",
+      "FIRST BARREL",
+      "SECOND BARREL"
     ]
   }
 }
