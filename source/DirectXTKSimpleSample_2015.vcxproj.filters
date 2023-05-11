@@ -80,9 +80,6 @@
     <ClInclude Include="SimplexNoise.h">
       <Filter>Modelling</Filter>
     </ClInclude>
-    <ClInclude Include="Board.h">
-      <Filter>Modelling</Filter>
-    </ClInclude>
     <ClInclude Include="Field.h">
       <Filter>Modelling</Filter>
     </ClInclude>
@@ -141,6 +138,10 @@
     <ClInclude Include="Storylet.h">
       <Filter>Narrative</Filter>
     </ClInclude>
+    <ClInclude Include="Board.h" />
+    <ClInclude Include="Hex.h">
+      <Filter>Modelling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -175,9 +176,6 @@
       <Filter>Modelling</Filter>
     </ClCompile>
     <ClCompile Include="SimplexNoise.cpp">
-      <Filter>Modelling</Filter>
-    </ClCompile>
-    <ClCompile Include="Board.cpp">
       <Filter>Modelling</Filter>
     </ClCompile>
     <ClCompile Include="Field.cpp">
@@ -233,6 +231,10 @@
     </ClCompile>
     <ClCompile Include="Storylet.cpp">
       <Filter>Narrative</Filter>
+    </ClCompile>
+    <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Hex.cpp">
+      <Filter>Modelling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

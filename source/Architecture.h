@@ -15,7 +15,14 @@ public:
 
 	void Initialize(float seed = 0.0f);
 
+	// DEBUG:
+	// SurfacePremise();
+	// SurfaceChoices();
+	// SurfaceConsequence();
+
 private:
 	float m_seed;
+
+	StoryWorld* m_world;
 };
 

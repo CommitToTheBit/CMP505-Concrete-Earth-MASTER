@@ -174,6 +174,7 @@
     <ClInclude Include="Architecture.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Grammar.h" />
+    <ClInclude Include="Hex.h" />
     <ClInclude Include="LDragonCurve.h" />
     <ClInclude Include="EnvironmentCamera.h" />
     <ClInclude Include="Game.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="Architecture.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="Grammar.cpp" />
+    <ClCompile Include="Hex.cpp" />
     <ClCompile Include="LDragonCurve.cpp" />
     <ClCompile Include="EnvironmentCamera.cpp" />
     <ClCompile Include="Game.cpp" />
