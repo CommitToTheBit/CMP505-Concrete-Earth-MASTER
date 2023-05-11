@@ -9,114 +9,184 @@
       "FEMININE PATRONYMIC"
     ]
   },
-  "Andrei": {
+  "Andreyevich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
     ]
   },
-  "Alexandr": {
+  "Anadreyevna": {
     "productions": [
-      "MASCULINE FORENAME"
+      "FEMININE PATRONYMIC"
     ]
   },
-  "Boris": {
+  "Alexandrovich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
     ]
   },
-  "Dmitry": {
+  "Alexandrovna": {
     "productions": [
-      "MASCULINE FORENAME"
+      "FEMININE PATRONYMIC"
     ]
   },
-  "Evegeny": {
+  "Borisovich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
     ]
   },
-  "Fyodor": {
+  "Borisovna": {
     "productions": [
-      "MASCULINE FORENAME"
+      "FEMININE PATRONYMIC"
     ]
   },
-  "Karl": {
+  "Dmitryevich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
     ]
   },
-  "Kirill": {
+  "Dmitriyevna": {
     "productions": [
-      "MASCULINE FORENAME"
+      "FEMININE PATRONYMIC"
     ]
   },
-  "Ilya": {
+  "Fyodorovich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
     ]
   },
-  "Ippolit": {
+  "Fyodorovna": {
     "productions": [
-      "MASCULINE FORENAME"
+      "FEMININE PATRONYMIC"
     ]
   },
-  "Ivan": {
+  "Ilyich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
     ]
   },
-  "Nikolai": {
+  "Ilyinichna": {
     "productions": [
-      "MASCULINE FORENAME"
+      "FEMININE PATRONYMIC"
     ]
   },
-  "Nikolenka": {
+  "Ippolitovich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
     ]
   },
-  "Osip": {
+  "Ippolitovna": {
     "productions": [
-      "MASCULINE FORENAME"
+      "FEMININE PATRONYMIC"
     ]
   },
-  "Pavel": {
+  "Ivanovich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
     ]
   },
-  "Platon": {
+  "Ivanovna": {
     "productions": [
-      "MASCULINE FORENAME"
+      "FEMININE PATRONYMIC"
     ]
   },
-  "Petya": {
+  "Karlovich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
     ]
   },
-  "Pierre": {
+  "Karlovna": {
     "productions": [
-      "MASCULINE FORENAME"
+      "FEMININE PATRONYMIC"
     ]
   },
-  "Pyotr": {
+  "Kirillovich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
     ]
   },
-  "Sergey": {
+  "Kirillovna": {
     "productions": [
-      "MASCULINE FORENAME"
+      "FEMININE PATRONYMIC"
     ]
   },
-  "Vasily": {
+  "Nikolaiyevich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
+    ]
+  },
+  "Nikolaiyevna": {
+    "productions": [
+      "FEMININE PATRONYMIC"
+    ]
+  },
+  "Osipovich": {
+    "productions": [
+      "MASCULINE PATRONYMIC"
+    ]
+  },
+  "Osipovna": {
+    "productions": [
+      "FEMININE PATRONYMIC"
+    ]
+  },
+  "Pavlovich": {
+    "productions": [
+      "MASCULINE PATRONYMIC"
+    ]
+  },
+  "Pavlovna": {
+    "productions": [
+      "FEMININE PATRONYMIC"
+    ]
+  },
+  "Platonovich": {
+    "productions": [
+      "MASCULINE PATRONYMIC"
+    ]
+  },
+  "Platonovna": {
+    "productions": [
+      "FEMININE PATRONYMIC"
+    ]
+  },
+  "Petrovich": {
+    "productions": [
+      "MASCULINE PATRONYMIC"
+    ]
+  },
+  "Petrovna": {
+    "productions": [
+      "FEMININE PATRONYMIC"
+    ]
+  },
+  "Sergeyevich": {
+    "productions": [
+      "MASCULINE PATRONYMIC"
+    ]
+  },
+  "Sergeyevna": {
+    "productions": [
+      "FEMININE PATRONYMIC"
+    ]
+  },
+  "Vasilyevich": {
+    "productions": [
+      "MASCULINE PATRONYMIC"
+    ]
+  },
+  "Vasilyevna": {
+    "productions": [
+      "FEMININE PATRONYMIC"
     ]
   },
   "Vladimirovich": {
     "productions": [
-      "MASCULINE FORENAME"
+      "MASCULINE PATRONYMIC"
+    ]
+  },
+  "Vladimirovna": {
+    "productions": [
+      "FEMININE PATRONYMIC"
     ]
   }
 }

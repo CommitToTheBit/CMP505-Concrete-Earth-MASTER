@@ -22,9 +22,12 @@ void Grammar::Initialize(float seed)
 
 	m_productionRules = std::map<std::string, std::vector<ProductionRuleType>>();
 	InitializeCorpus("CorpusPronouns.json");
+
+	InitializeCorpus("CorpusNamingConventions.json");
 	InitializeCorpus("CorpusForenames.json");
 	InitializeCorpus("CorpusPatronymics.json");
 	InitializeCorpus("CorpusSurnames.json");
+
 	InitializeCorpus("CorpusMisc.json");
 }
 

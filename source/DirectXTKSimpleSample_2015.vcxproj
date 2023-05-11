@@ -249,6 +249,7 @@
   <ItemGroup>
     <None Include="CorpusForenames.json" />
     <None Include="CorpusMisc.json" />
+    <None Include="CorpusNamingConventions.json" />
     <None Include="CorpusPatronymics.json" />
     <None Include="CorpusPronouns.json" />
     <None Include="CorpusSurnames.json" />

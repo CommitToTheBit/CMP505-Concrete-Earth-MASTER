@@ -1,0 +1,7 @@
+{
+  "{?{?GENDER} FORENAME} {?{?GENDER} PATRONYMIC} {?SURNAME}": {
+    "productions": [
+      "FULL NAME"
+    ]
+  }
+}

@@ -157,7 +157,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 		// DEBUG:
 		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-			m_Grammar.m_sentence = m_Grammar.GenerateSentence("... {*ARCHETYPE}... {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} ({{*GENDER} SUBJECT PRONOUN} met {{**GENDER} OBJECT PRONOUN})... {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} {*SURNAME}... {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} {*SURNAME}", nullptr, &m_Grammar.m_passive);
+			m_Grammar.m_sentence = m_Grammar.GenerateSentence("... {*ARCHETYPE}... {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} ({{*GENDER} SUBJECT PRONOUN} met {{**GENDER} OBJECT PRONOUN})... {*FULL NAME}... {*FULL NAME}", nullptr, &m_Grammar.m_passive);
 	}
 
 	// VIGNETTE INPUTS:
@@ -502,7 +502,7 @@ void Game::CreateDeviceDependentResources()
 
 	// Narrative // FIXME: Move to board?
 	m_Grammar.Initialize();
-	m_Grammar.m_sentence = m_Grammar.GenerateSentence("{*ARCHETYPE}: {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} ({GENDER})", &m_Grammar.m_active);
+	m_Grammar.m_sentence = m_Grammar.GenerateSentence("{*ARCHETYPE}: {LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE} ({GENDER}... {FULL NAME}, {FULL NAME}, {FULL NAME}...)", &m_Grammar.m_active);
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);
