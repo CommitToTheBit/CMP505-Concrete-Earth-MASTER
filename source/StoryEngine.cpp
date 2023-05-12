@@ -37,15 +37,19 @@ StoryEngine::Scene StoryEngine::StartScene(std::string landmark)
 	if (landmark == "salt")
 		return Scene();
 
+	// RESET TEMPS...
+	m_world.active = StoryWorld::StoryCharacter();
+	m_world.passive = StoryWorld::StoryCharacter();
+
 	m_storylet = m_architecture.SelectBeginning();
 	m_architecture.SelectMiddle(&m_storylet);
 
 	Scene scene;
 	StoryWorld::StoryCharacter character; // FIXME: Contain within storyworld as a "local" character (as in, local to the hex...)
-	scene.premise = m_grammar.GenerateSentence(m_storylet.beginning.axiom, &character);
+	scene.premise = m_grammar.GenerateSentence(m_storylet.beginning.axiom, m_storylet.beginning.active, m_storylet.beginning.passive);
 	scene.choices = std::vector<std::string>(); 
 	for (Storylet::Text middle : m_storylet.middle)
-		scene.choices.push_back(m_grammar.GenerateSentence(middle.axiom, &character));
+		scene.choices.push_back(m_grammar.GenerateSentence(middle.axiom, middle.active, middle.passive));
 
 	return scene;
 }
@@ -62,7 +66,7 @@ StoryEngine::Scene StoryEngine::ContinueScene(int choice)
 	m_architecture.SelectEnd(&m_storylet, choice);
 
 	Scene scene;
-	scene.premise = m_grammar.GenerateSentence(m_storylet.end[choice][0].axiom);
+	scene.premise = m_grammar.GenerateSentence(m_storylet.end[choice][0].axiom, m_storylet.end[choice][0].active, m_storylet.end[choice][0].passive);
 	
 	// NB: Does forcing the player to hit "Continue" kill the pacing?
 	/*scene.choices = std::vector<std::string>();

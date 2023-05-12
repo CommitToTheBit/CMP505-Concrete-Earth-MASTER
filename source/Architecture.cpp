@@ -77,8 +77,13 @@ Storylet Architecture::SelectBeginning()
 		return Storylet();
 
 	// FIXME: Add selection criteria here...
+	// FIXME: Identify selection criteria with applicable characters...
 
-	return m_storylets[rand()%m_storylets.size()];
+	Storylet storylet = m_storylets[rand()%m_storylets.size()];
+	storylet.beginning.active = &m_world->active;
+	storylet.beginning.passive = &m_world->passive;
+
+	return storylet;
 }
 
 void Architecture::SelectMiddle(Storylet* storylet)
@@ -87,9 +92,17 @@ void Architecture::SelectMiddle(Storylet* storylet)
 	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
 
 	// FIXME: Add selection criteria here...
+	// FIXME: Identify selection criteria with applicable characters...
+
 
 	while (storylet->middle.size() > 3) // NB: Would this maximum ever be a variable?
 		storylet->middle.erase(storylet->middle.begin() + rand()%storylet->middle.size());
+
+	for (int i = 0; i < storylet->middle.size(); i++)
+	{
+		storylet->middle[i].active = &m_world->active;
+		storylet->middle[i].passive = &m_world->passive;
+	}
 }
 
 void Architecture::SelectEnd(Storylet* storylet, int choice)
@@ -98,7 +111,11 @@ void Architecture::SelectEnd(Storylet* storylet, int choice)
 	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
 
 	// FIXME: Add selection criteria here...
+	// FIXME: Identify selection criteria with applicable characters...
 
 	while (storylet->end[choice].size() > 1) // NB: Would this maximum ever be a variable?
 		storylet->end[choice].pop_back();
+
+	storylet->end[choice][0].active = &m_world->active; // NB: Inherit from middle?
+	storylet->end[choice][0].passive = &m_world->passive;
 }

@@ -24,7 +24,11 @@ struct Storylet
 		Causes causes;
 		Effects effects;
 
+		StoryWorld::StoryCharacter* active;
+		StoryWorld::StoryCharacter* passive;
+
 		Text();
+		~Text();
 	};
 
 	Text beginning;

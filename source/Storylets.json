@@ -1,7 +1,10 @@
 {
   "passenger embarks": {
     "Beginning": {
-      "Axiom": "{*FULL NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe." 
+      "Axiom": "{*FULL NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe.",
+      "Causes": {
+        "MaxPassengers": 3
+      }
     },
     "Middle": [
       {

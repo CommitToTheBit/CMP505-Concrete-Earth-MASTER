@@ -12,6 +12,6 @@ struct StoryWorld
 	};
 
 	std::vector<StoryCharacter> passenger;
-	StoryCharacter outsider;
+	StoryCharacter active, passive;
 };
 

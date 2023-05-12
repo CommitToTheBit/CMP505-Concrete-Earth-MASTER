@@ -602,7 +602,7 @@ void Game::SetupGUI()
 		ImGui::SameLine();*/
 
 		ImGui::PushID(i);
-		if (ImGui::Button(("  "+std::to_string(i + 1)+". "+m_Board.m_scene.choices[i]).c_str(), ImVec2(0.9f*textWidth, 1.1f*m_choiceFont->FontSize)))
+		if (ImGui::Button(("  "+std::to_string(i + 1)+". "+m_Board.m_scene.choices[i]).c_str(), ImVec2(0.9f*textWidth, 1.1f*m_choiceFont->FontSize)) || m_gameInputCommands.chooseReleased[i]) // NB: Input class has 'on released' logic in place, to stop the player skipping through storylets...
 		{
 			m_Board.Choose(i);
 		}

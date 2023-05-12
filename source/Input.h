@@ -18,6 +18,10 @@ struct InputCommands
 	// Procedural generation controls
 	bool generate; 
 
+	// GUI controls
+	bool choosePressed[3];
+	bool chooseReleased[3];
+
 	DirectX::SimpleMath::Vector2 rotation;
 };
 
