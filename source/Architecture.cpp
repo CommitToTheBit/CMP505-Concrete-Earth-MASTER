@@ -60,12 +60,50 @@ void Architecture::Initialize(StoryWorld* world, float seed)
 
 Storylet::Text Architecture::InitializeText(nlohmann::json data)
 {
-	Storylet::Text text;
+	Storylet::Text text = Storylet::Text();
 	text.axiom = (data.contains("Axiom")) ? data["Axiom"] : "";
-
-	// FIXME: Initialize causes, effects...
+	text.causes = (data.contains("Causes")) ? InitializeCauses(data["Causes"]) : Storylet::Causes();
+	text.effects = (data.contains("Effects")) ? InitializeEffects(data["Effects"]) : Storylet::Effects();
 
 	return text;
+}
+
+Storylet::Causes Architecture::InitializeCauses(nlohmann::json data)
+{
+	Storylet::Causes causes = Storylet::Causes();
+
+	if (data.contains("MinPassengers"))
+		causes.minPassengers = std::max((int)data["MinPassengers"], causes.minPassengers);
+
+	if (data.contains("MaxPassengers"))
+		causes.maxPassengers = std::min((int)data["MaxPassengers"], causes.maxPassengers);
+
+	if (data.contains("ActiveIsPassenger"))
+		causes.activeIsPassenger = data["ActiveIsPassenger"];
+
+	if (data.contains("PassiveIsPassenger"))
+		causes.passiveIsPassenger = data["PassiveIsPassenger"];
+
+	return causes;
+}
+
+Storylet::Effects Architecture::InitializeEffects(nlohmann::json data)
+{
+	Storylet::Effects effects = Storylet::Effects();
+
+	if (data.contains("ActiveEmbarks"))
+		effects.activeEmbarks = data["ActiveEmbarks"];
+
+	if (data.contains("ActiveDisembarks"))
+		effects.activeDisembarks = data["ActiveDisembarks"];
+
+	if (data.contains("PassiveEmbarks"))
+		effects.passiveEmbarks = data["PassiveEmbarks"];
+
+	if (data.contains("PassiveDisembarks"))
+		effects.passiveDisembarks = data["PassiveDisembarks"];
+
+	return effects;
 }
 
 Storylet Architecture::SelectBeginning()
@@ -78,10 +116,39 @@ Storylet Architecture::SelectBeginning()
 
 	// FIXME: Add selection criteria here...
 	// FIXME: Identify selection criteria with applicable characters...
+	float totalWeight = 0.0f;
+	for each (Storylet storylet in m_storylets)
+	{
+		totalWeight += GetWeight(&storylet.beginning);
+	}
 
-	Storylet storylet = m_storylets[rand()%m_storylets.size()];
-	storylet.beginning.active = &m_world->active;
-	storylet.beginning.passive = &m_world->passive;
+	int index = 0;
+	float weight = GetRNGRange(0.0f, totalWeight);
+	float summedWeight = 0.0f;
+	for each (Storylet storylet in m_storylets)
+	{
+		if (weight > summedWeight + GetWeight(&storylet.beginning))
+		{
+			summedWeight += GetWeight(&storylet.beginning);
+			index++;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	Storylet storylet = m_storylets[index];
+
+	// FIXME: Assign separately...
+	std::vector<std::map<std::string, StoryWorld::StoryCharacter*>> pairings = GetPairings(&storylet.beginning);
+	if (pairings.size() > 0)
+	{
+		std::map<std::string, StoryWorld::StoryCharacter*> pairing = pairings[rand()%pairings.size()];
+
+		storylet.beginning.active = pairing["Active"];
+		storylet.beginning.passive = pairing["Passive"];
+	}
 
 	return storylet;
 }
@@ -100,8 +167,9 @@ void Architecture::SelectMiddle(Storylet* storylet)
 
 	for (int i = 0; i < storylet->middle.size(); i++)
 	{
-		storylet->middle[i].active = &m_world->active;
-		storylet->middle[i].passive = &m_world->passive;
+		// FIXME: Add flexibility here!
+		storylet->middle[i].active = storylet->beginning.active;
+		storylet->middle[i].passive = storylet->beginning.passive;
 	}
 }
 
@@ -115,7 +183,78 @@ void Architecture::SelectEnd(Storylet* storylet, int choice)
 
 	while (storylet->end[choice].size() > 1) // NB: Would this maximum ever be a variable?
 		storylet->end[choice].pop_back();
+#
+	// FIXME: Add flexibility here!
+	storylet->end[choice][0].active = storylet->middle[choice].active;
+	storylet->end[choice][0].passive = storylet->middle[choice].passive;
+}
 
-	storylet->end[choice][0].active = &m_world->active; // NB: Inherit from middle?
-	storylet->end[choice][0].passive = &m_world->passive;
+std::vector<std::map<std::string, StoryWorld::StoryCharacter*>> Architecture::GetPairings(Storylet::Text* text)
+{
+	std::vector<std::map<std::string, StoryWorld::StoryCharacter*>> pairings = std::vector<std::map<std::string, StoryWorld::StoryCharacter*>>();
+	std::vector<StoryWorld::StoryCharacter*> actives;
+	std::vector<StoryWorld::StoryCharacter*> passives;
+
+	if (text->causes.activeIsPassenger)
+	{
+		// NB: Lacks nuance...
+		for (int i = 0; i < m_world->passenger.size(); i++)
+		{
+			actives.push_back(&m_world->passenger[i]);
+		}
+	}
+	else
+	{
+		actives.push_back(&m_world->active);
+	}
+
+	if (text->causes.passiveIsPassenger)
+	{
+		// NB: Lacks nuance...
+		for (int i = 0; i < m_world->passenger.size(); i++)
+		{
+			passives.push_back(&m_world->passenger[i]);
+		}
+	}
+	else
+	{
+		passives.push_back(&m_world->passive);
+	}
+
+	for (StoryWorld::StoryCharacter* active : actives)
+	{
+		for (StoryWorld::StoryCharacter* passive : passives)
+		{
+			if (active == passive)
+				continue;
+
+			std::map<std::string, StoryWorld::StoryCharacter*> pairing = std::map<std::string, StoryWorld::StoryCharacter*>();
+			pairing["Active"] = active;
+			pairing["Passive"] = passive;
+			pairings.push_back(pairing);
+		}
+	}
+
+	return pairings;
+}
+
+float Architecture::GetWeight(Storylet::Text* text)
+{
+	// STEP 1: Check global conditions...
+	if (text->causes.minPassengers > m_world->passenger.size())
+		return 0.0f;
+
+	if (text->causes.maxPassengers < m_world->passenger.size())
+		return 0.0f;
+
+	// STEP 2: Check *any* characters match...
+	if (GetPairings(text).size() == 0)
+		return 0.0f;
+
+	return text->weight;
+}
+
+float Architecture::GetRNGRange(float a, float b)
+{
+	return a+(b-a)*std::rand()/RAND_MAX;
 }

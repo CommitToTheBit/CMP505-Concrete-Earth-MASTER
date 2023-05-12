@@ -180,7 +180,6 @@ std::string Grammar::GetProductionRule(std::string letter, StoryWorld::StoryChar
 	if (character && character->traits.find(letter) != character->traits.end())
 		return character->traits[letter];
 
-	// FIXME: Add dryness assessment here?
 	float totalWeight = 0.0f;
 	for each (ProductionRuleType productionRule in m_productionRules[letter])
 	{

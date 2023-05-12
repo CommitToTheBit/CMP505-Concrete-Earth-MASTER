@@ -42,6 +42,8 @@ StoryEngine::Scene StoryEngine::StartScene(std::string landmark)
 	m_world.passive = StoryWorld::StoryCharacter();
 
 	m_storylet = m_architecture.SelectBeginning();
+	ApplyEffects(&m_storylet.beginning);
+
 	m_architecture.SelectMiddle(&m_storylet);
 
 	Scene scene;
@@ -63,7 +65,10 @@ StoryEngine::Scene StoryEngine::ContinueScene(int choice)
 	}
 	m_storylet.progressed = true;
 
+	ApplyEffects(&m_storylet.middle[choice]);
+
 	m_architecture.SelectEnd(&m_storylet, choice);
+	ApplyEffects(&m_storylet.end[choice][0]);
 
 	Scene scene;
 	scene.premise = m_grammar.GenerateSentence(m_storylet.end[choice][0].axiom, m_storylet.end[choice][0].active, m_storylet.end[choice][0].passive);
@@ -75,18 +80,44 @@ StoryEngine::Scene StoryEngine::ContinueScene(int choice)
 	return scene;
 }
 
-StoryWorld::StoryCharacter StoryEngine::GenerateCharacter()
+void StoryEngine::ApplyEffects(Storylet::Text* text)
 {
-	StoryWorld::StoryCharacter character;
-	m_grammar.GenerateSentence("{*FULL NAME}", &character);
+	if (text->effects.activeEmbarks)
+	{
+		bool passenger = false;
+		for (int i = 0; i < m_world.passenger.size(); i++)
+		{
+			if (&m_world.passenger[i] == text->active)
+			{
+				passenger |= true;
+				break;
+			}
+		}
 
-	return character;
-}
+		if (!passenger)
+		{
+			m_world.passenger.push_back(*text->active);
+			text->active = &m_world.passenger[m_world.passenger.size() - 1];
+		}
+	}
 
-std::string StoryEngine::GenerateSentence(std::string suit)
-{
-	if (suit == "salt")
-		return "";
+	if (text->effects.activeDisembarks)
+	{
+		int index = -1;
+		for (int i = 0; i < m_world.passenger.size(); i++)
+		{
+			if (&m_world.passenger[i] == text->active)
+			{
+				index = i;
+				break;
+			}
+		}
 
-	return m_grammar.GenerateSentence("Might we meet {*FULL NAME}, the {*ARCHETYPE}, here?");
+		if (index >= 0)
+		{
+			m_world.active = m_world.passenger[index];
+			text->active = &m_world.active;
+			m_world.passenger.erase(m_world.passenger.begin() + index); // FIXME: Does this affect passive's pointer address? Surely..
+		}
+	}
 }

@@ -10,12 +10,27 @@ struct Storylet
 {
 	struct Causes
 	{
+		int minPassengers;
+		int maxPassengers;
 
+		bool activeIsPassenger;
+
+		bool passiveIsPassenger;
+
+		Causes();
+		~Causes();
 	};
 
 	struct Effects
 	{
+		bool activeEmbarks;
+		bool activeDisembarks;
 
+		bool passiveEmbarks;
+		bool passiveDisembarks;
+
+		Effects();
+		~Effects();
 	};
 
 	struct Text
@@ -27,6 +42,8 @@ struct Storylet
 		StoryWorld::StoryCharacter* active;
 		StoryWorld::StoryCharacter* passive;
 
+		float weight;
+
 		Text();
 		~Text();
 	};
@@ -34,8 +51,10 @@ struct Storylet
 	Text beginning;
 	std::vector<Text> middle;
 	std::vector<std::vector<Text>> end;
+
 	bool progressed;
 
 	Storylet();
+	~Storylet();
 };
 

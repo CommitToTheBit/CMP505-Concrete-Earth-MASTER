@@ -25,6 +25,10 @@ private:
 	Storylet::Causes InitializeCauses(nlohmann::json data);
 	Storylet::Effects InitializeEffects(nlohmann::json data);
 
+	std::vector<std::map<std::string, StoryWorld::StoryCharacter*>> GetPairings(Storylet::Text* text);
+	float GetWeight(Storylet::Text* text); // FIXME: Add "previous active/passive"
+	float GetRNGRange(float a = -1.0f, float b = 1.0f);
+
 private:
 public: // DBEUG...
 	std::vector<Storylet> m_storylets;

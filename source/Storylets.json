@@ -3,15 +3,22 @@
     "Beginning": {
       "Axiom": "{*FULL NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe.",
       "Causes": {
-        "MaxPassengers": 3
+        "MaxPassengers": 3,
+        "ActiveIsPassenger": false
       }
     },
     "Middle": [
       {
         "Axiom": "accept {*{*GENDER} FORENAME}'s coin...",
+        "Causes": {
+          "ActiveIsPassenger": false
+        },
         "End": [
           {
             "Axiom": "you extend your talon, and welcome the {*ARCHETYPE} aboard.",
+            "Causes": {
+              "ActiveIsPassenger": false
+            },
             "Effects": {
               "ActiveEmbarks": true
             }
@@ -19,18 +26,25 @@
         ]
       },
       {
-        "Axiom": "turn {{*GENDER} OBJECT PRONOUN} away..."
+        "Axiom": "turn {{*GENDER} OBJECT PRONOUN} away...",
+        "Causes": {
+          "ActiveIsPassenger": false
+        }
       }
     ],
     "End": {
-      "Axiom": "you carry on, leaving poor {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} by the wayside."
+      "Axiom": "you carry on, leaving poor {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} by the wayside.",
+      "Causes": {
+        "ActiveIsPassenger": false
+      }
     }
   },
   "passenger disembarks": {
     "Beginning": {
       "Axiom": "You come to a small hamlet. {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} disembarks, thanking you profusely.",
       "Causes": {
-        "MinPassengers": 1
+        "MinPassengers": 2,
+        "ActiveIsPassenger": true
       },
       "Effects": {
         "ActiveDisembarks": true
@@ -42,7 +56,7 @@
       }
     ],
     "End": {
-      "Axiom": "The steppe awaits."
+      "Axiom": "The plains await."
     }
   }
 }

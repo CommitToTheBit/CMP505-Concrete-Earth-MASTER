@@ -2,8 +2,7 @@
   "{?BARREL #1}-{?BARREL #2}": {
     "productions": [
       "SURNAME"
-    ],
-    "weight": 25.0
+    ]
   },
   "Arsenyev": {
     "productions": [

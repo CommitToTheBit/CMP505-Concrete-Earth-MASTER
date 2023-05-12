@@ -157,8 +157,8 @@ void Game::Update(DX::StepTimer const& timer)
 			m_Board.SetInterpolation(1, -1);
 		if (m_gameInputCommands.right)
 			m_Board.SetInterpolation(1, 1);
-		if (m_gameInputCommands.back)
-			m_Board.SetInterpolation(-1, 0);
+		//if (m_gameInputCommands.back)
+		//	m_Board.SetInterpolation(-1, 0);
 		//	m_Board.SetInterpolation(-1, 1);
 		//	m_Board.SetInterpolation(-1, -1);
 		//	m_Board.AddThorns(device, m_add++, 3);
@@ -167,15 +167,15 @@ void Game::Update(DX::StepTimer const& timer)
 	// VIGNETTE INPUTS:
 	if (m_Board.m_interpolating) //m_gameInputCommands.clockwise || m_gameInputCommands.anticlockwise)
 	{
-		float deltaInterpolation = 0.0f;
+		float deltaInterpolation = 1.0f;
 		//if (m_gameInputCommands.clockwise)
 		//	deltaInterpolation += 1.0f;
 		//if (m_gameInputCommands.anticlockwise)
 		//	deltaInterpolation -= 1.0f;
-		if (m_gameInputCommands.forward)
-			deltaInterpolation += 1.0f;
-		if (m_gameInputCommands.back)
-			deltaInterpolation -= 1.0f;
+		//if (m_gameInputCommands.forward)
+		//	deltaInterpolation += 1.0f;
+		//if (m_gameInputCommands.back)
+		//	deltaInterpolation -= 1.0f;
 			
 		for (int i = 0; i < m_BloodVesselCount; i++)
 		{
