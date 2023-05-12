@@ -11,9 +11,7 @@ struct StoryWorld
 		std::map<std::string, std::string> traits;
 	};
 
-	struct StoryWagon
-	{
-		std::vector<StoryCharacter> characters;
-	};
+	std::vector<StoryCharacter> passenger;
+	StoryCharacter outsider;
 };
 

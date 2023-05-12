@@ -12,8 +12,9 @@ Architecture::~Architecture()
 
 }
 
-void Architecture::Initialize(float seed)
+void Architecture::Initialize(StoryWorld* world, float seed)
 {
+	m_world = world;
 	m_seed = seed;
 
 	m_storylets = std::vector<Storylet>();
@@ -65,4 +66,39 @@ Storylet::Text Architecture::InitializeText(nlohmann::json data)
 	// FIXME: Initialize causes, effects...
 
 	return text;
+}
+
+Storylet Architecture::SelectBeginning()
+{
+	srand(m_seed); // FIXME: Hacky, but a good patch in lieu of a better rng implementation?
+	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
+
+	if (m_storylets.size() == 0)
+		return Storylet();
+
+	// FIXME: Add selection criteria here...
+
+	return m_storylets[rand()%m_storylets.size()];
+}
+
+void Architecture::SelectMiddle(Storylet* storylet)
+{
+	srand(m_seed); // FIXME: Hacky, but a good patch in lieu of a better rng implementation?
+	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
+
+	// FIXME: Add selection criteria here...
+
+	while (storylet->middle.size() > 3) // NB: Would this maximum ever be a variable?
+		storylet->middle.erase(storylet->middle.begin() + rand()%storylet->middle.size());
+}
+
+void Architecture::SelectEnd(Storylet* storylet, int choice)
+{
+	srand(m_seed); // FIXME: Hacky, but a good patch in lieu of a better rng implementation?
+	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
+
+	// FIXME: Add selection criteria here...
+
+	while (storylet->end[choice].size() > 1) // NB: Would this maximum ever be a variable?
+		storylet->end[choice].pop_back();
 }

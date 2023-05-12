@@ -55,8 +55,6 @@ void Grammar::InitializeCorpus(std::string jsonPath)
 
 std::string Grammar::GenerateSentence(std::string axiom, StoryWorld::StoryCharacter* active, StoryWorld::StoryCharacter* passive, bool nested)
 {
-
-
 	srand(m_seed); // FIXME: Hacky, but a good patch in lieu of a better rng implementation?
 	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
 

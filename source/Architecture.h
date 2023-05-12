@@ -13,12 +13,12 @@ public:
 	Architecture();
 	~Architecture();
 
-	void Initialize(float seed = 0.0f);
+	void Initialize(StoryWorld* world, float seed = 0.0f);
 
 	// DEBUG:
 	Storylet SelectBeginning();
 	void SelectMiddle(Storylet* storylet);
-	void SelectEnd(Storylet* storylet);
+	void SelectEnd(Storylet* storylet, int choice);
 
 private:
 	Storylet::Text InitializeText(nlohmann::json data);

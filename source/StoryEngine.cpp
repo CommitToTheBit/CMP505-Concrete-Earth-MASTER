@@ -28,7 +28,7 @@ StoryEngine::~StoryEngine()
 void StoryEngine::Initialize(float seed)
 {
 	// STEP 1: Initialise generators...
-	m_architecture.Initialize(seed);
+	m_architecture.Initialize(&m_world, seed);
 	m_grammar.Initialize(seed);
 }
 
@@ -37,18 +37,15 @@ StoryEngine::Scene StoryEngine::StartScene(std::string landmark)
 	if (landmark == "salt")
 		return Scene();
 
-	// FIXME: Use architecture to choose a new storylet...
-	if (m_architecture.m_storylets.size() == 0)
-		return Scene();
-
-	m_storylet = m_architecture.m_storylets[0];
+	m_storylet = m_architecture.SelectBeginning();
+	m_architecture.SelectMiddle(&m_storylet);
 
 	Scene scene;
 	StoryWorld::StoryCharacter character; // FIXME: Contain within storyworld as a "local" character (as in, local to the hex...)
 	scene.premise = m_grammar.GenerateSentence(m_storylet.beginning.axiom, &character);
 	scene.choices = std::vector<std::string>(); 
-	scene.choices.push_back(m_grammar.GenerateSentence(m_storylet.middle[0].axiom, &character));
-	scene.choices.push_back(m_grammar.GenerateSentence(m_storylet.middle[1].axiom, &character));
+	for (Storylet::Text middle : m_storylet.middle)
+		scene.choices.push_back(m_grammar.GenerateSentence(middle.axiom, &character));
 
 	return scene;
 }
@@ -62,8 +59,8 @@ StoryEngine::Scene StoryEngine::ContinueScene(int choice)
 	}
 	m_storylet.progressed = true;
 
+	m_architecture.SelectEnd(&m_storylet, choice);
 
-	// FIXME: Use architecture to narrow down storylet...
 	Scene scene;
 	scene.premise = m_grammar.GenerateSentence(m_storylet.end[choice][0].axiom);
 	
