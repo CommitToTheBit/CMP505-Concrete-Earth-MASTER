@@ -10,13 +10,13 @@
 #include "Input.h"
 #include "RenderTexture.h"
 
-#include "HexBoard.h"
+#include "Board.h"
 
 #include "LDragonCurve.h"
 #include "LSphinxTiling.h"
 #include "LBloodVessel.h"
 
-#include "Grammar.h"
+#include "StoryEngine.h"
 
 #include "Screen.h"
 
@@ -123,10 +123,10 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>                        m_normalMap;
 
 	// Shaders
-    Shader                                                                  m_LightShader;
-
-    // Shader Textures
     Shader                                                                  m_NeutralShader;
+    Shader                                                                  m_TerrainShader;
+
+    Shader                                                                  m_VoronoiShader; // DEBUG...
 
     // Render-to-Textures
     Screen                                                                  m_Screen;
@@ -136,8 +136,10 @@ private:
     RenderTexture*                                                          m_VeinsRenderPass;
 
     // Models
-    HexBoard                                                                m_HexBoard;
+    Board                                                                   m_Board;
     int                                                                     m_add; // DEBUG...
+
+    MarchingCubes                                                           m_Torus; // DEBUG...
 
     // L-Systems
     LDragonCurve                                                            m_DragonCurve;
@@ -148,11 +150,9 @@ private:
 
     ModelClass																m_Cube;
 
-    // Narrative
-    Grammar                                                                 m_Grammar;
-
     // GUI
     ImFont*                                                                 m_defaultFont;
+    ImFont*                                                                 m_choiceFont;
 
 #ifdef DXTK_AUDIO
     std::unique_ptr<DirectX::AudioEngine>                                   m_audEngine;

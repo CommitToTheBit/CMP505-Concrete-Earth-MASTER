@@ -10,11 +10,45 @@ Chomsky, N.  \harvardyearleft 1956\harvardyearright , `{Three Models for the
   Description of Language}', {\em IRE Transactions on Information Theory} {\bf
   2}(3),~113--124.
 
+\harvarditem[Compton et~al.]{Compton, Kybartas \harvardand\
+  Mateas}{2015}{comptonTracery}
+Compton, K., Kybartas, B. \harvardand\ Mateas, M.  \harvardyearleft
+  2015\harvardyearright , {Tracery: An Author-Focused Generative Text Tool},
+  {\em in} `\textit{8th International Conference on Interactive Digital
+  Storytelling}', Copenhagen, Denmark: 30 November-4 December, pp.~154--161.
+
+\harvarditem{Dias}{2018}{diasVoyageur}
+Dias, B.  \harvardyearleft 2018\harvardyearright , {\em \textit{Voyageur}},
+  self-published.
+
+\harvarditem{Dias}{2019}{diasVoyageurDescriptions}
+Dias, B.  \harvardyearleft 2019\harvardyearright , {`Procedural Descriptions in
+  \textit{Voyageur}'}, {\em in} T.~Short \harvardand\ T.~Adams, eds,
+  `\textit{Procedural Storytelling in Game Design}', $2^{\textrm{nd}}$ edn,
+  Boca Raton, FL, USA: Taylor \& Francis, pp.~193--207.
+
+\harvarditem{Hanan}{1992}{hananParametricLSystems}
+Hanan, J.~S.  \harvardyearleft 1992\harvardyearright , {Parametric L-systems
+  and Their Application to the Modelling and Visualization of Plants}, PhD
+  thesis, University of Regina, Regina.
+
 \harvarditem[Hopcroft et~al.]{Hopcroft, Motwani \harvardand\
   Ullman}{2000}{hopcroftFormalLanguages}
 Hopcroft, J., Motwani, R. \harvardand\ Ullman, J.~D.  \harvardyearleft
   2000\harvardyearright , {\em {Introduction to Automata Theory, Languages, and
   Computation}}, $2^{\textrm{nd}}$ edn, Boston, MA, USA: Addison-Wesley.
+
+\harvarditem{Kazemi}{2019}{kazemiSimpleProceduralGeneration}
+Kazemi, D.  \harvardyearleft 2019\harvardyearright , {`Keeping Procedural
+  Generation Simple'}, {\em in} T.~Short \harvardand\ T.~Adams, eds,
+  `\textit{Procedural Storytelling in Game Design}', $2^{\textrm{nd}}$ edn,
+  Boca Raton, FL, USA: Taylor \& Francis, pp.~17--22.
+
+\harvarditem{Kreminski \harvardand\ Wardrip-Fruin}{2018}{kreminskiStorylets}
+Kreminski, M. \harvardand\ Wardrip-Fruin, N.  \harvardyearleft
+  2018\harvardyearright , {Sketching a Map of the Storylets Design Space}, {\em
+  in} `\textit{11th International Conference on Interactive Digital
+  Storytelling}', Dublin, Ireland: 5-8 December, pp.~160--164.
 
 \harvarditem{Lindenmayer}{1968}{lindenmayerLSystems}
 Lindenmayer, A.  \harvardyearleft 1968\harvardyearright , `{Mathematical Models
@@ -28,6 +62,22 @@ Liu, X., Liu, H., Hao, A. \harvardand\ Zhao, Q.  \harvardyearleft
   2010\harvardyearright , {Simulation of Blood Vessels for Surgery Simulators},
   {\em in} `\textit{2010 International Conference on Machine Vision and
   Human-machine Interface}', pp.~377--380.
+
+\harvarditem{Prusinkiewicz \harvardand\
+  Lindenmayer}{1996}{prusinkiewiczAlgorithmicBeauty}
+Prusinkiewicz, P. \harvardand\ Lindenmayer, A.  \harvardyearleft
+  1996\harvardyearright , {\em {The Algorithmic Beauty of Plants}},
+  $2^{\textrm{nd}}$ edn, Berlin, Germany: Springer-Verlag.
+
+\harvarditem{Short}{2015}{shortParrigues}
+Short, E.  \harvardyearleft 2015\harvardyearright , {\em {The Annals of the
+  Parrigues}}, self-published.
+
+\harvarditem[Trauth et~al.]{Trauth, Hora \harvardand\ Guzowski}{1993}{trth93}
+Trauth, K., Hora, S. \harvardand\ Guzowski, R.  \harvardyearleft
+  1993\harvardyearright , {Expert Judgment on Markers to Deter Inadvertent
+  Human Intrusion Into the Waste Isolation Pilot Plant}, Technical report,
+  SANDIA National Laboratories, Albuquerque.
 
 \harvarditem{Zamir}{2001}{zamirArterialBranchingLSystems}
 Zamir, M.  \harvardyearleft 2001\harvardyearright , `{Arterial Branching Within

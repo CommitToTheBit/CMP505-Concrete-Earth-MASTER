@@ -1,0 +1,37 @@
+{
+  "non-Euclidean": {
+    "productions": [
+      "LANDMARK ADJECTIVE"
+    ]
+  },
+  "jagged": {
+    "productions": [
+      "LANDMARK ADJECTIVE"
+    ]
+  },
+  "jutting": {
+    "productions": [
+      "LANDMARK ADJECTIVE"
+    ]
+  },
+  "ancient": {
+    "productions": [
+      "LANDMARK ADJECTIVE"
+    ]
+  },
+  "arithmetician": {
+    "productions": [
+      "ARCHETYPE"
+    ]
+  },
+  "polyglot": {
+    "productions": [
+      "ARCHETYPE"
+    ]
+  },
+  "exorcist": {
+    "productions": [
+      "ARCHETYPE"
+    ]
+  }
+}

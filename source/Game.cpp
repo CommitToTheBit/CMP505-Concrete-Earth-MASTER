@@ -50,26 +50,34 @@ void Game::Initialize(HWND window, int width, int height)
 	//pulled from imgui directx11 example
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGuiIO& io = ImGui::GetIO(); // FIXME: Is (void)io; necessary?
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(window);		//tie to our window
 	ImGui_ImplDX11_Init(m_deviceResources->GetD3DDevice(), m_deviceResources->GetD3DDeviceContext());	//tie to directx
 
-	m_defaultFont = io.Fonts->AddFontFromFileTTF("beneg___.ttf", 48); // NB: pt-to-px conversion: px = (4.0f/3.0f)*pt
+	m_defaultFont = io.Fonts->AddFontFromFileTTF("beneg___.ttf", 54); // NB: pt-to-px conversion: px = (4.0f/3.0f)*pt
+	m_choiceFont = io.Fonts->AddFontFromFileTTF("beneg___.ttf", 42);
+
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.ButtonTextAlign = ImVec2(0.0f, 0.5f);
+	style.FrameRounding = 12.0f;
+	style.Colors[ImGuiCol_Button] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+	style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.8f, 0.2f, 0.2f, 0.5f);
+	style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.8f, 0.2f, 0.2f, 0.75f);
 
 	//setup light
 	m_Ambience = Vector4(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light.setPosition(0.0f, 2.5f, 2.0f*m_HexBoard.m_hexRadius-1);
+	m_Light.setPosition(0.0f, 2.5f, 2.0f*m_Board.m_hexRadius-1);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
 	m_Light.setStrength(100.0f);
 
 	// FIXME: Refactor this, for 'cleaner' board set-up?
 	float twist = XM_PI/12.0f;
-	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/5.0f)*sin(twist), sin(1.0f*XM_PI/5.0f)-0.15f, cos(1.0f*XM_PI/5.0f))*cos(twist));
-	m_Camera.setRotation(Vector3(-90.0f-36.0f, -180.0f+180.0f*twist/XM_PI, 0.0f));
+	m_Camera.setPosition(7.0f*Vector3(cos(1.0f*XM_PI/8.0f)*sin(twist), sin(1.0f*XM_PI/8.0f)-0.15f, cos(1.0f*XM_PI/8.0f))*cos(twist));
+	m_Camera.setRotation(Vector3(-90.0f-22.5f, -180.0f+180.0f*twist/XM_PI, 0.0f));
 	
 #ifdef DXTK_AUDIO
     // Create DirectXTK for Audio objects
@@ -136,42 +144,38 @@ void Game::Update(DX::StepTimer const& timer)
 	// LIGHTING INPUTS:
 	//m_Light.setPosition(4.0f*cos(XM_2PI*m_time/60.0f), 1.0f, 4.0f*sin(XM_2PI*m_time/60.0f)); // NB: Modelling a day/night cycle... so far, very limited...
 	
-	// HEXBOARD INPUTS:
-	if (m_HexBoard.m_interpolating)
+	// Board INPUTS:
+	if (m_Board.m_interpolating)
 	{
-		m_HexBoard.Interpolate(2.0f*timer.GetElapsedSeconds());
+		m_Board.Interpolate(2.0f*timer.GetElapsedSeconds());
 	}
-	if (!m_HexBoard.m_interpolating) // NB: Not an 'if/else', since this would waste a frame! 
+	if (!m_Board.m_interpolating && !m_Board.Paused()) // NB: Not an 'if/else', since this would waste a frame! 
 	{
 		if (m_gameInputCommands.forward)
-			m_HexBoard.SetInterpolation(1, 0);
+			m_Board.SetInterpolation(1, 0);
 		if (m_gameInputCommands.left)
-			m_HexBoard.SetInterpolation(1, -1);
+			m_Board.SetInterpolation(1, -1);
 		if (m_gameInputCommands.right)
-			m_HexBoard.SetInterpolation(1, 1);
-		if (m_gameInputCommands.back)
-			m_HexBoard.SetInterpolation(-1, 0);
-		//	m_HexBoard.SetInterpolation(-1, 1);
-		//	m_HexBoard.SetInterpolation(-1, -1);
-		//	m_HexBoard.AddThorns(device, m_add++, 3);
-
-		// DEBUG:
-		if (m_gameInputCommands.forward || m_gameInputCommands.left || m_gameInputCommands.right)
-			m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}");
+			m_Board.SetInterpolation(1, 1);
+		//if (m_gameInputCommands.back)
+		//	m_Board.SetInterpolation(-1, 0);
+		//	m_Board.SetInterpolation(-1, 1);
+		//	m_Board.SetInterpolation(-1, -1);
+		//	m_Board.AddThorns(device, m_add++, 3);
 	}
 
 	// VIGNETTE INPUTS:
-	if (m_HexBoard.m_interpolating) //m_gameInputCommands.clockwise || m_gameInputCommands.anticlockwise)
+	if (m_Board.m_interpolating) //m_gameInputCommands.clockwise || m_gameInputCommands.anticlockwise)
 	{
-		float deltaInterpolation = 0.0f;
+		float deltaInterpolation = 1.0f;
 		//if (m_gameInputCommands.clockwise)
 		//	deltaInterpolation += 1.0f;
 		//if (m_gameInputCommands.anticlockwise)
 		//	deltaInterpolation -= 1.0f;
-		if (m_gameInputCommands.forward)
-			deltaInterpolation += 1.0f;
-		if (m_gameInputCommands.back)
-			deltaInterpolation -= 1.0f;
+		//if (m_gameInputCommands.forward)
+		//	deltaInterpolation += 1.0f;
+		//if (m_gameInputCommands.back)
+		//	deltaInterpolation -= 1.0f;
 			
 		for (int i = 0; i < m_BloodVesselCount; i++)
 		{
@@ -255,16 +259,26 @@ void Game::Render()
 	// PHYSICAL RENDER
 	m_PhysicalRenderPass->setRenderTarget(context);
 	m_PhysicalRenderPass->clearRenderTarget(context, 0.0f, 0.0f, 0.0f, 0.0f);
-	
-	// Render board...
-	/*context->OMSetDepthStencilState(m_states->DepthNone(), 0);
-	m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -3.0f/8.0f, 0.0f)*Matrix::CreateScale(8.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	m_Screen.Render(context);*/
 
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
-	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.5f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_HexBoard.Render(context, &m_LightShader, displacement, 0.9f, 0.9f, &m_Camera, m_time, &m_Light);
+	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.4f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
+	m_Board.Render(context, &m_TerrainShader, displacement, 1.0f, 0.95f, &m_Camera, m_time, &m_Light);
+
+	// DEBUG: Render three (normalised) torii, for voxel texturing...
+	/*m_VoronoiShader.EnableShader(context);
+	m_VoronoiShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateRotationY(-XM_PIDIV4)*Matrix::CreateTranslation(-1.0f, 0.0f, -1.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+	m_VoronoiShader.SetTimeBuffer(context, m_timer.GetTotalSeconds());
+	m_Torus.Render(context);
+
+	m_VoronoiShader.EnableShader(context);
+	m_VoronoiShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateRotationY(0.0f)*Matrix::CreateTranslation(0.0f, 0.0f, -1.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+	m_VoronoiShader.SetTimeBuffer(context, m_timer.GetTotalSeconds());
+	m_Torus.Render(context);
+
+	m_VoronoiShader.EnableShader(context);
+	m_VoronoiShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateRotationY(XM_PIDIV4)*Matrix::CreateTranslation(1.0f, 0.0f, -1.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+	m_VoronoiShader.SetTimeBuffer(context, m_timer.GetTotalSeconds());
+	m_Torus.Render(context);*/
 
 	// DEBUG: Render a dragon curve...
 	/*m_NeutralShader.EnableShader(context);
@@ -487,12 +501,8 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_HexBoard.Initialize(device, 4, 1);// 32);
+	m_Board.Initialize(device, 4, 16);
 	m_add = 0;
-
-	// Narrative // FIXME: Move to board?
-	m_Grammar.Initialize("");
-	m_Grammar.GenerateSentence("{LANDMARK ADJECTIVE} and {LANDMARK ADJECTIVE}");
 
 	// L-Systems
 	m_DragonCurve.Initialize(device, 0.125f, 11);
@@ -509,14 +519,23 @@ void Game::CreateDeviceDependentResources()
 	m_Screen.Initialize(device);
 	m_Cube.InitializeModel(device, "cube.obj");
 
-	// Shaders
-	m_LightShader.InitShader(device, L"light3D_vs.cso", L"light3D_ps.cso");
-	m_LightShader.InitMatrixBuffer(device);
-	m_LightShader.InitAlphaBuffer(device);
-	m_LightShader.InitLightBuffer(device);
+	Field toroidalField = Field();
+	toroidalField.Initialise(32);
+	toroidalField.InitialiseToroidalField(0.75f, 0);
+	m_Torus.Initialize(device, 32, toroidalField.m_field, 1.0f);
 
+	// Shaders
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
 	m_NeutralShader.InitMatrixBuffer(device);
+
+	m_TerrainShader.InitShader(device, L"light_3vs.cso", L"light_3ps.cso");
+	m_TerrainShader.InitMatrixBuffer(device);
+	m_TerrainShader.InitAlphaBuffer(device);
+	m_TerrainShader.InitLightBuffer(device);
+
+	m_VoronoiShader.InitShader(device, L"texture_3vs.cso", L"manhattan_voronoi_3ps.cso");
+	m_VoronoiShader.InitMatrixBuffer(device);
+	m_VoronoiShader.InitTimeBuffer(device);
 
 	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps.cso");
 	m_ScreenShader.InitMatrixBuffer(device);
@@ -563,14 +582,35 @@ void Game::SetupGUI()
 	window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoCollapse;
 
-	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.79f), ImGuiCond_Always, ImVec2(0.5f, 0.0f));
+	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.825f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
 
-	if (m_Grammar.GetSentence().length() > 0 && m_BloodVesselCount > 0)
+	float textWidth = std::max(720.0f, std::min(ImGui::CalcTextSize(m_Board.m_scene.premise.c_str()).x, 1440.0f));
+
+	ImGui::Begin((m_Board.m_scene.premise.length() > 0) ? m_Board.m_scene.premise.c_str() : " ", (bool*)true, window_flags); // NB: Nice, robust failsafe here?
+
+	// FIXME: How do we right align wrapped text? (without a ridiculous amount of code...)
+	ImGui::PushTextWrapPos(1440.0f);
+	ImGui::Text(m_Board.m_scene.premise.c_str(), ImVec2(textWidth, 0.0f));
+	ImGui::PopTextWrapPos();
+
+	// FIXME: StoryEngine buttons will be handled here...
+	ImGui::PushFont(m_choiceFont);
+	for (int i = 0; i < m_Board.m_scene.choices.size(); i++)
 	{
-		ImGui::Begin(m_Grammar.GetSentence().c_str(), (bool*)true, window_flags);
-		ImGui::Text(m_Grammar.GetSentence().c_str());
-		ImGui::End();
+		// FIXME: Needed to right align buttons...
+		/*ImGui::Dummy(ImVec2(0.25f*textWidth, 0.0f));
+		ImGui::SameLine();*/
+
+		ImGui::PushID(i);
+		if (ImGui::Button(("  "+std::to_string(i + 1)+". "+m_Board.m_scene.choices[i]).c_str(), ImVec2(0.9f*textWidth, 1.1f*m_choiceFont->FontSize)) || m_gameInputCommands.chooseReleased[i]) // NB: Input class has 'on released' logic in place, to stop the player skipping through storylets...
+		{
+			m_Board.Choose(i);
+		}
+		ImGui::PopID();
 	}
+	ImGui::PopFont();
+
+	ImGui::End();
 
 	ImGui::EndFrame();
 }

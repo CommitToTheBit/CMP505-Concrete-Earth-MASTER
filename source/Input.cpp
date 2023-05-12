@@ -29,6 +29,14 @@ void Input::Initialise(HWND window)
 
 	m_GameInput.generate	= false;
 
+	m_GameInput.choosePressed[0]	= false;
+	m_GameInput.choosePressed[1]	= false;
+	m_GameInput.choosePressed[2]	= false;
+
+	m_GameInput.chooseReleased[0]	= false;
+	m_GameInput.chooseReleased[1]	= false;
+	m_GameInput.chooseReleased[2]	= false;
+
 	m_GameInput.rotation	= DirectX::SimpleMath::Vector2::Zero;
 }
 
@@ -54,6 +62,14 @@ void Input::Update()
 	m_GameInput.down			= kb.LeftShift;
 
 	m_GameInput.generate	= kb.Tab;
+
+	m_GameInput.chooseReleased[0]	= m_GameInput.choosePressed[0] && !kb.D1 && !kb.D2 && !kb.D3;
+	m_GameInput.chooseReleased[1]	= m_GameInput.choosePressed[1] && !kb.D1 && !kb.D2 && !kb.D3 && !m_GameInput.chooseReleased[0];
+	m_GameInput.chooseReleased[2]	= m_GameInput.choosePressed[2] && !kb.D1 && !kb.D2 && !kb.D3 && !m_GameInput.chooseReleased[1];
+
+	m_GameInput.choosePressed[0]	= kb.D1;
+	m_GameInput.choosePressed[1]	= kb.D2;
+	m_GameInput.choosePressed[2]	= kb.D3;
 
 	m_GameInput.rotation	= DirectX::SimpleMath::Vector2(mouse.x, mouse.y);
 }

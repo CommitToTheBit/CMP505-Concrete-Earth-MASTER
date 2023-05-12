@@ -1,5 +1,7 @@
 #pragma once
 
+#include "StoryWorld.h"
+
 #include <iostream>
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -12,40 +14,39 @@
 
 class Grammar
 {
-
 private:
 	struct ProductionRuleType
 	{
 		std::string production;
-		
-		//std::function<float(std::string)> context; // FIXME: Expand arguments of context function!
-
-		int dryness;
 		float weight;
+		int recency;
 	};
 
 public:
 	Grammar();
 	~Grammar();
 
-	void Initialize(std::string jsonPath, float seed = 0.0f);
+	void Initialize(float seed = 0.0f);
 
-	// DEBUG:
-	void GenerateSentence(std::string axiom);
-	std::string GetSentence();
+	std::string GenerateSentence(std::string axiom, StoryWorld::StoryCharacter* subject = nullptr, StoryWorld::StoryCharacter* object = nullptr, bool nested = false); // NB: Can equally apply this to character initialisation!
 
 private:
+	void InitializeCorpus(std::string jsonPath);
+
+	std::string PostProcessSentence(std::string sentence);
+
 	void AddProductionRule(std::string letter, ProductionRuleType productionRule);
 
-	ProductionRuleType Grammar::GetProductionRule(std::string letter, bool generation = true);
+	std::string Grammar::GetProductionRule(std::string letter, StoryWorld::StoryCharacter* character = nullptr, std::string consistencyDelimiter = "", bool generation = true);
 	float GetWeight(ProductionRuleType productionRule, std::string letter);
 	float GetRNGRange(float a = -1.0f, float b = 1.0f);
 
+	int FindClosingBracket(std::string sentence);
+
 private:
 	std::map<std::string, std::vector<ProductionRuleType>> m_productionRules;
-	std::string m_sentence;
-	int m_generations;
 
 	float m_seed;
+	int m_generations;
 };
 

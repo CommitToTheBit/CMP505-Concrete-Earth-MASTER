@@ -1,32 +1,62 @@
 {
-  "Amputation": {
-    "Text": "The #PASSIVE#'s #APPENDAGE# must be amputated...",
-    "Passive Conditions": {
-      "Malaise": "> 0.75"
-    },
-    "Choice": {
-      "Pray": {
-        "Text": "Thee #ACTIVE# lays on their healing hands...",
-        "Active Conditions": {
-          "Faith": "Cloth"
-        },
-        "Hint": "Here is a pop-up description of success...",
-        "Success": {
-          "Text": "The #PASSIVE# is reinvigorated!",
-          "Passive Conditions": {
-            "Faith": "Cloth || Land"
-          },
-          "Passive Effect": {
-            "Sanity": "- 0.1"
-          }
-        },
-        "Failure": {
-          "Text": "Nothing occurs..."
-        }
-      },
-      "Neglect": {
-        "Text": "Do nothing."
+  "passenger embarks": {
+    "Beginning": {
+      "Axiom": "{*FULL NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe.",
+      "Causes": {
+        "MaxPassengers": 3,
+        "ActiveIsPassenger": false
       }
+    },
+    "Middle": [
+      {
+        "Axiom": "accept {*{*GENDER} FORENAME}'s coin...",
+        "Causes": {
+          "ActiveIsPassenger": false
+        },
+        "End": [
+          {
+            "Axiom": "you extend your talon, and welcome the {*ARCHETYPE} aboard.",
+            "Causes": {
+              "ActiveIsPassenger": false
+            },
+            "Effects": {
+              "ActiveEmbarks": true
+            }
+          }
+        ]
+      },
+      {
+        "Axiom": "turn {{*GENDER} OBJECT PRONOUN} away...",
+        "Causes": {
+          "ActiveIsPassenger": false
+        }
+      }
+    ],
+    "End": {
+      "Axiom": "you carry on, leaving poor {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} by the wayside.",
+      "Causes": {
+        "ActiveIsPassenger": false
+      }
+    }
+  },
+  "passenger disembarks": {
+    "Beginning": {
+      "Axiom": "You come to a small hamlet. {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} disembarks, thanking you profusely.",
+      "Causes": {
+        "MinPassengers": 2,
+        "ActiveIsPassenger": true
+      },
+      "Effects": {
+        "ActiveDisembarks": true
+      }
+    },
+    "Middle": [
+      {
+        "Axiom": "Rest, and resupply..."
+      }
+    ],
+    "End": {
+      "Axiom": "The plains await."
     }
   }
 }
