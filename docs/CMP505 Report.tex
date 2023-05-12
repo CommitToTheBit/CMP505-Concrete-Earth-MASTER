@@ -87,6 +87,7 @@ The following is a technical discussion of the key features of \textit{Concrete 
 
 Given the concept, this game's terrain is of course intended to evoke a sense of ``shunned land'' \citep{trth93}. In generating the jutting thorns and blocks so essential to the post-nuclear setting, though, there comes a problem - concavity. Height maps are perfectly adequate for creating rolling hills and valleys, but the fact that each of their $(x,z)$-coordinates can correspond to only one $y$-value would prevent any overhangs in \textit{Concrete Earth}'s barren landscape (see Figure \ref{Concave Terrain}).
 
+%\vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.66\textwidth]{Concave Terrain}
@@ -96,13 +97,14 @@ Given the concept, this game's terrain is of course intended to evoke a sense of
 
 %\vspace{5pt}\noindent
 \newpage\noindent
-Consider the two-dimensional analogue of this problem: how does one construct the bounding curve of a (potentially concave, or even disconnected) area? Taking an $(n+1) \times (n+1)$ grid, with $n \in \mathbb{N}$,\footnote{This could equally be an $(n+1) \times (m + 1)$ grid; keeping the dimensions the same is just `neater'.} let the scalar field $f : [0,1]^2 \rightarrow \mathbb{R}$ assign each gridpoint $(i,j)$ a corresponding value $f_{i,j} = f(i/n,j/n)$. \textit{Marching squares} can then be used to approximate the \textit{isoclines} - or informally, the `contour lines' - $f(x,y) = c$ constant. [By partitioning each of the $n \times n$ square cells according to which of its four gridpoints have $f_{i,j} > c$ (see Figure \ref{Marching Square Configurations}), an increasingly accurate curve emerges as $n \rightarrow \infty$.]
+Consider the two-dimensional analogue of this problem: how does one construct the bounding curve of a (potentially concave, or even disconnected) area? Taking an $(n+1) \times (n+1)$ grid, with $n \in \mathbb{N}$,\footnote{This could equally be an $(n+1) \times (m + 1)$ grid; keeping the dimensions the same is just `neater'.} let the scalar field $f : [0,1]^2 \rightarrow \mathbb{R}$ assign each gridpoint $(i,j)$ a corresponding value $f_{i,j} = f(i/n,j/n)$. \textit{Marching squares} can then be used to approximate the \textit{isoclines} - or informally, the `contour lines' - $f(x,y) = c$ constant. [By partitioning each of the $n \times n$ square cells according to which of its four gridpoints have $f_{i,j} < c$ (see Figure \ref{Marching Square Partitions}), an increasingly accurate curve emerges as $n \rightarrow \infty$.]
 
+\vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
-%\includegraphics[width=0.9\textwidth]{Marching Squares}
-\caption{Partitions of a marching square. With each of the $4$ gridpoints existing in one of $2$ states (`$+$' for $f_{i,j} > c$, `$-$' for $f_{i,j} \leq c$), exactly $2^4 = 16$ partitions are possible.}
-\label{Marching Square Configurations}
+\includegraphics[width=0.9\textwidth]{Marching Square Partitions}
+\caption{Partitions of a marching square. With each of the $4$ gridpoints existing in one of $2$ states (`$+$' for $f_{i,j} \geqslant c$, `$-$' for $f_{i,j} < c$, exactly $2^4 = 16$ partitions are possible.}
+\label{Marching Square Partitions}
 \end{figure}
 
 \vspace{5pt}\noindent
@@ -111,6 +113,7 @@ Consider the two-dimensional analogue of this problem: how does one construct th
 $$f(x,y) = \min\left(\left(x-0.5\right)^2+\left(y-0.5\right)^2,4\left(\left(x-0.75\right)^2+\left(y-0.75\right)^2\right)\right),$$
 a scalar field describing two overlapping circles.
 
+\vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{Marching Squares}
@@ -297,7 +300,7 @@ Indeed, how does the player feel like they have an impact, if [the grammar doesn
  
 \section{Code Organisation}
 
-[...]
+Taking a step back, i
 
 \vspace{5pt}\noindent
 Section \ref{Features} has been structured [to reflect the two fundamental stages of graphics programming: first implementing frameworks (marching cubes, L-systems), then building tangible objects out of them (terrain hexes, blood vessels)]. \textit{Concrete Earth}'s code is structured accordingly. [Using inheritance...]. [Crucially, little is left exposed in the main \textit{Game.cpp} file...].
@@ -341,6 +344,15 @@ Of course, there is a distinction to be drawn between \textit{Concrete Earth}'s 
 
 \vspace{5pt}\noindent
 [What/how would I go about cannibalising this? Screen shader first/hexes... narrative much more an early experiment in structuring content selection architectures/context-sensitive grammars...]
+
+\vspace{5pt}\noindent
+[$3$rd last: iterating marching cubes, to build intuition... justify own rundown...]
+
+\vspace{5pt}\noindent
+[$2$nd last: iterating everything...]
+
+\vspace{5pt}\noindent
+[Last: framework does not exist in isolation - tie back to CMP502 to show potential! Shaders being stripped back is a great example...]
 
 \bibliographystyle{agsm}
 \bibliography{../../Bibliography/Bibliography}
