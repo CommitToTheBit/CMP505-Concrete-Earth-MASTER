@@ -124,7 +124,11 @@ a scalar field describing two overlapping circles.
 \end{figure}
 
 \vspace{5pt}\noindent
-[Linear interpolation] Though . Again, this is just an approximation, but the improvement should be immediately apparent (see Figure \ref{Interpolated Marching Squares}).
+Perhaps Figure [...?] is unconvincing. Indeed, it [...]: for gridpoints $\mathbf{a}$, $\mathbf{b}$ such that $f_{\mathbf{a}} < c < f_{\mathbf{b}}$, the previous figures assume the partitioning line will bisect edge $AB$ exactly; if the line is to represent an isocline, then this would surely imply %visually, they suggest %implicitely, there is an assumption that
+$$f\left(0.5\mathbf{a} + 0.5\mathbf{b}\right) \approx c.$$
+Is this reasonable? Instead assuming $f$ is linear over short distances (a first-order approximation),
+$$f\left((1-t)\mathbf{a} + t\mathbf{b}\right) \approx c, \,\, \textrm{where} \,\, t = \frac{c-f_{\mathbf{a}}}{f_{\mathbf{b}}-f_{\mathbf{a}}},$$
+and so the partition intersects $AB$ at $(1-t)\mathbf{a} + t\mathbf{b}$. [Mention that we still use straight lines?] The effect of this linear interpolation should speak for itself (see Figure \ref{Interpolated Marching Squares}).
 
 \begin{figure}[h]
 \centering
