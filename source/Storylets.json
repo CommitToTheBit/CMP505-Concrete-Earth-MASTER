@@ -11,7 +11,10 @@
         "Axiom": "accept {*{*GENDER} FORENAME}'s coin...",
         "End": [
           {
-            "Axiom": "you extend your talon, and welcome the {*ARCHETYPE} aboard."
+            "Axiom": "you extend your talon, and welcome the {*ARCHETYPE} aboard.",
+            "Effects": {
+              "ActiveEmbarks": true
+            }
           }
         ]
       },
@@ -21,6 +24,25 @@
     ],
     "End": {
       "Axiom": "you carry on, leaving poor {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} by the wayside."
+    }
+  },
+  "passenger disembarks": {
+    "Beginning": {
+      "Axiom": "You come to a small hamlet. {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} disembarks, thanking you profusely.",
+      "Causes": {
+        "MinPassengers": 1
+      },
+      "Effects": {
+        "ActiveDisembarks": true
+      }
+    },
+    "Middle": [
+      {
+        "Axiom": "Rest, and resupply..."
+      }
+    ],
+    "End": {
+      "Axiom": "The steppe awaits."
     }
   }
 }
