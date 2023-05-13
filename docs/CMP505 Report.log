@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  10 MAY 2023 18:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  13 MAY 2023 13:10
 entering extended mode
 **"./CMP505 Report.tex"
 (CMP505 Report.tex
@@ -906,88 +906,110 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
  [1
 
 {C:/Users/samdr/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-<./Images//Concave Terrain.jpg, id=121, 1910.63812pt x 941.76843pt>
+<./Images//Concave Terrain.jpg, id=122, 1910.63812pt x 941.76843pt>
 File: ./Images//Concave Terrain.jpg Graphic file (type jpg)
 <use ./Images//Concave Terrain.jpg>
-Package pdftex.def Info: ./Images//Concave Terrain.jpg  used on input line 82.
-(pdftex.def)             Requested size: 435.32422pt x 214.56161pt.
+Package pdftex.def Info: ./Images//Concave Terrain.jpg  used on input line 93.
+(pdftex.def)             Requested size: 319.2417pt x 157.3538pt.
  [2 <./Images//Concave Terrain.jpg>]
-<./Images//Marching Squares.jpg, id=133, 1790.94093pt x 587.94656pt>
+<./Images//Marching Square Partitions.jpg, id=139, 2230.58344pt x 548.0475pt>
+File: ./Images//Marching Square Partitions.jpg Graphic file (type jpg)
+<use ./Images//Marching Square Partitions.jpg>
+Package pdftex.def Info: ./Images//Marching Square Partitions.jpg  used on inpu
+t line 105.
+(pdftex.def)             Requested size: 435.32422pt x 106.95663pt.
+<./Images//Marching Squares.jpg, id=141, 1790.94093pt x 587.94656pt>
 File: ./Images//Marching Squares.jpg Graphic file (type jpg)
 <use ./Images//Marching Squares.jpg>
-Package pdftex.def Info: ./Images//Marching Squares.jpg  used on input line 106
+Package pdftex.def Info: ./Images//Marching Squares.jpg  used on input line 118
 .
 (pdftex.def)             Requested size: 435.32422pt x 142.91328pt.
-<./Images//Interpolated Marching Squares.jpg, id=135, 1947.52594pt x 934.24031p
+ [3 <./Images//Marching Square Partitions.jpg> <./Images//Marching Squares.jpg>
+]
+<./Images//Interpolated Marching Squares.jpg, id=160, 1947.52594pt x 934.24031p
 t>
 File: ./Images//Interpolated Marching Squares.jpg Graphic file (type jpg)
 <use ./Images//Interpolated Marching Squares.jpg>
 Package pdftex.def Info: ./Images//Interpolated Marching Squares.jpg  used on i
-nput line 116.
+nput line 131.
 (pdftex.def)             Requested size: 435.32422pt x 208.82649pt.
+ [4 <./Images//Interpolated Marching Squares.jpg>]
+<./Images//Dragon Curves.png, id=180, 1445.4pt x 768.62157pt>
+File: ./Images//Dragon Curves.png Graphic file (type png)
+<use ./Images//Dragon Curves.png>
+Package pdftex.def Info: ./Images//Dragon Curves.png  used on input line 190.
+(pdftex.def)             Requested size: 319.2417pt x 169.76578pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[3 <./Images//Marching Squares.jpg>] [4 <./Images//Interpolated Marching Square
-s.jpg>]
-<./Images//Dragon Curves.png, id=176, 1445.4pt x 768.62157pt>
-File: ./Images//Dragon Curves.png Graphic file (type png)
-<use ./Images//Dragon Curves.png>
-Package pdftex.def Info: ./Images//Dragon Curves.png  used on input line 174.
-(pdftex.def)             Requested size: 319.2417pt x 169.76578pt.
- [5 <./Images//Dragon Curves.png>]
+[5] [6 <./Images//Dragon Curves.png>]
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-258.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 258.
+274.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 274.
 
 
 LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 258.
+(Font)              for symbol `textbraceleft' on input line 274.
 
-[6] [7] (CMP505 Report.bbl [8]) [9] (CMP505 Report.aux)
+[7]
+<./Images//Euclidean Voronoi Voxel.png, id=254, 1445.4pt x 767.11594pt>
+File: ./Images//Euclidean Voronoi Voxel.png Graphic file (type png)
+<use ./Images//Euclidean Voronoi Voxel.png>
+Package pdftex.def Info: ./Images//Euclidean Voronoi Voxel.png  used on input l
+ine 337.
+(pdftex.def)             Requested size: 319.2417pt x 169.43323pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[8] (CMP505 Report.bbl [9 <./Images//Euclidean Voronoi Voxel.png>]) [10]
+(CMP505 Report.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `"CMP505 Report".out' has not changed.
-(rerunfilecheck)             Checksum: 0AEEDF878251F541FAFBBB77237BA3E1;2649.
+(rerunfilecheck)             Checksum: 417E133F01B3BA42C63D12C50E2D94DF;2654.
  ) 
 Here is how much of TeX's memory you used:
- 23102 strings out of 479300
- 421097 string characters out of 2853552
- 712158 words of memory out of 3000000
- 40083 multiletter control sequences out of 15000+200000
+ 23131 strings out of 479300
+ 421958 string characters out of 2853552
+ 711305 words of memory out of 3000000
+ 40103 multiletter control sequences out of 15000+200000
  419270 words of font info for 85 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 87i,24n,89p,895b,592s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 87i,24n,89p,1368b,586s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
 /cm/cmbx10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
 blic/amsfonts/cm/cmbx12.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/f
-onts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/samdr/AppData/Local/Programs
-/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/samdr/AppData/L
-ocal/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/sam
-dr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><
+onts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/samdr/AppData/Local/Programs/
+MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/samdr/AppData/Loc
+al/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/samd
+r/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
 C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
-/cmr10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
-/amsfonts/cm/cmr12.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/
-type1/public/amsfonts/cm/cmr17.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTe
-X 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/samdr/AppData/Local/Pro
-grams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/samdr/AppDat
-a/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/s
-amdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pf
+/cmmi8.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
+/amsfonts/cm/cmmi9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/
+type1/public/amsfonts/cm/cmr10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTe
+X 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/samdr/AppData/Local/Pr
+ograms/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/samdr/AppD
+ata/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users
+/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pf
 b><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
-/cm/cmsy8.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pub
-lic/amsfonts/cm/cmsy9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fon
-ts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/samdr/AppData/Local/Programs/M
-iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti9.pfb><C:/Users/samdr/AppData/Loca
-l/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/samdr
-/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt9.pfb><C:
-/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/symb
-ols/msbm10.pfb>
-Output written on "CMP505 Report.pdf" (9 pages, 1411087 bytes).
+/cm/cmr9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
+ic/amsfonts/cm/cmsy10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fon
+ts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/samdr/AppData/Local/Programs/Mi
+KTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/samdr/AppData/Local
+/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/samdr/
+AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti9.pfb><C:/
+Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cm
+tt10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/a
+msfonts/cm/cmtt9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
+pe1/public/amsfonts/symbols/msam10.pfb><C:/Users/samdr/AppData/Local/Programs/M
+iKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on "CMP505 Report.pdf" (10 pages, 1846885 bytes).
 PDF statistics:
- 329 PDF objects out of 1000 (max. 8388607)
- 64 named destinations out of 1000 (max. 500000)
- 193 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 365 PDF objects out of 1000 (max. 8388607)
+ 71 named destinations out of 1000 (max. 500000)
+ 203 words of extra memory for PDF output out of 10000 (max. 10000000)
 

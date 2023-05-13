@@ -83,7 +83,7 @@ The following is a technical discussion of the key features of \textit{Concrete 
 
 %\subsection{Noise} % TECHNIQUE: Perlin/simplex noise...
 
-\subsection{Procedural Terrain} % TECHNIQUE: Marching cubes...
+\subsection{Procedural Terrain}\label{Procedural Terrain} % TECHNIQUE: Marching cubes...
 
 Given the concept, this game's terrain is of course intended to evoke a sense of ``shunned land'' \citep{trth93}. In generating the jutting thorns and blocks so essential to the post-nuclear setting, though, there comes a problem - concavity. Height maps are perfectly adequate for creating rolling hills and valleys, but the fact that each of their $(x,z)$-coordinates can correspond to only one $y$-value would prevent any overhangs in \textit{Concrete Earth}'s barren landscape (see Figure \ref{Concave Terrain}).
 
@@ -138,7 +138,7 @@ Coming back to the task at hand, then, \textit{Concrete Earth} uses \textit{marc
 
 \vspace{5pt}\noindent
 This report will not offer a full breakdown of the 3D algorithm. In particular, the finer points of the DirectX implementation - [breaking down into triangles], or identifying adjacent marching cubes to construct `smooth' vertex normals\footnote{These being averaged from the surface normals of the surrounding faces; if , then it will be weighted by $1/((\mathbf{b}-\mathbf{a})\times(\mathbf{c}-\mathbf{a})) \propto$ the inverse of its area} %, being the weighted average Each [face] [has] [area], [so...].} 
-- are deliberately . [Intention of this section, focused on intuition, guiding principle...]. Paul \citeauthor{bourkeMarchingCubes}'s \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes} remains the definitive source on the technique [whereas this report is focused on intuition?]. %... [mention marching tetrahedra? While X, marching cubes have been perfectly adequate for the purposes set out below... save this for the evaluation!].
+- are deliberately . [Intention of this section, focused on intuition, guiding principle...]. Paul \citeauthor{bourkeMarchingCubes}'s \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes} remains the definitive source on the technique, and one that this project's version relies on heavily. %... [mention marching tetrahedra? While X, marching cubes have been perfectly adequate for the purposes set out below... save this for the evaluation!].
 
 \subsubsection{Case Study: Hexes}
 
@@ -326,7 +326,11 @@ Section \ref{Features} has been structured [to reflect the two fundamental stage
 [Start with marching cubes: successful, but more to do...]
 
 \vspace{5pt}\noindent
-Marching cubes, too, have been used effectively. T
+The role of marching cubes is much more utilitarian: height maps have a well-known limitation, to which this algorithm is the well-known solution (see Section \ref{Procedural Terrain}). Implementation of the code was a significant technical challenge, but largely successful. While , it's worth noting that [solutions/next steps exist]. \citeauthor{bourkeMarchingTetrahedrons} also provides an introduction to \textit{marching tetrahedrons} \citeyearpar{bourkeMarchingTetrahedrons}, a variant of marching cubes that would hopefully improve efficiency.\footnote{[$2^4 = 16$...]} %a more efficient variant of  that \citeauthor{} find ``reduces triangle generation by $70\%$'' \citeyear{}. 
+Though a  tetrahedral grid into  [additional nuances], [having completed the basic algorithm]. %To the extent that the feature's performance. Even for moderate values of $n$, \footnote{The complexity of}%one met to great success. To the extent that the performance of the feature can be criticised,  %Marching cubes, too, have been used effectively. T
+
+\vspace{5pt}\noindent
+The more interesting discussion of 
 
 \vspace{5pt}\noindent
 \begin{figure}[h]

@@ -5,6 +5,12 @@ Bourke, P.  \harvardyearleft 1994\harvardyearright , `{Polygonising a Scalar
   Field}', Available at: \url{http://paulbourke.net/geometry/polygonise/}.
 \newblock (Accessed: 9 February 2023).
 
+\harvarditem{Bourke}{1997}{bourkeMarchingTetrahedrons}
+Bourke, P.  \harvardyearleft 1997\harvardyearright , `{Polygonising a Scalar
+  Field Using Tetrahedrons}', Available at:
+  \url{http://paulbourke.net/geometry/polygonise/}.
+\newblock (Accessed: 9 February 2023).
+
 \harvarditem{Chomsky}{1956}{chomskyHierarchy}
 Chomsky, N.  \harvardyearleft 1956\harvardyearright , `{Three Models for the
   Description of Language}', {\em IRE Transactions on Information Theory} {\bf
