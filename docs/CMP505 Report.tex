@@ -147,10 +147,30 @@ Having . 3D fields are inherently , yet these are essential to carving out \text
 \vspace{5pt}\noindent
 Having established this framework, generating terrain becomes a case of 
 
+$$\textrm{Terrain}(x,y,z) = y + \textrm{FBM}(x,y,z),$$
+including
+
+
+
+$$\textrm{Hex}(x,y,z) = \frac{\left((2x-1)^2+(2z-1)^2\right)^{1/2}\cdot\cos\left(\pi/6\right)}{\cos\left((\theta\bmod\pi/3)-\pi/6\right)}, \,\, \textrm{where} \,\, \theta = \textrm{arctan2}(2z-1, 2x-1).$$
+[...] a vertical hexagonal prism
+
+$$f_c(x,y,z) = \max\left(\textrm{Terrain}(x,y,z), \, c\cdot\textrm{Hex}(x,y,z)\right)$$
+- taking a maximum `cuts out'
+
 \vspace{5pt}\noindent
 [Bounding hexagonal prism... As much as flat faces are antithetical to marching cubes (if they run parallel to the grid, then... can't interpolate? notice that interpolation doesn't account for the degenerate case where two adjacent gridpoints are equal)...] 
 
+\begin{figure}[h]
+\centering
+%\includegraphics[width=0.66\textwidth]{Concave Terrain}
+\caption{Isoclines of $\textrm{Hex}(x,y_0,z)$, a horizontal slice of the hexagonal field.}
+\label{Hex Field}
+\end{figure}
+
 \subsubsection{Case Study: Landmarks}
+
+%\footnote{The order we apply max/min in...}
 
 \subsection{Procedural Screen Shaders}\label{Procedural Screen Shaders} % TECHNIQUE: L-systems...
 

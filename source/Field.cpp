@@ -125,7 +125,7 @@ void Field::IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius, floa
 void Field::DeriveHexPrism(ID3D11Device* device, float isolevel, bool lowerBound, bool upperBound)
 {
 	DirectX::SimpleMath::Vector2 position;
-	float r, theta, z;
+	float r, theta, modTheta, z;
 
 	int q, quadrant;
 	DirectX::SimpleMath::Vector2 quadrantDirection;
@@ -133,15 +133,16 @@ void Field::DeriveHexPrism(ID3D11Device* device, float isolevel, bool lowerBound
 	for (int f = 0; f < (m_cells+1)*(m_cells+1)*(m_cells+1); f++)
 	{
 		position = 2.0f*DirectX::SimpleMath::Vector2(m_field[f].position.x-0.5f, m_field[f].position.z-0.5f);
+
 		theta = atan2(position.y, position.x);
 		if (theta < 0.0f)
 			theta += XM_2PI;
 
-		q = 6;
-		for (quadrant = 0; theta >= ((float)quadrant+1.0f)*XM_2PI/(float)q; quadrant++) {}
-		quadrantDirection = DirectX::SimpleMath::Vector2(cos(((float)quadrant+0.5f)*XM_2PI/(float)q), sin(((float)quadrant+0.5f)*XM_2PI/(float)q));
+		modTheta = theta;
+		while (modTheta >= XM_PI/3)
+			modTheta -= XM_PI/3;
 
-		r = position.Dot(quadrantDirection)/cos(XM_PI/(float(q)));
+		r = (cos(modTheta-XM_PI/6)/cos(XM_PI/6))*position.Length();
 		m_field[f].scalar = std::max(m_field[f].scalar, isolevel*r);
 
 		if (lowerBound)
