@@ -142,21 +142,20 @@ This report will not offer a full breakdown of the 3D algorithm. In particular, 
 
 \subsubsection{Case Study: Hexes}
 
-Having . 3D fields are inherently , yet these are essential to carving out \textit{Concrete Earth}'s landscape.
+Having established this framework, generating terrain becomes a matter of writing the right scalar field. [Ironically enough, ...is similar enough a height map]. %Having . 3D fields are inherently , yet these are essential to carving out \textit{Concrete Earth}'s landscape.
 
 \vspace{5pt}\noindent
 Having established this framework, generating terrain becomes a case of 
 
-$$\textrm{Terrain}(x,y,z) = y + \textrm{FBM}(x,y,z),$$
-including
+$$\textrm{Height}(\mathbf{x}) = y + 0.1\cdot\textrm{FBM}(\mathbf{x}),$$
+[...] with a (scaled down to avoid obvious `floating islands'). This report treats the underlying simplex noise as a black box; [justification].
 
-
-
-$$\textrm{Hex}(x,y,z) = \frac{\left((2x-1)^2+(2z-1)^2\right)^{1/2}\cdot\cos\left(\pi/6\right)}{\cos\left((\theta\bmod\pi/3)-\pi/6\right)}, \,\, \textrm{where} \,\, \theta = \textrm{arctan2}(2z-1, 2x-1).$$
+\vspace{5pt}\noindent
+To then [...].
+$$\textrm{Hex}(\mathbf{x}) = \frac{\left((2x-1)^2+(2z-1)^2\right)^{1/2}\cdot\cos\left(\pi/6\right)}{\cos\left((\theta\bmod\pi/3)-\pi/6\right)}, \,\, \textrm{where} \,\, \theta = \textrm{arctan2}(2z-1, 2x-1).$$
 [...] a vertical hexagonal prism
-
-$$f_c(x,y,z) = \max\left(\textrm{Terrain}(x,y,z), \, c\cdot\textrm{Hex}(x,y,z)\right)$$
-- taking a maximum `cuts out'
+$$\textrm{Terrain}_c(\mathbf{x}) = \max\left(\textrm{Height}(\mathbf{x}), \, c\cdot\textrm{Hex}(\mathbf{x})\right).$$
+[Explain maximum; explain $c$.]%taking a maximum `cuts out'
 
 \vspace{5pt}\noindent
 [Bounding hexagonal prism... As much as flat faces are antithetical to marching cubes (if they run parallel to the grid, then... can't interpolate? notice that interpolation doesn't account for the degenerate case where two adjacent gridpoints are equal)...] 
@@ -170,7 +169,19 @@ $$f_c(x,y,z) = \max\left(\textrm{Terrain}(x,y,z), \, c\cdot\textrm{Hex}(x,y,z)\r
 
 \subsubsection{Case Study: Landmarks}
 
-%\footnote{The order we apply max/min in...}
+apex $\mathbf{a}$, base with centre $\mathbf{b}$, and half angle $\phi$,
+
+$$\textrm{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \frac{1}{\phi}\arccos\left(\frac{\left(\mathbf{x}-\mathbf{a}\right)\cdot\left(\mathbf{b}-\mathbf{a}\right)}{\left|\mathbf{x}-\mathbf{a}\right|\cdot\left|\mathbf{b}-\mathbf{a}\right|}\right).$$
+Much like before,
+$$\textrm{Landmark}_{c;\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \min\left(\textrm{Terrain}_c(\mathbf{x}), \, c\cdot\textrm{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x})\right),$$
+noting %\footnote{The order we apply max/min in...}
+
+
+\vspace{5pt}\noindent
+[Explain how we add randomness to thorns]. That said, [smooth, geometric structure].
+
+\vspace{5pt}\noindent
+All landmarks follow this same pattern.
 
 \subsection{Procedural Screen Shaders}\label{Procedural Screen Shaders} % TECHNIQUE: L-systems...
 
