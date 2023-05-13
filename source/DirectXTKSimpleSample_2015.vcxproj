@@ -190,6 +190,7 @@
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LPenroseP3.h" />
     <ClInclude Include="LSphinxTiling.h" />
     <ClInclude Include="LSystem.h" />
     <ClInclude Include="LBloodVessel.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LPenroseP3.cpp" />
     <ClCompile Include="LSphinxTiling.cpp" />
     <ClCompile Include="LSystem.cpp" />
     <ClCompile Include="LBloodVessel.cpp" />

@@ -145,6 +145,9 @@
     <ClInclude Include="LDeterministicBloodVessel.h">
       <Filter>Modelling\LSystemModels</Filter>
     </ClInclude>
+    <ClInclude Include="LPenroseP3.h">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -240,6 +243,9 @@
       <Filter>Modelling</Filter>
     </ClCompile>
     <ClCompile Include="LDeterministicBloodVessel.cpp">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClCompile>
+    <ClCompile Include="LPenroseP3.cpp">
       <Filter>Modelling\LSystemModels</Filter>
     </ClCompile>
   </ItemGroup>

@@ -14,6 +14,7 @@
 
 #include "LDragonCurve.h"
 #include "LSphinxTiling.h"
+#include "LPenroseP3.h"
 #include "LDeterministicBloodVessel.h"
 #include "LBloodVessel.h"
 
@@ -145,6 +146,7 @@ private:
     // L-Systems
     LDragonCurve                                                            m_DragonCurve;
     LSphinxTiling                                                           m_SphinxTiling;
+    LPenroseP3                                                              m_PenroseP3;
 
     std::vector<LDeterministicBloodVessel>                                  m_DeterministicBloodVessels;
     std::vector<LBloodVessel>                                               m_StochasticBloodVessels;
