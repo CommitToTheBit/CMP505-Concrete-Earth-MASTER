@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  13 MAY 2023 18:53
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  13 MAY 2023 19:37
 entering extended mode
 **"./CMP505 Report.tex"
 (CMP505 Report.tex
@@ -933,35 +933,41 @@ File: ./Images//Interpolated Marching Squares.jpg Graphic file (type jpg)
 Package pdftex.def Info: ./Images//Interpolated Marching Squares.jpg  used on i
 nput line 131.
 (pdftex.def)             Requested size: 435.32422pt x 208.82649pt.
- [4 <./Images//Interpolated Marching Squares.jpg>] [5]
-<./Images//Dragon Curves.png, id=191, 1445.4pt x 768.62157pt>
+ [4 <./Images//Interpolated Marching Squares.jpg>]
+<./Images//Hex Field.jpg, id=172, 1500.35532pt x 844.65562pt>
+File: ./Images//Hex Field.jpg Graphic file (type jpg)
+<use ./Images//Hex Field.jpg>
+Package pdftex.def Info: ./Images//Hex Field.jpg  used on input line 166.
+(pdftex.def)             Requested size: 319.2417pt x 179.71571pt.
+ [5 <./Images//Hex Field.jpg>]
+<./Images//Dragon Curves.png, id=186, 1445.4pt x 768.62157pt>
 File: ./Images//Dragon Curves.png Graphic file (type png)
 <use ./Images//Dragon Curves.png>
-Package pdftex.def Info: ./Images//Dragon Curves.png  used on input line 221.
+Package pdftex.def Info: ./Images//Dragon Curves.png  used on input line 225.
 (pdftex.def)             Requested size: 319.2417pt x 169.76578pt.
- [6 <./Images//Dragon Curves.png>]
-LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-305.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 305.
-
-
-LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
-(Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 305.
-
-[7] [8]
-<./Images//Euclidean Voronoi Voxel.png, id=270, 1445.4pt x 767.11594pt>
-File: ./Images//Euclidean Voronoi Voxel.png Graphic file (type png)
-<use ./Images//Euclidean Voronoi Voxel.png>
-Package pdftex.def Info: ./Images//Euclidean Voronoi Voxel.png  used on input l
-ine 390.
-(pdftex.def)             Requested size: 319.2417pt x 169.43323pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[9] [10 <./Images//Euclidean Voronoi Voxel.png>] (CMP505 Report.bbl) [11]
-[12] (CMP505 Report.aux)
+[6] [7 <./Images//Dragon Curves.png>]
+LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
+309.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 309.
+
+
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbraceleft' on input line 309.
+
+[8] [9]
+<./Images//Euclidean Voronoi Voxel.png, id=276, 1445.4pt x 767.11594pt>
+File: ./Images//Euclidean Voronoi Voxel.png Graphic file (type png)
+<use ./Images//Euclidean Voronoi Voxel.png>
+Package pdftex.def Info: ./Images//Euclidean Voronoi Voxel.png  used on input l
+ine 394.
+(pdftex.def)             Requested size: 319.2417pt x 169.43323pt.
+ [10 <./Images//Euclidean Voronoi Voxel.png>] (CMP505 Report.bbl
+[11]) [12] (CMP505 Report.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -969,13 +975,13 @@ Package rerunfilecheck Info: File `"CMP505 Report".out' has not changed.
 (rerunfilecheck)             Checksum: 54249D16273B807856B9E292AC48AC44;2654.
  ) 
 Here is how much of TeX's memory you used:
- 23146 strings out of 479300
- 422131 string characters out of 2853552
- 712438 words of memory out of 3000000
- 40108 multiletter control sequences out of 15000+200000
+ 23155 strings out of 479300
+ 422315 string characters out of 2853552
+ 712439 words of memory out of 3000000
+ 40116 multiletter control sequences out of 15000+200000
  419270 words of font info for 85 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 87i,24n,89p,1368b,561s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 87i,24n,89p,1368b,598s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
 /cm/cmbx10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
 blic/amsfonts/cm/cmbx12.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/f
@@ -1003,9 +1009,9 @@ tt10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/a
 msfonts/cm/cmtt9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
 pe1/public/amsfonts/symbols/msam10.pfb><C:/Users/samdr/AppData/Local/Programs/M
 iKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on "CMP505 Report.pdf" (12 pages, 1858388 bytes).
+Output written on "CMP505 Report.pdf" (12 pages, 2151095 bytes).
 PDF statistics:
- 387 PDF objects out of 1000 (max. 8388607)
+ 388 PDF objects out of 1000 (max. 8388607)
  81 named destinations out of 1000 (max. 500000)
- 203 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 208 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -152,7 +152,7 @@ $$\textrm{Height}(\mathbf{x}) = y + 0.1\cdot\textrm{FBM}(\mathbf{x}),$$
 
 \vspace{5pt}\noindent
 To then [...].
-$$\textrm{Hex}(\mathbf{x}) = \frac{\left((2x-1)^2+(2z-1)^2\right)^{1/2}\cdot\cos\left(\pi/6\right)}{\cos\left((\theta\bmod\pi/3)-\pi/6\right)}, \,\, \textrm{where} \,\, \theta = \textrm{arctan2}(2z-1, 2x-1).$$
+$$\textrm{Hex}(\mathbf{x}) = \frac{\sqrt{(2x-1)^2+(2z-1)^2}\cos\left((\theta\bmod\pi/3)-\pi/6\right)}{\cos\left(\pi/6\right)}, \,\, \textrm{where} \,\, \theta = \textrm{arctan2}\left(2z-1, 2x-1\right).$$
 [...] a vertical hexagonal prism
 $$\textrm{Terrain}_c(\mathbf{x}) = \max\left(\textrm{Height}(\mathbf{x}), \, c\cdot\textrm{Hex}(\mathbf{x})\right).$$
 [Explain maximum; explain $c$.]%taking a maximum `cuts out'
@@ -160,9 +160,10 @@ $$\textrm{Terrain}_c(\mathbf{x}) = \max\left(\textrm{Height}(\mathbf{x}), \, c\c
 \vspace{5pt}\noindent
 [Bounding hexagonal prism... As much as flat faces are antithetical to marching cubes (if they run parallel to the grid, then... can't interpolate? notice that interpolation doesn't account for the degenerate case where two adjacent gridpoints are equal)...] 
 
+\vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
-%\includegraphics[width=0.66\textwidth]{Concave Terrain}
+\includegraphics[width=0.66\textwidth]{Hex Field}
 \caption{Isoclines of $\textrm{Hex}(x,y_0,z)$, a horizontal slice of the hexagonal field.}
 \label{Hex Field}
 \end{figure}
@@ -173,7 +174,7 @@ apex $\mathbf{a}$, base with centre $\mathbf{b}$, and half angle $\phi$,
 
 $$\textrm{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \frac{1}{\phi}\arccos\left(\frac{\left(\mathbf{x}-\mathbf{a}\right)\cdot\left(\mathbf{b}-\mathbf{a}\right)}{\left|\mathbf{x}-\mathbf{a}\right|\cdot\left|\mathbf{b}-\mathbf{a}\right|}\right).$$
 Much like before,
-$$\textrm{Landmark}_{c;\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \min\left(\textrm{Terrain}_c(\mathbf{x}), \, c\cdot\textrm{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x})\right),$$
+$$\textrm{Landmark}_{c;\,\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \min\left(\textrm{Terrain}_c(\mathbf{x}), \, c\cdot\textrm{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x})\right),$$
 noting %\footnote{The order we apply max/min in...}
 
 
@@ -182,6 +183,9 @@ noting %\footnote{The order we apply max/min in...}
 
 \vspace{5pt}\noindent
 All landmarks follow this same pattern.
+
+\vspace{5pt}\noindent
+[Figure: High-quality render of 3x2 tiles (top down and on angle)]
 
 \subsection{Procedural Screen Shaders}\label{Procedural Screen Shaders} % TECHNIQUE: L-systems...
 
