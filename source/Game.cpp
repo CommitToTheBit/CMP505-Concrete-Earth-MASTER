@@ -282,11 +282,19 @@ void Game::Render()
 
 	// DEBUG: Render a dragon curve...
 	/*m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5, 0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 	context->RSSetState(m_states->CullCounterClockwise());
 	m_DragonCurve.Render(context);
 	context->RSSetState(m_states->CullClockwise());
 	m_DragonCurve.Render(context);*/
+
+	// DEBUG: Render a sphinx tiling...
+	m_NeutralShader.EnableShader(context);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.375f, 0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	context->RSSetState(m_states->CullCounterClockwise());
+	m_SphinxTiling.Render(context);
+	context->RSSetState(m_states->CullClockwise());
+	m_SphinxTiling.Render(context);
 
 	// DEBUG: Render Zamir's model of arterial branching...
 	/*for (int i = 0; i < m_DeterministicBloodVessels.size(); i++)
@@ -304,17 +312,17 @@ void Game::Render()
 	}*/
 
 	// DEBUG: Render exemplar, stochastic blood vessels...
-	for (int i = 0; i < m_StochasticBloodVessels.size(); i++)
+	/*for (int i = 0; i < m_StochasticBloodVessels.size(); i++)
 	{
 		float xOffset = i-0.5f*(m_StochasticBloodVessels.size()-1);
 
 		m_NeutralShader.EnableShader(context);
-		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(0.9f)*Matrix::CreateTranslation(0.25f*xOffset, 0.015f, 0.0f)*Matrix::CreateScale(2.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(0.9f)*Matrix::CreateTranslation(0.25f*xOffset, 0.0f, 0.0f)*Matrix::CreateScale(2.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 		context->RSSetState(m_states->CullCounterClockwise()); // NB: MatrixBuffer uses 'true' on both sides, since we aren't applying lighting to the model anyway!
 		m_StochasticBloodVessels[i].Render(context);
 		context->RSSetState(m_states->CullClockwise());
 		m_StochasticBloodVessels[i].Render(context);
-	}
+	}*/
 
 	// VEINS RENDER:
 	m_VeinsRenderPass->setRenderTarget(context);
@@ -520,25 +528,25 @@ void Game::CreateDeviceDependentResources()
 	m_add = 0;
 
 	// L-Systems
-	m_DragonCurve.Initialize(device, 0.125f, 11);
-	m_DragonCurve.Update(device, 0.0f, 1.0f); // NB: Static, so setting initial intensity here!
+	/*m_DragonCurve.Initialize(device, 0.125f, 11);
+	m_DragonCurve.Update(device, 0.0f, 1.0f); // NB: Static, so setting initial intensity here!*/
 
 	m_SphinxTiling.Initialize(device, 0.01f, 5);
 	m_SphinxTiling.Update(device, 0.0f, 1.0f);
 
-	for (int i = 0; i < 5; i++)
+	/*for (int i = 0; i < 5; i++)
 	{
 		m_DeterministicBloodVessels.push_back(LDeterministicBloodVessel());
 		m_DeterministicBloodVessels[i].Initialize(device, 0.1f, 1.0f-(1.0f/5.0f)*i, 9);
 		m_DeterministicBloodVessels[i].Update(device, 0.0f, 1.0f);
-	}
+	}*/
 
-	for (int i = 0; i < 6; i++)
+	/*for (int i = 0; i < 6; i++)
 	{
 		m_StochasticBloodVessels.push_back(LBloodVessel());
 		m_StochasticBloodVessels[i].Initialize(device, 0.1f, 16, i);
 		m_StochasticBloodVessels[i].Update(device, 0.0f, 1.0f);
-	}
+	}*/
 
 	m_BloodVesselCount = 16;
 	for (int i = 0; i < m_BloodVesselCount; i++)
