@@ -121,11 +121,10 @@ a scalar field describing two overlapping circles.
 \end{figure}
 
 \vspace{5pt}\noindent
-Perhaps Figure [...?] is unconvincing. Indeed, it [...]: for gridpoints $\mathbf{a}$, $\mathbf{b}$ such that $f_{\mathbf{a}} < c < f_{\mathbf{b}}$, the previous figures assume the partitioning line will bisect edge $AB$ exactly; if the line is to represent an isoline, then this would surely imply %visually, they suggest %implicitely, there is an assumption that
-$$f\left(0.5\mathbf{a} + 0.5\mathbf{b}\right) \approx c.$$
-Is this reasonable? Instead assuming $f$ is linear over short distances (a first-order approximation),
-$$f\left((1-t)\mathbf{a} + t\mathbf{b}\right) \approx c, \,\, \textrm{where} \,\, t = \frac{c-f_{\mathbf{a}}}{f_{\mathbf{b}}-f_{\mathbf{a}}},$$
-and so the partition intersects $AB$ at $(1-t)\mathbf{a} + t\mathbf{b}$. [Mention that we still use straight lines?] The effect of this linear interpolation should speak for itself (see Figure \ref{Interpolated Marching Squares}).
+%\newpage\noindent
+Consider gridpoints $\mathbf{a}$, $\mathbf{b}$, such that $f_{\mathbf{a}} < c < f_{\mathbf{b}}$. By Figure \ref{Marching Square Partitions}, their partitioning line will bisect edge $AB$ exactly - if the partition is to represent an isoline, then it surely requires $f\left(0.5\mathbf{a} + 0.5\mathbf{b}\right) \approx c$, but this is a rather arbirtrary assumption about the scalar field. Instead making the standard, first-order approximation that $f$ is linear over short distances, it would follow that
+$$f\left((1-t)\mathbf{a} + t\mathbf{b}\right) \approx c, \,\, \textrm{where} \,\, t = \frac{c-f_{\mathbf{a}}}{f_{\mathbf{b}}-f_{\mathbf{a}}}.$$
+Understanding that it is more accurate for the partition to intersect $AB$ at $(1-t)\mathbf{a} + t\mathbf{b}$, linear interpolation can be accounted for in the marching squares algorithm (see Figure \ref{Interpolated Marching Squares}).
 
 \begin{figure}[h]
 \centering
@@ -135,10 +134,11 @@ and so the partition intersects $AB$ at $(1-t)\mathbf{a} + t\mathbf{b}$. [Mentio
 \end{figure}
 
 \vspace{5pt}\noindent
-In much the same way, \textit{Concrete Earth} uses \textit{marching cubes} to generate \textit{isosurfaces} bounding 3D volumes. Outside of the expected changes - scalar fields now operate on domain $[0,1]^3$, vertices now have $2^8 = 256$ possible configurations along [the edges of] each marching cube - this is actually a rather straightforward generalisation.
+Coming back to the task at hand, then, \textit{Concrete Earth} uses \textit{marching cubes} to generate \textit{isosurfaces} bounding 3D volumes. Partitioning with surfaces... (which, ). [Outside of the expected changes - scalar fields now operate on domain $[0,1]^3$, vertices now have $2^8 = 256$ possible configurations along [the edges of] each marching cube - this is actually a rather straightforward generalisation.]
 
 \vspace{5pt}\noindent
-[These are just the broad strokes; nuance to, say, weighing vertex normals correctly]. Definitive... Paul Bourke's \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes} remains the definitive source on the matter. %... [mention marching tetrahedra? While X, marching cubes have been perfectly adequate for the purposes set out below... save this for the evaluation!].
+[These are just the broad strokes; nuance to, say, weighing vertex normals correctly] - [breaking down into triangles], or identifying adjacent marching cubes to construct `smooth' vertex normals\footnote{These being averaged from the surface normals of the surrounding faces; if , then it will be weighted by $1/((\mathbf{b}-\mathbf{a})\times(\mathbf{c}-\mathbf{a})) \propto$ the inverse of its area} %, being the weighted average Each [face] [has] [area], [so...].} 
+- are deliberately . Definitive... Paul Bourke's \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes} remains the definitive source on the matter. %... [mention marching tetrahedra? While X, marching cubes have been perfectly adequate for the purposes set out below... save this for the evaluation!].
 
 \subsubsection{Case Study: Hexes}
 
