@@ -14,6 +14,7 @@
 
 #include "LDragonCurve.h"
 #include "LSphinxTiling.h"
+#include "LDeterministicBloodVessel.h"
 #include "LBloodVessel.h"
 
 #include "StoryEngine.h"
@@ -144,6 +145,9 @@ private:
     // L-Systems
     LDragonCurve                                                            m_DragonCurve;
     LSphinxTiling                                                           m_SphinxTiling;
+
+    std::vector<LDeterministicBloodVessel>                                  m_DeterministicBloodVessels;
+    std::vector<LBloodVessel>                                               m_StochasticBloodVessels;
 
     int                                                                     m_BloodVesselCount;
     std::vector<LBloodVessel>                                               m_BloodVessels;

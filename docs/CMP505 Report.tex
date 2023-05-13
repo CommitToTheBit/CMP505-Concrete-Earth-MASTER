@@ -252,9 +252,9 @@ $$\mathbf{C}(l,w,\theta) \mapsto \mathbf{X}(l,w,\theta)[\mathbf{C}(l_M,w_M,\thet
 %\vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
-%\includegraphics[width=0.66\textwidth]{Dragon Curves}
-\caption{\citeauthor{zamirArterialBranchingLSystems}'s model of arterial branching, with asymmetry ratios $\alpha = 1.0, 0.8, \cdots, 0.2$.}
-\label{Zamir Branching}
+\includegraphics[width=0.66\textwidth]{Zamir's Model}
+\caption{[\citeauthor{zamirArterialBranchingLSystems}'s model of arterial branching, with asymmetry ratios $\alpha = 1.0, 0.8, \cdots, 0.2$.]}
+\label{Zamir's Model}
 \end{figure}
 
 %\vspace{5pt}\noindent
@@ -279,17 +279,17 @@ $$\mathbf{C}(l,w,\theta) \mapsto \mathbf{X}(l,w,\theta)[\mathbf{C}(l_M,w_M,\thet
 %\end{matrix*}$$
 
 \vspace{5pt}\noindent
-\citet{liuSimulationBloodVessels} expand on this by introducing a stochastic component - that is to say, they allow [a more random structure]. \textit{Untitled} incorporates such randomness into its own rules for blood vessels:
+\citet{liuSimulationBloodVessels} expand on this by introducing a stochastic component - that is to say, they allow [a more random structure]. \textit{Concrete Earth} incorporates such randomness into its own rules for blood vessels:
 $$\begin{matrix*}[l]
-\mathbf{C}(l,w,\theta) &\xmapsto[0.4]{} &\mathbf{X}(l,w,\theta)[\mathbf{L}(l_M,w_M,\theta+\theta_M)]\mathbf{R}(l_m,w_m,\theta-\theta_m) \\
-\mathbf{C}(l,w,\theta) &\xmapsto[0.4]{} &\mathbf{X}(l,w,\theta)[\mathbf{L}(l_m,w_m,\theta+\theta_m)]\mathbf{R}(l_M,w_M,\theta-\theta_M) \\
-\mathbf{C}(l,w,\theta) &\xmapsto[0.2]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l,w,\theta) \\
+\mathbf{C}(l,w,\theta) &\xmapsto[0.45]{} &\mathbf{X}(l,w,\theta)[\mathbf{L}(l_M,w_M,\theta+\theta_M)]\mathbf{R}(l_m,w_m,\theta-\theta_m) \\
+\mathbf{C}(l,w,\theta) &\xmapsto[0.45]{} &\mathbf{X}(l,w,\theta)[\mathbf{L}(l_m,w_m,\theta+\theta_m)]\mathbf{R}(l_M,w_M,\theta-\theta_M) \\
+\mathbf{C}(l,w,\theta) &\xmapsto[0.10]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l,w,\theta) \\
 & & \\
-\mathbf{L}(l,w,\theta) &\xmapsto[1.0]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l_M,w_M,\theta-\theta_M) \\
+\mathbf{L}(l,w,\theta) &\xmapsto[1.00]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l_M,w_M,\theta-\theta_M) \\
 & & \\
-\mathbf{R}(l,w,\theta) &\xmapsto[1.0]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l_M,w_M,\theta+\theta_M)
+\mathbf{R}(l,w,\theta) &\xmapsto[1.00]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l_M,w_M,\theta+\theta_M)
 \end{matrix*}$$
-These describe a capillary with a 40\% chance of bifurcating with branch $M$ tacking clockwise, a 40\% chance of bifurcating with $M$ tacking anticlockwise, and a 20\% chance of extending forwards without any branching. The determinstic production rules on $\mathbf{L}$, $\mathbf{R}$ provide course correction, guaranteeing the [...]; further informal tweaks can be found in the \texttt{LBloodVessel} class, all intended to get the final look of the L-systems `right' (see Figure [reference]). 
+These describe a capillary with a 45\% chance of bifurcating with branch $M$ tacking clockwise, a 45\% chance of bifurcating with $M$ tacking anticlockwise, and a 10\% chance of extending forwards without any branching. The determinstic production rules on $\mathbf{L}$, $\mathbf{R}$ provide course correction, guaranteeing the [...]; further informal tweaks can be found in the \texttt{LBloodVessel} class, all intended to get the final look of the L-systems `right' (see Figure [reference]). 
 
 \vspace{5pt}\noindent
 [Figure of blood vessels in isolation]

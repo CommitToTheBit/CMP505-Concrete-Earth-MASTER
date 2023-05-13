@@ -142,6 +142,9 @@
     <ClInclude Include="Hex.h">
       <Filter>Modelling</Filter>
     </ClInclude>
+    <ClInclude Include="LDeterministicBloodVessel.h">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -235,6 +238,9 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Hex.cpp">
       <Filter>Modelling</Filter>
+    </ClCompile>
+    <ClCompile Include="LDeterministicBloodVessel.cpp">
+      <Filter>Modelling\LSystemModels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

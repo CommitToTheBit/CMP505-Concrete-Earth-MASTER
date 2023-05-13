@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  13 MAY 2023 19:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  13 MAY 2023 20:58
 entering extended mode
 **"./CMP505 Report.tex"
 (CMP505 Report.tex
@@ -949,7 +949,17 @@ Package pdftex.def Info: ./Images//Dragon Curves.png  used on input line 225.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[6] [7 <./Images//Dragon Curves.png>]
+[6]
+
+LaTeX Warning: Reference `Zamir Branching' on page 7 undefined on input line 24
+9.
+
+<./Images//Zamir's Model.png, id=211, 1445.4pt x 767.86874pt>
+File: ./Images//Zamir's Model.png Graphic file (type png)
+<use ./Images//Zamir's Model.png>
+Package pdftex.def Info: ./Images//Zamir's Model.png  used on input line 255.
+(pdftex.def)             Requested size: 319.2417pt x 169.59949pt.
+[7 <./Images//Dragon Curves.png> <./Images//Zamir's Model.png>]
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
 309.
 LaTeX Font Info:    No file OMScmtt.fd. on input line 309.
@@ -960,7 +970,7 @@ LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              for symbol `textbraceleft' on input line 309.
 
 [8] [9]
-<./Images//Euclidean Voronoi Voxel.png, id=276, 1445.4pt x 767.11594pt>
+<./Images//Euclidean Voronoi Voxel.png, id=277, 1445.4pt x 767.11594pt>
 File: ./Images//Euclidean Voronoi Voxel.png Graphic file (type png)
 <use ./Images//Euclidean Voronoi Voxel.png>
 Package pdftex.def Info: ./Images//Euclidean Voronoi Voxel.png  used on input l
@@ -971,17 +981,23 @@ ine 394.
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package rerunfilecheck Info: File `"CMP505 Report".out' has not changed.
 (rerunfilecheck)             Checksum: 54249D16273B807856B9E292AC48AC44;2654.
  ) 
 Here is how much of TeX's memory you used:
- 23155 strings out of 479300
- 422315 string characters out of 2853552
+ 23164 strings out of 479300
+ 422533 string characters out of 2853552
  712439 words of memory out of 3000000
- 40116 multiletter control sequences out of 15000+200000
+ 40124 multiletter control sequences out of 15000+200000
  419270 words of font info for 85 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 87i,24n,89p,1368b,598s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 87i,24n,89p,1368b,591s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
 /cm/cmbx10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
 blic/amsfonts/cm/cmbx12.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/f
@@ -1009,9 +1025,9 @@ tt10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/a
 msfonts/cm/cmtt9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
 pe1/public/amsfonts/symbols/msam10.pfb><C:/Users/samdr/AppData/Local/Programs/M
 iKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on "CMP505 Report.pdf" (12 pages, 2104243 bytes).
+Output written on "CMP505 Report.pdf" (12 pages, 2144656 bytes).
 PDF statistics:
- 388 PDF objects out of 1000 (max. 8388607)
+ 389 PDF objects out of 1000 (max. 8388607)
  81 named destinations out of 1000 (max. 500000)
- 208 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 213 words of extra memory for PDF output out of 10000 (max. 10000000)
 
