@@ -533,7 +533,7 @@ void Game::CreateDeviceDependentResources()
 	m_TerrainShader.InitAlphaBuffer(device);
 	m_TerrainShader.InitLightBuffer(device);
 
-	m_VoronoiShader.InitShader(device, L"texture_3vs.cso", L"manhattan_voronoi_3ps.cso");
+	m_VoronoiShader.InitShader(device, L"texture_3vs.cso", L"euclidean_voronoi_3ps.cso");
 	m_VoronoiShader.InitMatrixBuffer(device);
 	m_VoronoiShader.InitTimeBuffer(device);
 

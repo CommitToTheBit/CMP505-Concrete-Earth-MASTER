@@ -124,7 +124,7 @@ a scalar field describing two overlapping circles.
 %\newpage\noindent
 Consider gridpoints $\mathbf{a}$, $\mathbf{b}$, such that $f_{\mathbf{a}} < c < f_{\mathbf{b}}$. By Figure \ref{Marching Square Partitions}, their partitioning line will bisect edge $AB$ exactly - if the partition is to represent an isoline, then it surely requires $f\left(0.5\mathbf{a} + 0.5\mathbf{b}\right) \approx c$, but this is a rather arbirtrary assumption about the scalar field. Instead making the standard, first-order approximation that $f$ is linear over short distances, it would follow that
 $$f\left((1-t)\mathbf{a} + t\mathbf{b}\right) \approx c, \,\, \textrm{where} \,\, t = \frac{c-f_{\mathbf{a}}}{f_{\mathbf{b}}-f_{\mathbf{a}}}.$$
-Understanding that it is more accurate for the partition to intersect $AB$ at $(1-t)\mathbf{a} + t\mathbf{b}$, linear interpolation can be accounted for in the marching squares algorithm (see Figure \ref{Interpolated Marching Squares}).
+Understanding that it is more accurate for the partition to intersect $AB$ at $(1-t)\mathbf{a} + t\mathbf{b}$, such linear interpolation is integrated into the marching squares algorithm (see Figure \ref{Interpolated Marching Squares}).
 
 \begin{figure}[h]
 \centering
@@ -137,8 +137,8 @@ Understanding that it is more accurate for the partition to intersect $AB$ at $(
 Coming back to the task at hand, then, \textit{Concrete Earth} uses \textit{marching cubes} to generate \textit{isosurfaces} bounding 3D volumes. Partitioning with surfaces... (which, ). [Outside of the expected changes - scalar fields now operate on domain $[0,1]^3$, vertices now have $2^8 = 256$ possible configurations along [the edges of] each marching cube - this is actually a rather straightforward generalisation.]
 
 \vspace{5pt}\noindent
-[These are just the broad strokes; nuance to, say, weighing vertex normals correctly] - [breaking down into triangles], or identifying adjacent marching cubes to construct `smooth' vertex normals\footnote{These being averaged from the surface normals of the surrounding faces; if , then it will be weighted by $1/((\mathbf{b}-\mathbf{a})\times(\mathbf{c}-\mathbf{a})) \propto$ the inverse of its area} %, being the weighted average Each [face] [has] [area], [so...].} 
-- are deliberately . Definitive... Paul Bourke's \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes} remains the definitive source on the matter. %... [mention marching tetrahedra? While X, marching cubes have been perfectly adequate for the purposes set out below... save this for the evaluation!].
+This report will not offer a full breakdown of the 3D algorithm. In particular, the finer points of the DirectX implementation - [breaking down into triangles], or identifying adjacent marching cubes to construct `smooth' vertex normals\footnote{These being averaged from the surface normals of the surrounding faces; if , then it will be weighted by $1/((\mathbf{b}-\mathbf{a})\times(\mathbf{c}-\mathbf{a})) \propto$ the inverse of its area} %, being the weighted average Each [face] [has] [area], [so...].} 
+- are deliberately . [Intention of this section, focused on intuition, guiding principle...]. Paul \citeauthor{bourkeMarchingCubes}'s \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes} remains the definitive source on the technique [whereas this report is focused on intuition?]. %... [mention marching tetrahedra? While X, marching cubes have been perfectly adequate for the purposes set out below... save this for the evaluation!].
 
 \subsubsection{Case Study: Hexes}
 
@@ -299,8 +299,11 @@ Indeed, how does the player feel like they have an impact, if [the grammar doesn
 \subsubsection{Content Selection Architectures} \textit{Storylets} \citep{kreminskiStorylets} are [definition].
 
 \vspace{5pt}\noindent
-[Though conceptually no different, ... , our `narrative stack'...]
+In \textit{Concrete Earth}, these storylets are envisioned as the means for these [global changes]. [Discuss a beginning-middle-end structure].%[Though conceptually no different, ... , our `narrative stack'...]
  
+\vspace{5pt}\noindent
+The current implementation is limited. [Conditions: randomness]. [Effects: entering/exiting the party].
+
 \section{Code Organisation}
 
 Taking a step back, [...].
@@ -323,7 +326,15 @@ Section \ref{Features} has been structured [to reflect the two fundamental stage
 [Start with marching cubes: successful, but more to do...]
 
 \vspace{5pt}\noindent
-[L-systems: far more robust...]
+Marching cubes, too, have been used effectively. T
+
+\vspace{5pt}\noindent
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.66\textwidth]{Euclidean Voronoi Voxel}
+\caption{3D Voronoi noise. While voxel textures [would have...]}
+\label{Euclidean Voronoi Voxel}
+\end{figure}
 
 \vspace{5pt}\noindent
 To the extent that \textit{Concrete Earth} has any single `special feature', though, it would surely be its approach to procedural storytelling. [...]
