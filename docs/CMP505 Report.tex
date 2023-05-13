@@ -302,18 +302,18 @@ These describe a capillary with a 40\% chance of bifurcating with branch $M$ tac
 
 \subsubsection{Grammars}
 
-Given their origin in linguistics, it is perhaps unsurprising that grammars (see Section \ref{Procedural Screen Shaders}) are of use in the field of procedural narrative - \textit{Tracery} \citep{comptonTracery} being the prime example. From a mathematical perspective, this is a stochastic, context-free grammar, with uniformly-distributed production rules for each non-terminal; it iterates a given axiom until all non-terminals (demarcated by \texttt{\{BRACE\}} delimiters) have been replaced. To bemoan the generator as better suited to Twitter bots than immersive storytelling is to misunderstand its design. \citeauthor{comptonTracery} present a lightweight tool that is left \textit{deliberately} narrow, intended for ease-of-use amongst even the most fledgling authors.
+Given their origin in linguistics, it is perhaps unsurprising that grammars (see Section \ref{Procedural Screen Shaders}) find use in the field of procedural narrative - \textit{Tracery} \citep{comptonTracery} being the prime example. From a mathematical perspective, this is a stochastic, context-free grammar, with uniformly-distributed production rules for each non-terminal; it iterates a given axiom until all non-terminals (demarcated by \texttt{\{BRACE\}} delimiters) have been replaced. To bemoan the generator as better suited to Twitter bots than immersive storytelling is to misunderstand its design. \citeauthor{comptonTracery} present a lightweight tool that is left \textit{deliberately} narrow, intended for ease-of-use amongst even the most fledgling authors.
 
 \vspace{5pt}\noindent
-More substantial works, then, adapt \textit{Tracery}'s grammar-based approach to their own specifications. In \textit{The Annals of the Parrigues}, \citeauthor{shortParrigues} uses a consistent, context-sensitive generator that ``defines any facts about the world that aren’t already defined at the moment of generation'' (\citeyear{shortParrigues}, p. 83). \textit{Voyageur} \citep{diasVoyageur} attaches weightings to the distributions of its production rules \citep{diasVoyageurDescriptions}. Produceral storytelling is an art form; as much as \textit{Concrete Earth} wears these influences on its sleeve, to try and consolidate these into an `optimal', one-size-fits-all generator would be missing the point. This project therefore uses an implementation of \textit{Tracery} with a couple of custom modifications tailored to its own needs.
+More substantial works, then, adapt \textit{Tracery}'s grammar-based approach to their own specifications. In \textit{The Annals of the Parrigues}, \citeauthor{shortParrigues} uses a consistent, context-sensitive generator that ``defines any facts about the world that aren’t already defined at the moment of generation'' (\citeyear{shortParrigues}, p. 83). \textit{Voyageur} \citep{diasVoyageur} attaches weightings to the distributions of its production rules \citep{diasVoyageurDescriptions}. Produceral storytelling is an art form; as much as \textit{Concrete Earth} wears the above influences on its sleeve, to try and consolidate these into an `optimal', one-size-fits-all generator would be missing the point. This project therefore uses an implementation of \textit{Tracery} with its own custom modifications.
 
-\paragraph{Recency} [Clear, one sentence goal: avoid unnecessary repetition with recency].\footnote{\textit{Improv}, the generator for \textit{Voyageur}, calls this same quality `dryness'.} \textit{Concrete Earth} defines this by rank: given a non-terminal with $N$ possible production rules, the most recently used rule is will have a recency of $N-1$, the second most recent $N-2$, and so on down to the rule that has been used longest ago (or indeed, never been used), with recency $0$. Though it [does not consider the actual time interval between these uses, nor the \textit{second} most ], this metric is already enough to achieve the desired effect \citep{kazemiSimpleProceduralGeneration}.
-
-\vspace{5pt}\noindent
-[Second paragraph: how does this affect weighting?] $p^{n/(N-1)}$, such that (all other weightings being equal), the most recently used rule (with $n = N-1$) will be $p$ times as likely as the least recent ($n = 0$).\footnote{The same string \texttt{alpha} might replace two different non-terminals \texttt{\#A\#}, \texttt{\#B\#}. Recognising these as distinct production rules, the recency with which one was applied to \texttt{\#A\#} has no bearing on when the other is applied to \texttt{\#B\#}, or vice versa.} 
+\paragraph{Recency} To reduce repetition of a word or phrase, one might consider when it has last been used. \textit{Concrete Earth} treats this as a rank: given a non-terminal with $N$ possible production rules, the most recently used rule will have a \textit{recency}\footnote{Or `dryness', as \textit{Improv}, the generator for \textit{Voyageur}, would call it.} of $N-1$, the second most recent $N-2$, and so on down to the rule that has been used longest ago (or indeed, never been used), with recency $0$. Though it does not account for the intervals between uses, nor the second, third, etc, most recent use, this metric is already robust enough to achieve the desired effect \citep{kazemiSimpleProceduralGeneration}.
 
 \vspace{5pt}\noindent
-Note that [joint recency!].
+These ranks are straightforwardly integrating into the production rules' probability distribution. The likelihood of a rule with recency $n$ is scaled by $p^{n/(N-1)}$, such that (all other weightings being equal) the most recently used rule will be $p$ times as likely as the least recent.\footnote{The same string \texttt{alpha} might replace two different non-terminals \texttt{\#A\#}, \texttt{\#B\#}. Recognising these as distinct production rules, the recency with which one was applied to \texttt{\#A\#} has no bearing on when the other is applied to \texttt{\#B\#}, or vice versa.} 
+
+%\vspace{5pt}\noindent
+%Note that [joint recency!].
 
 \paragraph{Characterisation} [Consistency discussion...]
 
@@ -321,6 +321,9 @@ Note that [joint recency!].
 
 \vspace{5pt}\noindent
 [Link back to consistency...]
+
+\vspace{5pt}\noindent
+[EXAMPLE: Pronouns!]
 
 \vspace{5pt}\noindent
 This is still too limited, from a dramatic perspective. For all this effort to [maintain consistency], personality is not immutable; so much of good storytelling relies on character \textit{development}.
