@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  13 MAY 2023 19:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  13 MAY 2023 19:48
 entering extended mode
 **"./CMP505 Report.tex"
 (CMP505 Report.tex
@@ -934,11 +934,11 @@ Package pdftex.def Info: ./Images//Interpolated Marching Squares.jpg  used on i
 nput line 131.
 (pdftex.def)             Requested size: 435.32422pt x 208.82649pt.
  [4 <./Images//Interpolated Marching Squares.jpg>]
-<./Images//Hex Field.jpg, id=172, 1500.35532pt x 844.65562pt>
+<./Images//Hex Field.jpg, id=172, 964.35281pt x 844.65562pt>
 File: ./Images//Hex Field.jpg Graphic file (type jpg)
 <use ./Images//Hex Field.jpg>
 Package pdftex.def Info: ./Images//Hex Field.jpg  used on input line 166.
-(pdftex.def)             Requested size: 319.2417pt x 179.71571pt.
+(pdftex.def)             Requested size: 217.66211pt x 190.64507pt.
  [5 <./Images//Hex Field.jpg>]
 <./Images//Dragon Curves.png, id=186, 1445.4pt x 768.62157pt>
 File: ./Images//Dragon Curves.png Graphic file (type png)
@@ -1009,7 +1009,7 @@ tt10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/a
 msfonts/cm/cmtt9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
 pe1/public/amsfonts/symbols/msam10.pfb><C:/Users/samdr/AppData/Local/Programs/M
 iKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on "CMP505 Report.pdf" (12 pages, 2151095 bytes).
+Output written on "CMP505 Report.pdf" (12 pages, 2104243 bytes).
 PDF statistics:
  388 PDF objects out of 1000 (max. 8388607)
  81 named destinations out of 1000 (max. 500000)
