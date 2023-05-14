@@ -99,7 +99,7 @@ Given the concept, this game's terrain is of course intended to evoke a sense of
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.9\textwidth]{Marching Square Partitions}
-\caption{Partitions of a marching square. With each of the $4$ gridpoints existing in one of $2$ states (`$+$' for $f_{i,j} \geqslant c$, `$-$' for $f_{i,j} < c$), exactly $2^4 = 16$ partitions are possible.} % NB: $4$, ignoring symmetries!
+\caption{Linear partitions of a marching square. With $4$ gridpoints, each existing in one of $2$ states (`$+$' for $f_{i,j} \geqslant c$, `$-$' for $f_{i,j} < c$), exactly $2^4 = 16$ partitions are possible.} % NB: $4$, ignoring symmetries!
 \label{Marching Square Partitions}
 \end{figure}
 
@@ -114,7 +114,7 @@ Given the concept, this game's terrain is of course intended to evoke a sense of
 
 %\vspace{5pt}\noindent
 %\newpage\noindent
-Consider the two-dimensional analogue of this problem: how does one construct the bounding curve of a (potentially concave, or even disconnected) area? Consider an $n \times n$ square grid, with $n \in \mathbb{N}$.\footnote{This could equally be an $n \times m$ grid; keeping the dimensions the same is just neater.} Let a scalar field $f : [0,1]^2 \rightarrow \mathbb{R}$ assign each gridpoint $(i,j)$ a corresponding value $f_{i,j} = f(i/n,j/n)$. Figure \ref{Marching Square Partitions} shows how to partition a cell so as to enclose the gridpoints with $f_{i,j} < c$ constant - drawing such a partition into every cell of the grid will therefore approximate the \textit{isoline}\footnote{Informally, a `contour line' of the $2D$ field.} $f(x,y) = c$, with increasing accuracy as $n \rightarrow \infty$.%In each cell of the grid, straight lines can be drawn to  For each square cell, a line can be Consider%Under this construction, it is possible to approximate the \textit{isoclines}\footnote{Informally, the `contour lines' of the field.} $f(x,y) = c$ constant. Suppose%[By partitioning each of the $n \times n$ square cells according to which of its four gridpoints have $f_{i,j} < c$ (see Figure \ref{Marching Square Partitions}), an increasingly accurate curve emerges as $n \rightarrow \infty$.]
+Take the two-dimensional analogue of this problem: how does one construct the bounding curve of a (potentially concave, or even disconnected) area? Consider an $n \times n$ square grid, with $n \in \mathbb{N}$,\footnote{This could equally be an $n \times m$ grid; keeping the dimensions the same is just neater.} and let a scalar field $f : [0,1]^2 \rightarrow \mathbb{R}$ assign each gridpoint $(i,j)$ a corresponding value $f_{i,j} = f(i/n,j/n)$. Figure \ref{Marching Square Partitions} shows how to partition a cell so as to enclose the gridpoints with $f_{i,j} < c$ constant. Drawing such a partition into every cell of the grid will therefore approximate the \textit{isoline}\footnote{Informally, a `contour line' of the $2D$ field.} $f(x,y) = c$, with increasing accuracy as $n \rightarrow \infty$.%In each cell of the grid, straight lines can be drawn to  For each square cell, a line can be Consider%Under this construction, it is possible to approximate the \textit{isoclines}\footnote{Informally, the `contour lines' of the field.} $f(x,y) = c$ constant. Suppose%[By partitioning each of the $n \times n$ square cells according to which of its four gridpoints have $f_{i,j} < c$ (see Figure \ref{Marching Square Partitions}), an increasingly accurate curve emerges as $n \rightarrow \infty$.]
 
 
 
@@ -130,21 +130,15 @@ Consider gridpoints $\mathbf{a}$, $\mathbf{b}$, such that $f_{\mathbf{a}} < c < 
 $$f\left((1-t)\mathbf{a} + t\mathbf{b}\right) \approx c, \,\, \textrm{where} \,\, t = \frac{c-f_{\mathbf{a}}}{f_{\mathbf{b}}-f_{\mathbf{a}}}.$$
 Understanding that it is more accurate for the partition to intersect $AB$ at $(1-t)\mathbf{a} + t\mathbf{b}$, such linear interpolation is integrated into the marching squares algorithm (see Figure \ref{Interpolated Marching Squares}).
 
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.9\textwidth]{Interpolated Marching Squares}
 \caption{Bounding curve $f(x,y) = 0.16$, before and after linear intepolation.}
 \label{Interpolated Marching Squares}
 \end{figure}
 
-\vspace{5pt}\noindent
-Returning to the task at hand, then, \textit{Concrete Earth} uses \textit{marching cubes} to generate the \textit{isosurfaces} bounding 3D volumes. This requires an $n \times n \times n$ grid, and a new scalar field $f: \left[0,1\right]^3 \rightarrow \mathbb{R}$, and rather than straight lines, the algorithm now uses planar surfaces to partition cubic cells by which gridpoints $(i,j,k)$ satisfy $f_{i,j,k} < c$ (again using linear interpolation to best approximate isosurfaces). The guiding principle, however, remains the same. While $3D$ fields can be hard to visualise
-
-%While there are superficial changes (there are $2^8 = 256$ possible partitions of each marching cube!), the main difference is that 3D fields are just that much harder to visualise. [intuition]
-
-%The algorithm is a straightforward generalisation of the 2D case.
-
-%Partitioning with surfaces... (which, ). [Outside of the expected changes - scalar fields now operate on domain $[0,1]^3$, vertices now have $2^8 = 256$ possible configurations along [the edges of] each marching cube - this is actually a rather straightforward generalisation.]
+%\vspace{5pt}\noindent
+Returning to the problem at hand, \textit{Concrete Earth} uses \textit{marching cubes} to generate the \textit{isosurfaces} bounding 3D volumes. This requires an $n \times n \times n$ grid, and a new field $f: \left[0,1\right]^3 \rightarrow \mathbb{R}$, the algorithm now filling cubic cells with planar surfaces to partition the gridpoints $(i,j,k)$ satisfying $f_{i,j,k} < c$ (again using linear interpolation to best approximate  the `true' isosurface). [TWO FINAL SENTENCES HERE]. %The guiding principle, however, remains the same. While 3D fields can be hard to visualise
 
 \vspace{5pt}\noindent
 This section will not cover the finer points of the DirectX implementation - not how it deconstructs partitioning surfaces into triangles for the vertex/index buffers, nor how it identifies adjacent marching cubes so as to calculate `smooth' vertex normals\footnote{A weighted average over the surface normals of the surrounding triangular faces; if a face has vertices $\mathbf{a}$, $\mathbf{b}$, $\mathbf{c}$, it will be weighted by $1/|(\mathbf{b}-\mathbf{a})\times(\mathbf{c}-\mathbf{a})| \propto$ the inverse of its area}. The rest of the report will only require a high-level understanding of \textit{Concrete Earth}'s terrain. Paul \citeauthor{bourkeMarchingCubes}'s \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes} remains the definitive source on the marching cubes. %, and one that this project's code relies on heavily.
@@ -153,7 +147,7 @@ This section will not cover the finer points of the DirectX implementation - not
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.66\textwidth]{Dragon Curves}
-\caption{Bounding curve $f(x,y) = 0.16$, before and after linear intepolation.}
+\caption{Planara partitions of a marching cube, before linear interpolation. There are $15$ fundamental cases, ignoring symmetries; the code itself considers all $2^8 = 256$ possible configurations.}
 \label{Interpolated Marching Squares}
 \end{figure}
 
