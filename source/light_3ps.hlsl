@@ -30,7 +30,7 @@ float4 main(InputType input) : SV_TARGET
 
     // STEP 1: Sample from the base textures to calculate the pixel's base colour
     //float4 textureColor = float4(input.tex3D.x, input.tex3D.y, input.tex3D.z, 1.0f);
-    float4 textureColor = float4(0.1f, 0.1f, 1.0f, 1.0f);
+    float4 textureColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
     // STEP 2: Calculate lighting hitting pixel
     float3 lightDirection = normalize(input.position3D - lightPosition);

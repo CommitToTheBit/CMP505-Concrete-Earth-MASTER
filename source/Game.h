@@ -144,8 +144,8 @@ private:
 
     MarchingCubes                                                           m_Torus; // DEBUG...
 
-    MarchingCubes                                                           m_Wireframe;
-    MarchingCubes                                                           m_Partitions[14];
+    MarchingCubes                                                           m_Wireframe; // DEBUG...
+    MarchingCubes                                                           m_Partitions[14]; // DEBUG...
 
     // L-Systems
     LDragonCurve                                                            m_DragonCurve;
