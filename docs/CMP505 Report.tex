@@ -352,7 +352,7 @@ These ranks are straightforwardly integrating into the production rules' probabi
 \vspace{5pt}\noindent
 The grammar's \texttt{GenerateSentence} function, therefore, accepts (up to) two pointers to \texttt{StoryCharacter} structs. These are handled by three \textit{consistency markers}: %Not clear enough - relate to braces!
 \begin{itemize}[noitemsep]
-\item \verb|*|\textit{:} The term \verb|{*A}| tells the grammar to check the first character argument for key \verb|A|. If a value exist, this will be substituted  [If yes; if else], and stored in the character struct for future use.
+\item \verb|*|\textit{:} The term \verb|{*A}| tells the grammar to check the first character argument for key \verb|A|. If a value exists, this will be substituted  [If yes; if else], and stored in the character struct for future use.
 \item \verb|**|\textit{:} The term \verb|{**A}| similarly applies to the second character argument.
 \item \verb|?|\textit{:} %[THIRD EXAMPLE: Consider \verb|{?BARREL #1}-{?BARREL #2}|, (signifying a double-barrelled surname): if 
 .\footnote{Note that \texttt{?} can also inherit an empty string, if the preceding non-terminal is not being remembered.}
@@ -380,11 +380,12 @@ Consider how \textit{Concrete Earth}. Using a
 In this case, the grammar terminates after a single iteration. Should \verb|{*BARREL #1}-{*BARREL #2}| (signifying a double-barrelled surname) have replaced \verb|{*SURNAME}|, however, the new non-terminals would needed handled on a second parse.
 
 \vspace{5pt}\noindent
-This might feel too limited, from a dramatic perspective. For all this effort to [maintain consistency], personality is not so immutable; so much of good storytelling relies on character \textit{development}.
-Indeed, how does the player feel like they have an impact, if [the grammar doesn't have permission to make changes]? \textit{Concrete Earth} surely requires some sort of override...
+This might feel too limited, from a dramatic perspective. Personality is not immutable; for all this focus on consistency, good storytelling is just as reliant on character \textit{development}. Indeed, as a piece of interactive fiction, the player requires a means of meaningful interaction. The grammar surely requires some sort of override...
 %Does this make sense, dramaturgically?
 
-\subsubsection{Content Selection Architectures} \textit{Storylets} \citep{kreminskiStorylets} are [definition].
+\subsubsection{Content Selection Architectures} 
+
+\textit{Storylets} \citep{kreminskiStorylets} are [definition].
 
 \vspace{5pt}\noindent
 In \textit{Concrete Earth}, these storylets are envisioned as the means for these [global changes]. [Discuss a beginning-middle-end structure].%[Though conceptually no different, ... , our `narrative stack'...]

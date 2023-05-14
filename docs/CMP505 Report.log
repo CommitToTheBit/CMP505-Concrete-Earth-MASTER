@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  14 MAY 2023 14:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  14 MAY 2023 15:06
 entering extended mode
 **"./CMP505 Report.tex"
 (CMP505 Report.tex
@@ -993,7 +993,7 @@ LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 File: ./Images//Euclidean Voronoi Voxel.png Graphic file (type png)
 <use ./Images//Euclidean Voronoi Voxel.png>
 Package pdftex.def Info: ./Images//Euclidean Voronoi Voxel.png  used on input l
-ine 444.
+ine 445.
 (pdftex.def)             Requested size: 319.2417pt x 169.43323pt.
  [13 <./Images//Euclidean Voronoi Voxel.png>] (CMP505 Report.bbl [14]) [15] (CM
 P505 Report.aux)
@@ -1042,7 +1042,7 @@ onts/cm/cmtt10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type
 1/public/amsfonts/cm/cmtt9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.
 9/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/samdr/AppData/Local/
 Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on "CMP505 Report.pdf" (15 pages, 2277755 bytes).
+Output written on "CMP505 Report.pdf" (15 pages, 2277694 bytes).
 PDF statistics:
  430 PDF objects out of 1000 (max. 8388607)
  92 named destinations out of 1000 (max. 500000)
