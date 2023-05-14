@@ -27,9 +27,6 @@ public:
 	void SetInterpolation(int north, int east);
 	void Interpolate(float t);
 
-	// DEBUG: Testing interactivity...
-	void AddThorns(ID3D11Device*, int hex, int thorns);
-
 	// Changing scene...
 	void Choose(int choice);
 	bool Paused();
@@ -39,7 +36,7 @@ private:
 	void ApplyInterpolationPermutation();
 
 public: // FIXME: Left off while still accessed in Game.cpp...
-	int m_hexRadius, m_hexDiameter, m_hexes; // total tiles: 1+3*m_hexRadius*(m_hexRadius+1)
+	int m_hexRadius, m_hexDiameter, m_hexCount; // total tiles: 1+3*m_hexRadius*(m_hexRadius+1)
 	int* m_hexCoordinates;
 	int* m_hexPermutation;
 
@@ -47,7 +44,7 @@ public: // FIXME: Left off while still accessed in Game.cpp...
 	Field m_horizontalField;
 
 	float* m_hexIsolevels;
-	MarchingCubes* m_hexModels; // new MarchingTerrain[1+3*m_hexRadius*(m_hexRadius+1)]
+	Hex* m_hexModels; // new MarchingTerrain[1+3*m_hexRadius*(m_hexRadius+1)]
 
 	static const DirectX::SimpleMath::Vector3 m_origin, m_p, m_q;
 
@@ -60,6 +57,7 @@ public: // FIXME: Left off while still accessed in Game.cpp...
 
 	// Storylets...
 	StoryEngine::Scene m_scene;
+	int m_sceneInterval;
 
 private:
 	StoryEngine m_storyEngine;

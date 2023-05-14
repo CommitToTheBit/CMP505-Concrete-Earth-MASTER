@@ -3,21 +3,7 @@
 
 StoryEngine::StoryEngine()
 {
-	// DEBUG: Fixed storylet...
-	/*m_storylet.beginning.axiom = "{*FULL NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe.";
 
-	m_storylet.middle = std::vector<Storylet::Text>(2);
-	m_storylet.middle[0].axiom = "accept {*{*GENDER} FORENAME}'s coin...";
-	m_storylet.middle[1].axiom = "turn {{*GENDER} OBJECT PRONOUN} away...";
-
-	m_storylet.end = std::vector<std::vector<Storylet::Text>>(2);
-	m_storylet.end[0] = std::vector<Storylet::Text>(2);
-	m_storylet.end[0][0].axiom = "you extend your talon, and welcome the {*ARCHETYPE} aboard.";
-	m_storylet.end[0][1].axiom = "you carry on, leaving poor {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} by the wayside.";
-	m_storylet.end[1] = std::vector<Storylet::Text>(1);
-	m_storylet.end[1][0].axiom = "you carry on, leaving poor {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} by the wayside.";
-
-	m_storylet.progressed = false;*/
 }
 
 StoryEngine::~StoryEngine()
@@ -34,9 +20,6 @@ void StoryEngine::Initialize(float seed)
 
 StoryEngine::Scene StoryEngine::StartScene(std::string landmark)
 {
-	if (landmark == "salt")
-		return Scene();
-
 	// RESET TEMPS...
 	m_world.active = StoryWorld::StoryCharacter();
 	m_world.passive = StoryWorld::StoryCharacter();
@@ -120,4 +103,9 @@ void StoryEngine::ApplyEffects(Storylet::Text* text)
 			m_world.passenger.erase(m_world.passenger.begin() + index); // FIXME: Does this affect passive's pointer address? Surely..
 		}
 	}
+}
+
+int StoryEngine::GetPartySize()
+{
+	return m_world.passenger.size();
 }

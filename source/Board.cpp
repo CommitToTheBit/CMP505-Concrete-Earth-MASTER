@@ -21,17 +21,17 @@ Board::~Board()
 
 bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 {
+	hexRadius = std::max(hexRadius, 1);
+
 	m_hexRadius = hexRadius;
 	m_hexDiameter = (2*hexRadius+1);
-	m_hexes = 1+3*hexRadius*(hexRadius+1); // NB: We add an 'outer ring' of repeated hexes
+	m_hexCount = 1+3*hexRadius*(hexRadius+1); // NB: We add an 'outer ring' of repeated hexes
 
 	m_hexCoordinates = new int[(m_hexDiameter+2)*(m_hexDiameter+2)];
-	m_hexPermutation = new int[m_hexes];
+	m_hexPermutation = new int[m_hexCount];
 
-	m_hexIsolevels = new float[m_hexes];
-	m_hexModels = new MarchingCubes[m_hexes];
-
-	Field* hexField = new Field();
+	m_hexIsolevels = new float[m_hexCount];
+	m_hexModels = new Hex[m_hexCount];
 
 	m_horizontalField.Initialise(cells);
 	m_horizontalField.InitialiseHorizontalField(6,0.1f);
@@ -49,17 +49,18 @@ bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 
 			m_hexIsolevels[index] = 0.15f+0.15f*std::rand()/RAND_MAX;
 
-			hexField->Initialise(&m_horizontalField);
-			hexField->DeriveHexPrism(m_hexIsolevels[index]);
-
-			m_hexModels[index].Initialize(device, cells, hexField->m_field, m_hexIsolevels[index]);
+			if (std::rand()%6 == 0)
+			{
+				m_hexModels[index].InitializeThorn(device, &m_horizontalField, m_hexIsolevels[index]);
+			}
+			else
+			{
+				m_hexModels[index].InitializeSalt(device, &m_horizontalField, m_hexIsolevels[index]);
+			}
 
 			m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1] = index;
 			m_hexPermutation[index] = index;// (index+m_hexes/2)%m_hexes;
 
-			// DEBUG: Used for display purposes...
-			if (index%5 == 0)
-				AddThorns(device, index, 3);
 
 			index++;
 		}
@@ -72,11 +73,14 @@ bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 	m_t = 0.0f;
 	m_direction = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
 
-	delete hexField;
+	//delete hexField;
 
 	// Storylets...
 	m_storyEngine.Initialize();
-	m_scene = m_storyEngine.StartScene("thorn");
+
+	int playerIndex = m_hexPermutation[m_hexCoordinates[2*(m_hexDiameter+2)+2]]; // NB: Player's current hex...
+	m_scene = m_storyEngine.StartScene(m_hexModels[playerIndex].m_suit);
+	m_sceneInterval = 0;
 
 	return true;
 }
@@ -144,8 +148,12 @@ void Board::Interpolate(float t)
 	m_north = 0;
 	m_east = 0;
 
-	// FIXME: Make this dependent on hex landmark!
-	m_scene = m_storyEngine.StartScene("thorn");
+	int playerIndex = m_hexPermutation[m_hexCoordinates[2*(m_hexDiameter+2)+2]]; // NB: Player's current hex...
+	if (m_hexModels[playerIndex].m_suit != "salt" || ++m_sceneInterval >= 7-m_storyEngine.GetPartySize()) // NB: A larger party size means more frequent events of interest!
+	{
+		m_scene = m_storyEngine.StartScene(m_hexModels[playerIndex].m_suit);
+		m_sceneInterval = 0;
+	}
 }
 
 void Board::SetInterpolationPerimeter()
@@ -216,7 +224,7 @@ void Board::ApplyInterpolationPermutation()
 	if (m_north == 0)
 		return;
 
-	int* hexPermutation = new int[m_hexes];
+	int* hexPermutation = new int[m_hexCount];
 
 	int ijColumn, ijColumnLength;
 	int	iPermuted, jPermuted;
@@ -262,7 +270,7 @@ void Board::ApplyInterpolationPermutation()
 	m_hexPermutation = hexPermutation;
 }
 
-void Board::AddThorns(ID3D11Device* device, int hex, int thorns)
+/*void Board::AddThorns(ID3D11Device* device, int hex, int thorns)
 {
 	hex = (hex%m_hexes+m_hexes)%m_hexes;
 
@@ -297,7 +305,7 @@ void Board::AddThorns(ID3D11Device* device, int hex, int thorns)
 	m_hexModels[hex].Initialize(device, hexField->m_cells, hexField->m_field, m_hexIsolevels[hex]);
 
 	delete hexField;
-}
+}*/
 
 void Board::Choose(int choice)
 {
