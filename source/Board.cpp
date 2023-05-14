@@ -56,7 +56,7 @@ bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 			}
 			else if (landmark < 3)
 			{
-				m_hexModels[index].InitializeShrapnel(device, &m_horizontalField, m_hexIsolevels[index]);
+				m_hexModels[index].InitializeMonolith(device, &m_horizontalField, m_hexIsolevels[index]);
 			}
 			else
 			{

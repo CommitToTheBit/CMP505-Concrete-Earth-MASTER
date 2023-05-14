@@ -123,7 +123,7 @@ void Field::IntegrateShrapnel(DirectX::SimpleMath::Vector3 origin, DirectX::Simp
 	{
 		position = 2.0f*(m_field[f].position-origin);
 		DirectX::SimpleMath::Vector3::Transform(position, DirectX::SimpleMath::Matrix::CreateFromAxisAngle(axis, angle), position); // FIXME: Hacky use of rotations?
-		shrapnel = std::max(abs(position.x/dimensions.x), std::max(abs(position.y/dimensions.y), abs(position.z/dimensions.z)));
+		shrapnel = std::max((1.0f+m_field[f].position.y)*abs(position.x/dimensions.x), std::max(abs(position.y/dimensions.y), (1.0f+m_field[f].position.y)*abs(position.z/dimensions.z)));
 
 		m_field[f].scalar = std::min(m_field[f].scalar, isolevel*shrapnel);
 	}

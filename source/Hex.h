@@ -12,7 +12,7 @@ public:
 
 	void InitializeSalt(ID3D11Device*, Field* heightField, float isolevel);
 	void InitializeThorn(ID3D11Device*, Field* heightField, float isolevel);
-	void InitializeShrapnel(ID3D11Device*, Field* heightField, float isolevel);
+	void InitializeMonolith(ID3D11Device*, Field* heightField, float isolevel);
 
 public:
 	std::string m_suit;
