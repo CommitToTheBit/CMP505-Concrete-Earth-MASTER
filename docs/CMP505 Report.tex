@@ -42,7 +42,7 @@
 
 
 
-\newpage
+%\newpage\noindent
 \section{User Controls}
 
 The user plays as a carriage driver, journeying forwards over an endless map. Periodically, they will be stopped by a `multiple-choice' event; an option must be selected before continuing. Such is the core game loop of \textit{Concrete Earth}.
@@ -95,6 +95,7 @@ Given the concept, this game's terrain is of course intended to evoke a sense of
 \label{Concave Terrain}
 \end{figure}
 
+\newpage\noindent
 %\vspace{5pt}\noindent
 \begin{figure}[t]
 \centering
@@ -156,14 +157,14 @@ This section will not cover the finer points of the DirectX implementation - not
 
 Indeed, having established this framework, generating a landscape becomes a matter of writing the right scalar field. [Barren land, so start on a flat foundation...]. %Having . 3D fields are inherently , yet these are essential to carving out \textit{Concrete Earth}'s landscape.
 
-$$\textrm{Height}(\mathbf{x}) = y + 0.1\cdot\textrm{FBM}(\mathbf{x}),$$
+$$\textbf{Height}(\mathbf{x}) = y + 0.1\cdot\textbf{FBM}(\mathbf{x}),$$
 [...] with a (scaled down to avoid obvious `floating islands'). This report treats the underlying simplex noise as a black box; [justification].
 
 \vspace{5pt}\noindent
 The first significant [...].
-$$\textrm{Hex}(\mathbf{x}) = \frac{\sqrt{(2x-1)^2+(2z-1)^2}\cos\left((\theta\bmod\pi/3)-\pi/6\right)}{\cos\left(\pi/6\right)}, \,\, \textrm{where} \,\, \theta = \textrm{arctan2}\left(2z-1, 2x-1\right).$$
+$$\textbf{Hex}(\mathbf{x}) = \frac{\sqrt{(2x-1)^2+(2z-1)^2}\cos\left((\theta\bmod\pi/3)-\pi/6\right)}{\cos\left(\pi/6\right)}, \,\, \textrm{where} \,\, \theta = \textrm{arctan2}\left(2z-1, 2x-1\right).$$
 [...] a vertical hexagonal prism
-$$\textrm{Terrain}_c(\mathbf{x}) = \max\left(\textrm{Height}(\mathbf{x}), \, c\cdot\textrm{Hex}(\mathbf{x})\right).$$
+$$\textbf{Terrain}_c(\mathbf{x}) = \max\left(\textbf{Height}(\mathbf{x}), \, c\cdot\textbf{Hex}(\mathbf{x})\right).$$
 [Explain maximum; explain $c$.]%taking a maximum `cuts out'
 
 \vspace{5pt}\noindent
@@ -173,7 +174,7 @@ $$\textrm{Terrain}_c(\mathbf{x}) = \max\left(\textrm{Height}(\mathbf{x}), \, c\c
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.66\textwidth]{Hex Field}
-\caption{Isolines of $\textrm{Hex}(x,y_0,z)$, a horizontal slice of the hexagonal field.}
+\caption{Isolines of $\textbf{Hex}(x,y_0,z)$, a horizontal slice of the hexagonal field.}
 \label{Hex Field}
 \end{figure}
 
@@ -181,9 +182,9 @@ $$\textrm{Terrain}_c(\mathbf{x}) = \max\left(\textrm{Height}(\mathbf{x}), \, c\c
 
 apex $\mathbf{a}$, base with centre $\mathbf{b}$, and half angle $\phi$,
 
-$$\textrm{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \frac{1}{\phi}\arccos\left(\frac{\left(\mathbf{x}-\mathbf{a}\right)\cdot\left(\mathbf{b}-\mathbf{a}\right)}{\left|\mathbf{x}-\mathbf{a}\right|\cdot\left|\mathbf{b}-\mathbf{a}\right|}\right).$$
+$$\textbf{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \frac{1}{\phi}\arccos\left(\frac{\left(\mathbf{x}-\mathbf{a}\right)\cdot\left(\mathbf{b}-\mathbf{a}\right)}{\left|\mathbf{x}-\mathbf{a}\right|\cdot\left|\mathbf{b}-\mathbf{a}\right|}\right).$$
 Much like before,
-$$\textrm{Thorny Terrain}_{c;\,\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \min\left(\textrm{Terrain}_c(\mathbf{x}), \, c\cdot\textrm{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x})\right),$$
+$$\textbf{Thorny Terrain}_{c;\,\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \min\left(\textbf{Terrain}_c(\mathbf{x}), \, c\cdot\textbf{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x})\right),$$
 noting %\footnote{The order we apply max/min in...}
 
 
@@ -227,7 +228,7 @@ $$\begin{matrix*}[l]
 \end{matrix*}$$
 
 \vspace{5pt}\noindent
-While these defintions are rather abstract, \citet{lindenmayerLSystems} provides a remarkable application. Treating each symbol as an instruction like `go forward' or `turn right', \textit{L-systems} visualise sentences via `turtle graphics'; when those sentences have been generated recursively by a grammar, the line drawings inherit that same self-similar structure. Consider the above, where reading non-terminals $F$, $G$ as `draw a line while moving one unit forwards,' and terminals $\pm$ as `turn $\pm\, \pi/2$ on the spot,' produces the fractal dragon curves in Figure \ref{Dragon Curves}.
+While these definitions are rather abstract, \citet{lindenmayerLSystems} provides a remarkable application. Treating each symbol as an instruction like `go forward' or `turn right', \textit{L-systems} visualise sentences via `turtle graphics'; when the sentences have been generated recursively by a grammar, the line drawings will inherit their self-similar structure. Consider the above example - reading non-terminals $F$, $G$ as `draw a line while moving 1 unit forwards,' and terminals $\pm$ as `turn by $\pm\, \pi/2$ on the spot,' produces fractal `dragon curves' (see Figure \ref{Dragon Curves}).
 
 \vspace{5pt}\noindent
 \begin{figure}[h]
@@ -238,7 +239,7 @@ While these defintions are rather abstract, \citet{lindenmayerLSystems} provides
 \end{figure}
 
 \vspace{5pt}\noindent
-While L-systems are most common in the modelling of 3D plants and other branching structures \citep{prusinkiewiczAlgorithmicBeauty}, \textit{Untitled} only uses them to generate 2D alpha maps. Moreover, it restricts its attention to L-systems paired with context-free grammars.
+While L-systems are most common in the modelling of 3D plants and other branching structures \citep{prusinkiewiczAlgorithmicBeauty}, \textit{Concrete Earth} only uses them to generate 2D alpha maps. Moreover, it restricts its attention to L-systems paired with context-free grammars.
 
 \subsubsection{Case Study: Ciphers}
 
@@ -289,7 +290,7 @@ $$\mathbf{C}(l,w,\theta) \mapsto \mathbf{X}(l,w,\theta)[\mathbf{C}(l_M,w_M,\thet
 %\end{matrix*}$$
 
 \vspace{5pt}\noindent
-\citet{liuSimulationBloodVessels} expand on this by introducing a stochastic component - that is to say, they allow [a more random structure]. \textit{Concrete Earth} incorporates such randomness into its own rules for blood vessels:
+\citet{liuSimulationBloodVessels} expand on this research with a stochastic component - they assign \textit{multiple} production rules to a single non-terminal, choosing which to apply using a weighted probability distribution. \textit{Concrete Earth} incorporates such randomness into its own rules for blood vessels:
 $$\begin{matrix*}[l]
 \mathbf{C}(l,w,\theta) &\xmapsto[0.45]{} &\mathbf{X}(l,w,\theta)[\mathbf{L}(l_M,w_M,\theta+\theta_M)]\mathbf{R}(l_m,w_m,\theta-\theta_m) \\
 \mathbf{C}(l,w,\theta) &\xmapsto[0.45]{} &\mathbf{X}(l,w,\theta)[\mathbf{L}(l_m,w_m,\theta+\theta_m)]\mathbf{R}(l_M,w_M,\theta-\theta_M) \\
@@ -299,7 +300,7 @@ $$\begin{matrix*}[l]
 & & \\
 \mathbf{R}(l,w,\theta) &\xmapsto[1.00]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l_M,w_M,\theta+\theta_M)
 \end{matrix*}$$
-These describe a capillary with a 45\% chance of bifurcating with branch $M$ tacking clockwise, a 45\% chance of bifurcating with $M$ tacking anticlockwise, and a 10\% chance of extending forwards without any branching. The determinstic production rules on $\mathbf{L}$, $\mathbf{R}$ provide course correction, guaranteeing the [...]; further informal tweaks can be found in the \texttt{LBloodVessel} class, all intended to get the final look of the L-systems `right' (see Figure \ref{Blood Vessels}). 
+These describe a capillary with a 45\% chance of bifurcating with branch $M$ tacking clockwise, a 45\% chance of bifurcating with $M$ tacking anticlockwise, and a 10\% chance of extending forwards without any branching. The deterministic production rules on $\mathbf{L}$, $\mathbf{R}$ provide course correction, ensuring the models can be pointed towards the centre of the screen without veering off in either direction. Further informal tweaks can be found in the \texttt{LBloodVessel} class, all intended to get the final look of the blood vessels exactly right (see Figure \ref{Blood Vessels}). 
 
 \vspace{5pt}\noindent
 \begin{figure}[h]
@@ -311,14 +312,25 @@ These describe a capillary with a 45\% chance of bifurcating with branch $M$ tac
 
 
 \vspace{5pt}\noindent
-[Discussion of animation (and the shortcomings thereof)...]
+[Discussion of animation (and the shortcomings thereof)...] Finally, note that all L-systems have been implemented with a normalised \texttt{intensity} factor, which guides their growth according to
+\begin{center}
+\begin{BVerbatim}
+[(SIMPLIFIED) CODE SNIPPET]
+\end{BVerbatim}
+\end{center}
+As \texttt{intensity} increases from \texttt{0.0f} to \texttt{1.0f}, , the [X] component delaying the minor branches to .\footnote{This was completely unintentional, emerging from a typo in the code - } Rendering these to texture results in a visceral, procedurally-animated post-process effect, more responsive than passing in a static alpha map (see Figure \ref{Eye Strain Effect}). 
 
 \vspace{5pt}\noindent
-[Figure of final render]
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.66\textwidth]{Eye Strain Effect}
+\caption{\textit{Concrete Earth}'s final eye strain effect.}
+\label{Eye Strain Effect}
+\end{figure}
 
 \subsection{Procedural Narrative} % TECHNIQUE: 'Improv-lite' text generation...
 
-\textit{Untitled} was originally conceived as a showcase of procedural text generation, an application of [authored X] towards interactive fiction. Since [not in place], this section will focus on the intended narrative, and the infrastructure \textit{already in place} to facilitate it. 
+\textit{Concrete Earth} was originally conceived as a showcase of procedural text generation, an application of [authored X] towards interactive fiction. Since [not in place], this section will focus on the intended narrative, and the infrastructure \textit{already in place} to facilitate it. 
 
 \subsubsection{Grammars}
 

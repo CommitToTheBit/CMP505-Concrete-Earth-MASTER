@@ -149,7 +149,7 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		m_Board.Interpolate(2.0f*timer.GetElapsedSeconds());
 	}
-	if (!m_Board.m_interpolating && !m_Board.Paused()) // NB: Not an 'if/else', since this would waste a frame! 
+	if (!m_Board.m_interpolating)// && !m_Board.Paused()) // NB: Not an 'if/else', since this would waste a frame! 
 	{
 		if (m_gameInputCommands.forward)
 			m_Board.SetInterpolation(1, 0);
@@ -297,12 +297,12 @@ void Game::Render()
 	m_SphinxTiling.Render(context);*/
 
 	// DEBUG: Render a Penrose P3 tiling...
-	m_NeutralShader.EnableShader(context);
+	/*m_NeutralShader.EnableShader(context);
 	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 	context->RSSetState(m_states->CullCounterClockwise());
 	m_PenroseP3.Render(context);
 	context->RSSetState(m_states->CullClockwise());
-	m_PenroseP3.Render(context);
+	m_PenroseP3.Render(context);*/
 
 	// DEBUG: Render Zamir's model of arterial branching...
 	/*for (int i = 0; i < m_DeterministicBloodVessels.size(); i++)
@@ -539,11 +539,11 @@ void Game::CreateDeviceDependentResources()
 	/*m_DragonCurve.Initialize(device, 0.125f, 11);
 	m_DragonCurve.Update(device, 0.0f, 1.0f); // NB: Static, so setting initial intensity here!*/
 
-	m_SphinxTiling.Initialize(device, 0.01f, 5);
-	m_SphinxTiling.Update(device, 0.0f, 1.0f);/**/
+	/*m_SphinxTiling.Initialize(device, 0.01f, 5);
+	m_SphinxTiling.Update(device, 0.0f, 1.0f);*/
 
-	m_PenroseP3.Initialize(device, 0.01f, 1);
-	m_PenroseP3.Update(device, 0.0f, 1.0f);
+	/*m_PenroseP3.Initialize(device, 0.01f, 1);
+	m_PenroseP3.Update(device, 0.0f, 1.0f);*/
 
 	/*for (int i = 0; i < 5; i++)
 	{
