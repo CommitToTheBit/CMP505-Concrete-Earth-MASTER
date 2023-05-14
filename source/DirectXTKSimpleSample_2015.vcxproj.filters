@@ -309,6 +309,9 @@
     <Image Include="Stylized_Stone_Floor_005_basecolor.dds">
       <Filter>Assets\Textures</Filter>
     </Image>
+    <Image Include="LocationMarker.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="light_3ps.hlsl">

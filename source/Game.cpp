@@ -263,6 +263,7 @@ void Game::Render()
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.4f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
 	m_Board.Render(context, &m_TerrainShader, displacement, 1.0f, 0.95f, &m_Camera, m_time, &m_Light);
+	m_Board.RenderUI(context, &m_LocationShader, displacement, 1.0f, &m_Camera, m_time, m_normalMap.Get());
 
 	// DEBUG: Render three (normalised) torii, for voxel texturing...
 	/*m_VoronoiShader.EnableShader(context);
@@ -630,6 +631,9 @@ void Game::CreateDeviceDependentResources()
 	m_TerrainShader.InitAlphaBuffer(device);
 	m_TerrainShader.InitLightBuffer(device);
 
+	m_LocationShader.InitShader(device, L"texture_vs.cso", L"texture_ps.cso");
+	m_LocationShader.InitMatrixBuffer(device);
+
 	m_VoronoiShader.InitShader(device, L"texture_3vs.cso", L"euclidean_voronoi_3ps.cso");
 	m_VoronoiShader.InitMatrixBuffer(device);
 	m_VoronoiShader.InitTimeBuffer(device);
@@ -711,6 +715,16 @@ void Game::SetupGUI()
 	ImGui::PopFont();
 
 	ImGui::End();
+
+	// DEBUG:
+	//ImGui::Wind
+	//ImGui::EndFrame();
+	//ImGui::NewFrame();
+	//SetNextWindowPos(ImVec2(870, 520), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+	//ImGui::Begin(" ", (bool*)true, window_flags); // NB: Nice, robust failsafe here?
+	//ImGui::Text(m_Board.m_scene.premise.c_str(), ImVec2(textWidth, 0.0f));
+	//ImGui::Image(m_normalMap.Get(), ImVec2(80, 80));
+	//ImGui::End();
 
 	ImGui::EndFrame();
 }

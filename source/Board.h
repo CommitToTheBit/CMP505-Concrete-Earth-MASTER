@@ -5,6 +5,7 @@
 
 #include "Camera.h"
 #include "Shader.h"
+#include "Screen.h"
 
 class Board
 {
@@ -23,6 +24,14 @@ public:
 		Camera* camera, 
 		float time,
 		Light* light);
+
+	void RenderUI(ID3D11DeviceContext*,
+		Shader* shader,
+		DirectX::SimpleMath::Vector3 boardPosition,
+		float boardScale,
+		Camera* camera,
+		float time,
+		ID3D11ShaderResourceView* texture);
 
 	void SetInterpolation(int north, int east);
 	void Interpolate(float t);
@@ -58,6 +67,8 @@ public: // FIXME: Left off while still accessed in Game.cpp...
 	// Storylets...
 	StoryEngine::Scene m_scene;
 	int m_sceneInterval;
+
+	Screen m_location;
 
 private:
 	StoryEngine m_storyEngine;

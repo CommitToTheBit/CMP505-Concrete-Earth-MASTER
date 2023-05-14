@@ -127,6 +127,7 @@ private:
 	// Shaders
     Shader                                                                  m_NeutralShader;
     Shader                                                                  m_TerrainShader;
+    Shader                                                                  m_LocationShader;
 
     Shader                                                                  m_VoronoiShader; // DEBUG...
     Shader                                                                  m_WireframeShader; // DEBUG...

@@ -274,6 +274,7 @@
     <Image Include="directx.ico" />
     <Image Include="EvilDrone_Diff.dds" />
     <Image Include="glass_texture.dds" />
+    <Image Include="LocationMarker.png" />
     <Image Include="sample_nm.dds" />
     <Image Include="Specimen-Jar-_1-Normal.dds" />
     <Image Include="Stylized_Stone_Floor_005_basecolor.dds" />

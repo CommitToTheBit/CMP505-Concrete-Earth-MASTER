@@ -82,6 +82,8 @@ bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 	m_scene = m_storyEngine.StartScene(m_hexModels[playerIndex].m_suit);
 	m_sceneInterval = 0;
 
+	m_location.Initialize(device);
+
 	return true;
 }
 
@@ -120,6 +122,19 @@ void Board::Render(ID3D11DeviceContext* deviceContext, Shader* shader, DirectX::
 	}
 
 	return;
+}
+
+void Board::RenderUI(ID3D11DeviceContext* deviceContext, Shader* shader, DirectX::SimpleMath::Vector3 boardPosition, float boardScale, Camera* camera, float time, ID3D11ShaderResourceView* texture)
+{
+	DirectX::SimpleMath::Vector3 relativePosition = (-m_hexRadius+1)*m_p+(-m_hexRadius+1)*m_q+DirectX::SimpleMath::Vector3(0.0f, 0.5f+0.025f*sin(time), 0.0f);
+
+	float l = (camera->getPosition()-boardPosition).Length();
+	DirectX::SimpleMath::Matrix ortho = DirectX::SimpleMath::Matrix::CreateOrthographic(l*1920.0f/1080.0f, l*1.0f, 0.01f, 100.0f);
+
+	shader->EnableShader(deviceContext);
+	shader->SetMatrixBuffer(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(0.5f, 0.0f, 0.25f) * DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(0.25f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition) * DirectX::SimpleMath::Matrix::CreateScale(boardScale)), &camera->getCameraMatrix(), &ortho, true);
+	shader->SetShaderTexture(deviceContext, texture, 0, 0);
+	m_location.Render(deviceContext);
 }
 
 void Board::SetInterpolation(int north, int east)
