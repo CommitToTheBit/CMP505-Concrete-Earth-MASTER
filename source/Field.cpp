@@ -145,7 +145,7 @@ void Field::IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius, floa
 	}
 }
 
-void Field::DeriveHexPrism(ID3D11Device* device, float isolevel, bool lowerBound, bool upperBound)
+void Field::DeriveHexPrism(float isolevel, bool lowerBound, bool upperBound)
 {
 	DirectX::SimpleMath::Vector2 position;
 	float r, theta, modTheta, z;
@@ -182,7 +182,7 @@ void Field::DeriveHexPrism(ID3D11Device* device, float isolevel, bool lowerBound
 	}
 }
 
-void Field::DeriveCylindricalPrism(ID3D11Device* device, float isolevel, bool lowerBound, bool upperBound)
+void Field::DeriveCylindricalPrism(float isolevel, bool lowerBound, bool upperBound)
 {
 	DirectX::SimpleMath::Vector2 position;
 	float r, theta, z;

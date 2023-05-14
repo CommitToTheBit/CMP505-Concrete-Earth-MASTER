@@ -50,7 +50,7 @@ bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 			m_hexIsolevels[index] = 0.15f+0.15f*std::rand()/RAND_MAX;
 
 			hexField->Initialise(&m_horizontalField);
-			hexField->DeriveHexPrism(device, m_hexIsolevels[index]);
+			hexField->DeriveHexPrism(m_hexIsolevels[index]);
 
 			m_hexModels[index].Initialize(device, cells, hexField->m_field, m_hexIsolevels[index]);
 
@@ -291,7 +291,7 @@ void Board::AddThorns(ID3D11Device* device, int hex, int thorns)
 		hexField->IntegrateHorizontalThorn(origin, base, angle, m_hexIsolevels[hex]);
 	}
 	
-	hexField->DeriveHexPrism(device, m_hexIsolevels[hex]);
+	hexField->DeriveHexPrism(m_hexIsolevels[hex]);
 
 	m_hexModels[hex].Shutdown(); // NB: Resetting prevents memory leak!
 	m_hexModels[hex].Initialize(device, hexField->m_cells, hexField->m_field, m_hexIsolevels[hex]);

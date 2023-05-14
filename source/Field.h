@@ -36,8 +36,8 @@ public:
 	void InitialisePartition(int configuration);
 
 	// Generate *with hex*
-	void DeriveHexPrism(ID3D11Device*, float isolevel, bool lowerBound = true, bool upperBound = false);
-	void DeriveCylindricalPrism(ID3D11Device*, float isolevel, bool lowerBound = true, bool upperBound = false);
+	void DeriveHexPrism(float isolevel, bool lowerBound = true, bool upperBound = false);
+	void DeriveCylindricalPrism(float isolevel, bool lowerBound = true, bool upperBound = false);
 
 	int m_cells;
 	FieldVertexType* m_field;

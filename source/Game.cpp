@@ -262,7 +262,14 @@ void Game::Render()
 
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.4f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
-	m_Board.Render(context, &m_TerrainShader, displacement, 1.0f, 0.95f, &m_Camera, m_time, &m_Light);
+	//m_Board.Render(context, &m_TerrainShader, displacement, 1.0f, 0.95f, &m_Camera, m_time, &m_Light);
+
+	// DEBUG: Render three (normalised) torii, for voxel texturing...
+	m_TerrainShader.EnableShader(context);
+	m_TerrainShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateRotationX(XM_PIDIV4)*Matrix::CreateTranslation(0.0f, 0.0f, -1.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+	m_TerrainShader.SetAlphaBuffer(context, 1.0f);
+	m_TerrainShader.SetLightBuffer(context, &m_Light);
+	m_Hex.Render(context);
 
 	// DEBUG: Render three (normalised) torii, for voxel texturing...
 	/*m_VoronoiShader.EnableShader(context);
@@ -563,6 +570,9 @@ void Game::CreateDeviceDependentResources()
 	// Board
 	m_Board.Initialize(device, 4, 32);
 	m_add = 0;
+
+	// DEBUG:
+	m_Hex.InitializeSalt(device, &m_Board.m_horizontalField, 0.5f);
 
 	// L-Systems
 	/*m_DragonCurve.Initialize(device, 0.125f, 11);
