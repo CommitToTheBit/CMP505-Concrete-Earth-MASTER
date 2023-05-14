@@ -649,7 +649,7 @@ void Game::CreateDeviceDependentResources()
 	m_ScreenShader.InitStressBuffer(device);
 
 	//load Textures
-	CreateDDSTextureFromFile(device, L"sample_nm.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());
+	CreateDDSTextureFromFile(device, L"LocationMarker_002.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());
 
 	m_preRendered = false;
 

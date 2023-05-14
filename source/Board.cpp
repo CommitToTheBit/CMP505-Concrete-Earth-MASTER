@@ -126,7 +126,7 @@ void Board::Render(ID3D11DeviceContext* deviceContext, Shader* shader, DirectX::
 
 void Board::RenderUI(ID3D11DeviceContext* deviceContext, Shader* shader, DirectX::SimpleMath::Vector3 boardPosition, float boardScale, Camera* camera, float time, ID3D11ShaderResourceView* texture)
 {
-	DirectX::SimpleMath::Vector3 relativePosition = (-m_hexRadius+1)*m_p+(-m_hexRadius+1)*m_q+DirectX::SimpleMath::Vector3(0.0f, 0.5f+0.025f*sin(time), 0.0f);
+	DirectX::SimpleMath::Vector3 relativePosition = (-m_hexRadius+1)*m_p+(-m_hexRadius+1)*m_q+DirectX::SimpleMath::Vector3(0.0f, 0.6f+0.025f*sin(time), 0.0f);
 
 	float l = (camera->getPosition()-boardPosition).Length();
 	DirectX::SimpleMath::Matrix ortho = DirectX::SimpleMath::Matrix::CreateOrthographic(l*1920.0f/1080.0f, l*1.0f, 0.01f, 100.0f);
@@ -284,43 +284,6 @@ void Board::ApplyInterpolationPermutation()
 
 	m_hexPermutation = hexPermutation;
 }
-
-/*void Board::AddThorns(ID3D11Device* device, int hex, int thorns)
-{
-	hex = (hex%m_hexes+m_hexes)%m_hexes;
-
-	// STEP 1: Initialise field...
-	Field* hexField = new Field();
-	hexField->Initialise(&m_horizontalField);
-
-	// STEP 2: Set thorn parameters, integrate it into the field...
-	// FIXME: A solid prototype, but highly lacking aesthetically...
-	for (int i = 0; i < thorns; i++)
-	{
-		float angle = XM_PIDIV2/10.0f;
-
-		float rBaseRange = 0.5f*cos(XM_PI/6.0f);
-		float rBase = rBaseRange*sqrt(pow(((float)std::rand()/RAND_MAX), 2.0f)+pow(((float)std::rand()/RAND_MAX), 2.0f));
-		float thetaBase = XM_2PI*std::rand()/RAND_MAX;
-
-		DirectX::SimpleMath::Vector3 base = DirectX::SimpleMath::Vector3(0.5f+0.5f*rBase*cos(thetaBase), 0.0f, 0.5f+0.5f*rBase*sin(thetaBase));
-
-		float rOriginRange = cos(XM_PI/6.0f);
-		float rOrigin = rOriginRange*(0.5f+0.5f*sqrt(pow(((float)std::rand()/RAND_MAX), 2.0f)+pow(((float)std::rand()/RAND_MAX), 2.0f)));
-		float thetaOrigin = thetaBase + 2.0f*((XM_PI/3.0f)*std::rand()/RAND_MAX);
-
-		DirectX::SimpleMath::Vector3 origin = DirectX::SimpleMath::Vector3(0.5f+0.5f*rOrigin*cos(thetaOrigin), 0.4f+m_hexIsolevels[hex], 0.5f+0.5f*rBase*sin(thetaOrigin));
-
-		hexField->IntegrateHorizontalThorn(origin, base, angle, m_hexIsolevels[hex]);
-	}
-	
-	hexField->DeriveHexPrism(m_hexIsolevels[hex]);
-
-	m_hexModels[hex].Shutdown(); // NB: Resetting prevents memory leak!
-	m_hexModels[hex].Initialize(device, hexField->m_cells, hexField->m_field, m_hexIsolevels[hex]);
-
-	delete hexField;
-}*/
 
 void Board::Choose(int choice)
 {
