@@ -87,6 +87,19 @@ void Field::InitialiseToroidalField(float R, int octaves, float amplitude)
 	}
 }
 
+void Field::InitialiseCubicField()
+{
+	DirectX::SimpleMath::Vector3 origin = DirectX::SimpleMath::Vector3(0.5f, 0.5f, 0.5f);
+
+	DirectX::SimpleMath::Vector3 position;
+	for (int f = 0; f < (m_cells+1)*(m_cells+1)*(m_cells+1); f++)
+	{
+		position = 2.0f*(m_field[f].position-origin);
+
+		m_field[f].scalar = std::max(abs(position.x), std::max(abs(position.y), abs(position.z)));
+	}
+}
+
 void Field::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 base, float angle, float isolevel)
 {
 	SimplexNoise simplex = SimplexNoise();
@@ -103,6 +116,16 @@ void Field::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, Direct
 
 		m_field[f].scalar = std::min(m_field[f].scalar, isolevel*thorn); // NB: Use of min, since this points 'out' from isosurface...
 	}
+}
+
+void Field::InitialisePartition(int configuration)
+{
+	Initialise(1);
+	configuration %= 256;
+
+	for (int i = 0; i < 8; i++)
+		//m_field[i].scalar = ((configuration%((int)pow(2, i)))/(pow(2, i-1)) == 0) ? -1.0f : 1.0f;
+		m_field[i].scalar = (configuration & (int)pow(2, i)) ? -1.0f : 1.0f;
 }
 
 void Field::IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius, float isolevel)

@@ -371,5 +371,8 @@
     <FxCompile Include="voronoi_terrain_3ps_001.hlsl">
       <Filter>Assets\Shaders\Terrain</Filter>
     </FxCompile>
+    <FxCompile Include="wireframe_3ps.hlsl">
+      <Filter>Assets\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

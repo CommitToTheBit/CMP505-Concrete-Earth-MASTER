@@ -29,6 +29,12 @@ public:
 	// Toroidal surface generation...
 	void InitialiseToroidalField(float R, int octaves = 8, float amplitude = 0.2f);
 
+	// Cubic surface generation...
+	void InitialiseCubicField();
+
+	// Partition generation...
+	void InitialisePartition(int configuration);
+
 	// Generate *with hex*
 	void DeriveHexPrism(ID3D11Device*, float isolevel, bool lowerBound = true, bool upperBound = false);
 	void DeriveCylindricalPrism(ID3D11Device*, float isolevel, bool lowerBound = true, bool upperBound = false);

@@ -129,6 +129,7 @@ private:
     Shader                                                                  m_TerrainShader;
 
     Shader                                                                  m_VoronoiShader; // DEBUG...
+    Shader                                                                  m_WireframeShader; // DEBUG...
 
     // Render-to-Textures
     Screen                                                                  m_Screen;
@@ -142,6 +143,9 @@ private:
     int                                                                     m_add; // DEBUG...
 
     MarchingCubes                                                           m_Torus; // DEBUG...
+
+    MarchingCubes                                                           m_Wireframe;
+    MarchingCubes                                                           m_Partitions[14];
 
     // L-Systems
     LDragonCurve                                                            m_DragonCurve;

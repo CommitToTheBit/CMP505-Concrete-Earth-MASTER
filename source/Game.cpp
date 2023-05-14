@@ -67,10 +67,12 @@ void Game::Initialize(HWND window, int width, int height)
 	style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.8f, 0.2f, 0.2f, 0.75f);
 
 	//setup light
-	m_Ambience = Vector4(0.15f, 0.15f, 0.15f, 1.0f);
+	//m_Ambience = Vector4(0.15f, 0.15f, 0.15f, 1.0f);
+	m_Ambience = Vector4(0.9f, 0.9f, 0.9f, 1.0f);
 	m_Light.setAmbientColour(m_Ambience.x, m_Ambience.y, m_Ambience.z, m_Ambience.w);
 	m_Light.setDiffuseColour(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light.setPosition(0.0f, 2.5f, 2.0f*m_Board.m_hexRadius-1);
+	//m_Light.setPosition(0.0f, 2.5f, 2.0f*m_Board.m_hexRadius-1);
+	m_Light.setPosition(1.5f, 1.5f, 1.5f);
 	m_Light.setDirection(1.0f, 1.0f, 0.0f);
 	m_Light.setStrength(100.0f);
 
@@ -149,7 +151,7 @@ void Game::Update(DX::StepTimer const& timer)
 	{
 		m_Board.Interpolate(2.0f*timer.GetElapsedSeconds());
 	}
-	if (!m_Board.m_interpolating)// && !m_Board.Paused()) // NB: Not an 'if/else', since this would waste a frame! 
+	if (!m_Board.m_interpolating && !m_Board.Paused()) // NB: Not an 'if/else', since this would waste a frame! 
 	{
 		if (m_gameInputCommands.forward)
 			m_Board.SetInterpolation(1, 0);
@@ -303,6 +305,35 @@ void Game::Render()
 	m_PenroseP3.Render(context);
 	context->RSSetState(m_states->CullClockwise());
 	m_PenroseP3.Render(context);*/
+
+	// DEBUG: Render 15 fundamental partitions...
+	m_NeutralShader.EnableShader(context);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
+	context->OMSetDepthStencilState(m_states->DepthNone(), 0);
+	m_Screen.Render(context);
+	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
+
+	for (int i = 0; i < 14; i++)
+	{
+		m_WireframeShader.EnableShader(context);
+		m_WireframeShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.66f)*Matrix::CreateRotationY(-XM_PI/12.0f)*Matrix::CreateRotationX(XM_PI/9.0f)*Matrix::CreateTranslation(1.2f*(i%5-((i/5 < 2) ? 2.0f : 1.5f)), -((i/5)-1.0f), -1.0f)*Matrix::CreateScale(0.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+		context->RSSetState(m_states->CullCounterClockwise());
+		m_Wireframe.Render(context);
+
+		m_TerrainShader.EnableShader(context);
+		m_TerrainShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.66f)*Matrix::CreateRotationY(-XM_PI/12.0f)*Matrix::CreateRotationX(XM_PI/9.0f)*Matrix::CreateTranslation(1.2f*(i%5-((i/5 < 2) ? 2.0f : 1.5f)), -((i/5)-1.0f), -1.0f)*Matrix::CreateScale(0.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+		m_TerrainShader.SetAlphaBuffer(context, 0.83f);
+		m_TerrainShader.SetLightBuffer(context, &m_Light);
+		context->RSSetState(m_states->CullCounterClockwise());
+		m_Partitions[i].Render(context);
+		context->RSSetState(m_states->CullClockwise());
+		m_Partitions[i].Render(context);
+
+		m_WireframeShader.EnableShader(context);
+		m_WireframeShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.66f)*Matrix::CreateRotationY(-XM_PI/12.0f)*Matrix::CreateRotationX(XM_PI/9.0f)*Matrix::CreateTranslation(1.2f*(i%5-((i/5 < 2) ? 2.0f : 1.5f)), -((i/5)-1.0f), -1.0f)*Matrix::CreateScale(0.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+		context->RSSetState(m_states->CullClockwise());
+		m_Wireframe.Render(context);
+	}
 
 	// DEBUG: Render Zamir's model of arterial branching...
 	/*for (int i = 0; i < m_DeterministicBloodVessels.size(); i++)
@@ -571,9 +602,27 @@ void Game::CreateDeviceDependentResources()
 	m_Cube.InitializeModel(device, "cube.obj");
 
 	Field toroidalField = Field();
-	toroidalField.Initialise(32);
+	toroidalField.Initialise(64);
 	toroidalField.InitialiseToroidalField(0.75f, 0);
-	m_Torus.Initialize(device, 32, toroidalField.m_field, 1.0f);
+	m_Torus.Initialize(device, 64, toroidalField.m_field, 1.0f);
+
+	Field cubicField = Field();
+	cubicField.Initialise(64);
+	cubicField.InitialiseCubicField();
+	m_Wireframe.Initialize(device, 64, cubicField.m_field, 1.0f);
+
+	Field partitionField = Field();
+	//int configuration[14] = { 0, 1, 10, 9, 24, 14, 26, 22, 15, 23, 90, 27, 30, 150 };
+	int configuration[14] = { 
+		1, 9, 24, 22, 150,
+		10, 26, 90, 14, 30,
+		15, 27, 23, 0
+	};
+	for (int i = 0; i < 14; i++)
+	{
+		partitionField.InitialisePartition(configuration[i]);
+		m_Partitions[i].Initialize(device, 1, partitionField.m_field, 0.0f);
+	}
 
 	// Shaders
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
@@ -587,6 +636,9 @@ void Game::CreateDeviceDependentResources()
 	m_VoronoiShader.InitShader(device, L"texture_3vs.cso", L"euclidean_voronoi_3ps.cso");
 	m_VoronoiShader.InitMatrixBuffer(device);
 	m_VoronoiShader.InitTimeBuffer(device);
+
+	m_WireframeShader.InitShader(device, L"texture_3vs.cso", L"wireframe_3ps.cso");
+	m_WireframeShader.InitMatrixBuffer(device);
 
 	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps.cso");
 	m_ScreenShader.InitMatrixBuffer(device);

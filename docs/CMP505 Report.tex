@@ -144,12 +144,11 @@ Returning to the problem at hand, \textit{Concrete Earth} uses \textit{marching 
 \vspace{5pt}\noindent
 This section will not cover the finer points of the DirectX implementation - not how it deconstructs partitioning surfaces into triangles for the vertex/index buffers, nor how it identifies adjacent marching cubes so as to calculate `smooth' vertex normals\footnote{A weighted average over the surface normals of the surrounding triangular faces; if a face has vertices $\mathbf{a}$, $\mathbf{b}$, $\mathbf{c}$, it will be weighted by $1/|(\mathbf{b}-\mathbf{a})\times(\mathbf{c}-\mathbf{a})| \propto$ the inverse of its area}. The rest of the report will only require a high-level understanding of \textit{Concrete Earth}'s terrain. Paul \citeauthor{bourkeMarchingCubes}'s \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes} remains the definitive source on the marching cubes. %, and one that this project's code relies on heavily.
 
-\vspace{10pt}\noindent
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.66\textwidth]{Dragon Curves}
+\includegraphics[width=0.75\textwidth]{Marching Cube Partitions}
 \caption{Planar partitions of a marching cube, before linear interpolation. There are $15$ fundamental cases, ignoring symmetries; the code itself considers all $2^8 = 256$ possible configurations.}
-\label{Interpolated Marching Squares}
+\label{Marching Cube Partitions}
 \end{figure}
 
 \newpage
