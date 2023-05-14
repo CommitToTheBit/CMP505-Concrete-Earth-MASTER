@@ -102,10 +102,7 @@ void Field::InitialiseCubicField()
 
 void Field::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 base, float angle, float isolevel)
 {
-	SimplexNoise simplex = SimplexNoise();
-
 	float theta, thorn;
-
 	for (int f = 0; f < (m_cells+1)*(m_cells+1)*(m_cells+1); f++)
 	{
 		theta = acos((m_field[f].position-origin).Dot(base-origin)/((m_field[f].position-origin).Length()*(base-origin).Length()));
@@ -117,6 +114,21 @@ void Field::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, Direct
 		m_field[f].scalar = std::min(m_field[f].scalar, isolevel*thorn); // NB: Use of min, since this points 'out' from isosurface...
 	}
 }
+
+void Field::IntegrateShrapnel(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 axis, float angle, DirectX::SimpleMath::Vector3 dimensions, float isolevel)
+{
+	DirectX::SimpleMath::Vector3 position;
+	float shrapnel;
+	for (int f = 0; f < (m_cells+1)*(m_cells+1)*(m_cells+1); f++)
+	{
+		position = 2.0f*(m_field[f].position-origin);
+		DirectX::SimpleMath::Vector3::Transform(position, DirectX::SimpleMath::Matrix::CreateFromAxisAngle(axis, angle), position); // FIXME: Hacky use of rotations?
+		shrapnel = std::max(abs(position.x/dimensions.x), std::max(abs(position.y/dimensions.y), abs(position.z/dimensions.z)));
+
+		m_field[f].scalar = std::min(m_field[f].scalar, isolevel*shrapnel);
+	}
+}
+
 
 void Field::InitialisePartition(int configuration)
 {

@@ -49,9 +49,14 @@ bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 
 			m_hexIsolevels[index] = 0.15f+0.15f*std::rand()/RAND_MAX;
 
-			if (std::rand()%6 == 0)
+			int landmark = std::rand()%15;
+			if (landmark < 2)
 			{
 				m_hexModels[index].InitializeThorn(device, &m_horizontalField, m_hexIsolevels[index]);
+			}
+			else if (landmark < 3)
+			{
+				m_hexModels[index].InitializeShrapnel(device, &m_horizontalField, m_hexIsolevels[index]);
 			}
 			else
 			{

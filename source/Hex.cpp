@@ -57,3 +57,25 @@ void Hex::InitializeThorn(ID3D11Device* device, Field* heightField, float isolev
 
 	delete hexField;
 }
+
+void Hex::InitializeShrapnel(ID3D11Device* device, Field* heightField, float isolevel)
+{
+	m_suit = "shrapnel";
+
+	Field* hexField = new Field();
+	hexField->Initialise(heightField);
+
+	hexField->DeriveHexPrism(isolevel);
+
+	hexField->IntegrateShrapnel(DirectX::SimpleMath::Vector3(0.5f, 0.4f, 0.5f), DirectX::SimpleMath::Vector3(2.0f*((float)std::rand()/RAND_MAX)-1.0f, 0.01f+((float)std::rand()/RAND_MAX), 2.0f*((float)std::rand()/RAND_MAX)-1.0f), 30.0f*(DirectX::XM_PI/180.0f)*((float)std::rand()/RAND_MAX), DirectX::SimpleMath::Vector3(0.3f, 0.4f, 0.2f), isolevel);
+	hexField->IntegrateShrapnel(DirectX::SimpleMath::Vector3(0.5f, 0.4f, 0.5f), DirectX::SimpleMath::Vector3(2.0f*((float)std::rand()/RAND_MAX)-1.0f, 0.01f+((float)std::rand()/RAND_MAX), 2.0f*((float)std::rand()/RAND_MAX)-1.0f), 30.0f*(DirectX::XM_PI/180.0f)*((float)std::rand()/RAND_MAX), DirectX::SimpleMath::Vector3(0.3f, 0.4f, 0.2f), isolevel);
+	hexField->IntegrateShrapnel(DirectX::SimpleMath::Vector3(0.5f, 0.4f, 0.5f), DirectX::SimpleMath::Vector3(2.0f*((float)std::rand()/RAND_MAX)-1.0f, 0.01f+((float)std::rand()/RAND_MAX), 2.0f*((float)std::rand()/RAND_MAX)-1.0f), 30.0f*(DirectX::XM_PI/180.0f)*((float)std::rand()/RAND_MAX), DirectX::SimpleMath::Vector3(0.3f, 0.4f, 0.2f), isolevel);
+
+	//hexField->IntegrateShrapnel(DirectX::SimpleMath::Vector3(0.35f, 0.4f, 0.4f), DirectX::SimpleMath::Vector3(2.0f*((float)std::rand()/RAND_MAX)-1.0f, 0.01f+((float)std::rand()/RAND_MAX), 2.0f*((float)std::rand()/RAND_MAX)-1.0f), 60.0f*(DirectX::XM_PI/180.0f)*((float)std::rand()/RAND_MAX), DirectX::SimpleMath::Vector3(0.15f, 0.2f, 0.1f), isolevel);
+	//hexField->IntegrateShrapnel(DirectX::SimpleMath::Vector3(0.65f, 0.6f, 0.6f), DirectX::SimpleMath::Vector3(2.0f*((float)std::rand()/RAND_MAX)-1.0f, 0.01f+((float)std::rand()/RAND_MAX), 2.0f*((float)std::rand()/RAND_MAX)-1.0f), 60.0f*(DirectX::XM_PI/180.0f)*((float)std::rand()/RAND_MAX), DirectX::SimpleMath::Vector3(0.15f, 0.2f, 0.1f), isolevel);
+
+
+	__super::Initialize(device, hexField->m_cells, hexField->m_field, isolevel);
+
+	delete hexField;
+}

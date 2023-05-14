@@ -21,6 +21,7 @@ public:
 	// Planar surface generation...
 	void InitialiseHorizontalField(int octaves = 8, float amplitude = 0.05f);
 	void IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 prick, DirectX::SimpleMath::Vector3 root, float radius, float isolevel);
+	void IntegrateShrapnel(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 axis, float angle, DirectX::SimpleMath::Vector3 dimensions, float isolevel);
 	void IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius, float isolevel);
 
 	// Spherical surface generation...
