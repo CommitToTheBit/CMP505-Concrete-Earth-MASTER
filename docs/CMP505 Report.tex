@@ -130,24 +130,24 @@ Consider gridpoints $\mathbf{a}$, $\mathbf{b}$, such that $f_{\mathbf{a}} < c < 
 $$f\left((1-t)\mathbf{a} + t\mathbf{b}\right) \approx c, \,\, \textrm{where} \,\, t = \frac{c-f_{\mathbf{a}}}{f_{\mathbf{b}}-f_{\mathbf{a}}}.$$
 Understanding that it is more accurate for the partition to intersect $AB$ at $(1-t)\mathbf{a} + t\mathbf{b}$, such linear interpolation is integrated into the marching squares algorithm (see Figure \ref{Interpolated Marching Squares}).
 
-\begin{figure}[t]
+\begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{Interpolated Marching Squares}
+\includegraphics[width=0.66\textwidth]{Interpolated Marching Squares}
 \caption{Bounding curve $f(x,y) = 0.16$, before and after linear intepolation.}
 \label{Interpolated Marching Squares}
 \end{figure}
 
 %\vspace{5pt}\noindent
-Returning to the problem at hand, \textit{Concrete Earth} uses \textit{marching cubes} to generate the \textit{isosurfaces} bounding 3D volumes. This requires an $n \times n \times n$ grid, and a new field $f: \left[0,1\right]^3 \rightarrow \mathbb{R}$, the algorithm now filling cubic cells with planar surfaces to partition the gridpoints $(i,j,k)$ satisfying $f_{i,j,k} < c$ (again using linear interpolation to best approximate  the `true' isosurface). [TWO FINAL SENTENCES HERE]. %The guiding principle, however, remains the same. While 3D fields can be hard to visualise
+Returning to the problem at hand, \textit{Concrete Earth} uses \textit{marching cubes} to generate the \textit{isosurfaces} bounding 3D volumes. This requires an $n \times n \times n$ grid, and a new field $f: \left[0,1\right]^3 \rightarrow \mathbb{R}$, the algorithm now filling cubic cells with planar surfaces to partition the gridpoints $(i,j,k)$ satisfying $f_{i,j,k} < c$ (Again using linear interpolation to best approximate  the `true' isosurface). The underlying principle remains. Since 3D fields are hard to visualise in and of themself, marching cubes are best understood in relation to marching squares; despite any superficial differences, the intuition that has been built up above is readily generalised to higher dimensions.
 
 \vspace{5pt}\noindent
 This section will not cover the finer points of the DirectX implementation - not how it deconstructs partitioning surfaces into triangles for the vertex/index buffers, nor how it identifies adjacent marching cubes so as to calculate `smooth' vertex normals\footnote{A weighted average over the surface normals of the surrounding triangular faces; if a face has vertices $\mathbf{a}$, $\mathbf{b}$, $\mathbf{c}$, it will be weighted by $1/|(\mathbf{b}-\mathbf{a})\times(\mathbf{c}-\mathbf{a})| \propto$ the inverse of its area}. The rest of the report will only require a high-level understanding of \textit{Concrete Earth}'s terrain. Paul \citeauthor{bourkeMarchingCubes}'s \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes} remains the definitive source on the marching cubes. %, and one that this project's code relies on heavily.
 
-\vspace{5pt}\noindent
+\vspace{10pt}\noindent
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.66\textwidth]{Dragon Curves}
-\caption{Planara partitions of a marching cube, before linear interpolation. There are $15$ fundamental cases, ignoring symmetries; the code itself considers all $2^8 = 256$ possible configurations.}
+\caption{Planar partitions of a marching cube, before linear interpolation. There are $15$ fundamental cases, ignoring symmetries; the code itself considers all $2^8 = 256$ possible configurations.}
 \label{Interpolated Marching Squares}
 \end{figure}
 
@@ -318,16 +318,16 @@ These describe a capillary with a 45\% chance of bifurcating with branch $M$ tac
 
 \subsection{Procedural Narrative} % TECHNIQUE: 'Improv-lite' text generation...
 
-\textit{Untitled} was originally conceived as a showcase of procedural text generation, an application of [authored X] towards interactive fiction. 
+\textit{Untitled} was originally conceived as a showcase of procedural text generation, an application of [authored X] towards interactive fiction. Since [not in place], this section will focus on the intended narrative, and the infrastructure \textit{already in place} to facilitate it. 
 
 \subsubsection{Grammars}
 
-Given their origin in linguistics, it is perhaps unsurprising that grammars (see Section \ref{Procedural Screen Shaders}) find use in the field of procedural narrative - \textit{Tracery} \citep{comptonTracery} being the prime example. From a mathematical perspective, this is a stochastic, context-free grammar, with uniformly-distributed production rules for each non-terminal; it iterates a given axiom until all non-terminals (demarcated by \texttt{\{BRACE\}} delimiters) have been replaced. To bemoan the generator as better suited to Twitter bots than immersive storytelling is to misunderstand its design. \citeauthor{comptonTracery} present a lightweight tool that is left \textit{deliberately} narrow, intended for ease-of-use amongst even the most fledgling authors.
+Given their origin in linguistics, it is perhaps unsurprising that grammars (see Section \ref{Procedural Screen Shaders}) find use in the field of procedural narrative - \textit{Tracery} \citep{comptonTracery} being a prime example. This is, formally, a stochastic, context-free grammar, with uniformly-distributed production rules for each non-terminal; it iterates a given axiom until all non-terminals (demarcated by \texttt{\{BRACE\}} delimiters) have been replaced. To bemoan the generator as better suited to Twitter bots than interactive storytelling is to misunderstand its design. \citeauthor{comptonTracery} present a lightweight tool that is left \textit{deliberately} narrow, intended for ease-of-use amongst even the most fledgling authors.
 
 \vspace{5pt}\noindent
 More substantial works, then, adapt \textit{Tracery}'s grammar-based approach to their own specifications. In \textit{The Annals of the Parrigues}, \citeauthor{shortParrigues} uses a consistent, context-sensitive generator that ``defines any facts about the world that aren’t already defined at the moment of generation'' (\citeyear{shortParrigues}, p. 83). \textit{Voyageur} \citep{diasVoyageur} attaches weightings to the distributions of its production rules \citep{diasVoyageurDescriptions}. Produceral storytelling is an art form; as much as \textit{Concrete Earth} wears the above influences on its sleeve, to try and consolidate these into an `optimal', one-size-fits-all generator would be missing the point. This project therefore uses an implementation of \textit{Tracery} with its own custom modifications.
 
-\paragraph{Recency} To reduce repetition of a word or phrase, one might consider when it has last been used. \textit{Concrete Earth} treats this as a rank: given a non-terminal with $N$ possible production rules, the most recently used rule will have a \textit{recency}\footnote{Or `dryness', as \textit{Improv}, the generator for \textit{Voyageur}, would call it.} of $N-1$, the second most recent $N-2$, and so on down to the rule that has been used longest ago (or indeed, never been used), with recency $0$. Though it does not account for the intervals between uses, nor the second, third, etc, most recent use, this metric is already robust enough to achieve the desired effect \citep{kazemiSimpleProceduralGeneration}.
+\paragraph{Recency} To reduce repetition of a word or phrase, one might consider when it has last been used. The custom grammar treats this as a rank: given a non-terminal with $N$ possible production rules, the most recently used rule will have a \textit{recency}\footnote{Or `dryness', as \textit{Improv}, the generator for \textit{Voyageur}, would call it.} of $N-1$, the second most recent $N-2$, and so on down to the rule that was used longest ago (or indeed, never used), with recency $0$. Though it does not account for the intervals between uses, nor the second, third, etc, most recent use, there isn't any reason to overcomplicate a metric that already achieves the desired effect \citep{kazemiSimpleProceduralGeneration}.
 
 \vspace{5pt}\noindent
 These ranks are straightforwardly integrating into the production rules' probability distribution. The likelihood of a rule with recency $n$ is scaled by $p^{n/(N-1)}$, such that (all other weightings being equal) the most recently used rule will be $p$ times as likely as the least recent.\footnote{The same string \texttt{alpha} might replace two different non-terminals \texttt{\#A\#}, \texttt{\#B\#}. Recognising these as distinct production rules, the recency with which one was applied to \texttt{\#A\#} has no bearing on when the other is applied to \texttt{\#B\#}, or vice versa.} 
@@ -335,10 +335,17 @@ These ranks are straightforwardly integrating into the production rules' probabi
 %\vspace{5pt}\noindent
 %Note that [joint recency!].
 
-\paragraph{Consistency} [Consistency of characterisation discussion...]
+\paragraph{Consistency} To create a feeling of transience, landmarks can , meaning the . The approach to characterisation is not so simple. The narrative of \textit{Concrete Earth} is so largely centred around , though, its  . [Consistency of characterisation discussion...] As such,  uses a lightweight approach to consistent characterisation
 
 \vspace{5pt}\noindent
-[Two cases...]
+[The... delimiters]:
+\begin{itemize}[noitemsep]
+\item \verb|*| [checks active character]. [If yes; if else].
+\item \verb|**| applies similarly to the second character slot.
+\item \verb|?| [THIRD EXAMPLE: Consider \verb|{?BARREL #1}-{?BARREL #2}|, (signifying a double-barrelled surname): if .\footnote{Note that \texttt{?} can also inherit an empty string, if the preceding non-terminal is not being remembered.}
+\end{itemize}
+
+
 
 \paragraph{Conditionality} By their very nature, grammars struggle ``to encode high level relationships between different things generated at different points'' in a sentence \citep{cmptn19}. [Explainer of \textit{nested non-terminals}]. [Doesn't scale, but author-friendly enough when it only tracks a few key conditions].
 
@@ -357,7 +364,7 @@ Consider how \textit{Concrete Earth}. Using a
 \item \verb|{*MASCULINE PATRONYMIC}| $\mapsto$ \verb|NIKOLAYEVICH|\textit{:} The character's forename is matched to a patronymic of the same gender (``Nikolayevich'' here meaning ``Son of Nikolay'') \footnote{As far as this report can tell, there are no gender-neutral patronymics in Russian - without actually speaking the language, it seems most appropriate to drop these from non-binary characters' names entirely. [Ethical generation - what a generator might accidentally say about the worlds it creates (citation); as much as (...medieval society would be engaged in non-binary erasure on a systemic level?)]}
 \item \verb|{*SURNAME}| $\mapsto$ \verb|TOLSTOY|\textit{:} The final non-terminal comes with no conditions, and ; this, too, is saved within the
 \end{enumerate}
-In this case, the grammar will terminate after a single iteration. Should a term like \verb|{*BARREL #1}-{*BARREL #2}| (signifying a double-barrelled surname) replace \verb|{*SURNAME}|, however, the new non-terminals would needed handled on a second parse.
+In this case, the grammar terminates after a single iteration. Should \verb|{*BARREL #1}-{*BARREL #2}| have replaced \verb|{*SURNAME}|, however, the new non-terminals would needed handled on a second parse.
 
 \vspace{5pt}\noindent
 This might feel too limited, from a dramatic perspective. For all this effort to [maintain consistency], personality is not so immutable; so much of good storytelling relies on character \textit{development}.
