@@ -95,7 +95,7 @@ Given the concept, this game's terrain is of course intended to evoke a sense of
 \label{Concave Terrain}
 \end{figure}
 
-\newpage\noindent
+%\newpage\noindent
 %\vspace{5pt}\noindent
 \begin{figure}[t]
 \centering
@@ -155,7 +155,7 @@ This section will not cover the finer points of the DirectX implementation - not
 \newpage
 \subsubsection{Case Study: Hexes}
 
-Indeed, having established this framework, generating a landscape becomes a matter of writing the right scalar field. [Barren land, so start on a flat foundation...]. %Having . 3D fields are inherently , yet these are essential to carving out \textit{Concrete Earth}'s landscape.
+Indeed, having established this framework, generating a landscape becomes a matter of writing the right scalar field. [Barren - stark, even! - land, so start on a flat foundation...]. %Having . 3D fields are inherently , yet these are essential to carving out \textit{Concrete Earth}'s landscape.
 
 $$\textbf{Height}(\mathbf{x}) = y + 0.1\cdot\textbf{FBM}(\mathbf{x}),$$
 [...] with a (scaled down to avoid obvious `floating islands'). This report treats the underlying simplex noise as a black box; [justification].
@@ -324,7 +324,7 @@ As \texttt{intensity} increases from \texttt{0.0f} to \texttt{1.0f}, , the [X] c
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.66\textwidth]{Eye Strain Effect}
-\caption{\textit{Concrete Earth}'s final eye strain effect.}
+\caption{(High-contrast render of) \textit{Concrete Earth}'s eye strain effect.}
 \label{Eye Strain Effect}
 \end{figure}
 
@@ -342,19 +342,20 @@ More substantial works, then, adapt \textit{Tracery}'s grammar-based approach to
 \paragraph{Recency} To reduce repetition of a word or phrase, one might consider when it has last been used. The custom grammar treats this as a rank: given a non-terminal with $N$ possible production rules, the most recently used rule will have a \textit{recency}\footnote{Or `dryness', as \textit{Improv}, the generator for \textit{Voyageur}, would call it.} of $N-1$, the second most recent $N-2$, and so on down to the rule that was used longest ago (or indeed, never used), with recency $0$. Though it does not account for the intervals between uses, nor the second, third, etc, most recent use, there isn't any reason to overcomplicate a metric that already achieves the desired effect \citep{kazemiSimpleProceduralGeneration}.
 
 \vspace{5pt}\noindent
-These ranks are straightforwardly integrating into the production rules' probability distribution. The likelihood of a rule with recency $n$ is scaled by $p^{n/(N-1)}$, such that (all other weightings being equal) the most recently used rule will be $p$ times as likely as the least recent.\footnote{The same string \texttt{alpha} might replace two different non-terminals \texttt{\#A\#}, \texttt{\#B\#}. Recognising these as distinct production rules, the recency with which one was applied to \texttt{\#A\#} has no bearing on when the other is applied to \texttt{\#B\#}, or vice versa.} 
+These ranks are straightforwardly integrating into the production rules' probability distribution. The likelihood of a rule with recency $n$ is scaled by $p^{n/(N-1)}$, such that (all other weightings being equal) the most recently used rule will be $p$ times as likely as the least recent.\footnote{The same string \texttt{alpha} might replace two different non-terminals \texttt{\{A\}}, \texttt{\{B\}}. Recognising these as distinct production rules, the recency with which one was applied to \texttt{\{A\}} has no bearing on when the other is applied to \texttt{\{B\}}, or vice versa.} 
 
 %\vspace{5pt}\noindent
 %Note that [joint recency!].
 
-\paragraph{Consistency} To create a feeling of transience, landmarks can , meaning the . The approach to characterisation is not so simple. The narrative of \textit{Concrete Earth} is so largely centred around , though, its  . [Consistency of characterisation discussion...] As such,  uses a lightweight approach to consistent characterisation
+\paragraph{Consistency} Intended to create a feeling of transience, landmarks in \textit{Concrete Earth} can be visited once and once only, and as such do not need tracked by an overall `world model'. The game's approach to characterisation is not so simple. With a narrative largely centred around picking up passengers, journeying with them, then parting ways, it should follow that if a detail about a party member has already been established, the text generator must be able to consistently recover it. %As such,  uses a lightweight approach to consistent characterisation
 
 \vspace{5pt}\noindent
-[The... delimiters]:
+The grammar's \texttt{GenerateSentence} function, therefore, accepts (up to) two pointers to \texttt{StoryCharacter} structs. These are handled by three \textit{consistency markers}: %Not clear enough - relate to braces!
 \begin{itemize}[noitemsep]
-\item \verb|*| [checks active character]. [If yes; if else].
-\item \verb|**| applies similarly to the second character slot.
-\item \verb|?| [THIRD EXAMPLE: Consider \verb|{?BARREL #1}-{?BARREL #2}|, (signifying a double-barrelled surname): if .\footnote{Note that \texttt{?} can also inherit an empty string, if the preceding non-terminal is not being remembered.}
+\item \verb|*|\textit{:} The term \verb|{*A}| tells the grammar to check the first character argument for key \verb|A|. If a value exist, this will be substituted  [If yes; if else], and stored in the character struct for future use.
+\item \verb|**|\textit{:} The term \verb|{**A}| similarly applies to the second character argument.
+\item \verb|?|\textit{:} %[THIRD EXAMPLE: Consider \verb|{?BARREL #1}-{?BARREL #2}|, (signifying a double-barrelled surname): if 
+.\footnote{Note that \texttt{?} can also inherit an empty string, if the preceding non-terminal is not being remembered.}
 \end{itemize}
 
 
@@ -376,7 +377,7 @@ Consider how \textit{Concrete Earth}. Using a
 \item \verb|{*MASCULINE PATRONYMIC}| $\mapsto$ \verb|NIKOLAYEVICH|\textit{:} The character's forename is matched to a patronymic of the same gender (``Nikolayevich'' here meaning ``Son of Nikolay'') \footnote{As far as this report can tell, there are no gender-neutral patronymics in Russian - without actually speaking the language, it seems most appropriate to drop these from non-binary characters' names entirely. [Ethical generation - what a generator might accidentally say about the worlds it creates (citation); as much as (...medieval society would be engaged in non-binary erasure on a systemic level?)]}
 \item \verb|{*SURNAME}| $\mapsto$ \verb|TOLSTOY|\textit{:} The final non-terminal comes with no conditions, and ; this, too, is saved within the
 \end{enumerate}
-In this case, the grammar terminates after a single iteration. Should \verb|{*BARREL #1}-{*BARREL #2}| have replaced \verb|{*SURNAME}|, however, the new non-terminals would needed handled on a second parse.
+In this case, the grammar terminates after a single iteration. Should \verb|{*BARREL #1}-{*BARREL #2}| (signifying a double-barrelled surname) have replaced \verb|{*SURNAME}|, however, the new non-terminals would needed handled on a second parse.
 
 \vspace{5pt}\noindent
 This might feel too limited, from a dramatic perspective. For all this effort to [maintain consistency], personality is not so immutable; so much of good storytelling relies on character \textit{development}.
@@ -435,7 +436,7 @@ The role of marching cubes is much more utilitarian: height maps have a well-kno
 Though a  tetrahedral grid into  [additional nuances], [having completed the basic algorithm]. %To the extent that the feature's performance. Even for moderate values of $n$, \footnote{The complexity of}%one met to great success. To the extent that the performance of the feature can be criticised,  %Marching cubes, too, have been used effectively. T
 
 \vspace{5pt}\noindent
-The more interesting question here is how effectively the marching cubes enhance \textit{Concrete Earth}'s setting. As much as they are used to procedurally generate terrain, that terrain feel somewhat lacking: while this report has already acknowledged [few landmarks], it's no less notable that [untextured]. That the game logic [generates at runtime and cycles through] only enhances (though this is a much quicker fix).
+The more interesting question here is how effectively the marching cubes enhance \textit{Concrete Earth}'s setting. As much as they are used to procedurally generate terrain, that terrain feel somewhat lacking: while this report has already acknowledged the relatively few landmarks available, it's no less notable that they are left untextured. With more time, , but having already experimented with procedural texturing in CMP502 it felt more fruitful to explore new techniques. That the game logic [generates at runtime and cycles through] only enhances (though this is a much quicker fix).
 
 \vspace{5pt}\noindent
 \begin{figure}[h]
@@ -460,6 +461,10 @@ Built on previous work from CMP502, this project could be written to an already-
 
 \vspace{5pt}\noindent
 [Discuss the broader merits of Section 4, ultimately landing on the value of \textit{internal consistency}? Or - contrast narrative with models?]
+
+\vspace{5pt}\noindent
+[Holistically, though, the code \textit{must} be a success.]
+
 
 \section{Conclusions}
 

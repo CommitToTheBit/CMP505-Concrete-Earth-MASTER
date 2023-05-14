@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  13 MAY 2023 20:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.3.17)  14 MAY 2023 14:48
 entering extended mode
 **"./CMP505 Report.tex"
 (CMP505 Report.tex
@@ -784,7 +784,11 @@ LaTeX Info: Thecontrolsequence`\]'isalreadyrobust on input line 130.
 File: l3backend-pdftex.def 2021-03-02 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count314
 \l__pdf_internal_box=\box63
-) (CMP505 Report.aux)
+) (CMP505 Report.aux
+
+LaTeX Warning: Label `Interpolated Marching Squares' multiply defined.
+
+)
 \openout1 = `"CMP505 Report.aux"'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
@@ -911,123 +915,136 @@ File: ./Images//Concave Terrain.jpg Graphic file (type jpg)
 <use ./Images//Concave Terrain.jpg>
 Package pdftex.def Info: ./Images//Concave Terrain.jpg  used on input line 93.
 (pdftex.def)             Requested size: 319.2417pt x 157.3538pt.
- [2 <./Images//Concave Terrain.jpg>]
-<./Images//Marching Square Partitions.jpg, id=139, 2230.58344pt x 548.0475pt>
+<./Images//Marching Square Partitions.jpg, id=123, 2230.58344pt x 548.0475pt>
 File: ./Images//Marching Square Partitions.jpg Graphic file (type jpg)
 <use ./Images//Marching Square Partitions.jpg>
 Package pdftex.def Info: ./Images//Marching Square Partitions.jpg  used on inpu
-t line 105.
+t line 102.
 (pdftex.def)             Requested size: 435.32422pt x 106.95663pt.
-<./Images//Marching Squares.jpg, id=141, 1790.94093pt x 587.94656pt>
+ [2 <./Images//Concave Terrain.jpg>]
+<./Images//Marching Squares.jpg, id=134, 1790.94093pt x 587.94656pt>
 File: ./Images//Marching Squares.jpg Graphic file (type jpg)
 <use ./Images//Marching Squares.jpg>
-Package pdftex.def Info: ./Images//Marching Squares.jpg  used on input line 118
+Package pdftex.def Info: ./Images//Marching Squares.jpg  used on input line 110
 .
 (pdftex.def)             Requested size: 435.32422pt x 142.91328pt.
- [3 <./Images//Marching Square Partitions.jpg> <./Images//Marching Squares.jpg>
-]
-<./Images//Interpolated Marching Squares.jpg, id=160, 1947.52594pt x 934.24031p
+<./Images//Interpolated Marching Squares.jpg, id=141, 1947.52594pt x 934.24031p
 t>
 File: ./Images//Interpolated Marching Squares.jpg Graphic file (type jpg)
 <use ./Images//Interpolated Marching Squares.jpg>
 Package pdftex.def Info: ./Images//Interpolated Marching Squares.jpg  used on i
-nput line 131.
-(pdftex.def)             Requested size: 435.32422pt x 208.82649pt.
- [4 <./Images//Interpolated Marching Squares.jpg>]
-<./Images//Hex Field.jpg, id=172, 964.35281pt x 844.65562pt>
-File: ./Images//Hex Field.jpg Graphic file (type jpg)
-<use ./Images//Hex Field.jpg>
-Package pdftex.def Info: ./Images//Hex Field.jpg  used on input line 166.
-(pdftex.def)             Requested size: 217.66211pt x 190.64507pt.
- [5 <./Images//Hex Field.jpg>]
-<./Images//Dragon Curves.png, id=186, 1445.4pt x 768.62157pt>
-File: ./Images//Dragon Curves.png Graphic file (type png)
-<use ./Images//Dragon Curves.png>
-Package pdftex.def Info: ./Images//Dragon Curves.png  used on input line 225.
-(pdftex.def)             Requested size: 319.2417pt x 169.76578pt.
+nput line 136.
+(pdftex.def)             Requested size: 319.2417pt x 153.13086pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[6]
-
-LaTeX Warning: Reference `Zamir Branching' on page 7 undefined on input line 24
-9.
-
-<./Images//Zamir's Model.png, id=211, 1445.4pt x 767.86874pt>
+[3 <./Images//Marching Square Partitions.jpg> <./Images//Marching Squares.jpg>]
+<./Images//Dragon Curves.png, id=165, 1445.4pt x 768.62157pt>
+File: ./Images//Dragon Curves.png Graphic file (type png)
+<use ./Images//Dragon Curves.png>
+Package pdftex.def Info: ./Images//Dragon Curves.png  used on input line 150.
+(pdftex.def)             Requested size: 319.2417pt x 169.76578pt.
+[4 <./Images//Interpolated Marching Squares.jpg> <./Images//Dragon Curves.png>]
+<./Images//Hex Field.jpg, id=176, 964.35281pt x 844.65562pt>
+File: ./Images//Hex Field.jpg Graphic file (type jpg)
+<use ./Images//Hex Field.jpg>
+Package pdftex.def Info: ./Images//Hex Field.jpg  used on input line 176.
+(pdftex.def)             Requested size: 319.2417pt x 279.61363pt.
+[5 <./Images//Hex Field.jpg>] [6]
+File: ./Images//Dragon Curves.png Graphic file (type png)
+<use ./Images//Dragon Curves.png>
+Package pdftex.def Info: ./Images//Dragon Curves.png  used on input line 236.
+(pdftex.def)             Requested size: 319.2417pt x 169.76578pt.
+ [7]
+<./Images//Zamir's Model.png, id=218, 1445.4pt x 767.86874pt>
 File: ./Images//Zamir's Model.png Graphic file (type png)
 <use ./Images//Zamir's Model.png>
-Package pdftex.def Info: ./Images//Zamir's Model.png  used on input line 255.
+Package pdftex.def Info: ./Images//Zamir's Model.png  used on input line 266.
 (pdftex.def)             Requested size: 319.2417pt x 169.59949pt.
-[7 <./Images//Dragon Curves.png> <./Images//Zamir's Model.png>]
+ [8 <./Images//Zamir's Model.png>]
+<./Images//Blood Vessels.png, id=237, 1444.64719pt x 766.36313pt>
+File: ./Images//Blood Vessels.png Graphic file (type png)
+<use ./Images//Blood Vessels.png>
+Package pdftex.def Info: ./Images//Blood Vessels.png  used on input line 308.
+(pdftex.def)             Requested size: 319.2417pt x 169.3488pt.
+<./Images//Eye Strain Effect.png, id=240, 1444.64719pt x 764.8575pt>
+File: ./Images//Eye Strain Effect.png Graphic file (type png)
+<use ./Images//Eye Strain Effect.png>
+Package pdftex.def Info: ./Images//Eye Strain Effect.png  used on input line 32
+6.
+(pdftex.def)             Requested size: 319.2417pt x 169.0161pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[9 <./Images//Blood Vessels.png>]
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-309.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 309.
+337.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 337.
 
 
 LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 309.
+(Font)              for symbol `textbraceleft' on input line 337.
 
-[8] [9]
-<./Images//Euclidean Voronoi Voxel.png, id=277, 1445.4pt x 767.11594pt>
+[10 <./Images//Eye Strain Effect.png>] [11] [12]
+<./Images//Euclidean Voronoi Voxel.png, id=313, 1445.4pt x 767.11594pt>
 File: ./Images//Euclidean Voronoi Voxel.png Graphic file (type png)
 <use ./Images//Euclidean Voronoi Voxel.png>
 Package pdftex.def Info: ./Images//Euclidean Voronoi Voxel.png  used on input l
-ine 394.
+ine 444.
 (pdftex.def)             Requested size: 319.2417pt x 169.43323pt.
- [10 <./Images//Euclidean Voronoi Voxel.png>] (CMP505 Report.bbl
-[11]) [12] (CMP505 Report.aux)
+ [13 <./Images//Euclidean Voronoi Voxel.png>] (CMP505 Report.bbl [14]) [15] (CM
+P505 Report.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `"CMP505 Report".out' has not changed.
-(rerunfilecheck)             Checksum: 54249D16273B807856B9E292AC48AC44;2654.
+(rerunfilecheck)             Checksum: 52EE06E146E99467F70EB0F426FF8DCC;2654.
  ) 
 Here is how much of TeX's memory you used:
- 23164 strings out of 479300
- 422533 string characters out of 2853552
- 712439 words of memory out of 3000000
- 40124 multiletter control sequences out of 15000+200000
- 419270 words of font info for 85 fonts, out of 3000000 for 9000
+ 23197 strings out of 479300
+ 423193 string characters out of 2853552
+ 709980 words of memory out of 3000000
+ 40143 multiletter control sequences out of 15000+200000
+ 419611 words of font info for 86 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 87i,24n,89p,1368b,591s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
-/cm/cmbx10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
-blic/amsfonts/cm/cmbx12.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/f
-onts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/samdr/AppData/Local/Programs/
-MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/samdr/AppData/Loc
-al/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/samd
-r/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
-C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
-/cmmi8.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
-/amsfonts/cm/cmmi9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/
-type1/public/amsfonts/cm/cmr10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTe
-X 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/samdr/AppData/Local/Pr
-ograms/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/samdr/AppD
-ata/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users
-/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pf
-b><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
-/cm/cmr9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
-ic/amsfonts/cm/cmsy10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fon
-ts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/samdr/AppData/Local/Programs/Mi
-KTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/samdr/AppData/Local
-/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/samdr/
-AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti9.pfb><C:/
+ 87i,24n,89p,1355b,609s stack positions out of 5000i,500n,10000p,200000b,50000s
+ <C:\Users\samdr\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\
+tcrm1095.pk><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publi
+c/amsfonts/cm/cmbx10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/font
+s/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/samdr/AppData/Local/Programs/Mi
+KTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/samdr/AppData/Local
+/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/samdr/A
+ppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/
 Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cm
-tt10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/a
-msfonts/cm/cmtt9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
-pe1/public/amsfonts/symbols/msam10.pfb><C:/Users/samdr/AppData/Local/Programs/M
-iKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on "CMP505 Report.pdf" (12 pages, 2144656 bytes).
+mi10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/a
+msfonts/cm/cmmi8.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/ty
+pe1/public/amsfonts/cm/cmmi9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 
+2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/samdr/AppData/Local/Prog
+rams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/samdr/AppDat
+a/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/
+samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb
+><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/
+cm/cmr8.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publi
+c/amsfonts/cm/cmr9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/
+type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKT
+eX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/samdr/AppData/Local/P
+rograms/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/samdr/App
+Data/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Us
+ers/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti
+9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsf
+onts/cm/cmtt10.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.9/fonts/type
+1/public/amsfonts/cm/cmtt9.pfb><C:/Users/samdr/AppData/Local/Programs/MiKTeX 2.
+9/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/samdr/AppData/Local/
+Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on "CMP505 Report.pdf" (15 pages, 2277755 bytes).
 PDF statistics:
- 389 PDF objects out of 1000 (max. 8388607)
- 81 named destinations out of 1000 (max. 500000)
- 213 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 430 PDF objects out of 1000 (max. 8388607)
+ 92 named destinations out of 1000 (max. 500000)
+ 223 words of extra memory for PDF output out of 10000 (max. 10000000)
 
