@@ -265,6 +265,51 @@ void Game::Render()
 	m_Board.Render(context, &m_TerrainShader, displacement, 1.0f, 0.95f, &m_Camera, m_time, &m_Light);
 	m_Board.RenderUI(context, &m_LocationShader, displacement, 1.0f, &m_Camera, m_time, m_normalMap.Get());
 
+	// DEBUG: Render exemplar landmarks...
+	/*float l = (m_Camera.getPosition()-displacement).Length();
+	DirectX::SimpleMath::Matrix ortho = DirectX::SimpleMath::Matrix::CreateOrthographic(l*1920.0f/1080.0f, l*1.0f, 0.01f, 100.0f);
+
+	m_TerrainShader.EnableShader(context);
+	m_TerrainShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.9f)*Matrix::CreateRotationY(XM_PI/12.0f)*Matrix::CreateTranslation(-1.0f, 0.1f, -1.0f)*Matrix::CreateScale(0.9f)), &m_Camera.getCameraMatrix(), &ortho, true);// &m_Camera.getPerspective(), true);
+	m_TerrainShader.SetAlphaBuffer(context, 1.0f);
+	m_TerrainShader.SetLightBuffer(context, &m_Light);
+	m_Thorns.Render(context);
+
+	m_TerrainShader.EnableShader(context);
+	m_TerrainShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.9f)*Matrix::CreateRotationY(XM_PI/12.0f)*Matrix::CreateTranslation(0.0f, 0.1f, -1.0f)*Matrix::CreateScale(0.9f)), &m_Camera.getCameraMatrix(), &ortho, true);// &m_Camera.getPerspective(), true);
+	m_TerrainShader.SetAlphaBuffer(context, 1.0f);
+	m_TerrainShader.SetLightBuffer(context, &m_Light);
+	m_Monolith1.Render(context);
+
+	m_TerrainShader.EnableShader(context);
+	m_TerrainShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.9f)*Matrix::CreateRotationY(XM_PI/12.0f)*Matrix::CreateTranslation(1.0f, 0.1f, -1.0f)*Matrix::CreateScale(0.9f)), &m_Camera.getCameraMatrix(), &ortho, true);// &m_Camera.getPerspective(), true);
+	m_TerrainShader.SetAlphaBuffer(context, 1.0f);
+	m_TerrainShader.SetLightBuffer(context, &m_Light);
+	m_Monolith2.Render(context);
+
+	Light light = m_Light;
+	light.setPosition(0.0f, 2.5f*cos(-67.5f*XM_PI/180.0f)+(2.0f*m_Board.m_hexRadius-1)*sin(-67.5f*XM_PI/180.0f)-1.2f, -2.5f*sin(-67.5f*XM_PI/180.0f)+(2.0f*m_Board.m_hexRadius-1)*cos(-67.5f*XM_PI/180.0f));
+	//m_Light.setDirection(1.0f, 1.0f, 0.0f);
+	//m_Light.setStrength(100.0f);
+
+	m_TerrainShader.EnableShader(context);
+	m_TerrainShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.9f)*Matrix::CreateRotationY(XM_PI/12.0f)*Matrix::CreateRotationX(67.5f*XM_PI/180.0f)*Matrix::CreateTranslation(-1.0f, -1.1f, -1.0f)*Matrix::CreateScale(0.9f)), &m_Camera.getCameraMatrix(), &ortho, true);// &m_Camera.getPerspective(), true);
+	m_TerrainShader.SetAlphaBuffer(context, 1.0f);
+	m_TerrainShader.SetLightBuffer(context, &light);
+	m_Thorns.Render(context);
+
+	m_TerrainShader.EnableShader(context);
+	m_TerrainShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.9f)*Matrix::CreateRotationY(XM_PI/12.0f)*Matrix::CreateRotationX(67.5f*XM_PI/180.0f)*Matrix::CreateTranslation(0.0f, -1.1f, -1.0f)*Matrix::CreateScale(0.9f)), &m_Camera.getCameraMatrix(), &ortho, true);// &m_Camera.getPerspective(), true);
+	m_TerrainShader.SetAlphaBuffer(context, 1.0f);
+	m_TerrainShader.SetLightBuffer(context, &light);
+	m_Monolith1.Render(context);
+
+	m_TerrainShader.EnableShader(context);
+	m_TerrainShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.9f)*Matrix::CreateRotationY(XM_PI/12.0f)*Matrix::CreateRotationX(67.5f*XM_PI/180.0f)*Matrix::CreateTranslation(1.0f, -1.1f, -1.0f)*Matrix::CreateScale(0.9f)), &m_Camera.getCameraMatrix(), &ortho, true);// &m_Camera.getPerspective(), true);
+	m_TerrainShader.SetAlphaBuffer(context, 1.0f);
+	m_TerrainShader.SetLightBuffer(context, &light);
+	m_Monolith2.Render(context);*/
+
 	// DEBUG: Render three (normalised) torii, for voxel texturing...
 	/*m_VoronoiShader.EnableShader(context);
 	m_VoronoiShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateRotationY(-XM_PIDIV4)*Matrix::CreateTranslation(-1.0f, 0.0f, -1.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
@@ -562,8 +607,12 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_Board.Initialize(device, 4, 80);
+	m_Board.Initialize(device, 4, 32);
 	m_add = 0;
+
+	/*m_Thorns.InitializeThorn(device, &m_Board.m_horizontalField, 0.15f+0.15f*std::rand()/RAND_MAX);
+	m_Monolith1.InitializeMonolith(device, &m_Board.m_horizontalField, 0.15f+0.15f*std::rand()/RAND_MAX);
+	m_Monolith2.InitializeMonolith(device, &m_Board.m_horizontalField, 0.15f+0.15f*std::rand()/RAND_MAX);*/
 
 	// L-Systems
 	/*m_DragonCurve.Initialize(device, 0.125f, 11);

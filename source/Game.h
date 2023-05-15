@@ -155,6 +155,10 @@ private:
     LSphinxTiling                                                           m_SphinxTiling;
     LPenroseP3                                                              m_PenroseP3;
 
+    Hex                                                                     m_Thorns;
+    Hex                                                                     m_Monolith1;
+    Hex                                                                     m_Monolith2;
+
     std::vector<LDeterministicBloodVessel>                                  m_DeterministicBloodVessels;
     std::vector<LBloodVessel>                                               m_StochasticBloodVessels;
 

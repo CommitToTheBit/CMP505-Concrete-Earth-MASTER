@@ -72,7 +72,7 @@ void Hex::InitializeMonolith(ID3D11Device* device, Field* heightField, float iso
 	DirectX::SimpleMath::Vector3 baseOrigin = DirectX::SimpleMath::Vector3(0.5f, 0.5f*baseHeight, 0.5f);
 	DirectX::SimpleMath::Vector3 baseAxis = DirectX::SimpleMath::Vector3(2.0f*((float)std::rand()/RAND_MAX)-1.0f, 0.01f+((float)std::rand()/RAND_MAX), 2.0f*((float)std::rand()/RAND_MAX)-1.0f);
 	float baseAngle = (-30.0f+60.0f*((float)std::rand()/RAND_MAX))*(DirectX::XM_PI/180.0f);
-	DirectX::SimpleMath::Vector3 baseDimensions = DirectX::SimpleMath::Vector3(0.2f+0.2f*((float)std::rand()/RAND_MAX), 0.5f*baseHeight, 0.2f+0.2f*((float)std::rand()/RAND_MAX));
+	DirectX::SimpleMath::Vector3 baseDimensions = DirectX::SimpleMath::Vector3(0.2f+0.2f*((float)std::rand()/RAND_MAX), baseHeight, 0.2f+0.2f*((float)std::rand()/RAND_MAX));
 
 	int variant = std::rand()%3;
 	if (variant < 2)
