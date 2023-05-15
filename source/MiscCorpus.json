@@ -1,5 +1,25 @@
 {
-  "your {WAGON DESCRIPTION}.": {
+  "you arrive at {{SUIT} LANDMARK}.": {
+    "productions": [
+      "ARRIVAL SENTENCE"
+    ]
+  },
+  "a scorned vista": {
+    "productions": [
+      "SALT LANDMARK"
+    ]
+  },
+  "a gathering of vile, jutting thorns": {
+    "productions": [
+      "THORN LANDMARK"
+    ]
+  },
+  "an awesome monument": {
+    "productions": [
+      "MONOLITH LANDMARK"
+    ]
+  },
+  "your {WAGON DESCRIPTION} {WAGON STOPS}.": {
     "productions": [
       "ARRIVAL SENTENCE"
     ]
@@ -103,7 +123,7 @@
       "PESTILENCE"
     ]
   },
-  "{WAGON FRICTIONS} to a {WAGON HALT}": {
+  "{WAGON FRICTIONS} to a halt": {
     "productions": [
       "WAGON STOPS"
     ]
@@ -139,16 +159,6 @@
       "WAGON FRICTIONS"
     ]
   },
-  "stop": {
-    "productions": [
-      "WAGON HALT"
-    ]
-  },
-  "halt": {
-    "productions": [
-      "WAGON HALT"
-    ]
-  },
   "non-Euclidean": {
     "productions": [
       "LANDMARK ADJECTIVE"
@@ -180,6 +190,16 @@
     ]
   },
   "exorcist": {
+    "productions": [
+      "ARCHETYPE"
+    ]
+  },
+  "drunkard": {
+    "productions": [
+      "ARCHETYPE"
+    ]
+  },
+  "fieldhand": {
     "productions": [
       "ARCHETYPE"
     ]
