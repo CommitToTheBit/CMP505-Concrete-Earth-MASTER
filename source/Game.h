@@ -14,6 +14,8 @@
 
 #include "LDragonCurve.h"
 #include "LSphinxTiling.h"
+#include "LPenroseP3.h"
+#include "LDeterministicBloodVessel.h"
 #include "LBloodVessel.h"
 
 #include "StoryEngine.h"
@@ -24,6 +26,8 @@
 #include "EnvironmentCamera.h"
 
 #include "Shader.h"
+
+#include <chrono>
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
@@ -125,8 +129,10 @@ private:
 	// Shaders
     Shader                                                                  m_NeutralShader;
     Shader                                                                  m_TerrainShader;
+    Shader                                                                  m_LocationShader;
 
     Shader                                                                  m_VoronoiShader; // DEBUG...
+    Shader                                                                  m_WireframeShader; // DEBUG...
 
     // Render-to-Textures
     Screen                                                                  m_Screen;
@@ -141,9 +147,16 @@ private:
 
     MarchingCubes                                                           m_Torus; // DEBUG...
 
+    MarchingCubes                                                           m_Wireframe; // DEBUG...
+    MarchingCubes                                                           m_Partitions[14]; // DEBUG...
+
     // L-Systems
     LDragonCurve                                                            m_DragonCurve;
     LSphinxTiling                                                           m_SphinxTiling;
+    LPenroseP3                                                              m_PenroseP3;
+
+    std::vector<LDeterministicBloodVessel>                                  m_DeterministicBloodVessels;
+    std::vector<LBloodVessel>                                               m_StochasticBloodVessels;
 
     int                                                                     m_BloodVesselCount;
     std::vector<LBloodVessel>                                               m_BloodVessels;

@@ -87,12 +87,22 @@ void Field::InitialiseToroidalField(float R, int octaves, float amplitude)
 	}
 }
 
+void Field::InitialiseCubicField()
+{
+	DirectX::SimpleMath::Vector3 origin = DirectX::SimpleMath::Vector3(0.5f, 0.5f, 0.5f);
+
+	DirectX::SimpleMath::Vector3 position;
+	for (int f = 0; f < (m_cells+1)*(m_cells+1)*(m_cells+1); f++)
+	{
+		position = 2.0f*(m_field[f].position-origin);
+
+		m_field[f].scalar = std::max(abs(position.x), std::max(abs(position.y), abs(position.z)));
+	}
+}
+
 void Field::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 base, float angle, float isolevel)
 {
-	SimplexNoise simplex = SimplexNoise();
-
 	float theta, thorn;
-
 	for (int f = 0; f < (m_cells+1)*(m_cells+1)*(m_cells+1); f++)
 	{
 		theta = acos((m_field[f].position-origin).Dot(base-origin)/((m_field[f].position-origin).Length()*(base-origin).Length()));
@@ -103,6 +113,31 @@ void Field::IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 origin, Direct
 
 		m_field[f].scalar = std::min(m_field[f].scalar, isolevel*thorn); // NB: Use of min, since this points 'out' from isosurface...
 	}
+}
+
+void Field::IntegrateShrapnel(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 axis, float angle, DirectX::SimpleMath::Vector3 dimensions, float isolevel)
+{
+	DirectX::SimpleMath::Vector3 position;
+	float shrapnel;
+	for (int f = 0; f < (m_cells+1)*(m_cells+1)*(m_cells+1); f++)
+	{
+		position = 2.0f*(m_field[f].position-origin);
+		DirectX::SimpleMath::Vector3::Transform(position, DirectX::SimpleMath::Matrix::CreateFromAxisAngle(axis, angle), position); // FIXME: Hacky use of rotations?
+		shrapnel = std::max((1.0f+m_field[f].position.y)*abs(position.x/dimensions.x), std::max(abs(position.y/dimensions.y), (1.0f+m_field[f].position.y)*abs(position.z/dimensions.z)));
+
+		m_field[f].scalar = std::min(m_field[f].scalar, isolevel*shrapnel);
+	}
+}
+
+
+void Field::InitialisePartition(int configuration)
+{
+	Initialise(1);
+	configuration %= 256;
+
+	for (int i = 0; i < 8; i++)
+		//m_field[i].scalar = ((configuration%((int)pow(2, i)))/(pow(2, i-1)) == 0) ? -1.0f : 1.0f;
+		m_field[i].scalar = (configuration & (int)pow(2, i)) ? -1.0f : 1.0f;
 }
 
 void Field::IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius, float isolevel)
@@ -122,10 +157,10 @@ void Field::IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius, floa
 	}
 }
 
-void Field::DeriveHexPrism(ID3D11Device* device, float isolevel, bool lowerBound, bool upperBound)
+void Field::DeriveHexPrism(float isolevel, bool lowerBound, bool upperBound)
 {
 	DirectX::SimpleMath::Vector2 position;
-	float r, theta, z;
+	float r, theta, modTheta, z;
 
 	int q, quadrant;
 	DirectX::SimpleMath::Vector2 quadrantDirection;
@@ -133,15 +168,16 @@ void Field::DeriveHexPrism(ID3D11Device* device, float isolevel, bool lowerBound
 	for (int f = 0; f < (m_cells+1)*(m_cells+1)*(m_cells+1); f++)
 	{
 		position = 2.0f*DirectX::SimpleMath::Vector2(m_field[f].position.x-0.5f, m_field[f].position.z-0.5f);
+
 		theta = atan2(position.y, position.x);
 		if (theta < 0.0f)
 			theta += XM_2PI;
 
-		q = 6;
-		for (quadrant = 0; theta >= ((float)quadrant+1.0f)*XM_2PI/(float)q; quadrant++) {}
-		quadrantDirection = DirectX::SimpleMath::Vector2(cos(((float)quadrant+0.5f)*XM_2PI/(float)q), sin(((float)quadrant+0.5f)*XM_2PI/(float)q));
+		modTheta = theta;
+		while (modTheta >= XM_PI/3)
+			modTheta -= XM_PI/3;
 
-		r = position.Dot(quadrantDirection)/cos(XM_PI/(float(q)));
+		r = (cos(modTheta-XM_PI/6)/cos(XM_PI/6))*position.Length();
 		m_field[f].scalar = std::max(m_field[f].scalar, isolevel*r);
 
 		if (lowerBound)
@@ -158,7 +194,7 @@ void Field::DeriveHexPrism(ID3D11Device* device, float isolevel, bool lowerBound
 	}
 }
 
-void Field::DeriveCylindricalPrism(ID3D11Device* device, float isolevel, bool lowerBound, bool upperBound)
+void Field::DeriveCylindricalPrism(float isolevel, bool lowerBound, bool upperBound)
 {
 	DirectX::SimpleMath::Vector2 position;
 	float r, theta, z;

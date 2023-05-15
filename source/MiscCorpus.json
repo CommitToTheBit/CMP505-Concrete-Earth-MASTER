@@ -1,4 +1,164 @@
 {
+  "you arrive at {{SUIT} LANDMARK}": {
+    "productions": [
+      "ARRIVAL SENTENCE"
+    ]
+  },
+  "a scorned vista": {
+    "productions": [
+      "SALT LANDMARK"
+    ]
+  },
+  "a gathering of vile, jutting thorns": {
+    "productions": [
+      "THORN LANDMARK"
+    ]
+  },
+  "an awesome monument": {
+    "productions": [
+      "MONOLITH LANDMARK"
+    ]
+  },
+  "your {WAGON DESCRIPTION} {WAGON STOPS}": {
+    "productions": [
+      "ARRIVAL SENTENCE"
+    ]
+  },
+  "wagon": {
+    "productions": [
+      "WAGON DESCRIPTION",
+      "WAGON NOUN"
+    ]
+  },
+  "caravan": {
+    "productions": [
+      "WAGON DESCRIPTION",
+      "WAGON NOUN"
+    ]
+  },
+  "carriage": {
+    "productions": [
+      "WAGON DESCRIPTION",
+      "WAGON NOUN"
+    ]
+  },
+  "chariot": {
+    "productions": [
+      "WAGON DESCRIPTION",
+      "WAGON NOUN"
+    ]
+  },
+  "{WAGON NEGATIVE} {WAGON NOUN}": {
+    "productions": [
+      "WAGON DESCRIPTION"
+    ]
+  },
+  "{WAGON POSITIVE}-if-{WAGON NEGATIVE} {WAGON NOUN}": {
+    "productions": [
+      "WAGON DESCRIPTION"
+    ]
+  },
+  "quaint": {
+    "productions": [
+      "WAGON POSITIVR"
+    ]
+  },
+  "faithful": {
+    "productions": [
+      "WAGON POSITIVE"
+    ]
+  },
+  "reliable": {
+    "productions": [
+      "WAGON POSITIVE"
+    ]
+  },
+  "shambling": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "quease-inducing": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "cramped": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "battered": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "forsaken": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "damned": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "rusting": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "{PESTILENCE}-riddled": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "lice": {
+    "productions": [
+      "PESTILENCE"
+    ]
+  },
+  "plague": {
+    "productions": [
+      "PESTILENCE"
+    ]
+  },
+  "{WAGON FRICTIONS} to a halt": {
+    "productions": [
+      "WAGON STOPS"
+    ]
+  },
+  "{WAGON ROLLS} in": {
+    "productions": [
+      "WAGON STOPS"
+    ]
+  },
+  "trundles": {
+    "productions": [
+      "WAGON ROLLS"
+    ]
+  },
+  "rumbles": {
+    "productions": [
+      "WAGON ROLLS"
+    ]
+  },
+  "judders": {
+    "productions": [
+      "WAGON ROLLS",
+      "WAGON FRICTIONS"
+    ]
+  },
+  "peters": {
+    "productions": [
+      "WAGON ROLLS"
+    ]
+  },
+  "grinds": {
+    "productions": [
+      "WAGON FRICTIONS"
+    ]
+  },
   "non-Euclidean": {
     "productions": [
       "LANDMARK ADJECTIVE"
@@ -30,6 +190,16 @@
     ]
   },
   "exorcist": {
+    "productions": [
+      "ARCHETYPE"
+    ]
+  },
+  "drunkard": {
+    "productions": [
+      "ARCHETYPE"
+    ]
+  },
+  "fieldhand": {
     "productions": [
       "ARCHETYPE"
     ]

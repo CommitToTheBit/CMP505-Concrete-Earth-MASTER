@@ -24,6 +24,8 @@ public:
 	Scene StartScene(std::string landmark);
 	Scene ContinueScene(int choice);
 
+	int GetPartySize();
+
 private:
 	void ApplyEffects(Storylet::Text* text);
 

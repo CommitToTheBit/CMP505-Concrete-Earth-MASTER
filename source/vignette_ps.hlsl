@@ -23,7 +23,6 @@ cbuffer StressBuffer : register(b5)
     float stress;
 };
 
-
 struct InputType
 {
     float4 position : SV_POSITION;

@@ -21,6 +21,7 @@ public:
 	// Planar surface generation...
 	void InitialiseHorizontalField(int octaves = 8, float amplitude = 0.05f);
 	void IntegrateHorizontalThorn(DirectX::SimpleMath::Vector3 prick, DirectX::SimpleMath::Vector3 root, float radius, float isolevel);
+	void IntegrateShrapnel(DirectX::SimpleMath::Vector3 origin, DirectX::SimpleMath::Vector3 axis, float angle, DirectX::SimpleMath::Vector3 dimensions, float isolevel);
 	void IntegrateOrb(DirectX::SimpleMath::Vector3 centre, float radius, float isolevel);
 
 	// Spherical surface generation...
@@ -29,9 +30,15 @@ public:
 	// Toroidal surface generation...
 	void InitialiseToroidalField(float R, int octaves = 8, float amplitude = 0.2f);
 
+	// Cubic surface generation...
+	void InitialiseCubicField();
+
+	// Partition generation...
+	void InitialisePartition(int configuration);
+
 	// Generate *with hex*
-	void DeriveHexPrism(ID3D11Device*, float isolevel, bool lowerBound = true, bool upperBound = false);
-	void DeriveCylindricalPrism(ID3D11Device*, float isolevel, bool lowerBound = true, bool upperBound = false);
+	void DeriveHexPrism(float isolevel, bool lowerBound = true, bool upperBound = false);
+	void DeriveCylindricalPrism(float isolevel, bool lowerBound = true, bool upperBound = false);
 
 	int m_cells;
 	FieldVertexType* m_field;

@@ -7,7 +7,7 @@ const DirectX::SimpleMath::Vector3 Board::m_q = DirectX::SimpleMath::Vector3(-0.
 
 Board::Board()
 {
-	std::srand(0);
+	std::srand(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
 	m_interpolating = false;
 
@@ -21,17 +21,17 @@ Board::~Board()
 
 bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 {
+	hexRadius = std::max(hexRadius, 1);
+
 	m_hexRadius = hexRadius;
 	m_hexDiameter = (2*hexRadius+1);
-	m_hexes = 1+3*hexRadius*(hexRadius+1); // NB: We add an 'outer ring' of repeated hexes
+	m_hexCount = 1+3*hexRadius*(hexRadius+1); // NB: We add an 'outer ring' of repeated hexes
 
 	m_hexCoordinates = new int[(m_hexDiameter+2)*(m_hexDiameter+2)];
-	m_hexPermutation = new int[m_hexes];
+	m_hexPermutation = new int[m_hexCount];
 
-	m_hexIsolevels = new float[m_hexes];
-	m_hexModels = new MarchingCubes[m_hexes];
-
-	Field* hexField = new Field();
+	m_hexIsolevels = new float[m_hexCount];
+	m_hexModels = new Hex[m_hexCount];
 
 	m_horizontalField.Initialise(cells);
 	m_horizontalField.InitialiseHorizontalField(6,0.1f);
@@ -49,17 +49,23 @@ bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 
 			m_hexIsolevels[index] = 0.15f+0.15f*std::rand()/RAND_MAX;
 
-			hexField->Initialise(&m_horizontalField);
-			hexField->DeriveHexPrism(device, m_hexIsolevels[index]);
-
-			m_hexModels[index].Initialize(device, cells, hexField->m_field, m_hexIsolevels[index]);
+			int landmark = std::rand()%15;
+			if (landmark < 2)
+			{
+				m_hexModels[index].InitializeThorn(device, &m_horizontalField, m_hexIsolevels[index]);
+			}
+			else if (landmark < 3)
+			{
+				m_hexModels[index].InitializeMonolith(device, &m_horizontalField, m_hexIsolevels[index]);
+			}
+			else
+			{
+				m_hexModels[index].InitializeSalt(device, &m_horizontalField, m_hexIsolevels[index]);
+			}
 
 			m_hexCoordinates[(m_hexDiameter+2)*(j+m_hexRadius+1)+i+m_hexRadius+1] = index;
 			m_hexPermutation[index] = index;// (index+m_hexes/2)%m_hexes;
 
-			// DEBUG: Used for display purposes...
-			if (index%5 == 0)
-				AddThorns(device, index, 3);
 
 			index++;
 		}
@@ -72,11 +78,16 @@ bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 	m_t = 0.0f;
 	m_direction = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
 
-	delete hexField;
+	//delete hexField;
 
 	// Storylets...
-	m_storyEngine.Initialize();
-	m_scene = m_storyEngine.StartScene("thorn");
+	m_storyEngine.Initialize(std::rand());
+
+	int playerIndex = m_hexPermutation[m_hexCoordinates[2*(m_hexDiameter+2)+2]]; // NB: Player's current hex...
+	m_scene = m_storyEngine.StartScene(m_hexModels[playerIndex].m_suit);
+	m_sceneInterval = 0;
+
+	m_location.Initialize(device);
 
 	return true;
 }
@@ -118,6 +129,19 @@ void Board::Render(ID3D11DeviceContext* deviceContext, Shader* shader, DirectX::
 	return;
 }
 
+void Board::RenderUI(ID3D11DeviceContext* deviceContext, Shader* shader, DirectX::SimpleMath::Vector3 boardPosition, float boardScale, Camera* camera, float time, ID3D11ShaderResourceView* texture)
+{
+	DirectX::SimpleMath::Vector3 relativePosition = (-m_hexRadius+1)*m_p+(-m_hexRadius+1)*m_q+DirectX::SimpleMath::Vector3(0.0f, 0.6f+0.025f*sin(time), 0.0f);
+
+	float l = (camera->getPosition()-boardPosition).Length();
+	DirectX::SimpleMath::Matrix ortho = DirectX::SimpleMath::Matrix::CreateOrthographic(l*1920.0f/1080.0f, l*1.0f, 0.01f, 100.0f);
+
+	shader->EnableShader(deviceContext);
+	shader->SetMatrixBuffer(deviceContext, &(DirectX::SimpleMath::Matrix::CreateTranslation(0.5f, 0.0f, 0.25f) * DirectX::SimpleMath::Matrix::CreateTranslation(m_origin) * DirectX::SimpleMath::Matrix::CreateScale(0.25f) * DirectX::SimpleMath::Matrix::CreateTranslation(boardPosition+relativePosition) * DirectX::SimpleMath::Matrix::CreateScale(boardScale)), &camera->getCameraMatrix(), &ortho, true);
+	shader->SetShaderTexture(deviceContext, texture, 0, 0);
+	m_location.Render(deviceContext);
+}
+
 void Board::SetInterpolation(int north, int east)
 {
 	// ERROR-HANDLING: 'Normalise' direction...
@@ -144,8 +168,12 @@ void Board::Interpolate(float t)
 	m_north = 0;
 	m_east = 0;
 
-	// FIXME: Make this dependent on hex landmark!
-	m_scene = m_storyEngine.StartScene("thorn");
+	int playerIndex = m_hexPermutation[m_hexCoordinates[2*(m_hexDiameter+2)+2]]; // NB: Player's current hex...
+	if (m_hexModels[playerIndex].m_suit != "salt" || ++m_sceneInterval >= 7-m_storyEngine.GetPartySize()) // NB: A larger party size means more frequent events of interest!
+	{
+		m_scene = m_storyEngine.StartScene(m_hexModels[playerIndex].m_suit);
+		m_sceneInterval = 0;
+	}
 }
 
 void Board::SetInterpolationPerimeter()
@@ -216,7 +244,7 @@ void Board::ApplyInterpolationPermutation()
 	if (m_north == 0)
 		return;
 
-	int* hexPermutation = new int[m_hexes];
+	int* hexPermutation = new int[m_hexCount];
 
 	int ijColumn, ijColumnLength;
 	int	iPermuted, jPermuted;
@@ -260,43 +288,6 @@ void Board::ApplyInterpolationPermutation()
 	}
 
 	m_hexPermutation = hexPermutation;
-}
-
-void Board::AddThorns(ID3D11Device* device, int hex, int thorns)
-{
-	hex = (hex%m_hexes+m_hexes)%m_hexes;
-
-	// STEP 1: Initialise field...
-	Field* hexField = new Field();
-	hexField->Initialise(&m_horizontalField);
-
-	// STEP 2: Set thorn parameters, integrate it into the field...
-	// FIXME: A solid prototype, but highly lacking aesthetically...
-	for (int i = 0; i < thorns; i++)
-	{
-		float angle = XM_PIDIV2/10.0f;
-
-		float rBaseRange = 0.5f*cos(XM_PI/6.0f);
-		float rBase = rBaseRange*sqrt(pow(((float)std::rand()/RAND_MAX), 2.0f)+pow(((float)std::rand()/RAND_MAX), 2.0f));
-		float thetaBase = XM_2PI*std::rand()/RAND_MAX;
-
-		DirectX::SimpleMath::Vector3 base = DirectX::SimpleMath::Vector3(0.5f+0.5f*rBase*cos(thetaBase), 0.0f, 0.5f+0.5f*rBase*sin(thetaBase));
-
-		float rOriginRange = cos(XM_PI/6.0f);
-		float rOrigin = rOriginRange*(0.5f+0.5f*sqrt(pow(((float)std::rand()/RAND_MAX), 2.0f)+pow(((float)std::rand()/RAND_MAX), 2.0f)));
-		float thetaOrigin = thetaBase + 2.0f*((XM_PI/3.0f)*std::rand()/RAND_MAX);
-
-		DirectX::SimpleMath::Vector3 origin = DirectX::SimpleMath::Vector3(0.5f+0.5f*rOrigin*cos(thetaOrigin), 0.4f+m_hexIsolevels[hex], 0.5f+0.5f*rBase*sin(thetaOrigin));
-
-		hexField->IntegrateHorizontalThorn(origin, base, angle, m_hexIsolevels[hex]);
-	}
-	
-	hexField->DeriveHexPrism(device, m_hexIsolevels[hex]);
-
-	m_hexModels[hex].Shutdown(); // NB: Resetting prevents memory leak!
-	m_hexModels[hex].Initialize(device, hexField->m_cells, hexField->m_field, m_hexIsolevels[hex]);
-
-	delete hexField;
 }
 
 void Board::Choose(int choice)

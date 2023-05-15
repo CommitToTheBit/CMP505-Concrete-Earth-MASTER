@@ -53,7 +53,7 @@ void Grammar::InitializeCorpus(std::string jsonPath)
 	}
 }
 
-std::string Grammar::GenerateSentence(std::string axiom, StoryWorld::StoryCharacter* active, StoryWorld::StoryCharacter* passive, bool nested)
+std::string Grammar::GenerateSentence(std::string axiom, std::string suit, StoryWorld::StoryCharacter* active, StoryWorld::StoryCharacter* passive, bool nested)
 {
 	srand(m_seed); // FIXME: Hacky, but a good patch in lieu of a better rng implementation?
 	m_seed = 2.0f*(std::rand()-RAND_MAX/2)+std::rand()/RAND_MAX;
@@ -90,12 +90,12 @@ std::string Grammar::GenerateSentence(std::string axiom, StoryWorld::StoryCharac
 			sentence.erase(sentence.begin(), sentence.begin() + 1); // NB: Must wait for FindClosingBracket call to erase opening bracket...
 			index--;
 
-			nestedSentence = GenerateSentence(sentence.substr(0, index), active, passive, true); // NB: Recursive calls like this aren't ideal, but there'll never be too many nested brackets at once...
+			nestedSentence = GenerateSentence(sentence.substr(0, index), suit, active, passive, true); // NB: Recursive calls like this aren't ideal, but there'll never be too many nested brackets at once...
 
 			if (nestedSentence.find("*") == 0)
 				iteratedSentence += (nestedSentence.find("*", 1) == 1) ? GetProductionRule(nestedSentence.substr(2), passive, "**") : GetProductionRule(nestedSentence.substr(1), active, "*");
 			else
-				iteratedSentence += GetProductionRule(nestedSentence); // NB: nullptr passed in as 'forgetfulness override'...
+				iteratedSentence += (nestedSentence == "SUIT") ? suit : GetProductionRule(nestedSentence); // NB: nullptr passed in as 'forgetfulness override'... // NB: "Suit" is currently a special case, but this too can be generalised!
 
 			sentence.erase(sentence.begin(), sentence.begin() + index + 1);
 		}
@@ -208,16 +208,19 @@ std::string Grammar::GetProductionRule(std::string letter, StoryWorld::StoryChar
 
 	// Parse out "?" delimiters...
 	int consistencyIndex = production.find("{");
-	while (consistencyIndex != -1)
-	{	
-		if (production.find("?", consistencyIndex + 1) == consistencyIndex + 1) // FIXME: OOB?
+	if (production.find("?") != -1) // NB: This fixes an infinite while loop, but maybe not robust enough?
+	{
+		while (consistencyIndex != -1)
 		{
-			iteratedProduction += production.substr(0, consistencyIndex) + "{" + consistencyDelimiter;// ONLY STARS BREAK THIS!
-			production.erase(production.begin(), production.begin() + consistencyIndex + 2);
-			consistencyIndex = 0;
-		}
+			if (production.find("?", consistencyIndex + 1) == consistencyIndex + 1) // FIXME: OOB?
+			{
+				iteratedProduction += production.substr(0, consistencyIndex) + "{" + consistencyDelimiter;// ONLY STARS BREAK THIS!
+				production.erase(production.begin(), production.begin() + consistencyIndex + 2);
+				consistencyIndex = 0;
+			}
 
-		consistencyIndex = production.find("{", consistencyIndex);
+			consistencyIndex = production.find("{", consistencyIndex);
+		}
 	}
 	iteratedProduction += production;
 	production = iteratedProduction;

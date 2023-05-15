@@ -175,6 +175,7 @@
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Grammar.h" />
     <ClInclude Include="Hex.h" />
+    <ClInclude Include="LDeterministicBloodVessel.h" />
     <ClInclude Include="LDragonCurve.h" />
     <ClInclude Include="EnvironmentCamera.h" />
     <ClInclude Include="Game.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LPenroseP3.h" />
     <ClInclude Include="LSphinxTiling.h" />
     <ClInclude Include="LSystem.h" />
     <ClInclude Include="LBloodVessel.h" />
@@ -214,6 +216,7 @@
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="Grammar.cpp" />
     <ClCompile Include="Hex.cpp" />
+    <ClCompile Include="LDeterministicBloodVessel.cpp" />
     <ClCompile Include="LDragonCurve.cpp" />
     <ClCompile Include="EnvironmentCamera.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -226,6 +229,7 @@
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LPenroseP3.cpp" />
     <ClCompile Include="LSphinxTiling.cpp" />
     <ClCompile Include="LSystem.cpp" />
     <ClCompile Include="LBloodVessel.cpp" />
@@ -270,6 +274,8 @@
     <Image Include="directx.ico" />
     <Image Include="EvilDrone_Diff.dds" />
     <Image Include="glass_texture.dds" />
+    <Image Include="LocationMarker_001.dds" />
+    <Image Include="LocationMarker_002.dds" />
     <Image Include="sample_nm.dds" />
     <Image Include="Specimen-Jar-_1-Normal.dds" />
     <Image Include="Stylized_Stone_Floor_005_basecolor.dds" />
@@ -391,6 +397,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="voronoi_terrain_3ps_001.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="wireframe_3ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

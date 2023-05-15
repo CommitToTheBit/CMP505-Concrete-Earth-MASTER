@@ -97,7 +97,7 @@ void Game::Initialize(HWND window, int width, int height)
     m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"616516__justlaz__geiger_tick_low.wav");
     m_effect1 = m_soundEffect->CreateInstance();
 
-    //m_effect1->Play(true); // DEBUG: Turned off temporarily...
+    m_effect1->Play(true);
 #endif
 }
 
@@ -263,6 +263,7 @@ void Game::Render()
 	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
 	DirectX::SimpleMath::Vector3 displacement = Vector3(0.0f, -0.4f, 0.0f);// DirectX::SimpleMath::Vector3(2.5f, 1.0f*sin(1.0f*XM_PI/5.0f), 0.0f);
 	m_Board.Render(context, &m_TerrainShader, displacement, 1.0f, 0.95f, &m_Camera, m_time, &m_Light);
+	m_Board.RenderUI(context, &m_LocationShader, displacement, 1.0f, &m_Camera, m_time, m_normalMap.Get());
 
 	// DEBUG: Render three (normalised) torii, for voxel texturing...
 	/*m_VoronoiShader.EnableShader(context);
@@ -282,11 +283,84 @@ void Game::Render()
 
 	// DEBUG: Render a dragon curve...
 	/*m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5, 0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
 	context->RSSetState(m_states->CullCounterClockwise());
-	m_DragonCurve.Render(context)
+	m_DragonCurve.Render(context);
 	context->RSSetState(m_states->CullClockwise());
 	m_DragonCurve.Render(context);*/
+
+	// DEBUG: Render a sphinx tiling...
+	/*m_NeutralShader.EnableShader(context);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.375f, 0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	context->RSSetState(m_states->CullCounterClockwise());
+	m_SphinxTiling.Render(context);
+	context->RSSetState(m_states->CullClockwise());
+	m_SphinxTiling.Render(context);*/
+
+	// DEBUG: Render a Penrose P3 tiling...
+	/*m_NeutralShader.EnableShader(context);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+	context->RSSetState(m_states->CullCounterClockwise());
+	m_PenroseP3.Render(context);
+	context->RSSetState(m_states->CullClockwise());
+	m_PenroseP3.Render(context);*/
+
+	// DEBUG: Render 14 fundamental partitions...
+	/*m_NeutralShader.EnableShader(context);
+	m_NeutralShader.SetMatrixBuffer(context, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, &(Matrix)Matrix::Identity, true);
+	context->OMSetDepthStencilState(m_states->DepthNone(), 0);
+	m_Screen.Render(context);
+	context->OMSetDepthStencilState(m_states->DepthDefault(), 0);
+
+	for (int i = 0; i < 14; i++)
+	{
+		m_WireframeShader.EnableShader(context);
+		m_WireframeShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.66f)*Matrix::CreateRotationY(-XM_PI/12.0f)*Matrix::CreateRotationX(XM_PI/9.0f)*Matrix::CreateTranslation(1.2f*(i%5-((i/5 < 2) ? 2.0f : 1.5f)), -((i/5)-1.0f), -1.0f)*Matrix::CreateScale(0.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+		context->RSSetState(m_states->CullCounterClockwise());
+		m_Wireframe.Render(context);
+
+		m_TerrainShader.EnableShader(context);
+		m_TerrainShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.66f)*Matrix::CreateRotationY(-XM_PI/12.0f)*Matrix::CreateRotationX(XM_PI/9.0f)*Matrix::CreateTranslation(1.2f*(i%5-((i/5 < 2) ? 2.0f : 1.5f)), -((i/5)-1.0f), -1.0f)*Matrix::CreateScale(0.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+		m_TerrainShader.SetAlphaBuffer(context, 0.83f);
+		m_TerrainShader.SetLightBuffer(context, &m_Light);
+		context->RSSetState(m_states->CullCounterClockwise());
+		m_Partitions[i].Render(context);
+		context->RSSetState(m_states->CullClockwise());
+		m_Partitions[i].Render(context);
+
+		m_WireframeShader.EnableShader(context);
+		m_WireframeShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, -0.5f)*Matrix::CreateScale(0.66f)*Matrix::CreateRotationY(-XM_PI/12.0f)*Matrix::CreateRotationX(XM_PI/9.0f)*Matrix::CreateTranslation(1.2f*(i%5-((i/5 < 2) ? 2.0f : 1.5f)), -((i/5)-1.0f), -1.0f)*Matrix::CreateScale(0.5f)), &(Matrix)Matrix::Identity, &Matrix::CreateOrthographic(2.0f*m_aspectRatio, 2.0f, 0.01f, 100.0f), true);// &m_Camera.getPerspective(), true);
+		context->RSSetState(m_states->CullClockwise());
+		m_Wireframe.Render(context);
+	}*/
+
+	// DEBUG: Render Zamir's model of arterial branching...
+	/*for (int i = 0; i < m_DeterministicBloodVessels.size(); i++)
+	{
+		int upperRow = (m_DeterministicBloodVessels.size()-1)/2+1;
+		float xOffset = (i < upperRow) ? i-0.5f*(upperRow-1) : (i-upperRow)-0.5f*((m_DeterministicBloodVessels.size()-upperRow)-1);
+		float yOffset = (i < upperRow) ? 0.5f : -0.33f;
+
+		m_NeutralShader.EnableShader(context);
+		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(0.9f)*Matrix::CreateTranslation(xOffset, yOffset, 0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+		context->RSSetState(m_states->CullCounterClockwise()); // NB: MatrixBuffer uses 'true' on both sides, since we aren't applying lighting to the model anyway!
+		m_DeterministicBloodVessels[i].Render(context);
+		context->RSSetState(m_states->CullClockwise());
+		m_DeterministicBloodVessels[i].Render(context);
+	}*/
+
+	// DEBUG: Render exemplar, stochastic blood vessels...
+	/*for (int i = 0; i < m_StochasticBloodVessels.size(); i++)
+	{
+		float xOffset = i-0.5f*(m_StochasticBloodVessels.size()-1);
+
+		m_NeutralShader.EnableShader(context);
+		m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f, -0.5f, 0.0f)*Matrix::CreateScale(0.9f)*Matrix::CreateTranslation(0.25f*xOffset, 0.0f, 0.0f)*Matrix::CreateScale(2.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
+		context->RSSetState(m_states->CullCounterClockwise()); // NB: MatrixBuffer uses 'true' on both sides, since we aren't applying lighting to the model anyway!
+		m_StochasticBloodVessels[i].Render(context);
+		context->RSSetState(m_states->CullClockwise());
+		m_StochasticBloodVessels[i].Render(context);
+	}*/
 
 	// VEINS RENDER:
 	m_VeinsRenderPass->setRenderTarget(context);
@@ -325,19 +399,6 @@ void Game::Render()
 	m_ScreenShader.SetShaderTexture(context, m_PhysicalRenderPass->getShaderResourceView(), -1, 0);
 	m_ScreenShader.SetShaderTexture(context, m_VeinsRenderPass->getShaderResourceView(), -1, 1);
 	m_Screen.Render(context);
-
-	// DEBUG: Display a single, normalised L-system...
-	/*m_NeutralShader.EnableShader(context);
-	m_NeutralShader.SetMatrixBuffer(context, &(Matrix::CreateTranslation(-0.5f,-0.5f,0.0f)*Matrix::CreateScale(1.0f)), &(Matrix)Matrix::Identity, &Matrix::CreateScale(1.0f/m_aspectRatio, 1.0f, 1.0f), true);
-	context->RSSetState(m_states->CullCounterClockwise());
-	m_DragonCurve.Render(context)
-	context->RSSetState(m_states->CullClockwise());
-	m_DragonCurve.Render(context);*/
-
-	// Draw Text to the screen
-	//m_sprites->Begin();
-	//m_font->DrawString(m_sprites.get(), m_LSystem.GetSentence().c_str(), XMFLOAT2(10, 10), Colors::White);
-	//m_sprites->End();
 
 	//render our GUI
 	ImGui::Render();
@@ -501,28 +562,65 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_Board.Initialize(device, 4, 16);
+	m_Board.Initialize(device, 4, 80);
 	m_add = 0;
 
 	// L-Systems
-	m_DragonCurve.Initialize(device, 0.125f, 11);
-	m_SphinxTiling.Initialize(device, 0.01f, 5);
+	/*m_DragonCurve.Initialize(device, 0.125f, 11);
+	m_DragonCurve.Update(device, 0.0f, 1.0f); // NB: Static, so setting initial intensity here!*/
+
+	/*m_SphinxTiling.Initialize(device, 0.01f, 5);
+	m_SphinxTiling.Update(device, 0.0f, 1.0f);*/
+
+	/*m_PenroseP3.Initialize(device, 0.01f, 1);
+	m_PenroseP3.Update(device, 0.0f, 1.0f);*/
+
+	/*for (int i = 0; i < 5; i++)
+	{
+		m_DeterministicBloodVessels.push_back(LDeterministicBloodVessel());
+		m_DeterministicBloodVessels[i].Initialize(device, 0.1f, 1.0f-(1.0f/5.0f)*i, 9);
+		m_DeterministicBloodVessels[i].Update(device, 0.0f, 1.0f);
+	}*/
+
+	/*for (int i = 0; i < 6; i++)
+	{
+		m_StochasticBloodVessels.push_back(LBloodVessel());
+		m_StochasticBloodVessels[i].Initialize(device, 0.1f, 16, i);
+		m_StochasticBloodVessels[i].Update(device, 0.0f, 1.0f);
+	}*/
 
 	m_BloodVesselCount = 16;
 	for (int i = 0; i < m_BloodVesselCount; i++)
 	{
 		m_BloodVessels.push_back(LBloodVessel());
-		m_BloodVessels[i].Initialize(device, 0.1f, 8, i);
+		m_BloodVessels[i].Initialize(device, 0.1f, 8, std::rand());
 	}
 
 	// Models
 	m_Screen.Initialize(device);
 	m_Cube.InitializeModel(device, "cube.obj");
 
-	Field toroidalField = Field();
-	toroidalField.Initialise(32);
+	/*Field toroidalField = Field();
+	toroidalField.Initialise(64);
 	toroidalField.InitialiseToroidalField(0.75f, 0);
-	m_Torus.Initialize(device, 32, toroidalField.m_field, 1.0f);
+	m_Torus.Initialize(device, 64, toroidalField.m_field, 1.0f);
+
+	Field cubicField = Field();
+	cubicField.Initialise(64);
+	cubicField.InitialiseCubicField();
+	m_Wireframe.Initialize(device, 64, cubicField.m_field, 1.0f);
+
+	Field partitionField = Field();
+	int configuration[14] = { 
+		1, 9, 24, 22, 150,
+		10, 26, 90, 14, 30,
+		15, 27, 23, 0
+	};
+	for (int i = 0; i < 14; i++)
+	{
+		partitionField.InitialisePartition(configuration[i]);
+		m_Partitions[i].Initialize(device, 1, partitionField.m_field, 0.0f);
+	}*/
 
 	// Shaders
 	m_NeutralShader.InitShader(device, L"neutral_vs.cso", L"neutral_ps.cso");
@@ -533,9 +631,15 @@ void Game::CreateDeviceDependentResources()
 	m_TerrainShader.InitAlphaBuffer(device);
 	m_TerrainShader.InitLightBuffer(device);
 
-	m_VoronoiShader.InitShader(device, L"texture_3vs.cso", L"manhattan_voronoi_3ps.cso");
+	m_LocationShader.InitShader(device, L"texture_vs.cso", L"texture_ps.cso");
+	m_LocationShader.InitMatrixBuffer(device);
+
+	m_VoronoiShader.InitShader(device, L"texture_3vs.cso", L"euclidean_voronoi_3ps.cso");
 	m_VoronoiShader.InitMatrixBuffer(device);
 	m_VoronoiShader.InitTimeBuffer(device);
+
+	m_WireframeShader.InitShader(device, L"texture_3vs.cso", L"wireframe_3ps.cso");
+	m_WireframeShader.InitMatrixBuffer(device);
 
 	m_ScreenShader.InitShader(device, L"vignette_vs.cso", L"vignette_ps.cso");
 	m_ScreenShader.InitMatrixBuffer(device);
@@ -545,7 +649,7 @@ void Game::CreateDeviceDependentResources()
 	m_ScreenShader.InitStressBuffer(device);
 
 	//load Textures
-	CreateDDSTextureFromFile(device, L"sample_nm.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());
+	CreateDDSTextureFromFile(device, L"LocationMarker_002.dds", nullptr,	m_normalMap.ReleaseAndGetAddressOf());
 
 	m_preRendered = false;
 
@@ -611,6 +715,16 @@ void Game::SetupGUI()
 	ImGui::PopFont();
 
 	ImGui::End();
+
+	// DEBUG:
+	//ImGui::Wind
+	//ImGui::EndFrame();
+	//ImGui::NewFrame();
+	//SetNextWindowPos(ImVec2(870, 520), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+	//ImGui::Begin(" ", (bool*)true, window_flags); // NB: Nice, robust failsafe here?
+	//ImGui::Text(m_Board.m_scene.premise.c_str(), ImVec2(textWidth, 0.0f));
+	//ImGui::Image(m_normalMap.Get(), ImVec2(80, 80));
+	//ImGui::End();
 
 	ImGui::EndFrame();
 }

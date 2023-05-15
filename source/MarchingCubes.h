@@ -21,7 +21,7 @@ public:
 	MarchingCubes();
 	~MarchingCubes();
 
-	bool Initialize(ID3D11Device*, int cells, FieldVertexType* field, float isolevel);
+	virtual bool Initialize(ID3D11Device*, int cells, FieldVertexType* field, float isolevel);
 	void Render(ID3D11DeviceContext*);
 	void Shutdown();
 

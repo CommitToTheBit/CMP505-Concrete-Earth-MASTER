@@ -28,7 +28,7 @@ public:
 
 	void Initialize(float seed = 0.0f);
 
-	std::string GenerateSentence(std::string axiom, StoryWorld::StoryCharacter* subject = nullptr, StoryWorld::StoryCharacter* object = nullptr, bool nested = false); // NB: Can equally apply this to character initialisation!
+	std::string GenerateSentence(std::string axiom, std::string suit, StoryWorld::StoryCharacter* subject = nullptr, StoryWorld::StoryCharacter* object = nullptr, bool nested = false); // NB: Can equally apply this to character initialisation!
 
 private:
 	void InitializeCorpus(std::string jsonPath);

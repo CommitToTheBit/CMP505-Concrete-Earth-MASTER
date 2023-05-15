@@ -142,6 +142,12 @@
     <ClInclude Include="Hex.h">
       <Filter>Modelling</Filter>
     </ClInclude>
+    <ClInclude Include="LDeterministicBloodVessel.h">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClInclude>
+    <ClInclude Include="LPenroseP3.h">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -236,6 +242,12 @@
     <ClCompile Include="Hex.cpp">
       <Filter>Modelling</Filter>
     </ClCompile>
+    <ClCompile Include="LDeterministicBloodVessel.cpp">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClCompile>
+    <ClCompile Include="LPenroseP3.cpp">
+      <Filter>Modelling\LSystemModels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -295,6 +307,12 @@
       <Filter>Assets\Textures</Filter>
     </Image>
     <Image Include="Stylized_Stone_Floor_005_basecolor.dds">
+      <Filter>Assets\Textures</Filter>
+    </Image>
+    <Image Include="LocationMarker_001.dds">
+      <Filter>Assets\Textures</Filter>
+    </Image>
+    <Image Include="LocationMarker_002.dds">
       <Filter>Assets\Textures</Filter>
     </Image>
   </ItemGroup>
@@ -358,6 +376,9 @@
     </FxCompile>
     <FxCompile Include="voronoi_terrain_3ps_001.hlsl">
       <Filter>Assets\Shaders\Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="wireframe_3ps.hlsl">
+      <Filter>Assets\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
