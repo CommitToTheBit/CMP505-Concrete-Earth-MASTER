@@ -1,4 +1,154 @@
 {
+  "your {WAGON DESCRIPTION}.": {
+    "productions": [
+      "ARRIVAL SENTENCE"
+    ]
+  },
+  "wagon": {
+    "productions": [
+      "WAGON DESCRIPTION",
+      "WAGON NOUN"
+    ]
+  },
+  "caravan": {
+    "productions": [
+      "WAGON DESCRIPTION",
+      "WAGON NOUN"
+    ]
+  },
+  "carriage": {
+    "productions": [
+      "WAGON DESCRIPTION",
+      "WAGON NOUN"
+    ]
+  },
+  "chariot": {
+    "productions": [
+      "WAGON DESCRIPTION",
+      "WAGON NOUN"
+    ]
+  },
+  "{WAGON NEGATIVE} {WAGON NOUN}": {
+    "productions": [
+      "WAGON DESCRIPTION"
+    ]
+  },
+  "{WAGON POSITIVE}-if-{WAGON NEGATIVE} {WAGON NOUN}": {
+    "productions": [
+      "WAGON DESCRIPTION"
+    ]
+  },
+  "quaint": {
+    "productions": [
+      "WAGON POSITIVR"
+    ]
+  },
+  "faithful": {
+    "productions": [
+      "WAGON POSITIVE"
+    ]
+  },
+  "reliable": {
+    "productions": [
+      "WAGON POSITIVE"
+    ]
+  },
+  "shambling": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "quease-inducing": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "cramped": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "battered": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "forsaken": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "damned": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "rusting": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "{PESTILENCE}-riddled": {
+    "productions": [
+      "WAGON NEGATIVE"
+    ]
+  },
+  "lice": {
+    "productions": [
+      "PESTILENCE"
+    ]
+  },
+  "plague": {
+    "productions": [
+      "PESTILENCE"
+    ]
+  },
+  "{WAGON FRICTIONS} to a {WAGON HALT}": {
+    "productions": [
+      "WAGON STOPS"
+    ]
+  },
+  "{WAGON ROLLS} in": {
+    "productions": [
+      "WAGON STOPS"
+    ]
+  },
+  "trundles": {
+    "productions": [
+      "WAGON ROLLS"
+    ]
+  },
+  "rumbles": {
+    "productions": [
+      "WAGON ROLLS"
+    ]
+  },
+  "judders": {
+    "productions": [
+      "WAGON ROLLS",
+      "WAGON FRICTIONS"
+    ]
+  },
+  "peters": {
+    "productions": [
+      "WAGON ROLLS"
+    ]
+  },
+  "grinds": {
+    "productions": [
+      "WAGON FRICTIONS"
+    ]
+  },
+  "stop": {
+    "productions": [
+      "WAGON HALT"
+    ]
+  },
+  "halt": {
+    "productions": [
+      "WAGON HALT"
+    ]
+  },
   "non-Euclidean": {
     "productions": [
       "LANDMARK ADJECTIVE"
