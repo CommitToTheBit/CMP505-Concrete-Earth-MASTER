@@ -306,26 +306,18 @@ These describe a capillary with a 45\% chance of bifurcating with branch $M$ tac
 
 
 \vspace{5pt}\noindent
-Finally, all L-systems have been implemented with a normalised \texttt{intensity} factor, which guides their growth. Knowing the \texttt{maxLength} a \texttt{line} segment%A line segment inherits the 
+Finally, assigning each \texttt{line} segment a (strictly positive) \texttt{depth} value and taking the \texttt{maxDepth} across all such segments, a normalised \texttt{intensity} factor scales the model as follows: 
 \begin{center} % NB: CHECK THIS CODE LINES UP!
 \begin{BVerbatim}
-float maxDepth = 0.0f;
-for ( )
-{
-    line[i].depth = 0.0f;
-    for each ( )
-        line[i].depth +=
-    maxDepth = std::max();
-}
-
-for ( )
+for (int i = 0; i < line.size(); i++)
 {
     float growth = 1.0f-(1.0f-intensity)*maxDepth/line[i].depth;
-    line[i].length = std::max(0.0f,std::min(growth, 1.0f))*line[i].maxLength;
+    line[i].length *= std::max(0.0f,std::min(growth, 1.0f));
 }
 \end{BVerbatim}
 \end{center}
-As \texttt{intensity} increases from \texttt{0.0f} to \texttt{1.0f}, , the [X] component delaying the minor branches to .\footnote{This was completely unintentional, emerging from a typo in the code - } Rendering these to texture results in a visceral, procedurally-animated post-process effect, more responsive than passing in a static alpha map. 
+As \texttt{intensity} increases from \texttt{0.0f} to \texttt{1.0f}, the blood vessels grow, the `deepest' branches emerging first.\footnote{On a more technical level, \textit{Concrete Earth} treats a branch's \texttt{depth} as a function of the \texttt{length}s of its child branches. Though it came about from a typo in the code, the definition stuck - by delaying growth around bifurcation points, it achieve a nice `sprouting' effect!} 
+Rendering these to texture results in a visceral, procedurally-animated post-process effect, more responsive than passing in a static alpha map. 
 
 %\vspace{5pt}\noindent
 \begin{figure}[h]
@@ -345,7 +337,7 @@ As \texttt{intensity} increases from \texttt{0.0f} to \texttt{1.0f}, , the [X] c
 %\newpage
 \subsection{Procedural Narrative} % TECHNIQUE: 'Improv-lite' text generation...
 
-\textit{Concrete Earth} was originally conceived as a showcase of procedural text generation, an application of [authored X] towards interactive fiction. Since [not in place], this section will focus on the intended narrative, and the infrastructure \textit{already in place} to facilitate it. 
+\textit{Concrete Earth} was originally conceived as a work of interactive fiction, a mix of authorship and procedural text generation. Only a fraction of the content has been written so far, so this section will focus on the intended narrative, and the infrastructure \textit{already in place} to facilitate it. 
 
 \subsubsection{Grammars}
 
@@ -408,6 +400,7 @@ In \textit{Concrete Earth}, these storylets are envisioned as the means for thes
 \vspace{5pt}\noindent
 The current implementation is limited. [Conditions: randomness]. [Effects: entering/exiting the party].
 
+\newpage
 \section{Code Organisation}
 
 Taking a step back, [...]. [\texttt{Game.cpp} manages three core components: gameplay, UI, and rendering]
