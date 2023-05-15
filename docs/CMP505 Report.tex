@@ -155,16 +155,16 @@ This section will not cover the finer points of the DirectX marching cubes imple
 \newpage
 \subsubsection{Case Study: Hexes}
 
-Having now established a \texttt{MarchingCubes} class, generating a landscape becomes a matter of writing the right scalar field. Indeed, the first step is trivial: for any isovalue $c \in \left(0,1\right)$,
+Having now established a \texttt{MarchingCubes} class, generating a landscape becomes a matter of writing the right scalar field. Indeed, the first step is easyl: for any isovalue $c \in \left(0,1\right)$,
 $$\textbf{Height}(\mathbf{x}) = y + 0.1\cdot\textbf{FBM}(\mathbf{x})$$
 models a stark, sweeping tundra, its \textit{fractal brownian motion} component scaled to add roughness whilst avoiding `floating islands'. The application treats the underlying simplex noise as a black box.
 
 \vspace{5pt}\noindent
-Taking a stylised approach, \textit{Concrete Earth} presents its terrain not as a contiguous mass, but as a set of isometric, hexagonal tiles. To that extent, it relies equally on the second field
+Taking a stylised approach, \textit{Concrete Earth} presents its terrain not as a contiguous mass, but as a board of isometric, hexagonal tiles. To that extent, it relies equally on the second field
 $$\textbf{Hex}(\mathbf{x}) = \frac{\sqrt{(2x-1)^2+(2z-1)^2}\cos\left((\theta\bmod\pi/3)-\pi/6\right)}{\cos\left(\pi/6\right)}, \,\, \textrm{where} \,\, \theta = \textrm{arctan2}\left(2z-1, 2x-1\right).$$
 For all the trigonometry, this just describes a vertical hexagonal prism centred at $x = 0.5$, $z = 0.5$, much the same as $\sqrt{(2x-1)^2+(2z-1)^2}$ describes a cylinder (see Figure \ref{Hex Field}).
 $$\textbf{Terrain}_c(\mathbf{x}) = \max\left(\textbf{Height}(\mathbf{x}), \, c\cdot\textbf{Hex}(\mathbf{x})\right)$$
-then takes a maximum to enclose only those gridpoints that fall below the isovalue in \textit{both} fields, imposing hexagonal bounds on the existing tundra (the scale factor of $c$ normalising the width of this hex, regardless of the tundra's height). 
+then takes a maximum to enclose only those gridpoints that fall below the isovalue in \textit{both} fields, imposing hexagonal bounds on the existing terrain (the scale factor of $c$ normalising the width of this hex for all isovalues). 
 
 %\vspace{5pt}\noindent
 %[Bounding hexagonal prism... As much as flat faces are antithetical to marching cubes (if they run parallel to the grid, then... can't interpolate? notice that interpolation doesn't account for the degenerate case where two adjacent gridpoints are equal)...] 
@@ -179,28 +179,28 @@ then takes a maximum to enclose only those gridpoints that fall below the isoval
 
 \subsubsection{Case Study: Landmarks}
 
-Physical markers are similarly integrated into the terrain. To generate an afore-mentioned thorn with apex $\mathbf{a}$, base with centre $\mathbf{b}$, and half angle $\phi$, for instance, the framework defines field
+Physical markers are similarly integrated. To generate one of the afore-mentioned thorns with apex $\mathbf{a}$, base centred on $\mathbf{b}$, and half angle $\phi$, for instance, the framework defines field
 
 $$\textbf{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \frac{1}{\phi}\arccos\left(\frac{\left(\mathbf{x}-\mathbf{a}\right)\cdot\left(\mathbf{b}-\mathbf{a}\right)}{\left|\mathbf{x}-\mathbf{a}\right|\cdot\left|\mathbf{b}-\mathbf{a}\right|}\right).$$
 Using a minimum, isosurfaces of
 $$\textbf{Landmarked Terrain}_{c;\,\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \min\left(\textbf{Terrain}_c(\mathbf{x}), \, c\cdot\textbf{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x})\right),$$
-will contain all gridpoints below the isovalue of \textit{any} field, adding volume to the final model just as a maximum subtracts.\footnote{These operations do not commute! Taking the maximum first allows thorns that `stick out' from the bounding hex - this is a conscious, if purely aesthetic, decision on the part of the game.} %Though only a few such fiel have been modelled, 
+contain all gridpoints below the isovalue of \textit{either} field, adding volume just as a maximum subtracts.\footnote{These operations do not commute! Taking the maximum first allows thorns that `stick out' from the bounding hex - this is a conscious, if purely aesthetic, decision on the part of the game.} %Though only a few such fiel have been modelled, 
 
 
 \vspace{5pt}\noindent
-The \texttt{Hex} class handling high-level field generation adds a further, stochastic component, randomising $\mathbf{a}$, $\mathbf{b}$, $\phi$. Moreover, any number of thorns can be added; taking the minimum over more than two fields just expands the isosurface further. Perhaps the only surprising choice made in procedurally generating these landmarks is keeping their surfaces completely smooth. While it would absolutely be , the entire conceit of \textit{Concrete Earth} is that these strange, idealised geometries feel distinctly unnatural. The physical markers of shunned land are man-made designs that \textit{should} tap into a sense of the uncanny, in the hopes of communicating to future civilisations that `THIS IS NOT A PLACE OF HONOUR'.  %Only the . Rather than add noise, the game [Explain how we add randomness to thorns]. That said, [smooth, geometric structure].
+The \texttt{Hex} class handling high-level field generation adds a further, stochastic component, randomising $\mathbf{a}$, $\mathbf{b}$, $\phi$. Moreover, any number of thorns can be added; taking the minimum over more than two fields just expands the isosurface further. Perhaps the only surprising choice made in procedurally generating these landmarks is keeping their surfaces completely smooth. Rather than simulating weathering and erosion, the conceit of \textit{Concrete Earth} is that these strange, idealised geometries feel distinctly unnatural. The physical markers of shunned land are man-made designs that \textit{should} tap into a sense of the uncanny, in the hopes of communicating to future civilisations that `THIS IS NOT A PLACE OF HONOUR'.  %Only the . Rather than add noise, the game [Explain how we add randomness to thorns]. That said, [smooth, geometric structure].
 
 \vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.66\textwidth]{Landmarks}
-\caption{\textit{Concrete Earth}'s stochastic model.  Three main designs have been established so far, with more to be added now the generation pipeline is feature-complete.}
+\caption{\textit{Concrete Earth}'s landmarks.  Three designs have been prototype so far, with more to be added now the terrain pipeline is feature-complete.}
 \label{Landmarks}
 \end{figure}
 
 \subsection{Procedural Screen Shaders}\label{Procedural Screen Shaders} % TECHNIQUE: L-systems...
 
-The post-processing in \textit{Concrete Earth} is, in many respects, trivial. \texttt{vignette\_ps.hlsl}, for instance, calls only two renders-to-texture on every frame: the board itself, and an alpha map of blood vessels sprouting from the edges of the screen. As striking as the final effect is, the shader is surprisingly straightforward in blending the textures into a single, pulsing eye strain overlay; far more worthy of further discussion is how the blood vessels themselves are generated.
+The post-processing in \textit{Concrete Earth} is, in many respects, trivial. \texttt{vignette\_ps.hlsl}, for instance, demands only two renders-to-texture on every frame: the board itself, and an alpha map of blood vessels sprouting from the edges of the screen. As striking as the final effect is, the shader is surprisingly straightforward in blending the textures into a single, pulsing eye strain overlay; far more worthy of further discussion is how the blood vessels themselves are generated.
 
 \newpage\noindent
 %\vspace{5pt}\noindent
@@ -229,7 +229,7 @@ $$\begin{matrix*}[l]
 \end{matrix*}$$
 
 \vspace{5pt}\noindent
-While these definitions are rather abstract, \citet{lindenmayerLSystems} provides a remarkable application. Treating each symbol as an instruction like `go forward' or `turn right', \textit{L-systems} visualise sentences via `turtle graphics'; when the sentences have been generated recursively by a grammar, the line drawings will inherit their self-similar structure. Consider the above example - reading non-terminals $F$, $G$ as `draw a line while moving 1 unit forwards,' and terminals $\pm$ as `turn by $\pm\, \pi/2$ on the spot,' produces fractal `dragon curves' (see Figure \ref{Dragon Curves}).
+While these definitions are rather abstract, \citet{lindenmayerLSystems} provides a remarkable application. Treating each symbol as an instruction like `go forward' or `turn right', \textit{L-systems} visualise sentences using turtle graphics; when the sentences have been generated recursively by a grammar, the line drawings will inherit their self-similar structure. Consider the above example - reading non-terminals $F$, $G$ as `draw a line while moving 1 unit forwards,' and terminals $\pm$ as `turn by $\pm\, \pi/2$ on the spot,' produces dragon curve fractals (see Figure \ref{Dragon Curves}).
 
 \vspace{5pt}\noindent
 \begin{figure}[h]
