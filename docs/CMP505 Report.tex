@@ -188,7 +188,7 @@ contain all gridpoints below the isovalue of \textit{either} field, adding volum
 
 
 \vspace{5pt}\noindent
-The \texttt{Hex} class handling high-level field generation adds a further, stochastic component, randomising $\mathbf{a}$, $\mathbf{b}$, $\phi$. Moreover, any number of thorns can be added; taking the minimum over more than two fields just expands the isosurface further. Perhaps the only surprising choice made in procedurally generating these landmarks is keeping their surfaces completely smooth. Rather than simulating weathering and erosion, the conceit of \textit{Concrete Earth} is that these strange, idealised geometries feel distinctly unnatural. The physical markers of shunned land are man-made designs that \textit{should} tap into a sense of the uncanny, in the hopes of communicating to future civilisations that `THIS IS NOT A PLACE OF HONOUR'.  %Only the . Rather than add noise, the game [Explain how we add randomness to thorns]. That said, [smooth, geometric structure].
+The \texttt{Hex} class handling high-level field generation adds a stochastic element, randomising $\mathbf{a}$, $\mathbf{b}$, $\phi$. Moreover, any number of thorns can be added; taking the minimum over more than two fields just expands the isosurface further. Perhaps the only surprising choice made in procedurally generating these landmarks is keeping their surfaces completely smooth. Rather than simulating weathering and erosion, the conceit of \textit{Concrete Earth} is that these strange, idealised geometries feel distinctly unnatural. The physical markers of shunned land are man-made designs that \textit{should} tap into a sense of the uncanny, in the hopes of communicating to future civilisations that `THIS IS NOT A PLACE OF HONOUR'.  %Only the . Rather than add noise, the game [Explain how we add randomness to thorns]. That said, [smooth, geometric structure].
 
 \vspace{5pt}\noindent
 \begin{figure}[h]
@@ -244,20 +244,23 @@ While L-systems are most common in the modelling of 3D plants and other branchin
 
 \subsubsection{Case Study: Blood Vessels}
 
-[Parametric L-Systems]
+Generalising the above, \textit{parametric L-systems} act not on symbols $A$ but \textit{modules} $\mathbf{A}(x_1,\cdots,x_n)$. By treating non-terminals as structures containing parameters $x_1$, $\cdots$, $x_n$, production rules can then be written to act on said parameters.
 
 \vspace{5pt}\noindent
-[Code organisation - dragon curves!]
+This project's own \texttt{LSystem} class tracks three main values: the length $l$, width $w$, and orientation $\theta$ with which to draw each line segment. The benefit is, if nothing else, organisational. Even in the basic L-system for dragon curves, terminals $\pm$ are made redundant by the altogether more readable set of production rules
+$$\begin{matrix*}[l]
+\mathbf{F}(l,w,\theta) &\mapsto &\mathbf{F}(l,w,\theta)\mathbf{G}(l,w,\theta+\pi/2) \\
+\mathbf{G}(l,w,\theta) &\mapsto &\mathbf{F}(l,w,\theta)\mathbf{G}(l,w,\theta-\pi/2).
+\end{matrix*}$$
 
 \vspace{5pt}\noindent
-\citet{zamirArterialBranchingLSystems}, meanwhile, uses this parametric structure to visualise the bifurcation of blood vessels. Suppose a branch with length $l$, width $w$ bifurcates into two branches $M$ and $m$, such that $l_M \geq l_m$. Defining the \textit{asymmetry ratio} $\alpha = l_m/l_M$, it follows that
+\citet{zamirArterialBranchingLSystems}, meanwhile, uses this parametric formulation to visualise bifurcations of blood vessels. Suppose a branch with length $l$, width $w$ bifurcates into two branches $M$ and $m$, such that $l_M \geq l_m$. Defining the \textit{asymmetry ratio} $\alpha = l_m/l_M$, it follows that
 $$l_M = \frac{l}{\left(1+\alpha^3\right)^{1/3}}, \;\; l_m = \frac{\alpha\cdot l}{\left(1+\alpha^3\right)^{1/3}}, \;\; w_M = \frac{w}{\left(1+\alpha^3\right)^{1/3}}, \;\; w_m = \frac{\alpha\cdot w}{\left(1+\alpha^3\right)^{1/3}}.$$
 Furthermore, the branches diverge from their parent at angles
 $$\theta_M = \arccos\left(\frac{\left(1+\alpha^3\right)^{4/3}+1-\alpha^4}{2\left(1+\alpha^3\right)^{2/3}}\right), \;\; \theta_m = \arccos\left(\frac{\left(1+\alpha^3\right)^{4/3}+\alpha^4-1}{2\alpha^2\left(1+\alpha^3\right)^{2/3}}\right).$$
-The established framework is therefore capable of reproducing \citeauthor{zamirArterialBranchingLSystems}'s results (see Figure \ref{Zamir's Model}), using an L-system with the single production rule:  
-$$\mathbf{C}(l,w,\theta) \mapsto \mathbf{X}(l,w,\theta)[\mathbf{C}(l_M,w_M,\theta+\theta_M)]\mathbf{C}(l_m,w_m,\theta-\theta_m).$$
+This application is therefore capable of reproducing \citeauthor{zamirArterialBranchingLSystems}'s results (see Figure \ref{Zamir's Model}), using an L-system with the single production rule $\mathbf{C}(l,w,\theta) \mapsto \mathbf{X}(l,w,\theta)[\mathbf{C}(l_M,w_M,\theta+\theta_M)]\mathbf{C}(l_m,w_m,\theta-\theta_m)$.
 
-%\vspace{5pt}\noindent
+\vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.66\textwidth]{Zamir's Model}
@@ -286,8 +289,9 @@ $$\mathbf{C}(l,w,\theta) \mapsto \mathbf{X}(l,w,\theta)[\mathbf{C}(l_M,w_M,\thet
 %\mathbf{C}(l,w,\theta) &\xmapsto[0.2]{} &\mathbf{X}(l,w,\theta)\mathbf{C}(l,w,\theta) \\
 %\end{matrix*}$$
 
+%\newpage\noindent
 \vspace{5pt}\noindent
-\citet{liuSimulationBloodVessels} expand on this research with a stochastic component - they assign \textit{multiple} production rules to a single non-terminal, choosing which to apply using a weighted probability distribution. \textit{Concrete Earth} incorporates such randomness into its own rules for blood vessels:
+\citet{liuSimulationBloodVessels} expand on this research with a further stochastic component - they assign \textit{multiple} production rules to a single non-terminal, choosing which to apply using a weighted probability distribution. \textit{Concrete Earth} incorporates such randomness into its own rules for blood vessels:
 $$\begin{matrix*}[l]
 \mathbf{C}(l,w,\theta) &\xmapsto[0.45]{} &\mathbf{X}(l,w,\theta)[\mathbf{L}(l_M,w_M,\theta+\theta_M)]\mathbf{R}(l_m,w_m,\theta-\theta_m) \\
 \mathbf{C}(l,w,\theta) &\xmapsto[0.45]{} &\mathbf{X}(l,w,\theta)[\mathbf{L}(l_m,w_m,\theta+\theta_m)]\mathbf{R}(l_M,w_M,\theta-\theta_M) \\
@@ -310,6 +314,7 @@ These describe a capillary with a 45\% chance of bifurcating with branch $M$ tac
 \end{center}
 As \texttt{intensity} increases from \texttt{0.0f} to \texttt{1.0f}, , the [X] component delaying the minor branches to .\footnote{This was completely unintentional, emerging from a typo in the code - } Rendering these to texture results in a visceral, procedurally-animated post-process effect, more responsive than passing in a static alpha map (see Figure \ref{Eye Strain Effect}). 
 
+\vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.66\textwidth]{Blood Vessels}
@@ -317,13 +322,14 @@ As \texttt{intensity} increases from \texttt{0.0f} to \texttt{1.0f}, , the [X] c
 \label{Blood Vessels}
 \end{figure}
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.66\textwidth]{Eye Strain Effect}
-\caption{(High-contrast render of) \textit{Concrete Earth}'s eye strain effect.}
-\label{Eye Strain Effect}
-\end{figure}
+%\begin{figure}[h]
+%\centering
+%\includegraphics[width=0.66\textwidth]{Eye Strain Effect}
+%\caption{(High-contrast render of) \textit{Concrete Earth}'s eye strain effect.}
+%\label{Eye Strain Effect}
+%\end{figure}
 
+%\newpage
 \subsection{Procedural Narrative} % TECHNIQUE: 'Improv-lite' text generation...
 
 \textit{Concrete Earth} was originally conceived as a showcase of procedural text generation, an application of [authored X] towards interactive fiction. Since [not in place], this section will focus on the intended narrative, and the infrastructure \textit{already in place} to facilitate it. 
