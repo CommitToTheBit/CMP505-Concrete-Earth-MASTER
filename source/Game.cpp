@@ -97,7 +97,7 @@ void Game::Initialize(HWND window, int width, int height)
     m_soundEffect = std::make_unique<SoundEffect>(m_audEngine.get(), L"616516__justlaz__geiger_tick_low.wav");
     m_effect1 = m_soundEffect->CreateInstance();
 
-    //m_effect1->Play(true); // DEBUG: Turned off temporarily...
+    m_effect1->Play(true);
 #endif
 }
 
@@ -562,7 +562,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_Board.Initialize(device, 4, 32);
+	m_Board.Initialize(device, 4, 80);
 	m_add = 0;
 
 	// L-Systems
@@ -593,7 +593,7 @@ void Game::CreateDeviceDependentResources()
 	for (int i = 0; i < m_BloodVesselCount; i++)
 	{
 		m_BloodVessels.push_back(LBloodVessel());
-		m_BloodVessels[i].Initialize(device, 0.1f, 8, i);
+		m_BloodVessels[i].Initialize(device, 0.1f, 8, std::rand());
 	}
 
 	// Models

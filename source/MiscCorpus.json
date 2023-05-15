@@ -1,5 +1,5 @@
 {
-  "you arrive at {{SUIT} LANDMARK}.": {
+  "you arrive at {{SUIT} LANDMARK}": {
     "productions": [
       "ARRIVAL SENTENCE"
     ]
@@ -19,7 +19,7 @@
       "MONOLITH LANDMARK"
     ]
   },
-  "your {WAGON DESCRIPTION} {WAGON STOPS}.": {
+  "your {WAGON DESCRIPTION} {WAGON STOPS}": {
     "productions": [
       "ARRIVAL SENTENCE"
     ]

@@ -7,7 +7,7 @@ const DirectX::SimpleMath::Vector3 Board::m_q = DirectX::SimpleMath::Vector3(-0.
 
 Board::Board()
 {
-	std::srand(0);
+	std::srand(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
 	m_interpolating = false;
 
@@ -81,7 +81,7 @@ bool Board::Initialize(ID3D11Device* device, int hexRadius, int cells)
 	//delete hexField;
 
 	// Storylets...
-	m_storyEngine.Initialize();
+	m_storyEngine.Initialize(std::rand());
 
 	int playerIndex = m_hexPermutation[m_hexCoordinates[2*(m_hexDiameter+2)+2]]; // NB: Player's current hex...
 	m_scene = m_storyEngine.StartScene(m_hexModels[playerIndex].m_suit);

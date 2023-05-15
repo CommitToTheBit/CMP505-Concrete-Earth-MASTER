@@ -1,7 +1,7 @@
 {
   "passenger embarks": {
     "Beginning": {
-      "Axiom": "{ARRIVAL SENTENCE}. {*FULL NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe.",
+      "Axiom": "{ARRIVAL SENTENCE}. {*PREFERRED NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe.",
       "Causes": {
         "MaxPassengers": 3,
         "ActiveIsPassenger": false
@@ -9,13 +9,13 @@
     },
     "Middle": [
       {
-        "Axiom": "accept {*{*GENDER} FORENAME}'s coin...",
+        "Axiom": "accept {{*GENDER} POSSESSIVE DETERMINER} coin...",
         "Causes": {
           "ActiveIsPassenger": false
         },
         "End": [
           {
-            "Axiom": "you extend your talon, and welcome the {*ARCHETYPE} aboard.",
+            "Axiom": "you extend your palm, and welcome the {*ARCHETYPE} aboard.",
             "Causes": {
               "ActiveIsPassenger": false
             },
@@ -33,7 +33,7 @@
       }
     ],
     "End": {
-      "Axiom": "you carry on, leaving poor {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} by the wayside.",
+      "Axiom": "you carry on, leaving poor {*PREFERRED NAME} by the wayside.",
       "Causes": {
         "ActiveIsPassenger": false
       }
@@ -41,7 +41,7 @@
   },
   "passenger disembarks": {
     "Beginning": {
-      "Axiom": "You come to a small hamlet. {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} disembarks, thanking you profusely.",
+      "Axiom": "You come to a small hamlet. {*PREFERRED NAME} disembarks, thanking you profusely.",
       "Causes": {
         "MinPassengers": 2,
         "ActiveIsPassenger": true
