@@ -420,7 +420,7 @@ The narrative pipeline is as follows. On every move, the \texttt{Board} checks i
 Text events are rendered to the screen with using the ImGui library - the UI is minimal, handled almost entirely within a single \texttt{Game::SetupGUI} function. This application also relies on nlohmann's JSON API.\footnote{Indeed, it is a conscious organisational choice to store word banks of terminals and non-terminals within their own self-contained JSON files, rather than hardcode them into the \texttt{Grammar} itself.} The \href{https://www.dafont.com/benegraphic.font}{\ul{font}} and \href{https://freesound.org/people/JustLaz/sounds/616516/}{\ul{Geiger counter SFX}} were sourced online; the code has been cited as appropriate.
 
 \vspace{5pt}\noindent
-Finally, \textit{Concrete Earth} has been written with good coding practices in mind. Functions and variables follow a consistent naming convention, focused on readability. The DRY principle has been followed, within reason. Even the current, informal use of comments proves effective, these breaking down the logic behind key snippets, highlighting potential bugs, and overall acting as incisive memos-to-self\footnote{This is notably untrue of \texttt{Game.cpp}. All figures in this report have been expressly produced for CMP505 - though unused in the final application, the code used to render these figures remains, commented out in large and unclear blocks solely for the sake of posterity.} (a collaborative project would obviously require a higher standard of documentation). GitHub was used for version control.
+Finally, \textit{Concrete Earth} was written with good coding practices in mind. Functions and variables follow a consistent naming convention, focused on readability. The DRY principle has been followed, at least within reason. Even the current, informal use of comments proves effective, these breaking down the logic behind key snippets, highlighting potential bugs, and overall acting as incisive memos-to-self\footnote{This is notably untrue of \texttt{Game.cpp}. All figures in this report have been expressly produced for CMP505 - though unused in the final application, the code used to render these figures remains, commented out in large and unclear blocks solely for the sake of posterity.} (a collaborative project would obviously require a higher standard of documentation). GitHub was used for version control.
 
 %Taking a step back, [...]. [\texttt{Game.cpp} manages three core components: gameplay, UI, and rendering]
 %\paragraph{Gameplay} \texttt{Board} [...explain the loop].
@@ -447,66 +447,49 @@ Finally, \textit{Concrete Earth} has been written with good coding practices in 
 
 \subsection{Features}
 
-If there is one element of this project that represents an unambiguous success, it is the L-systems. [...]. Not that there isn't more to do - the procedural animation of the blood vessels, for instance - but . [An \textit{open-ended} tool, to be carried into future projects].
+If one element of this project constitutes an unambiguous success, it is the L-systems. \textit{Concrete Earth} provides not only a robust framework, but a genuinely interesting use case. Indeed, [...]. Not that there isn't more to do - the procedural animation of the blood vessels, for instance, still feels quite limited - but the \texttt{LSystem} class is in a good place. Above all else, it feels \textit{versatile}, a foundational piece of code that could be carried over to any number of future projects.
 
 \vspace{5pt}\noindent
-The role of marching cubes is much more utilitarian: height maps have a well-known limitation, to which this algorithm is the well-known solution (see Section \ref{Procedural Terrain}). Implementing the code was a significant technical challenge, but largely successful. While , it's worth noting that [solutions/next steps exist]. \citeauthor{bourkeMarchingTetrahedrons} also provides an introduction to \textit{marching tetrahedrons} \citeyearpar{bourkeMarchingTetrahedrons}, a variant of marching cubes that would hopefully improve efficiency.\footnote{[$2^4 = 16$...]} %a more efficient variant of  that \citeauthor{} find ``reduces triangle generation by $70\%$'' \citeyear{}. 
-Though a  tetrahedral grid into  [additional nuances], [having completed the basic algorithm]. %To the extent that the feature's performance. Even for moderate values of $n$, \footnote{The complexity of}%one met to great success. To the extent that the performance of the feature can be criticised,  %Marching cubes, too, have been used effectively. T
+The role of marching cubes, by contrast, seems much more narrow: height maps have a well-known limitation, to which this algorithm is the well-known solution (see Section \ref{Procedural Terrain}). Implementing the code was a significant technical challenge, but largely successful, and though the generation process does not run especially quickly\footnote{Not on a low-end laptop, at least!} a potential solution has already been identified. \citeauthor{bourkeMarchingTetrahedrons}'s discussion of marching cubes is accompanied by an introduction to \textit{marching tetrahedrons} \citeyearpar{bourkeMarchingTetrahedrons}, a variation of the algorithm that would hopefully improve the efficiency of the code.\footnote{Where there are $256$ possible partitions of a cube, tetrahedrons only come with $2^4 = 16$...} Working within a tetrahedral grid will come with additional nuances (e.g. cell orientation), but I now feel I've built enough intuition to take on this more advanced technique. %To the extent that the feature's performance. Even for moderate values of $n$, \footnote{The complexity of}%one met to great success. To the extent that the performance of the feature can be criticised,  %Marching cubes, too, have been used effectively. T
 
 \vspace{5pt}\noindent
-The more interesting question here is how effectively the marching cubes enhance \textit{Concrete Earth}'s setting. As much as they are used to procedurally generate terrain, that terrain feel somewhat lacking: while this report has already acknowledged the relatively few landmarks available, it's no less notable that they are left untextured. With more time, , but having already experimented with procedural texturing in CMP502 it felt more fruitful to explore new techniques. That the game logic [generates at runtime and cycles through] only enhances (though this is a much quicker fix).
+The more interesting question here is how effectively the marching cubes enhance \textit{Concrete Earth}'s setting. As much as they are used to procedurally generate terrain, that terrain can feel somewhat lacking - while this report has already acknowledged the relatively few landmarks available, it's no less notable that they are left untextured. With more time, I would have been keen to write a pixel shader to handle this, but having already experimented with procedural texturing in CMP502 it felt more fruitful to focus on new techniques. Note also that all terrain hexes are generated at runtime; updating these dynamically would be a relatively minor change that greatly reduces repetitivity.
 
 \vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.66\textwidth]{Euclidean Voronoi Voxel}
-\caption{3D Voronoi noise. While voxel textures [would have...]}
+\caption{3D Voronoi noise. Experiments with voxel textures did not make it past initial prototyping.}
 \label{Euclidean Voronoi Voxel}
 \end{figure}
 
 \vspace{5pt}\noindent
-To the extent that \textit{Concrete Earth} has any single `special feature', though, it would surely be its approach to procedural storytelling. [...]
+To the extent that \textit{Concrete Earth} has any single `special feature', though, it would surely be its approach to procedural storytelling. While there's a lot , this has not exactly . For all my interest in \textit{coding} narrative frameworks, I am not myself a writer - a fact reflected in the lack of content available to the grammar. [MORE CONTENT = MORE TESTING]. [Genuinely pleased with the functionality of the grammar]; it is a shame that functionality has not been fully utilised. % While there is a perfectly functional loop of picking up and parting way with new passengers, it is not exactly narrative interesting. 
+
+\vspace{5pt}\noindent
+That said, I am genuinely pleased with how the \texttt{Grammar} functions - not so much the surrounding \texttt{Architecture}. 
+The same cannot be said of the surrounding \texttt{Architecture}. [The priority was getting a serviceable game loop in place].
 
 \subsection{Code Organisation}
 
-Built on previous work from CMP502, this project could be written to an already-established style. Functions and variables follow a consistent naming convention, with a strong focus on readability. Inheritance has helped reduce redundancies. Even the current, informal use of comments proves effective, these breaking down the logic behind key snippets, highlighting potential bugs, and overall acting as valuable memos-to-self (a collaborative project would obviously require a higher standard of documentation). In this very granular sense, \textit{Concrete Earth} is a perfectly acceptable piece of code.
+This relates, in part, to a broader organisational problem. [An architecture that grows \textit{with} the content, as my alternative strategy.]
 
 \vspace{5pt}\noindent
-[Stripping back shaders... an effective strategy!]
+[That's not to detract from... - bridge!]. [While the end result of the architecture feels unstructured, overly reliant on special cases... - the rest of the code is good!]
 
 \vspace{5pt}\noindent
-[Position weakness of the storytelling as an \textit{organisational} matter...]
-
-\vspace{5pt}\noindent
-[Discuss the broader merits of Section 4, ultimately landing on the value of \textit{internal consistency}? Or - contrast narrative with models?]
-
-\vspace{5pt}\noindent
-[Holistically, though, the code \textit{must} be a success.]
-
+More than anything else, I've genuinely tried to . [...]. For instance, [...performance!].
 
 \section{Conclusions}
 
-From a more personal perspective, I can't help but feel that \textit{Concrete Earth} shows promise.
+\vspace{5pt}\noindent
+[General lessons]
 
 \vspace{5pt}\noindent
-[Coheres in a way that my CMP502 project absolutely didn't...]. [Furthermore, a better sense of performance] - I might not be happy with the loading times \textit{per se}, but all things considered these advanced graphics techniques will still run on my laptop.
+[Features vs. content throughline]
 
 \vspace{5pt}\noindent
-Of course, there is a distinction to be drawn between \textit{Concrete Earth}'s functionality as a graphics showcase and as a game. As much as there's a certain level of interactivity on display,\footnote{And likewise, non-interactive features like the fixed, orthographic camera carry some level of intentionality...} [Perils of interactive narrative].
-
-\vspace{5pt}\noindent
-[What/how would I go about cannibalising this? Screen shader first/hexes... narrative much more an early experiment in structuring content selection architectures/context-sensitive grammars...]
-
-%1000 bowls of porridge; these generation problems are more than familiar!
-
-\vspace{5pt}\noindent
-[$3$rd last: iterating marching cubes, to build intuition... justify own rundown...]
-
-\vspace{5pt}\noindent
-[$2$nd last: iterating everything...]
-
-\vspace{5pt}\noindent
-[Last: framework does not exist in isolation - tie back to CMP502 to show potential! Shaders being stripped back is a great example...]
+[Last: iteration on CMP502...]
 
 \bibliographystyle{agsm}
 \bibliography{../../Bibliography/Bibliography}
