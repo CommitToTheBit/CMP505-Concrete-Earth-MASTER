@@ -70,8 +70,8 @@ The application uses the following key mappings:\footnote{While the framework re
 \vspace{2.5pt}\noindent 
 \textbf{2} \dotfill{} Select option \#$2$
 
-\vspace{2.5pt}\noindent 
-\textbf{3} \dotfill{} Select option \#$3$
+%\vspace{2.5pt}\noindent 
+%\textbf{3} \dotfill{} Select option \#$3$
 
 \vspace{2.5pt}\noindent 
 \textbf{Esc} \dotfill{} Quit
@@ -130,7 +130,7 @@ a scalar field describing two overlapping circles.
 
 \vspace{5pt}\noindent
 %\newpage\noindent
-Given adjacent gridpoints $\mathbf{a}$, $\mathbf{b}$ such that $f_{\mathbf{a}} < c < f_{\mathbf{b}}$, Figure \ref{Marching Square Partitions} would have their partitioning line bisect edge $AB$ exactly. However, knowing the partition represents an isoline, this accidentally implies $f\left(0.5\mathbf{a} + 0.5\mathbf{b}\right) \approx c$, which may not be true of the scalar field. Using the standard, first-order approximation that $f$ is linear over short distances 
+Given adjacent gridpoints $\mathbf{a}$, $\mathbf{b}$ such that $f_{\mathbf{a}} < c < f_{\mathbf{b}}$, Figure \ref{Marching Square Partitions} would have their partitioning line bisect edge $AB$ exactly. However, knowing the partition represents an isoline, this accidentally implies $f\left(0.5\mathbf{a} + 0.5\mathbf{b}\right) \approx c$, which may not be true of the scalar field. Using the standard, first-order approximation that $f$ is linear over short distances, 
 $$f\left((1-t)\mathbf{a} + t\mathbf{b}\right) \approx c, \,\, \textrm{where} \,\, t = \frac{c-f_{\mathbf{a}}}{f_{\mathbf{b}}-f_{\mathbf{a}}}.$$
 Understanding that it is therefore more accurate for the partition to intersect $AB$ at $(1-t)\mathbf{a} + t\mathbf{b}$, such linear interpolation is integrated into the marching squares algorithm (see Figure \ref{Interpolated Marching Squares}).
 
@@ -145,24 +145,25 @@ Understanding that it is therefore more accurate for the partition to intersect 
 Returning to the problem at hand, \textit{Concrete Earth} uses \textit{marching cubes} to generate the \textit{isosurfaces} bounding 3D volumes. This requires an $n \times n \times n$ grid, and a new field $f: \left[0,1\right]^3 \rightarrow \mathbb{R}$, the algorithm now filling cubic cells with planar surfaces to partition out the gridpoints $(i,j,k)$ satisfying $f_{i,j,k} < c$ (again using linear interpolation to best approximate  the `true' isosurface). Since 3D fields can be hard to visualise, marching cubes are best understood in relation to marching squares. The intuition established above is readily generalised to higher dimensions; whatever the superficial differences, the guiding principle remains the same.
 
 \vspace{5pt}\noindent
-This section will not cover the finer points of the DirectX marching cubes implementation - not how it deconstructs partitioning surfaces into triangles for the vertex/index buffers, nor how it identifies adjacent marching cubes so as to calculate `smooth' vertex normals\footnote{A weighted average is taken over the surface normals of the surrounding triangular faces. If a face has vertices $\mathbf{a}$, $\mathbf{b}$, $\mathbf{c}$, it will be weighted by $1/|(\mathbf{b}-\mathbf{a})\times(\mathbf{c}-\mathbf{a})|$, proportional to the inverse of its area}. The report is only interested in this technique as it relates to \textit{Concrete Earth}'s terrain. Paul \citeauthor{bourkeMarchingCubes}'s \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes} remains the definitive source on the algorithm itself. %, and one that this project's code relies on heavily.
+This section will not cover the finer points of the DirectX marching cubes implementation - not how it deconstructs partitioning surfaces into triangles for the vertex/index buffers, nor how it identifies adjacent marching cubes so as to calculate `smooth' vertex normals\footnote{A weighted average is taken over the surface normals of the surrounding triangular faces. If a face has vertices $\mathbf{a}$, $\mathbf{b}$, $\mathbf{c}$, it will be weighted by $1/|(\mathbf{b}-\mathbf{a})\times(\mathbf{c}-\mathbf{a})|$, proportional to the inverse of its area.}. The report is only interested in this technique as it relates to \textit{Concrete Earth}'s terrain. Paul \citeauthor{bourkeMarchingCubes}'s \textit{Polygonising a Scalar Field} \citeyearpar{bourkeMarchingCubes} remains the definitive source on the algorithm itself. %, and one that this project's code relies on heavily.
 
+\vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.75\textwidth]{Marching Cube Partitions}
-\caption{Planar partitions of a marching cube, before linear interpolation. There are $14$ fundamental cases, ignoring symmetries; the code itself considers all $2^8 = 256$ possible configurations.}
+\caption{Planar partitions of a marching cube, before linear interpolation. There are $14$ fundamental cases, ignoring symmetries; the code itself considers all $2^8 = 256$ possible orientations.}
 \label{Marching Cube Partitions}
 \end{figure}
 
 \newpage
 \subsubsection{Case Study: Hexes}
 
-Having now established a \texttt{MarchingCubes} class, generating a landscape becomes a matter of writing the right scalar field. Indeed, the first step is easyl: for any isovalue $c \in \left(0,1\right)$,
+Having now established a \texttt{MarchingCubes} class, generating a landscape becomes a matter of writing the right scalar field. Indeed, the first step is easy: for any isovalue $c \in \left(0,1\right)$,
 $$\textbf{Height}(\mathbf{x}) = y + 0.1\cdot\textbf{FBM}(\mathbf{x})$$
-models a stark, sweeping tundra, its \textit{fractal brownian motion} component scaled to add roughness whilst avoiding `floating islands'. The application treats the underlying simplex noise as a black box.
+models a stark, sweeping tundra, its \textit{fractal brownian motion} component scaled to add roughness whilst avoiding `floating islands'. The underlying simplex noise is treated as a black box.
 
 \vspace{5pt}\noindent
-Taking a stylised approach, \textit{Concrete Earth} presents its terrain not as a contiguous mass, but as a board of isometric, hexagonal tiles. To that extent, it relies equally on the second field
+Taking a stylised approach, \textit{Concrete Earth} presents its terrain not as a contiguous mass, but a board of isometric, hexagonal tiles. To that extent, it relies equally on the second field
 $$\textbf{Hex}(\mathbf{x}) = \frac{\sqrt{(2x-1)^2+(2z-1)^2}\cos\left((\theta\bmod\pi/3)-\pi/6\right)}{\cos\left(\pi/6\right)}, \,\, \textrm{where} \,\, \theta = \textrm{arctan2}\left(2z-1, 2x-1\right).$$
 For all the trigonometry, this just describes a vertical hexagonal prism centred at $x = 0.5$, $z = 0.5$, much the same as $\sqrt{(2x-1)^2+(2z-1)^2}$ describes a cylinder (see Figure \ref{Hex Field}).
 $$\textbf{Terrain}_c(\mathbf{x}) = \max\left(\textbf{Height}(\mathbf{x}), \, c\cdot\textbf{Hex}(\mathbf{x})\right)$$
@@ -184,19 +185,19 @@ then takes a maximum to enclose only those gridpoints that fall below the isoval
 Physical markers are similarly integrated. To generate one of the afore-mentioned thorns with apex $\mathbf{a}$, base centred on $\mathbf{b}$, and half angle $\phi$, for instance, the framework defines field
 
 $$\textbf{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \frac{1}{\phi}\arccos\left(\frac{\left(\mathbf{x}-\mathbf{a}\right)\cdot\left(\mathbf{b}-\mathbf{a}\right)}{\left|\mathbf{x}-\mathbf{a}\right|\cdot\left|\mathbf{b}-\mathbf{a}\right|}\right).$$
-Using a minimum, isosurfaces of
+Thansk to its minimum, isosurfaces of
 $$\textbf{Landmarked Terrain}_{c;\,\mathbf{a},\mathbf{b},\phi}(\mathbf{x}) = \min\left(\textbf{Terrain}_c(\mathbf{x}), \, c\cdot\textbf{Thorn}_{\mathbf{a},\mathbf{b},\phi}(\mathbf{x})\right),$$
 contain all gridpoints below the isovalue of \textit{either} field, adding volume just as a maximum subtracts.\footnote{These operations do not commute! Taking the maximum first allows thorns that `stick out' from the bounding hex - this is a conscious, if purely aesthetic, decision on the part of the game.} %Though only a few such fiel have been modelled, 
 
 
 \vspace{5pt}\noindent
-The \texttt{Hex} class handling high-level field generation adds a stochastic element, randomising $\mathbf{a}$, $\mathbf{b}$, $\phi$. Moreover, any number of thorns can be added; taking the minimum over more than two fields just expands the isosurface further. Perhaps the only surprising choice made in procedurally generating these landmarks is keeping their surfaces completely smooth. Rather than simulating weathering and erosion, the conceit of \textit{Concrete Earth} is that these strange, idealised geometries feel distinctly unnatural. The physical markers of shunned land are man-made designs that \textit{should} tap into a sense of the uncanny, in the hopes of communicating to future civilisations that `THIS IS NOT A PLACE OF HONOUR'.  %Only the . Rather than add noise, the game [Explain how we add randomness to thorns]. That said, [smooth, geometric structure].
+The \texttt{Hex} class handling high-level field generation adds a stochastic element, randomising $\mathbf{a}$, $\mathbf{b}$, $\phi$. Moreover, any number of thorns can be added: taking the minimum over more than two fields just expands the isosurface further. Perhaps the only surprising choice made in procedurally generating these landmarks is keeping their surfaces completely smooth. Rather than simulating weathering and erosion, the conceit of \textit{Concrete Earth} is that these strange, idealised geometries feel distinctly unnatural. The physical markers of shunned land are man-made designs that \textit{should} tap into a sense of the uncanny, in the hopes of communicating to future civilisations that `THIS IS NOT A PLACE OF HONOUR'.  %Only the . Rather than add noise, the game [Explain how we add randomness to thorns]. That said, [smooth, geometric structure].
 
 \vspace{5pt}\noindent
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.66\textwidth]{Landmarks}
-\caption{\textit{Concrete Earth}'s landmarks.  Three designs have been prototype so far, with more to be added now the terrain pipeline is feature-complete.}
+\caption{\textit{Concrete Earth}'s landmarks.  Three designs have been prototyped so far, with more to be added now the terrain generation pipeline is feature-complete.}
 \label{Landmarks}
 \end{figure}
 
@@ -348,10 +349,10 @@ Given their origin in linguistics, it is perhaps unsurprising that grammars (see
 \vspace{5pt}\noindent
 More substantial works, then, adapt \textit{Tracery}'s grammar-based approach to their own specifications. In \textit{The Annals of the Parrigues}, \citeauthor{shortParrigues} uses a consistent, context-sensitive generator that ``defines any facts about the world that aren’t already defined at the moment of generation'' (\citeyear{shortParrigues}, p. 83). \textit{Voyageur} \citep{diasVoyageur} attaches weightings to the distributions of its production rules \citep{diasVoyageurDescriptions}. Produceral storytelling is an art form; as much as \textit{Concrete Earth} wears the above influences on its sleeve, to try and consolidate these into an `optimal', one-size-fits-all generator would be missing the point. This project therefore uses an implementation of \textit{Tracery} with its own custom modifications.
 
-\paragraph{Recency} To reduce repetition of a word or phrase, one might consider when it has last been used. The custom grammar treats this as a rank: given a non-terminal with $N$ possible production rules, the most recently used rule will have a \textit{recency}\footnote{Or `dryness', as \textit{Improv}, the generator for \textit{Voyageur}, would call it.} of $N-1$, the second most recent $N-2$, and so on down to the rule that was used longest ago (or indeed, never used), with recency $0$. Though it does not account for the intervals between uses, nor the second, third, etc, most recent use, there isn't any reason to overcomplicate a metric that already achieves the desired effect \citep{kazemiSimpleProceduralGeneration}.
+\paragraph{Recency} To reduce repetition of a word or phrase, one might consider when it has last been used. The custom grammar treats this as a rank: given a non-terminal with $N$ possible production rules, the most recently used rule will have a \textit{recency}\footnote{Or `dryness', as \textit{Improv}, the generator for \textit{Voyageur}, would call it \citep{diasVoyageurDescriptions}.} of $N-1$, the second most recent $N-2$, and so on down to the rule that was used longest ago (or indeed, never used), with recency $0$. Though it does not factor in the intervals between uses, nor the second, third, etc, most recent use, there isn't any reason to overcomplicate a metric that already achieves the desired effect \citep{kazemiSimpleProceduralGeneration}.
 
 \vspace{5pt}\noindent
-These ranks are straightforwardly integrating into the production rules' probability distribution. The likelihood of a rule with recency $n$ is scaled by $p^{n/(N-1)}$, such that (all other weightings being equal) the most recently used rule will be $p$ times as likely as the least recent.\footnote{The same string \texttt{alpha} might replace two different non-terminals \texttt{\{A\}}, \texttt{\{B\}}. Recognising these as distinct production rules, the recency with which one was applied to \texttt{\{A\}} has no bearing on when the other is applied to \texttt{\{B\}}, or vice versa.} 
+These ranks are straightforwardly integrated into the production rules' probability distribution. The likelihood of a rule with recency $n$ is scaled by $p^{n/(N-1)}$, such that (all other weightings being equal) the most recently used rule will be $p$ times as likely as the least recent.\footnote{The same string \texttt{alpha} might replace two different non-terminals \texttt{\{A\}}, \texttt{\{B\}}. Recognising these as distinct production rules, the recency with which one was applied to \texttt{\{A\}} has no bearing on when the other is applied to \texttt{\{B\}}, or vice versa.} 
 
 %\vspace{5pt}\noindent
 %Note that [joint recency!].
@@ -359,48 +360,47 @@ These ranks are straightforwardly integrating into the production rules' probabi
 \paragraph{Consistency} Intended to create a feeling of transience, landmarks in \textit{Concrete Earth} can be visited once and once only, and as such do not need tracked by an overall `world model'. The game's approach to characterisation is not so simple. With a narrative largely centred around picking up passengers, journeying with them, then parting ways, it should follow that if a detail about a party member has already been established, the text generator must be able to consistently recover it. %As such,  uses a lightweight approach to consistent characterisation
 
 \vspace{5pt}\noindent
-The grammar's \texttt{GenerateSentence} function, therefore, accepts (up to) two pointers to \texttt{StoryCharacter} structs. These are handled by three \textit{consistency markers}: %Not clear enough - relate to braces!
+The grammar's \texttt{GenerateSentence} function therefore accepts (up to) two pointers to \texttt{StoryCharacter} structs. These are handled by three \textit{consistency markers}: %Not clear enough - relate to braces!
 \begin{itemize}[noitemsep]
-\item \verb|*|\textit{:} The term \verb|{*A}| tells the grammar to check the first character argument for key \verb|A|. If a value exists, this will be substituted  [If yes; if else], and stored in the character struct for future use.
-\item \verb|**|\textit{:} The term \verb|{**A}| similarly applies to the second character argument.
-\item \verb|?|\textit{:} %[THIRD EXAMPLE: Consider \verb|{?BARREL #1}-{?BARREL #2}|, (signifying a double-barrelled surname): if 
-.\footnote{Note that \texttt{?} can also inherit an empty string, if the preceding non-terminal is not being remembered.}
+\item \verb|{*A}| tells the grammar to check the first character argument for key \verb|A|. If a corresponding value exists, it will be substituted directly into \verb|{*A}|; if not, the grammar will choose a production rule as usual, storing this choice in the character struct for future recall.
+\item \verb|{**A}| similarly applies to the second character argument.
+\item \verb|{?A}| inherits the consistency marker from its preceding non-terminal, handling `follow-up' information. If a \verb|{**SURNAME}| is replaced by \verb|{?BARREL #1}-{?BARREL #2}|, for instance, both parts of the second character's double-barrelled surname will also need to be consistent!\footnote{Note that \texttt{?} can also inherit an empty string, if the preceding non-terminal is not being remembered.}
 \end{itemize}
 
 
-
-\paragraph{Conditionality} By their very nature, grammars struggle ``to encode high level relationships between different things generated at different points'' in a sentence \citep{cmptn19}. [Explainer of \textit{nested non-terminals}]. [Doesn't scale, but author-friendly enough when it only tracks a few key conditions].
+%\newpage
+\paragraph{Conditionality} By their very nature, grammars struggle ``to encode high level relationships between different things generated at different points'' in a sentence \citep{cmptn19}. The game tries to work around this with \textit{nested non-terminals}: in receiving a term \verb|{{A} B}|, the grammar will first replace \verb|{A}| with some term \verb|X|, creating a new non-terminal \verb|{X B}| dependent on this initial choice. While this solution doesn't exactly scale,\footnote{Handling all possible cases of the nested non-terminal \texttt{\{\{A1\} \{A2\} \{A3\} \{A4\} \{A5\} B\}} will get out of hand!} it is an author-friendly means of tracking key conditions.
 
 \vspace{5pt}\noindent
-Consider how \textit{Concrete Earth}. Using a 
+Consolidating the above, consider how \textit{Concrete Earth} might use the Russian convention
 \begin{center}
 \begin{BVerbatim}
 {*{*GENDER} FORENAME} {*{*GENDER} PATRONYMIC} {*SURNAME}
 \end{BVerbatim}
 \end{center}
-\textit{Concrete Earth}'s grammar processes this as follows:
+to name a new character:
 \begin{enumerate}[label=\textit{\arabic*}\textit{.}, noitemsep]
-\item \verb|{*{*GENDER} FORENAME}| $\mapsto$ \verb|{*MASCULINE FORENAME}|\textit{:} The grammar starts with the nested \verb|{*GENDER}| non-terminal. The asterisk tells it to use the character's established gender, but - finding nothing - it randomly decides whether they are a man, woman, or non-binary, and passes this same value into the sentence and the \texttt{StoryCharacter} struct.
-\item \verb|{*MASCULINE FORENAME}| $\mapsto$ \verb|LEO|\textit{:} ; even if [never made explicit], the internal consistency
-\item \verb|{*{*GENDER} PATRONYMIC}| $\mapsto$ \verb|{*MASCULINE PATRONYMIC}|\textit{:} Now that their gender has been established, the grammar now directly substitutes in the value from the \texttt{StoryCharacter} struct.
-\item \verb|{*MASCULINE PATRONYMIC}| $\mapsto$ \verb|NIKOLAYEVICH|\textit{:} The character's forename is matched to a patronymic of the same gender (``Nikolayevich'' here meaning ``Son of Nikolay'') \footnote{As far as this report can tell, there are no gender-neutral patronymics in Russian - without actually speaking the language, it seems most appropriate to drop these from non-binary characters' names entirely. \citet{cook19} offers an invaluable discussion of representation within procedural narrative, and how generators can (whether by accident or authorial intent) reveal prejudices within the societies they create.}
-\item \verb|{*SURNAME}| $\mapsto$ \verb|TOLSTOY|\textit{:} The final non-terminal comes with no conditions, and ; this, too, is saved within the
+\item \verb|{*{*GENDER} FORENAME}| $\mapsto$ \verb|{*MASCULINE FORENAME}|\textit{:} The grammar starts with the nested \verb|{*GENDER}| non-terminal. The asterisk tells it to use the character's established gender, but - finding nothing - it randomly decides whether they are a man, woman, or non-binary, passing this value into sentence and the \texttt{StoryCharacter} struct alike.
+\item \verb|{*MASCULINE FORENAME}| $\mapsto$ \verb|LEO|\textit{:} A forename is chosen according to gender identity; even if that gender identity will not be made explicit to the player, an internal consistency is essential.
+\item \verb|{*{*GENDER} PATRONYMIC}| $\mapsto$ \verb|{*MASCULINE PATRONYMIC}|\textit{:} Now that the character's gender has been established, it is substituted back in to the second non-terminal.
+\item \verb|{*MASCULINE PATRONYMIC}| $\mapsto$ \verb|NIKOLAYEVICH|\textit{:} The character's forename is paired with a patronymic of the same gender (``Nikolayevich'' here meaning ``Son of Nikolay'') \footnote{As far as this report can tell, there are no gender-neutral patronymics in Russian - without actually speaking the language, it seems most appropriate to drop these from non-binary characters' names entirely. \citet{cook19} offers an invaluable discussion of representation within procedural narrative, and how generators can (whether by accident or authorial intent) reveal prejudices within the societies they create.}
+\item \verb|{*SURNAME}| $\mapsto$ \verb|TOLSTOY|\textit{:} The final non-terminal comes with no conditions, and is replaced outright. This, too, is saved within the character struct.
 \end{enumerate}
-In this case, the grammar terminates after a single iteration. Should \verb|{*BARREL #1}-{*BARREL #2}| (signifying a double-barrelled surname) have replaced \verb|{*SURNAME}|, however, the new non-terminals would needed handled on a second parse.
+In this case, the grammar terminates after a single iteration. Should \verb|{*BARREL #1}-{*BARREL #2}| have replaced \verb|{*SURNAME}|, however, the new non-terminals would trigger a second parse.
 
 \vspace{5pt}\noindent
-This might feel too limited, from a dramatic perspective. Personality is not immutable; for all this focus on consistency, good storytelling is just as reliant on character \textit{development}. Indeed, as a piece of interactive fiction, the player requires a means of meaningful interaction. The grammar surely requires some sort of override...
+This might feel too limited, from a dramatic perspective. Personality is not immutable; for all this focus on consistency, good storytelling is just as reliant on character \textit{development}. Indeed, as a piece of interactive fiction, one might expect to have a personal impact on the characters' lives. The grammar surely requires some sort of override...
 %Does this make sense, dramaturgically?
 
 \subsubsection{Content Selection Architectures} 
 
-\textit{Storylets} \citep{kreminskiStorylets} are [definition].
+\textit{Storylets} \citep{kreminskiStorylets} are [definition]. %[Though conceptually no different, ... , our `narrative stack'...] %based on salience (prioritising rarest)
 
 \vspace{5pt}\noindent
-In \textit{Concrete Earth}, these storylets are envisioned as the means for these [global changes]. [Discuss a beginning-middle-end structure].%[Though conceptually no different, ... , our `narrative stack'...]
+In \textit{Concrete Earth}, these storylets are envisioned as the means for these [global changes]. [Discuss a beginning-middle-end structure].
  
 \vspace{5pt}\noindent
-The current implementation is limited. [Conditions: randomness]. [Effects: entering/exiting the party].
+The current implementation is limited. [Conditions: randomness; a uniformly random choice from all possible ]. [Moreover, limited conditions/effects: entering/exiting the party]. The grammar is the focus here; the surrounding architecture used only to integrate it with the surrounding gameplay.
 
 \newpage
 \section{Code Organisation}
@@ -417,7 +417,7 @@ Procedural modelling comes with two key challenges - establishing general, multi
 The narrative pipeline is as follows. On every move, the \texttt{Board} checks if it should start a new scene. If so, it passes the player's current location (i.e. whether they are near thorns, or a towering monolith) down to the \texttt{StoryEngine}, which in turn receives a . ...passes back up to the \texttt{Board}, having first replaced any non-terminals via its \texttt{Grammar}. The \texttt{Board} then tells the \texttt{StoryEngine} the player's choice, which returns the corresponding consequence (again having been parsed by \texttt{Grammar}).
 
 \vspace{5pt}\noindent
-Text events are rendered to the screen with using the ImGui library - the UI is minimal, handled almost entirely within a single \texttt{Game::SetupGUI} function. This application also relies on nlohmann's JSON API.\footnote{Indeed, it is a conscious organisational choice to store word banks of terminals and non-terminals within their own self-contained JSON files, rather than hardcode them into the \texttt{Grammar} itself.} The \href{https://www.dafont.com/benegraphic.font}{\ul{font}} and \href{https://freesound.org/people/JustLaz/sounds/616516/}{\ul{Geiger counter SFX}} were sourced online; the code has been cited as appropriate.
+Text events are rendered to the screen with using the ImGui library - the UI is minimal, handled almost entirely within a single \texttt{Game::SetupGUI} function. This application also relies on nlohmann's JSON API.\footnote{Indeed, it is a conscious organisational choice to store word banks of terminals and non-terminals within their own self-contained JSON files, rather than hardcode them into the \texttt{Grammar} itself.} The \href{https://www.dafont.com/benegraphic.font}{\ul{font}} and \href{https://freesound.org/people/JustLaz/sounds/616516/}{\ul{Geiger counter SFX}} were sourced online; the code is cited as appropriate.
 
 \vspace{5pt}\noindent
 Finally, \textit{Concrete Earth} was written with good coding practices in mind. Functions and variables follow a consistent naming convention, focused on readability. The DRY principle has been followed, at least within reason. Even the current, informal use of comments proves effective, these breaking down the logic behind key snippets, highlighting potential bugs, and overall acting as incisive memos-to-self\footnote{This is notably untrue of \texttt{Game.cpp}. All figures in this report have been expressly produced for CMP505 - though unused in the final application, the code used to render these figures remains, commented out in large and unclear blocks solely for the sake of posterity.} (a collaborative project would obviously require a higher standard of documentation). GitHub was used for version control.
