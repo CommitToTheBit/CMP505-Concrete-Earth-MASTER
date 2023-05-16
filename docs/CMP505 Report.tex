@@ -447,7 +447,7 @@ Finally, \textit{Concrete Earth} was written with good coding practices in mind.
 
 \subsection{Features}
 
-If one aspect of this project constitutes an unambiguous success, it is surely the use of L-systems. \textit{Concrete Earth} provides not only a robust, parametric framework, but also a genuinely interesting application. While the game's models of blood vessels are perfectly acceptable in themselves, it is their integration with the post-process pipeline that (quite literally) allows them to shine. Not that there isn't more to do, of course - the procedural animation, for instance, still feels quite limited - but the \texttt{LSystem} class is in a good place. Above all else, it is \textit{versatile}, a foundational piece of code to be transposed into any number of future projects.
+If one aspect of this project constitutes an unambiguous success, it is surely the use of L-systems. \textit{Concrete Earth} provides not only a robust, parametric framework, but also a genuinely interesting application thereof. While the game's models of blood vessels are perfectly acceptable in themselves, it is their integration with the rest of the post-process pipeline that (literally) allows them to shine. Not that there isn't more to do, of course - the procedural animation, for example, still feels rather rudimentary - but the \texttt{LSystem} class is in a good place. Above all else, it is \textit{versatile}, a foundational piece of code to be transposed into any number of future projects.
 
 \vspace{5pt}\noindent
 The role of marching cubes, by contrast, feels much more narrow: height maps have a well-known limitation, to which this algorithm is the well-known solution (see Section \ref{Procedural Terrain}). Implementing the code was a significant technical challenge, but largely successful, and though the generation process does not run especially quickly\footnote{For this reason, the executable will often need a couple of minutes to `boot up'.} a potential solution has already been identified. \citeauthor{bourkeMarchingTetrahedrons}'s discussion of marching cubes is accompanied by an introduction to \textit{marching tetrahedrons} \citeyearpar{bourkeMarchingTetrahedrons}, a variation of the algorithm that would hopefully improve the efficiency of the code.\footnote{Where there are $256$ possible partitions of a cube, tetrahedrons only come with $2^4 = 16$...} Working with a tetrahedral grid will come with additional nuances (e.g. cell orientation), but I now feel I've built enough intuition to take on this more advanced technique. %To the extent that the feature's performance. Even for moderate values of $n$, \footnote{The complexity of}%one met to great success. To the extent that the performance of the feature can be criticised,  %Marching cubes, too, have been used effectively. T
@@ -464,17 +464,19 @@ The more interesting question here is how effectively the marching cubes enhance
 \end{figure}
 
 \vspace{5pt}\noindent
-To the extent that the game has any single `special feature', though, it would surely be its approach to procedural storytelling. On a technical level, the \texttt{Grammar} class works exactly as intended: it offers all the functionality of \textit{Tracery}, plus a few targeted tweaks. For all my interest in narrative frameworks, though, I am fundamentally not a writer, a fact reflected by a rather limited collection of corpora (plus a typo here and there!). Just like the marching cubes, the grammar lacks the \textit{content} to reach its full potential. 
+To the extent that the game has any single `special feature',  it would surely be its approach to procedural storytelling. On a technical level, the \texttt{Grammar} class works exactly as intended: it offers all the functionality of \textit{Tracery}, with targeted tweaks. For all my interest in narrative frameworks, though, I am fundamentally not a writer, a fact reflected by a rather limited collection of corpora (plus a typo here and there!). Just like the marching cubes, the grammar lacks the \textit{content} to reach its full potential. 
 
 \subsection{Code Organisation}
 
 This feeds in to a deeper, organisational issue. Having known how few storylets would be ready in time to submit this prototype, their [...]. [Bad working practice]. The code \textit{works}, certainly, but in terms of how much will need refactored . [Indeed, a new strategy - step back, draft a range of scenes, then use this content to inform the next iteration of the code].
 
 \vspace{5pt}\noindent
-[That's not to detract from... - bridge!]. [While the end result of the architecture feels unstructured, overly reliant on special cases... - the rest of the code is good!]
+[Stands out as a \textit{singular} point of failure]. [For all the obvious benefits to my own, personal workflow, this philosophy pays off in the final executable]. [Performance-centric!].  
+
+%[That's not to detract from... - bridge!]. [While the end result of the architecture feels unstructured, overly reliant on special cases... - the rest of the code is good!]
 
 \vspace{5pt}\noindent
-More than anything else, I've genuinely tried to . [...]. For instance, [...performance!].
+%More than anything else, I've genuinely tried to . [...]. For instance, [...performance!].
 
 \section{Conclusions}
 
