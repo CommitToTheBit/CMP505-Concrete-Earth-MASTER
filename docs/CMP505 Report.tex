@@ -340,7 +340,7 @@ Rendering these to texture results in a visceral, procedurally-animated post-pro
 %\newpage
 \subsection{Procedural Narrative} % TECHNIQUE: 'Improv-lite' text generation...
 
-\textit{Concrete Earth} was originally conceived as a work of interactive fiction, a mix of authorship and procedural text generation. Only a fraction of the content has been written so far, so this section will focus on the intended narrative, and the infrastructure already in place to facilitate it. 
+\textit{Concrete Earth} was originally conceived as a work of interactive fiction, a mix of authorship and procedural text generation. Only a fraction of the content has been written so far, so this section will focus on the \textit{intended} narrative, and the infrastructure already in place to facilitate it. 
 
 \subsubsection{Grammars}
 
@@ -349,7 +349,7 @@ Given their origin in linguistics, it is perhaps unsurprising that grammars (see
 \vspace{5pt}\noindent
 More substantial works, then, adapt \textit{Tracery}'s grammar-based approach to their own specifications. In \textit{The Annals of the Parrigues}, \citeauthor{shortParrigues} uses a consistent, context-sensitive generator that ``defines any facts about the world that aren’t already defined at the moment of generation'' (\citeyear{shortParrigues}, p. 83). \textit{Voyageur} \citep{diasVoyageur} attaches weightings to the distributions of its production rules \citep{diasVoyageurDescriptions}. Produceral storytelling is an art form; as much as \textit{Concrete Earth} wears the above influences on its sleeve, to try and consolidate these into an `optimal', one-size-fits-all generator would be missing the point. This project therefore uses an implementation of \textit{Tracery} with its own custom modifications.
 
-\paragraph{Recency} To reduce repetition of a word or phrase, one might consider when it has last been used. The custom grammar treats this as a rank: given a non-terminal with $N$ possible production rules, the most recently used rule will have a \textit{recency}\footnote{Or `dryness', as \textit{Improv}, the generator for \textit{Voyageur}, would call it \citep{diasVoyageurDescriptions}.} of $N-1$, the second most recent $N-2$, and so on down to the rule that was used longest ago (or indeed, never used), with recency $0$. Though it does not factor in the intervals between uses, nor the second, third, etc, most recent use, there is no need to overcomplicate a metric that already achieves the desired effect \citep{kazemiSimpleProceduralGeneration}.
+\paragraph{Recency} To reduce repetition of a word or phrase, one might consider when it has last been used. The custom grammar treats this as a rank: given a non-terminal with $N$ possible production rules, the most recently applied rule having a \textit{recency}\footnote{Or `dryness', as \textit{Improv}, the generator for \textit{Voyageur}, would call it \citep{diasVoyageurDescriptions}.} of $N-1$, the second most recent $N-2$, and so on down to the rule that was applied longest ago (or indeed, never!), with recency $0$. Though it does not factor in the intervals between uses, nor the second, third, etc, most recent use, there is no need to overcomplicate a metric that already achieves the desired effect \citep{kazemiSimpleProceduralGeneration}.
 
 \vspace{5pt}\noindent
 These ranks are straightforwardly integrated into the production rules' probability distribution. The likelihood of a rule with recency $n$ is scaled by $p^{n/(N-1)}$, such that (all other weightings being equal) the most recently used rule will be $p$ times as likely as the least recent.\footnote{The same string \texttt{alpha} might replace two different non-terminals \texttt{\{A\}}, \texttt{\{B\}}. Recognising these as distinct production rules, the recency with which one was applied to \texttt{\{A\}} has no bearing on when the other is applied to \texttt{\{B\}}, or vice versa.} 
@@ -362,9 +362,9 @@ These ranks are straightforwardly integrated into the production rules' probabil
 \vspace{5pt}\noindent
 The grammar's \texttt{GenerateSentence} function will therefore accept (up to) two pointers to \texttt{StoryCharacter} structs. These are handled by the \textit{consistency markers} \verb|*|, \verb|**|, \verb|?|: %Not clear enough - relate to braces!
 \begin{itemize}[noitemsep]
-\item \verb|{*A}| tells the grammar to check the first character argument for key \verb|A|. If a corresponding value exists, it will be substituted directly into \verb|{*A}|; if not, the grammar will choose a production rule as usual, storing this choice in the character struct for future recall.
+\item \verb|{*A}| tells the grammar to check the first character argument for key \verb|A|. If a corresponding value exists, it will be substituted directly in place of \verb|{*A}|; if not, the grammar will choose a production rule as usual, storing this choice in the character struct for future recall.
 \item \verb|{**A}| acts similarly on the second character argument.
-\item \verb|{?A}| inherits the consistency marker from its preceding non-terminal, adding `follow-up' information. If a \verb|{**SURNAME}| is replaced by \verb|{?BARREL #1}-{?BARREL #2}|, for instance, both parts of the second character's double-barrelled surname will also need to be consistent!\footnote{Note that \texttt{?} can also inherit an empty string, if the preceding non-terminal is not being remembered.}
+\item \verb|{?A}| inherits the consistency marker from its preceding non-terminal, allowing for `follow-up' information. If a \verb|{**SURNAME}| is replaced by \verb|{?BARREL #1}-{?BARREL #2}|, for instance, both halves of the second character's double-barrelled surname will also need to be consistent.\footnote{Note that \texttt{?} can also inherit an empty string, if the preceding non-terminal is not being remembered.}
 \end{itemize}
 
 
@@ -382,8 +382,8 @@ to name a new character:
 \begin{enumerate}[label=\textit{\arabic*}\textit{.}, noitemsep]
 \item \verb|{*{*GENDER} FORENAME}| $\mapsto$ \verb|{*MASCULINE FORENAME}|\textit{:} The grammar starts with the nested \verb|{*GENDER}| non-terminal. The asterisk tells it to use the character's established gender, but - finding nothing - it randomly decides whether they are a man, woman, or non-binary, passing this value into sentence and the \texttt{StoryCharacter} struct alike.
 \item \verb|{*MASCULINE FORENAME}| $\mapsto$ \verb|LEO|\textit{:} A forename is chosen according to gender identity; even if that gender identity is never made explicit to the player, an internal consistency is essential.
-\item \verb|{*{*GENDER} PATRONYMIC}| $\mapsto$ \verb|{*MASCULINE PATRONYMIC}|\textit{:} Now that a value for \verb|GENDER| gender has been established, it is substituted back in to the second non-terminal.
-\item \verb|{*MASCULINE PATRONYMIC}| $\mapsto$ \verb|NIKOLAYEVICH|\textit{:} The character's forename is paired with an appropriate patronymic (``Nikolayevich'' here meaning ``Son of Nikolay'') \footnote{As far as this report can tell, there are no gender-neutral patronymics in Russian - without actually speaking the language, it seems most appropriate to drop these from non-binary characters' names entirely. \citet{cook19} offers an invaluable discussion of representation within procedural narrative, and how generators can (whether by accident or authorial intent) reveal prejudices within the societies they create.}
+\item \verb|{*{*GENDER} PATRONYMIC}| $\mapsto$ \verb|{*MASCULINE PATRONYMIC}|\textit{:} Now that a value for \verb|GENDER| has been established, it is substituted back in to the second non-terminal.
+\item \verb|{*MASCULINE PATRONYMIC}| $\mapsto$ \verb|NIKOLAYEVICH|\textit{:} The character's forename is paired with an appropriate patronymic (``Nikolayevich'' here meaning ``Son of Nikolay'').\footnote{As far as this report can tell, there are no gender-neutral patronymics in Russian - without actually speaking the language, it seems most appropriate to drop these from non-binary characters' names entirely. \citet{cook19} offers an invaluable discussion of representation within procedural narrative, and how generators can (whether by accident or authorial intent) reveal prejudices within the societies they create.}
 \item \verb|{*SURNAME}| $\mapsto$ \verb|TOLSTOY|\textit{:} The final non-terminal comes with no conditions, and is replaced outright. This, too, is saved within the character struct.
 \end{enumerate}
 In this case, the grammar terminates after a single iteration. Should \verb|{*BARREL #1}-{*BARREL #2}| have replaced \verb|{*SURNAME}|, however, the new non-terminals would trigger a second parse.
@@ -394,14 +394,14 @@ The framework might feel too limited, from a dramatic perspective. Personality i
 
 \subsubsection{Storylets} 
 
-\textit{Storylets} \citep{kreminskiStorylets} are narrative modules, best thought of as the largest `unit of story' in a given project. The definition is broad (again, this is not an exact science), but storylets are generally understood as a dynamic, yet controlled, approach to storytelling. They come with their own internal structures, though these may well be modified by a grammar or other text generator. What's more, being highly reorderable, they are best surfaced by a surrounding \textit{content selection architecture} - it is common to use salience scores or a weighted distribution to prioritise the more surprising modules when their conditions are met.
+\textit{Storylets} \citep{kreminskiStorylets} are narrative modules, best thought of as the largest `unit of story' in a given project. The definition is broad (again, this is not an exact science), but storylets are generally understood as a dynamic, yet controlled, option for storytelling. They come with their own internal structures, which may well be parsed by grammars or other text generators. What's more, being highly reorderable, they are best surfaced by a surrounding \textit{content selection architecture} - it is common to use salience scores or a weighted distribution to prioritise the more surprising modules when their conditions are met.
 
 \vspace{5pt}\noindent
-In a full release of \textit{Concrete Earth}, the player will first be presented with a scene (the `beginning' of the storylet) and an accompanying set of choices (the `middle') that fit with the world's current state. When they select one of the options, the architecture will surface a second scene that shows a consequence (the `end'). It is a streamlined internal structure, with the beginning, middle and end \textit{all} capable of updating the world model, making changes beyond just filling in uninitialised character details.
+In a full release of \textit{Concrete Earth}, the player will first be presented with a scene (the `beginning' of the storylet) and an accompanying set of choices (the `middle') that fit with the world's current state. When they select one of the options, the architecture will find a fitting consequence (the `end'). It is a streamlined internal structure, with the beginning, middle and end \textit{all} capable of updating the world model, making changes beyond just filling in uninitialised character details.
  
 \newpage\noindent
 %\vspace{5pt}\noindent
-The current implementation, however, is limited. The content selection architecture is trivial, surfacing storylets at random (so long as the world model satisfies their minimal sets of conditions). Moreover, the player's effect on the narrative amounts to an arbitrary choice of whether to add a given passenger to their party. In the future, the storylet framework could be essential in tracing out meaningful character arcs; for now, it is simply a vehicle through which the game can showcase its grammar.
+The current implementation, however, is limited. The content selection architecture is trivial, surfacing storylets at random (so long as the world model satisfies their minimal sets of conditions). Moreover, the player's effect on the narrative amounts to an arbitrary choice of whether to add a given passenger to their party. In the future, the storylet framework could be essential in tracing out meaningful character arcs; for now, it exists only in support of other, more successful features.
 
 \section{Code Organisation}
 
@@ -447,13 +447,13 @@ Finally, \textit{Concrete Earth} was written with good coding practices in mind.
 
 \subsection{Features}
 
-If one element of this project constitutes an unambiguous success, it is the L-systems. \textit{Concrete Earth} provides not only a robust framework, but a genuinely interesting use case. Indeed, [...]. Not that there isn't more to do - the procedural animation of the blood vessels, for instance, still feels quite limited - but the \texttt{LSystem} class is in a good place. Above all else, it feels \textit{versatile}, a foundational piece of code that could be carried over to any number of future projects.
+If one aspect of this project constitutes an unambiguous success, it is surely the use of L-systems. \textit{Concrete Earth} provides not only a robust, parametric framework, but also a genuinely interesting application. While the game's models of blood vessels are perfectly acceptable in themselves, it is their integration with the post-process pipeline that (quite literally) allows them to shine. Not that there isn't more to do, of course - the procedural animation, for instance, still feels quite limited - but the \texttt{LSystem} class is in a good place. Above all else, it is \textit{versatile}, a foundational piece of code to be transposed into any number of future projects.
 
 \vspace{5pt}\noindent
-The role of marching cubes, by contrast, seems much more narrow: height maps have a well-known limitation, to which this algorithm is the well-known solution (see Section \ref{Procedural Terrain}). Implementing the code was a significant technical challenge, but largely successful, and though the generation process does not run especially quickly\footnote{Not on a low-end laptop, at least!} a potential solution has already been identified. \citeauthor{bourkeMarchingTetrahedrons}'s discussion of marching cubes is accompanied by an introduction to \textit{marching tetrahedrons} \citeyearpar{bourkeMarchingTetrahedrons}, a variation of the algorithm that would hopefully improve the efficiency of the code.\footnote{Where there are $256$ possible partitions of a cube, tetrahedrons only come with $2^4 = 16$...} Working within a tetrahedral grid will come with additional nuances (e.g. cell orientation), but I now feel I've built enough intuition to take on this more advanced technique. %To the extent that the feature's performance. Even for moderate values of $n$, \footnote{The complexity of}%one met to great success. To the extent that the performance of the feature can be criticised,  %Marching cubes, too, have been used effectively. T
+The role of marching cubes, by contrast, feels much more narrow: height maps have a well-known limitation, to which this algorithm is the well-known solution (see Section \ref{Procedural Terrain}). Implementing the code was a significant technical challenge, but largely successful, and though the generation process does not run especially quickly\footnote{For this reason, the executable will often need a couple of minutes to `boot up'.} a potential solution has already been identified. \citeauthor{bourkeMarchingTetrahedrons}'s discussion of marching cubes is accompanied by an introduction to \textit{marching tetrahedrons} \citeyearpar{bourkeMarchingTetrahedrons}, a variation of the algorithm that would hopefully improve the efficiency of the code.\footnote{Where there are $256$ possible partitions of a cube, tetrahedrons only come with $2^4 = 16$...} Working with a tetrahedral grid will come with additional nuances (e.g. cell orientation), but I now feel I've built enough intuition to take on this more advanced technique. %To the extent that the feature's performance. Even for moderate values of $n$, \footnote{The complexity of}%one met to great success. To the extent that the performance of the feature can be criticised,  %Marching cubes, too, have been used effectively. T
 
 \vspace{5pt}\noindent
-The more interesting question here is how effectively the marching cubes enhance \textit{Concrete Earth}'s setting. As much as they are used to procedurally generate terrain, that terrain can feel somewhat lacking - while this report has already acknowledged the relatively few landmarks available, it's no less notable that they are left untextured. With more time, I would have been keen to write a pixel shader to handle this, but having already experimented with procedural texturing in CMP502 it felt more fruitful to focus on new techniques. Note also that all terrain hexes are generated at runtime; updating these dynamically would be a relatively minor change that greatly reduces repetitivity.
+The more interesting question here is how effectively the marching cubes enhance \textit{Concrete Earth}'s setting. As much as they are used to procedurally generate terrain, that terrain can feel somewhat lacking - while this report has already acknowledged the relatively few landmarks available, it's no less notable that they are left untextured. With more time, I would have been keen to write a pixel shader to handle this, but having already experimented with procedural texturing in CMP502 it felt more fruitful to focus on new techniques. Note also that all terrain hexes are generated at runtime; updating these dynamically would be a relatively minor change that greatly increases variety.
 
 \vspace{5pt}\noindent
 \begin{figure}[h]
@@ -464,15 +464,11 @@ The more interesting question here is how effectively the marching cubes enhance
 \end{figure}
 
 \vspace{5pt}\noindent
-To the extent that \textit{Concrete Earth} has any single `special feature', though, it would surely be its approach to procedural storytelling. While there's a lot , this has not exactly . For all my interest in \textit{coding} narrative frameworks, I am not myself a writer - a fact reflected in the lack of content available to the grammar. [MORE CONTENT = MORE TESTING]. [Genuinely pleased with the functionality of the grammar]; it is a shame that functionality has not been fully utilised. % While there is a perfectly functional loop of picking up and parting way with new passengers, it is not exactly narrative interesting. 
-
-\vspace{5pt}\noindent
-That said, I am genuinely pleased with how the \texttt{Grammar} functions - not so much the surrounding \texttt{Architecture}. 
-The same cannot be said of the surrounding \texttt{Architecture}. [The priority was getting a serviceable game loop in place].
+To the extent that the game has any single `special feature', though, it would surely be its approach to procedural storytelling. On a technical level, the \texttt{Grammar} class works exactly as intended: it offers all the functionality of \textit{Tracery}, plus a few targeted tweaks. For all my interest in narrative frameworks, though, I am fundamentally not a writer, a fact reflected by a rather limited collection of corpora (plus a typo here and there!). Just like the marching cubes, the grammar lacks the \textit{content} to reach its full potential. 
 
 \subsection{Code Organisation}
 
-This relates, in part, to a broader organisational problem. [An architecture that grows \textit{with} the content, as my alternative strategy.]
+This feeds in to a deeper, organisational issue. Having known how few storylets would be ready in time to submit this prototype, their [...]. [Bad working practice]. The code \textit{works}, certainly, but in terms of how much will need refactored . [Indeed, a new strategy - step back, draft a range of scenes, then use this content to inform the next iteration of the code].
 
 \vspace{5pt}\noindent
 [That's not to detract from... - bridge!]. [While the end result of the architecture feels unstructured, overly reliant on special cases... - the rest of the code is good!]
@@ -486,7 +482,7 @@ More than anything else, I've genuinely tried to . [...]. For instance, [...perf
 [General lessons]
 
 \vspace{5pt}\noindent
-[Features vs. content throughline]
+A more meaningful throughline of this report might be the relationship between implementing features, and generating content \textit{with} those features. As much as I , I'm not so sure I'd draw that same distinction. ; conversely, The eL-system; conversely, my content selection architecture feels so 
 
 \vspace{5pt}\noindent
 [Last: iteration on CMP502...]
