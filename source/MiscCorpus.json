@@ -485,7 +485,7 @@
       "SALT HABITAT DESCRIPTION"
     ]
   },
-  "a {BUILDING}, carved into the {{SUIT} ADJECTIVE} geometry,": {
+  "a {BUILDING}, carved into the {{SUIT} ADJECTIVE} geometry": {
     "productions": [
       "THORN HABITAT DESCRIPTION",
       "MONOLITH HABITAT DESCRIPTION"
