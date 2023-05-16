@@ -4,6 +4,14 @@
       "TITLED NAME"
     ]
   },
+  "": {
+    "productions": [
+      "MASCULINE TITLE",
+      "FEMININE TITLE",
+      "NEUTER TITLE"
+    ],
+    "weight":  0.1
+  },
   "M.": {
     "productions": [
       "MASCULINE TITLE"
@@ -17,11 +25,6 @@
   "Mlle.": {
     "productions": [
       "FEMININE TITLE"
-    ]
-  },
-  "Mx.": {
-    "productions": [
-      "NEUTER TITLE"
     ]
   },
   "Dr.": {

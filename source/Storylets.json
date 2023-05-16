@@ -1,7 +1,7 @@
 {
   "passenger embarks": {
     "Beginning": {
-      "Axiom": "{ARRIVAL SENTENCE}. {*PREFERRED NAME}, a {*ARCHETYPE}, offers you payment for passage across the steppe.",
+      "Axiom": "{ARRIVAL SENTENCE}. {*PREFERRED NAME} offers fair payment for passage.",
       "Causes": {
         "MaxPassengers": 3,
         "ActiveIsPassenger": false
@@ -41,7 +41,7 @@
   },
   "passenger disembarks": {
     "Beginning": {
-      "Axiom": "You come to a small hamlet. {*PREFERRED NAME} disembarks, thanking you profusely.",
+      "Axiom": "{ARRIVAL SENTENCE}. {HABITAT SENTENCE}. {*PREFERRED NAME} disembarks, thanking you {THANKING ADVERB}.",
       "Causes": {
         "MinPassengers": 2,
         "ActiveIsPassenger": true
@@ -52,11 +52,31 @@
     },
     "Middle": [
       {
-        "Axiom": "Rest, and resupply..."
+        "Axiom": "accept the gratitude, {THANKING ADVERB}..."
+      },
+      {
+        "Axiom": "remain mute ({THANKING ADVERB})..."
       }
     ],
     "End": {
-      "Axiom": "The plains await."
+      "Axiom": "Your {WAGON NOUN} {WAGON ROLLS} ever onward..."
+    }
+  },
+  "are we there yet": {
+    "Beginning": {
+      "Axiom": "The {WAGON DESCRIPTION} passes {{SUIT} LANDMARK}. {*PREFERRED NAME} asks if you ''are there yet.''",
+      "Causes": {
+        "MinPassengers": 2,
+        "ActiveIsPassenger": true
+      }
+    },
+    "Middle": [
+      {
+        "Axiom": "''No.''"
+      }
+    ],
+    "End": {
+      "Axiom": "{*{*GENDER} SUBJECT PRONOUN} goes quiet."
     }
   }
 }

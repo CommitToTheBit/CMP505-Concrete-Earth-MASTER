@@ -607,7 +607,7 @@ void Game::CreateDeviceDependentResources()
 	m_batch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
 	// Board
-	m_Board.Initialize(device, 4, 32);
+	m_Board.Initialize(device, 4, 80);
 	m_add = 0;
 
 	/*m_Thorns.InitializeThorn(device, &m_Board.m_horizontalField, 0.15f+0.15f*std::rand()/RAND_MAX);
