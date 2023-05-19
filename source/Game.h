@@ -75,14 +75,6 @@ private:
 
     void Render();
 
-    // Rendering models
-    void RenderSkyboxOnto(Camera* camera);
-
-    // Render passes
-    void RenderStaticTextures();
-    void RenderDynamicTextures();
-    void RenderShaderTexture(RenderTexture* renderPass, Shader rendering);
-
     void Clear();
     void CreateDeviceDependentResources();
     void CreateWindowSizeDependentResources();
@@ -131,9 +123,6 @@ private:
     Shader                                                                  m_TerrainShader;
     Shader                                                                  m_LocationShader;
 
-    Shader                                                                  m_VoronoiShader; // DEBUG...
-    Shader                                                                  m_WireframeShader; // DEBUG...
-
     // Render-to-Textures
     Screen                                                                  m_Screen;
     Shader                                                                  m_ScreenShader;
@@ -145,27 +134,9 @@ private:
     Board                                                                   m_Board;
     int                                                                     m_add; // DEBUG...
 
-    MarchingCubes                                                           m_Torus; // DEBUG...
-
-    MarchingCubes                                                           m_Wireframe; // DEBUG...
-    MarchingCubes                                                           m_Partitions[14]; // DEBUG...
-
     // L-Systems
-    LDragonCurve                                                            m_DragonCurve;
-    LSphinxTiling                                                           m_SphinxTiling;
-    LPenroseP3                                                              m_PenroseP3;
-
-    Hex                                                                     m_Thorns;
-    Hex                                                                     m_Monolith1;
-    Hex                                                                     m_Monolith2;
-
-    std::vector<LDeterministicBloodVessel>                                  m_DeterministicBloodVessels;
-    std::vector<LBloodVessel>                                               m_StochasticBloodVessels;
-
     int                                                                     m_BloodVesselCount;
     std::vector<LBloodVessel>                                               m_BloodVessels;
-
-    ModelClass																m_Cube;
 
     // GUI
     ImFont*                                                                 m_defaultFont;

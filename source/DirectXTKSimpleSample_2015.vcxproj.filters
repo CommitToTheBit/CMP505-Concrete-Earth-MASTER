@@ -381,4 +381,9 @@
       <Filter>Assets\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="beneg___.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+  </ItemGroup>
 </Project>
