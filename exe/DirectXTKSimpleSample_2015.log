@@ -1,0 +1,164 @@
+﻿  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_001.cso
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_002.cso
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_003.cso
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_004.hlsl(91,5-89): warning X3206: implicit truncation of vector type
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_004.hlsl(99,11-37): warning X3206: implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\hex_vignette_ps_004.cso
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\euclidean_voronoi_3ps.hlsl(41,45-127): warning X3556: integer modulus may be much slower, try using uints if possible.
+  
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\euclidean_voronoi_3ps.cso
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light_3ps.hlsl(39,11-116): warning X3206: implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light_3ps.cso
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light_3vs.hlsl(41,5-33): warning X3206: implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\light_3vs.cso
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\manhattan_voronoi_3ps.hlsl(41,45-127): warning X3556: integer modulus may be much slower, try using uints if possible.
+  
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\manhattan_voronoi_3ps.cso
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\neutral_ps.cso
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\neutral_vs.cso
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\texture_3vs.hlsl(36,2-30): warning X3206: implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\texture_3vs.cso
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\texture_coordinates_3ps.cso
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_ps.hlsl(43,11-67): warning X3206: implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_ps.cso
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\texture_ps.cso
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\texture_vs.cso
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_ps_001.cso
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_ps_002.hlsl(27,11-195): warning X3206: implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_ps_002.cso
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_ps_003.hlsl(44,11-67): warning X3206: implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_ps_003.cso
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\vignette_vs.cso
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\voronoi_terrain_3ps_001.hlsl(99,11-116): warning X3206: implicit truncation of vector type
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\voronoi_terrain_3ps_001.hlsl(58,45-127): warning X3556: integer modulus may be much slower, try using uints if possible.
+  
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\voronoi_terrain_3ps_001.cso
+  compilation object save succeeded; see C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\wireframe_3ps.cso
+  pch.cpp
+  Camera.cpp
+  ClassicNoise.cpp
+  Architecture.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Architecture.cpp(31,48): warning C4804: '>': unsafe use of type 'bool' in operation
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Architecture.cpp(49,111): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Architecture.cpp(111,8): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Architecture.cpp(158,8): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Architecture.cpp(178,8): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+  DeviceResources.cpp
+  Grammar.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Grammar.cpp(58,8): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Grammar.cpp(123,28): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Grammar.cpp(133,29): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Grammar.cpp(157,41): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Grammar.cpp(210,45): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Grammar.cpp(222,61): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Grammar.cpp(274,45): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Grammar.cpp(275,45): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Hex.cpp
+  LDeterministicBloodVessel.cpp
+  LDragonCurve.cpp
+  EnvironmentCamera.cpp
+  Game.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(139,34): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(150,27): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(182,90): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(182,62): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Game.cpp(645,58): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Board.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Board.cpp(10,120): warning C4244: 'argument': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Board.cpp(84,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Board.cpp(134,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Board.cpp(134,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Board.cpp(215,6): warning C4101: 'sign': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Board.cpp(250,17): warning C4101: 'jPermuted': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Board.cpp(250,6): warning C4101: 'iPermuted': unreferenced local variable
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_dx11.cpp
+  imgui_impl_win32.cpp
+  imgui_widgets.cpp
+  Input.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Input.cpp(74,68): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Input.cpp(74,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Light.cpp
+  LPenroseP3.cpp
+  Generating Code...
+  Compiling...
+  LSphinxTiling.cpp
+  LSystem.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\LSystem.cpp(62,8): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\LSystem.cpp(72,8): warning C4101: 'asymmetry': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\LSystem.cpp(149,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\LSystem.cpp(378,13): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\LSystem.cpp(461,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  LBloodVessel.cpp
+  Main.cpp
+  MarchingCubes.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(481,32): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(612,8): warning C4101: 'determinant': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\MarchingCubes.cpp(613,8): warning C4101: 'length': unreferenced local variable
+  modelclass.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\modelclass.cpp(211,28): warning C4477: 'fscanf_s' : format string '%s' requires an argument of type 'unsigned int', but variadic argument 2 has type 'size_t'
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\modelclass.cpp(211,28): message : this argument is used as a buffer size
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\modelclass.cpp(365,8): warning C4101: 'length': unreferenced local variable
+  RenderTexture.cpp
+  Screen.cpp
+  Shader.cpp
+  SimplexNoise.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(87,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(99,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(100,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(152,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(160,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(160,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(163,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(171,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(171,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(176,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(139,20): warning C4101: 'n3': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(196,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(197,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(198,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(256,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(257,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(258,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(261,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(262,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(263,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\SimplexNoise.cpp(325,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  StoryEngine.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\StoryEngine.cpp(110,33): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  Storylet.cpp
+  StoryWorld.cpp
+  Terrain.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(25,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(262,40): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(295,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(305,6): warning C4101: 'index': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(380,8): warning C4101: 'length': unreferenced local variable
+  Field.cpp
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,99): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,55): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(21,127): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(74,18): warning C4101: 'phi': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(165,6): warning C4101: 'q': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(165,9): warning C4101: 'quadrant': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(200,11): warning C4101: 'theta': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(202,6): warning C4101: 'q': unreferenced local variable
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Field.cpp(202,9): warning C4101: 'quadrant': unreferenced local variable
+  Generating Code...
+C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Terrain.cpp(291): warning C4715: 'Terrain::GenerateHeightMap': not all control paths return a value
+     Creating library Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.lib and object Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exp
+  DirectXTKSimpleSample_2015.vcxproj -> C:\Users\Sam\Documents\GitHub\CMP505-Untitled-Coursework-MASTER\source\Bin\Desktop_2015\x64\Debug\DirectXTKSimpleSample_2015.exe
